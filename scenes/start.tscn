@@ -1,0 +1,46 @@
+[gd_scene format=3 uid="uid://wailp86tbexo"]
+
+[ext_resource type="Script" uid="uid://bbahcfdskoiai" path="res://scripts/start.gd" id="1_start"]
+[ext_resource type="FontFile" uid="uid://c5yx45hbe6fq4" path="res://assets/fonts/CormorantGaramond-Italic.ttf" id="2_font"]
+[ext_resource type="PackedScene" path="res://scenes/book.tscn" id="3_book"]
+[ext_resource type="PackedScene" path="res://scenes/dialogue_box.tscn" id="4_box"]
+
+[node name="Start" type="Control" unique_id=49563097]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_start")
+
+[node name="Background" type="ColorRect" parent="." unique_id=1279192864]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
+
+[node name="PromptLabel" type="Label" parent="." unique_id=1627662216]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 40
+text = "Press any key to start..."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Book" parent="." unique_id=1865872905 instance=ExtResource("3_book")]
+layout_mode = 1
+
+[node name="DialogueBox" parent="." unique_id=1429802619 instance=ExtResource("4_box")]
+layout_mode = 1

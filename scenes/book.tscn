@@ -1,0 +1,270 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/book.gd" id="1_book"]
+[ext_resource type="Script" path="res://scripts/page_corner.gd" id="2_corner"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="4_semibold"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Italic.ttf" id="5_italic"]
+
+[sub_resource type="StyleBoxFlat" id="Style_dark_page"]
+bg_color = Color(0.11, 0.11, 0.12, 1)
+corner_radius_top_left = 3
+corner_radius_bottom_left = 3
+
+[sub_resource type="StyleBoxFlat" id="Style_ivory_page"]
+bg_color = Color(0.95, 0.92, 0.84, 1)
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="Style_cover"]
+bg_color = Color(0.13, 0.09, 0.075, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.78, 0.64, 0.38, 1)
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_top_left = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="StyleBoxFlat" id="Style_cover_inner"]
+draw_center = false
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.78, 0.64, 0.38, 0.5)
+
+[sub_resource type="StyleBoxFlat" id="Style_input"]
+draw_center = false
+border_width_bottom = 1
+border_color = Color(0.78, 0.64, 0.38, 0.8)
+content_margin_left = 6.0
+content_margin_right = 6.0
+content_margin_top = 2.0
+content_margin_bottom = 2.0
+
+[sub_resource type="LabelSettings" id="Label_dark_ink"]
+font = ExtResource("3_regular")
+font_size = 26
+font_color = Color(0.86, 0.83, 0.76, 1)
+line_spacing = 6.0
+
+[sub_resource type="LabelSettings" id="Label_ivory_ink"]
+font = ExtResource("3_regular")
+font_size = 26
+font_color = Color(0.17, 0.14, 0.12, 1)
+line_spacing = 6.0
+
+[sub_resource type="LabelSettings" id="Label_number"]
+font = ExtResource("5_italic")
+font_size = 18
+font_color = Color(0.5, 0.48, 0.44, 1)
+
+[sub_resource type="LabelSettings" id="Label_gold"]
+font = ExtResource("4_semibold")
+font_size = 54
+font_color = Color(0.86, 0.72, 0.45, 1)
+line_spacing = -4.0
+
+[node name="Book" type="Control"]
+layout_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -440.0
+offset_top = -290.0
+offset_right = 440.0
+offset_bottom = 290.0
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset = Vector2(440, 290)
+mouse_filter = 2
+script = ExtResource("1_book")
+
+[node name="LeftPage" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 440.0
+offset_bottom = 580.0
+theme_override_styles/panel = SubResource("Style_dark_page")
+
+[node name="Text" type="Label" parent="LeftPage"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 64.0
+offset_right = 384.0
+offset_bottom = 500.0
+label_settings = SubResource("Label_dark_ink")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Number" type="Label" parent="LeftPage"]
+layout_mode = 0
+offset_top = 520.0
+offset_right = 440.0
+offset_bottom = 550.0
+label_settings = SubResource("Label_number")
+horizontal_alignment = 1
+
+[node name="RightPage" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 440.0
+offset_right = 880.0
+offset_bottom = 580.0
+theme_override_styles/panel = SubResource("Style_ivory_page")
+
+[node name="Text" type="Label" parent="RightPage"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 64.0
+offset_right = 384.0
+offset_bottom = 500.0
+label_settings = SubResource("Label_ivory_ink")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Number" type="Label" parent="RightPage"]
+layout_mode = 0
+offset_top = 520.0
+offset_right = 440.0
+offset_bottom = 550.0
+label_settings = SubResource("Label_number")
+horizontal_alignment = 1
+
+[node name="Spine" type="ColorRect" parent="."]
+layout_mode = 0
+offset_left = 437.0
+offset_right = 443.0
+offset_bottom = 580.0
+mouse_filter = 2
+color = Color(0, 0, 0, 0.35)
+
+[node name="LeftCorner" type="Control" parent="."]
+layout_mode = 0
+offset_top = 490.0
+offset_right = 90.0
+offset_bottom = 580.0
+script = ExtResource("2_corner")
+left_side = true
+flap_color = Color(0.9, 0.86, 0.77, 1)
+
+[node name="RightCorner" type="Control" parent="."]
+layout_mode = 0
+offset_left = 790.0
+offset_top = 490.0
+offset_right = 880.0
+offset_bottom = 580.0
+script = ExtResource("2_corner")
+flap_color = Color(0.17, 0.17, 0.18, 1)
+
+[node name="FlipSheet" type="Panel" parent="."]
+layout_mode = 0
+offset_right = 440.0
+offset_bottom = 580.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Style_ivory_page")
+
+[node name="Text" type="Label" parent="FlipSheet"]
+layout_mode = 0
+offset_left = 56.0
+offset_top = 64.0
+offset_right = 384.0
+offset_bottom = 500.0
+label_settings = SubResource("Label_ivory_ink")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Number" type="Label" parent="FlipSheet"]
+layout_mode = 0
+offset_top = 520.0
+offset_right = 440.0
+offset_bottom = 550.0
+label_settings = SubResource("Label_number")
+horizontal_alignment = 1
+
+[node name="Cover" type="Panel" parent="."]
+layout_mode = 0
+offset_left = 440.0
+offset_right = 880.0
+offset_bottom = 580.0
+theme_override_styles/panel = SubResource("Style_cover")
+
+[node name="InnerBorder" type="Panel" parent="Cover"]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 18.0
+offset_right = 422.0
+offset_bottom = 562.0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("Style_cover_inner")
+
+[node name="Content" type="VBoxContainer" parent="Cover"]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 90.0
+offset_right = 390.0
+offset_bottom = 500.0
+alignment = 1
+theme_override_constants/separation = 18
+
+[node name="Title" type="Label" parent="Cover/Content"]
+layout_mode = 2
+text = "The Twins Civilization"
+label_settings = SubResource("Label_gold")
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Ornament" type="Label" parent="Cover/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.78, 0.64, 0.38, 0.8)
+theme_override_fonts/font = ExtResource("3_regular")
+theme_override_font_sizes/font_size = 28
+text = "⁂"
+horizontal_alignment = 1
+
+[node name="Spacer" type="Control" parent="Cover/Content"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+mouse_filter = 2
+
+[node name="NameRow" type="HBoxContainer" parent="Cover/Content"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 10
+
+[node name="NameLabel" type="Label" parent="Cover/Content/NameRow"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_fonts/font = ExtResource("3_regular")
+theme_override_font_sizes/font_size = 28
+text = "Name:"
+
+[node name="NameInput" type="LineEdit" parent="Cover/Content/NameRow"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_colors/font_uneditable_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_colors/caret_color = Color(0.86, 0.72, 0.45, 1)
+theme_override_colors/selection_color = Color(0.78, 0.64, 0.38, 0.35)
+theme_override_fonts/font = ExtResource("5_italic")
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("Style_input")
+theme_override_styles/focus = SubResource("Style_input")
+theme_override_styles/read_only = SubResource("Style_input")
+max_length = 20
+context_menu_enabled = false
+caret_blink = true
+
+[node name="Hint" type="Label" parent="Cover/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 0.55)
+theme_override_fonts/font = ExtResource("5_italic")
+theme_override_font_sizes/font_size = 18
+text = "Press Enter to begin"
+horizontal_alignment = 1

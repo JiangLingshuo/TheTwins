@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Dialogue for the transition scene.
+  Each <line> is one page of dialogue:
+	speaker = who is talking (leave empty for narration)
+	content = the text between the tags
+  Use <br/> inside a line for a manual line break.
+-->
+<dialogue>
+	<line speaker="#PLAYER#">I wonder why my investigation notebook has two colors, black and white</line>
+	<line speaker="??">...</line>
+	<line speaker="??">...Hello? Can you hear this #PLAYER#?</line>
+	<line speaker="#PLAYER#">Aurora? Is that you? My connection is finally recovered. I've landed safely</line>
+	<line speaker="Aurora">And have you looked at your handbook? </line>
+	<line speaker="#PLAYER#">Just a little bit. The colors confuse me. Any meaning behind it?</line>
+	<line speaker="Aurora">The white and black? Those are for different content, by design. </line>
+	<line speaker="Aurora">You see, the Agency have been monitoring this civilization for years, but all of a sudden it collapses into ashes.</line>
+	<line speaker="Aurora">The only thing captured is this photo, this black and white photo.</line>
+	<line speaker="#PLAYER#">We worked for years to get it, now it is the time to find the truth.</line>
+	<line speaker="Aurora">This communication will be kept active, if any future studies you would like to reference from the Agency.</line>
+	<line speaker="Aurora">Good luck.</line>
+</dialogue>
