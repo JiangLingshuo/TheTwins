@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://7jbemo34hg4f"
+path="res://.godot/imported/初期调查bgm loop加长版.wav-0c0deae338ad1d549d79ec17f1852a17.sample"
+
+[deps]
+
+source_file="res://assets/audio/初期调查bgm loop加长版.wav"
+dest_files=["res://.godot/imported/初期调查bgm loop加长版.wav-0c0deae338ad1d549d79ec17f1852a17.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2
