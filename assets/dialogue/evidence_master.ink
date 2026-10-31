@@ -60,6 +60,7 @@
 # title:The Appearance of the Dayfolk
 # category:observation
 # location:day_cemetery
+# tool: camera
 # evidence_tag:dayfolk_appearance
 # evidence_tag:human_figure_reference
 // Source: 01_婴儿小碑!B9. TODO: choose the actual environmental reference image.
@@ -72,6 +73,7 @@ The figure has a smooth face and the familiar outline of the Dayfolk. Its featur
 # title:The Moon Above Night City
 # category:observation
 # location:night_cemetery
+# tool: camera
 # evidence_tag:moon_reference
 # evidence_tag:moon_motif
 // Source: 01_婴儿小碑!B8:B9. The local moon should differ from Earth's moon.
@@ -170,6 +172,7 @@ The family's chosen depiction does not match with the records of the infant's ap
 # title:One Base, Three Tombs
 # category:observation
 # location:day_cemetery
+# tool: camera
 # evidence_tag:shared_family_plot
 # evidence_tag:three_family_markers
 # evidence_tag:missing_family_member_reference
@@ -253,7 +256,7 @@ The lines are formed by blue blood seeping through the skin. A skin drawing with
 # evidence_tag:husband_disappearance
 # evidence_tag:day_city_bias
 // Source: 02_学者晶石碑!C12. These are the author's beliefs, not objective narration.
-The unexplained disappearances in Day City are always reported at dawn, when people wake.
+The unexplained <link="disappearance">disappearances</link> in Day City are always reported at dawn, when people wake.
 
 The Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.
 
@@ -305,25 +308,39 @@ A one-way passage must be established: the Dayfolk may descend, but the Nightfol
 
 
 // ================================================================
-// 03 - DAY CITY: THE TYCOON
+// 03 - DAY CITY: THE SUN-SHAPED MONUMENT
 // ================================================================
 
-=== ev_coin_marker_rubbing ===
+=== ev_sun_reference ===
 # type:evidence
-# id:coin_marker_rubbing
+# id:sun_reference
+# title:The Sun Above Day City
+# category:observation
+# location:day_cemetery
+# tool: camera
+# evidence_tag:sun_shape
+# evidence_tag:sun_motif
+// Scene reference for the sun-shaped monument and the pointed outlines of Day City coins.
+// A shared outline supports comparison; it does not establish the deceased's occupation.
+The bright sun above Day City offers a possible reference for the monument's radiating outline. The same sun-like outline can also be compared with the pointed rims of Day City coins.
+-> DONE
+
+=== ev_sun_shaped_marker_rubbing ===
+# type:evidence
+# id:sun_shaped_marker_rubbing
 # title:The Sun-Shaped Monument
 # category:rubbing
 # location:day_cemetery
-# evidence_tag:coin_shape
-# evidence_tag:wealth_marker_reference
+# evidence_tag:sun_shape
+# evidence_tag:sun_motif
 // Source: 03_大亨金钱碑!B8:B9.
 Radiating points surround the monument like a shining sun. The rubbing records its distinctive outline.
 -> DONE
 
-=== ev_tycoon_beast_rubbing ===
+=== ev_sun_shaped_beast_rubbing ===
 # type:evidence
-# id:tycoon_beast_rubbing
-# title:The Coin Monument's Twin Beast
+# id:sun_shaped_beast_rubbing
+# title:The Sun-Shaped Monument's Twin Beast
 # category:rubbing
 # location:day_cemetery
 # evidence_tag:twin_beast_motif
@@ -341,11 +358,11 @@ A small creature occupies the center of the monument. One half looks different f
 # searchlight_year:1990
 # searchlight_years_ago:60
 # location:day_cemetery
-# evidence_tag:coin_shape
+# evidence_tag:sun_shape
 # evidence_tag:day_city_currency
-# evidence_tag:wealth_marker_reference
+# evidence_tag:sun_motif
 // Source: 03_大亨金钱碑!B9. Do not confuse this with Night City's blessing stones.
-Circulating coins lied in the wishing pool beneath the ram-spirit emblem. Its pointed rim resembles the shape of the large monument.The pool was obsolete with technological development—people started to have other faith.
+Circulating coins once lay in the wishing pool beneath the ram-spirit emblem. Their pointed rims form a sun-like outline, similar to the sun-shaped monument. The pool fell out of use as technology developed and people turned to other beliefs.
 -> DONE
 
 === ev_ram_spirit_emblem ===
@@ -366,6 +383,7 @@ A ram-spirit emblem stands above the wishing pool. It belongs to the religious i
 # title:A Giant Footprint in the Ruins
 # category:observation
 # location:day_city_ruins
+# tool: camera
 # evidence_tag:ancient_creature_trace
 # evidence_tag:twin_beast_reference
 // Source: 03_大亨金钱碑!B9.
@@ -417,7 +435,7 @@ Then, in a single night, they disappeared.
 # evidence_tag:twin_beast_motif
 # evidence_tag:repeated_local_symbol
 // Source: 03_大亨金钱碑!B8. Frequency alone does not establish meaning.
-The same twin beast appears on several other markers in Day City. It is not a decoration unique to the coin-shaped monument.
+The same twin beast appears on several other markers in Day City. It is not a decoration unique to the sun-shaped monument.
 -> DONE
 
 === ev_family_photo ===
@@ -494,7 +512,7 @@ An unfamiliar symbol is carved into the altar. It does not resemble a passage of
 // Source: 05_婴儿夜城祭坛!B9. Award after Aurora interprets the glyph.
 Aurora interprets the symbol as a blessing:
 
-"To disappear is to set out on a journey without end. May the power of crystal remain with you."
+"To disappear is to set out on a journey without end. May the wishes of crystal remain with you."
 -> DONE
 
 === ev_crystal_god_rubbing ===
@@ -587,7 +605,7 @@ The moon-shaped stones are offerings of blessing, not coins. The Nightfolk do no
 # evidence_tag:paired_day_night_memorials
 # evidence_tag:contradictory_death_accounts
 // Source: 05_婴儿夜城祭坛!B9,B13. Award only after the two infant images are compared.
-The human-shaped marker in Day City corresponds to the infant memorial in Night City. One city describes a death; the other commemorates a disappearance.
+The human-shaped marker in Day City corresponds to the infant memorial in Night City. One city describes a death; the other commemorates a <link="disappearance">disappearance</link>.
 -> DONE
 
 
@@ -618,7 +636,7 @@ The upper part of the small stone shows a figure holding a child. The child can 
 # evidence_tag:night_mother_future
 # evidence_tag:shared_body_reference
 // Source: 06_夜母石碑!B8:B9. Lower field: a future/wish, not a literal event date.
-Below the figure holding a child, a member of the Dayfolk and a member of the Nightfolk clasp hands. The arrangement resembles the picture preserved inside the Scholar's crystal monument.
+Below the figure holding a child, a member of the Dayfolk and a member of the Nightfolk hold their hands. The arrangement resembles the picture preserved inside the Scholar's crystal monument.
 -> DONE
 
 === ev_night_mother_river_rubbing ===
@@ -639,6 +657,7 @@ Cracked lines surround the stone like the bed of a dried river. They form the bo
 # title:The Underground Riverbed
 # category:observation
 # location:night_city
+# tool: camera
 # evidence_tag:dry_river_motif
 # evidence_tag:water_source_lost
 // Source: 06_夜母石碑!B9,B12.
@@ -782,6 +801,7 @@ The exchange continued with each cycle of day and night. The Dayfolk brought bac
 # title:The Path to the Surface
 # category:observation
 # location:skyway
+# tool: camera
 # evidence_tag:ascending_path_motif
 # evidence_tag:skyway_not_steep
 # evidence_tag:night_father_final_journey
@@ -800,7 +820,7 @@ An uneven path rises through the fallen stone toward the surface. It is not the 
 # evidence_tag:night_father_final_journey
 # evidence_tag:paired_day_night_death
 // Source: 07_夜父石碑!B14. Award after the relevant dialogue establishes this conclusion.
-The father left to search for the missing infant. The path itself was not a dangerous climb. He continued searching beyond the permitted waking hours and failed to return to a sleeping coffin in time.
+The father left to search for the missing infant. The path itself was not a dangerous climb. He continued searching <link="missed_sleeping_deadline">beyond the permitted waking hours</link> and failed to return to a sleeping coffin in time.
 
 His death can be compared with the report of the Scholar's husband disappearing at dawn.
 -> DONE
@@ -901,7 +921,7 @@ The girl, her joined hands, and the upright coffin form a single composition. Th
 // Suggested snapshot: 2005 (45 years before investigation), summer, after the girl leaves and before the mother dies.
 // Timing rationale: The mother leaves the girl's earlier sculpture at her solitary marker after her departure.
 // Source: 04_小女孩终局碑!B10,B15. No additional inscription is specified.
-A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the coin-shaped monument.
+A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.
 -> DONE
 
 === ev_day_city_history ===
@@ -961,11 +981,11 @@ I once loved and respected my mother so much. She was my example from childhood.
 
 How many more times must we hurt our own people in the name of protecting them?
 
-She wrote to me. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.
+She left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.
 
 She wants to bring her mother. But <link="diary_mothers">if she brings her mother, we will have to bring mine</link>. With my mother's influence in Day City, everyone will find out. We will go through it all again.
 
-I have to persuade her. We can only <link="diary_escape">escape on our own</link>.
+I have to persuade her. We can only <link="diary_escape">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.
 -> DONE
 
 === ev_diary_cover ===
@@ -979,7 +999,7 @@ I have to persuade her. We can only <link="diary_escape">escape on our own</link
 # evidence_tag:author_identity_reference
 # evidence_tag:well_preserved_diary
 // Source: 04_小女孩终局碑!B13. "As new" is observable; do not assign a placement date.
-The diary remains intact, as if new. Its cover bears the image of a girl standing inside an upright coffin, hands joined before her chest.
+The diary remains intact, as if new. It seems that it's not part of the remains collected by previous archaeologists. Its cover bears the image of a girl standing inside an upright coffin, hands joined before her chest.
 -> DONE
 
 === ev_notebook_cover ===
@@ -994,7 +1014,7 @@ The diary remains intact, as if new. Its cover bears the image of a girl standin
 // Source: 04_小女孩终局碑!B8:B9,B15; user-authored opening identifies the notebook as Aurora's.
 Aurora gave you this black-and-white notebook. On its cover, a girl stands inside an upright coffin, hands joined before her chest.
 
-You have been carrying the image throughout your investigation.
+You have been carrying the image throughout your investigation, holding it like the girl in the monument.
 -> DONE
 
 === ev_four_person_family_finding ===
