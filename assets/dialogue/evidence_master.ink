@@ -8,7 +8,12 @@
 // # id = stable evidence identifier; keep it unchanged when editing the prose.
 // # title = player-facing title.
 // # category = rubbing / manuscript / trace / object / observation / finding.
-// # location = where this record is obtained.
+// # location = where/how the PLAYER obtains this record, not its historical origin.
+// # related_location = associated investigation area; not a pickup instruction.
+// aurora_transmission means Aurora sends a document/copy to the player.
+// Draft default: manuscripts, their copied illustrations, and diary-cover records
+// are transmitted by Aurora; confirm any exceptional physical pickups separately.
+// Transmission timing/unlock conditions belong to acquisition logic, not these tags.
 // # evidence_tag = repeatable inference label, queried by the game.
 // A dialogue may accept ANY evidence with the required tag (OR), not all items.
 // The game must register these tags and check the evidence currently submitted.
@@ -20,9 +25,19 @@
 // Descriptions preserve what is visible or written. Documents preserve their
 // author's beliefs, including prejudice. A tag is not proof of every accusation.
 // Findings are separate entries to award ONLY after the relevant comparison or
-// dialogue, not when an ingredient is collected. No dates have been invented.
+// dialogue, not when an ingredient is collected. Searchlight dates below are
+// author-facing scheduling suggestions, not newly discovered historical facts.
 // Raw visual records can be folded into one summary card after a comparison;
 // keep their original IDs and tags as aliases of that card.
+//
+// SEARCHLIGHT TIME METADATA (project conventions, not built-in Ink logic):
+// Investigation year: 2050. Dates follow the suggested narrative timeline.
+// searchlight_year = year of the visible snapshot, not necessarily creation date.
+// searchlight_years_ago = 2050 minus searchlight_year, for the tool dial.
+// searchlight_date_status = timeline_suggestion / provisional_ancient_date.
+// Year-level precision only; seasonal notes are author-facing scheduling guidance.
+// These tags do not implement the tool or change acquisition/unlock logic.
+// A negative scan is a range check, not a positive trace at an invented instant.
 //
 // LATEST RULES OVERRIDE STALE CELLS:
 // Scholar: twin beast / disappearance, not moon / natural death.
@@ -92,7 +107,8 @@ A curved shape is carved into the small marker. The rubbing preserves its outlin
 # id:designer_manuscript
 # title:A Marker for Someone Without an Occupation
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:infant_identity
 # evidence_tag:occupation_marker_custom
 # evidence_tag:human_figure_reference
@@ -110,7 +126,8 @@ The family asked us not to define the child by work he had never begun. We chose
 # id:designer_journal
 # title:A Page of the Designer's Journal
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:infant_appearance_mismatch
 # evidence_tag:family_requested_depiction
 My <link="student">student</link> visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger. 
@@ -122,9 +139,15 @@ My <link="student">student</link> visited me with urgency. She showed me a photo
 # title:A Sketch of the Infant
 # category:trace
 # location:day_cemetery
+# tool:searchlight
+# searchlight_year:2000
+# searchlight_years_ago:50
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:infant_appearance_mismatch
 # evidence_tag:infant_actual_appearance
-// Source: 01_婴儿小碑!B10,B15. Searchlight: 2050 minus 50 years = 2000.
+// Suggested snapshot: 2000 (50 years before investigation), summer, after the infant burial.
+// Timing rationale: The sister records her brother after the burial; she is about fourteen.
+// Source: 01_婴儿小碑!B10,B15.
 // TODO: the artist's identifying mark is not specified in the workbook; do not invent one here.
 The searchlight reveals an old sketch of the infant. His appearance differs from the smooth figure chosen for the marker.
 -> DONE
@@ -138,20 +161,20 @@ The searchlight reveals an old sketch of the infant. His appearance differs from
 # evidence_tag:infant_death_unresolved
 # evidence_tag:infant_appearance_mismatch
 // Source: 01_婴儿小碑!B7,B15. Award after the evidence-supported reply.
-The family's chosen depiction does not agree with the records of the infant's appearance. The marker's expression of natural death does not settle what actually happened to him. There may be unexplained circumstances behind this death.
+The family's chosen depiction does not match with the records of the infant's appearance. The tombstone's expression of natural death does not settle what actually happened to him. There may be <link="unexplained death">unexplained circumstances</link> behind this death.
 -> DONE
 
 === ev_shared_family_base ===
 # type:evidence
 # id:shared_family_base
-# title:One Base, Three Markers
+# title:One Base, Three Tombs
 # category:observation
 # location:day_cemetery
 # evidence_tag:shared_family_plot
 # evidence_tag:three_family_markers
 # evidence_tag:missing_family_member_reference
 // Source: 01!B8; 02!B8; 03_大亨金钱碑!C14.
-The small marker, the crystal monument, and the coin-shaped monument share one continuous stone base. They are not merely three separate graves standing close together.
+The small gravestone, the crystal monument, and the sun-shaped monument share one continuous stone base. They are not merely three separate graves standing close together.
 -> DONE
 
 
@@ -193,7 +216,7 @@ A twin beast is carved on the crystal monument. Its two halves belong to one bod
 # evidence_tag:night_city_mineral_origin
 # evidence_tag:intercity_resource_exchange
 // Source: 02_学者晶石碑!B9,B15; 07_夜父石碑!C12.
-This mineral was found in Night City. Its facets resemble the outline of the crystal monument in Day City. The place of discovery is recorded alongside the sample.
+This mineral was found in Night City. Its facets resemble the outline of the crystal monument in Day City.
 -> DONE
 
 === ev_skin_picture ===
@@ -202,13 +225,19 @@ This mineral was found in Night City. Its facets resemble the outline of the cry
 # title:The Picture Preserved on Skin
 # category:trace
 # location:day_cemetery
+# tool:searchlight
+# searchlight_year:2005
+# searchlight_years_ago:45
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:day_night_handholding
 # evidence_tag:skin_as_message_medium
 # evidence_tag:shared_body_reference
-// Source: 02_学者晶石碑!B8,B10. Searchlight only; year still to be set.
+// Suggested snapshot: 2005 (45 years before investigation), autumn, the mother's final days.
+// Timing rationale: The Scholar and Night Mother exchange the picture shortly before their shared death.
+// Source: 02_学者晶石碑!B8,B10.
 Rewound to a time before the skin decayed, the searchlight reveals the picture clearly. A member of the Dayfolk and a member of the Nightfolk reach out and clasp hands.
 
-The lines are formed by blue blood seeping through the skin. This is a picture on a body, not a drawing on a loose sheet of paper.
+The lines are formed by blue blood seeping through the skin. A skin drawing with unexplained reason.
 -> DONE
 
 === ev_disappearance_inquiry ===
@@ -216,7 +245,8 @@ The lines are formed by blue blood seeping through the skin. This is a picture o
 # id:disappearance_inquiry
 # title:The Scholar's Notes on Disappearances
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:dawn_disappearances
 # evidence_tag:unexplained_waking_wounds
 # evidence_tag:sleep_coffin_required
@@ -227,9 +257,9 @@ The unexplained disappearances in Day City are always reported at dawn, when peo
 
 The Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.
 
-Who has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolk while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.
+Who has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.
 
-It is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.
+It is not only disappearances. Many of us, myself included, have found <link="fresh_wounds">fresh wounds</link> upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.
 -> DONE
 
 === ev_profession_record ===
@@ -237,7 +267,8 @@ It is not only disappearances. Many of us, myself included, have found fresh wou
 # id:profession_record
 # title:The Scholar, Her Work, and Her Patron
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:scholar_identity
 # evidence_tag:tycoon_identity
 # evidence_tag:crystal_research_reference
@@ -250,7 +281,7 @@ The stones were later used to power machinery. The occupational title thus becam
 
 A young man from a wealthy family was the first to invest in her research. He later became her husband and came to be known as the <link="tycoon">Tycoon</link>.
 
-In recognition of her outstanding contributions to Day City, the Scholar may apply for a mausoleum beyond the usual grave-marker design and have her family interred within it. For the Dayfolk, who place such importance on the rituals of death, this is the highest of honors.
+In recognition of her outstanding contributions to Day City, the Scholar may apply for a mausoleum beyond the usual grave-marker design and have her family interred within it. For the Dayfolk, who place such importance on the rituals of death, this is the highest honor.
 -> DONE
 
 === ev_one_way_passage_order ===
@@ -258,13 +289,14 @@ In recognition of her outstanding contributions to Day City, the Scholar may app
 # id:one_way_passage_order
 # title:An Order for a One-Way Passage
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:one_way_passage
 # evidence_tag:intercity_resource_exchange
 # evidence_tag:night_city_supply_blockade
 # evidence_tag:day_city_bias
 // Source: 02_学者晶石碑!C14. Preserve the issuing authority's prejudiced wording.
-We must put an end to Nightfolk incursions at their source.
+An order to the Scholar: We must put an end to Nightfolk incursions at their source.
 
 They were once allowed to take our food in exchange for the crystals they excavated. Now they neglect their work, yet continue to demand more and more from Day City.
 
@@ -279,13 +311,13 @@ A one-way passage must be established: the Dayfolk may descend, but the Nightfol
 === ev_coin_marker_rubbing ===
 # type:evidence
 # id:coin_marker_rubbing
-# title:The Coin-Shaped Monument
+# title:The Sun-Shaped Monument
 # category:rubbing
 # location:day_cemetery
 # evidence_tag:coin_shape
 # evidence_tag:wealth_marker_reference
 // Source: 03_大亨金钱碑!B8:B9.
-Radiating points surround the monument like the rim of an enlarged coin. The rubbing records its distinctive outline.
+Radiating points surround the monument like a shining sun. The rubbing records its distinctive outline.
 -> DONE
 
 === ev_tycoon_beast_rubbing ===
@@ -305,12 +337,15 @@ A small creature occupies the center of the monument. One half looks different f
 # id:day_city_coin
 # title:A Coin from the Wishing Pool
 # category:object
+# tool:searchlight
+# searchlight_year:1990
+# searchlight_years_ago:60
 # location:day_cemetery
 # evidence_tag:coin_shape
 # evidence_tag:day_city_currency
 # evidence_tag:wealth_marker_reference
 // Source: 03_大亨金钱碑!B9. Do not confuse this with Night City's blessing stones.
-A circulating coin lies in the wishing pool beneath the ram-spirit emblem. Its pointed rim resembles the shape of the large monument.
+Circulating coins lied in the wishing pool beneath the ram-spirit emblem. Its pointed rim resembles the shape of the large monument.The pool was obsolete with technological development—people started to have other faith.
 -> DONE
 
 === ev_ram_spirit_emblem ===
@@ -343,10 +378,16 @@ A vast footprint remains in the ruins. The print alone does not reveal the full 
 # title:The Creature Revealed Above the Footprint
 # category:trace
 # location:day_city_ruins
+# tool:searchlight
+# searchlight_year:1800
+# searchlight_years_ago:250
+# searchlight_date_status:provisional_ancient_date
 # evidence_tag:twin_beast_motif
 # evidence_tag:twin_beast_reference
 # evidence_tag:contrasting_halves
-// Source: 03_大亨金钱碑!B9. Searchlight year is not specified.
+// Suggested snapshot: 1800 (250 years before investigation), before Day City was founded; provisional placeholder.
+// Timing rationale: Ancient-history date only: 1800 is a suggested tool setting, NOT established chronology. It must precede Day City's founding; revise when the founding/separation dates are fixed.
+// Source: 03_大亨金钱碑!B9.
 The searchlight reveals the creature that once occupied this space: one body with two strikingly different halves. Its outline can be compared with the small beasts carved on the monuments.
 -> DONE
 
@@ -355,7 +396,8 @@ The searchlight reveals the creature that once occupied this space: one body wit
 # id:twin_beast_account
 # title:An Account of the Twin-Bodied Creature
 # category:manuscript
-# location:day_cemetery
+# location:aurora_transmission
+# related_location:day_cemetery
 # evidence_tag:twin_beast_reference
 # evidence_tag:contrasting_halves
 # evidence_tag:ancient_disappearance
@@ -371,6 +413,7 @@ Then, in a single night, they disappeared.
 # title:The Same Beast on Other Graves
 # category:observation
 # location:day_cemetery
+# tool: camera
 # evidence_tag:twin_beast_motif
 # evidence_tag:repeated_local_symbol
 // Source: 03_大亨金钱碑!B8. Frequency alone does not establish meaning.
@@ -383,10 +426,16 @@ The same twin beast appears on several other markers in Day City. It is not a de
 # title:A Photograph of Four
 # category:trace
 # location:day_cemetery
+# tool:searchlight
+# searchlight_year:2000
+# searchlight_years_ago:50
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:four_person_family
 # evidence_tag:missing_family_member_reference
 # evidence_tag:family_image_reference
-// Source: 03_大亨金钱碑!B10,B15. Searchlight year is not specified.
+// Suggested snapshot: 2000 (50 years before investigation), summer or autumn, after the father's memorial is erected.
+// Timing rationale: The photograph shows the earlier family of four; the searchlight date is when it stood at the grave, NOT when the photograph was taken.
+// Source: 03_大亨金钱碑!B10,B15.
 A photograph once stood in front of the monument. It shows four members of a family. There are only three markers on the shared base.
 -> DONE
 
@@ -466,9 +515,15 @@ The altar's decoration preserves the outline of the Crystal God, but the place w
 # title:The Crystal Figure That Once Stood Here
 # category:trace
 # location:night_cemetery
+# tool:searchlight
+# searchlight_year:2000
+# searchlight_years_ago:50
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:crystal_god_motif
 # evidence_tag:removed_crystal_offering
 # evidence_tag:crystal_extraction_reference
+// Suggested snapshot: 2000 (50 years before investigation), summer, shortly after the infant altar is dedicated.
+// Timing rationale: Show the crystal figure intact before its later removal. Its removal date remains unconfirmed; this snapshot does not identify the remover.
 // Source: 05_婴儿夜城祭坛!B8,B10. The raw image does not identify who removed it.
 In the searchlight's view of the past, crystals fill the altar's empty recess and form the figure of a god. Today the crystals have been pried out.
 -> DONE
@@ -479,9 +534,15 @@ In the searchlight's view of the past, crystals fill the altar's empty recess an
 # title:A Moon-Shaped Stone on the Altar
 # category:trace
 # location:night_cemetery
+# tool:searchlight
+# searchlight_year:2000
+# searchlight_years_ago:50
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:moon_stone_offering
 # evidence_tag:night_blessing_reference
 # evidence_tag:moon_motif
+// Suggested snapshot: 2000 (50 years before investigation), summer, during mourning for the missing infant.
+// Timing rationale: The blessing stone is present among the infant altar offerings.
 // Source: 05_婴儿夜城祭坛!B10,B13. Not identified as money.
 A moon-shaped stone once lay among the altar's offerings. It resembles a small token, but there is nothing here that establishes its value as currency.
 -> DONE
@@ -491,7 +552,8 @@ A moon-shaped stone once lay among the altar's offerings. It resembles a small t
 # id:crystal_god_prophecy
 # title:The Crystal God's Prophecy
 # category:manuscript
-# location:night_cemetery
+# location:aurora_transmission
+# related_location:night_cemetery
 # evidence_tag:night_infant_reference
 # evidence_tag:smooth_skinned_child
 # evidence_tag:night_city_belief
@@ -589,8 +651,16 @@ The underground river has dried up. Its exposed bed preserves the cracked patter
 # title:No Readable Traces Around the Stone
 # category:observation
 # location:night_cemetery
+# tool:searchlight
+# searchlight_scan_start_year:2005
+# searchlight_scan_end_year:2050
+# searchlight_scan_years_ago_min:0
+# searchlight_scan_years_ago_max:45
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:absence_of_readable_traces
 # evidence_tag:last_survivor_question
+// Negative scan: after the mother's death in autumn 2005 through the 2050 investigation.
+// Do not unlock this absence finding from a single dial setting; check the relevant post-burial range.
 // Source: 06_夜母石碑!B10,B12. Do not award "last survivor" from absence alone.
 The searchlight reveals no discernible traces around this stone. There is no record here of later visitors or offerings.
 -> DONE
@@ -656,10 +726,16 @@ The lower part of the stone bears the image of the Crystal God. It resembles the
 # title:A Moon-Shaped Stone Before the Father's Marker
 # category:trace
 # location:night_cemetery
+# tool:searchlight
+# searchlight_year:2000
+# searchlight_years_ago:50
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:moon_stone_offering
 # evidence_tag:night_blessing_reference
 # evidence_tag:moon_motif
-// Source: 07_夜父石碑!B10. Searchlight year is not specified.
+// Suggested snapshot: 2000 (50 years before investigation), summer or autumn, shortly after the father's death.
+// Timing rationale: The father dies days or weeks after the infant. Allow time for his marker and the blessing offering.
+// Source: 07_夜父石碑!B10.
 A moon-shaped stone once lay before the father's marker. It resembles the stones left as offerings on the infant's altar.
 -> DONE
 
@@ -668,7 +744,8 @@ A moon-shaped stone once lay before the father's marker. It resembles the stones
 # id:natural_collapse_record
 # title:The Collapse That Sealed the Road
 # category:manuscript
-# location:night_cemetery
+# location:aurora_transmission
+# related_location:night_cemetery
 # evidence_tag:shared_day_night_history
 # evidence_tag:original_separation
 # evidence_tag:natural_collapse
@@ -681,7 +758,8 @@ A moon-shaped stone once lay before the father's marker. It resembles the stones
 # id:skyway_history
 # title:An Account of the Skyway
 # category:manuscript
-# location:night_cemetery
+# location:aurora_transmission
+# related_location:night_cemetery
 # evidence_tag:ascending_path_motif
 # evidence_tag:skyway_not_steep
 # evidence_tag:intercity_resource_exchange
@@ -813,9 +891,15 @@ The girl, her joined hands, and the upright coffin form a single composition. Th
 # title:A Statuette of Four
 # category:trace
 # location:cemetery_edge
+# tool:searchlight
+# searchlight_year:2005
+# searchlight_years_ago:45
+# searchlight_date_status:timeline_suggestion
 # evidence_tag:four_person_family
 # evidence_tag:family_image_reference
 # evidence_tag:mother_remembers_daughter
+// Suggested snapshot: 2005 (45 years before investigation), summer, after the girl leaves and before the mother dies.
+// Timing rationale: The mother leaves the girl's earlier sculpture at her solitary marker after her departure.
 // Source: 04_小女孩终局碑!B10,B15. No additional inscription is specified.
 A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the coin-shaped monument.
 -> DONE
@@ -825,7 +909,8 @@ A small sculpture of four family members once stood before the marker. It was ca
 # id:day_city_history
 # title:A History of Day City
 # category:manuscript
-# location:cemetery_edge
+# location:aurora_transmission
+# related_location:cemetery_edge
 # evidence_tag:shared_day_night_history
 # evidence_tag:sleep_coffin_required
 # evidence_tag:upright_coffin_motif
@@ -847,7 +932,8 @@ The Nightfolk placed theirs underground, where the darkness of the caves made th
 # id:history_coffin_illustration
 # title:An Upright Sleeping Coffin
 # category:rubbing
-# location:cemetery_edge
+# location:aurora_transmission
+# related_location:cemetery_edge
 # evidence_tag:upright_coffin_motif
 # evidence_tag:shared_day_night_history
 // Source: 04_小女孩终局碑!B9,B11. The illustration can be copied and compared.
@@ -859,7 +945,8 @@ An illustration in the old history book shows a sleeping coffin standing upright
 # id:girl_diary
 # title:A Diary Page, Author Unknown
 # category:manuscript
-# location:cemetery_edge
+# location:aurora_transmission
+# related_location:cemetery_edge
 # evidence_tag:author_identity_reference
 # evidence_tag:funerary_artist_reference
 # evidence_tag:deliberate_departure
@@ -886,7 +973,8 @@ I have to persuade her. We can only <link="diary_escape">escape on our own</link
 # id:diary_cover
 # title:The Motif on the Diary Cover
 # category:observation
-# location:cemetery_edge
+# location:aurora_transmission
+# related_location:cemetery_edge
 # evidence_tag:girl_coffin_motif
 # evidence_tag:author_identity_reference
 # evidence_tag:well_preserved_diary
