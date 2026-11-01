@@ -23,6 +23,7 @@ signal written(page_index: int)
 
 const SOUND_FLIP: AudioStream = preload("res://assets/audio/翻书声.wav")
 const SOUND_WRITE: AudioStream = preload("res://assets/audio/写字声.wav")
+const PAPER_SHADER: Shader = preload("res://shaders/notebook_paper.gdshader")
 const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
@@ -51,6 +52,18 @@ const GRAVESTONE_SLOTS := 6
 @export_range(-40.0, 6.0, 0.5) var flip_volume_db: float = 0.0
 ## Loudness of the writing sound, in decibels (0 = original level).
 @export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 0.0
+
+@export_group("Day/Night pages")
+## Sections (indices into SECTION_TITLES) whose spreads show a Day page on the
+## left and a Night page on the right. Other sections keep the normal paper.
+@export var day_night_sections: PackedInt32Array = [0]
+@export var day_paper: Color = Color(0.96, 0.92, 0.82)
+@export var day_ink: Color = Color(0.2, 0.15, 0.11)
+@export var night_paper: Color = Color(0.14, 0.16, 0.22)
+@export var night_ink: Color = Color(0.94, 0.91, 0.84)
+## Opacity of the faint linework (placeholders, notes) on each page theme.
+@export_range(0.0, 1.0, 0.05) var day_faded_alpha: float = 0.45
+@export_range(0.0, 1.0, 0.05) var night_faded_alpha: float = 0.7
 
 @onready var left_page: Panel = $LeftPage
 @onready var left_text: Label = $LeftPage/Text
@@ -84,12 +97,17 @@ var _write_player: AudioStreamPlayer
 var section_spreads: PackedInt32Array = [GRAVESTONE_SLOTS / 2, 1, 1, 1, 1]
 ## Which gravestone slots hold a collected gravestone (placeholder data for now).
 var gravestone_collected: Array[bool] = []
+var _day_material: ShaderMaterial
+var _night_material: ShaderMaterial
+var _normal_ink: Color
+var _normal_number_ink: Color
 
 
 func _ready() -> void:
 	visible = false
 	_style_left = left_page.get_theme_stylebox("panel")
 	_style_right = right_page.get_theme_stylebox("panel")
+	_setup_page_themes()
 	left_page.visible = false
 	right_page.visible = false  # would stick out around the closed cover
 	flip_sheet.visible = false
@@ -500,6 +518,48 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	number_label.text = str(page_index) if page_index > 0 and not content.is_empty() else ""
 	# Each page (and the turning sheet) has an Art node next to its labels.
 	_fill_art(text_label.get_parent().get_node("Art"), page_index)
+	_apply_page_theme(text_label, number_label, page_index)
+
+
+# --- Day / Night page themes -------------------------------------------------
+
+func _setup_page_themes() -> void:
+	_day_material = _make_paper_material(day_paper)
+	_night_material = _make_paper_material(night_paper)
+	# The labels share their LabelSettings in the scene; give each its own copy
+	# so a Night page can have light ink without changing the other pages.
+	for label: Label in [left_text, left_number, right_text, right_number, flip_text, flip_number]:
+		label.label_settings = label.label_settings.duplicate()
+	_normal_ink = left_text.label_settings.font_color
+	_normal_number_ink = left_number.label_settings.font_color
+
+
+func _make_paper_material(paper: Color) -> ShaderMaterial:
+	var material := ShaderMaterial.new()
+	material.shader = PAPER_SHADER
+	material.set_shader_parameter("paper_color", paper)
+	return material
+
+
+## Colour a page (its paper, text, number and drawing) for the theme of
+## page_index. The turning sheet is coloured per face the same way.
+func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) -> void:
+	var page: Panel = text_label.get_parent()
+	var art := page.get_node("Art")
+	var day_night := use_sections and page_index / 2 < _spread_count() \
+		and day_night_sections.has(_section_of(page_index / 2))
+	if not day_night:
+		page.material = null
+		text_label.label_settings.font_color = _normal_ink
+		number_label.label_settings.font_color = _normal_number_ink
+		art.reset_ink()
+		return
+	var is_day := page_index % 2 == 0  # Day on the left, Night on the right
+	var ink := day_ink if is_day else night_ink
+	page.material = _day_material if is_day else _night_material
+	text_label.label_settings.font_color = ink
+	number_label.label_settings.font_color = Color(ink, 0.8)
+	art.set_ink(ink, day_faded_alpha if is_day else night_faded_alpha)
 
 
 ## Draw the section placeholder for a page (nothing without sections).

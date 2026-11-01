@@ -5,7 +5,7 @@ extends Control
 
 const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 const INK := Color(0.17, 0.14, 0.12)
-const FADED_INK := Color(0.17, 0.14, 0.12, 0.45)
+const FADED_ALPHA := 0.45
 ## Size of the gravestone silhouette.
 const STONE_SIZE := Vector2(170, 240)
 
@@ -14,10 +14,25 @@ enum Kind { NONE, GRAVESTONE, TITLE, NOTE }
 var _kind := Kind.NONE
 var _text := ""
 var _collected := false
+## Ink of the drawing; the book changes it for Day / Night pages.
+var _ink := INK
+var _faded_ink := Color(INK, FADED_ALPHA)
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+
+
+## Draw in `ink`, with the faint linework at `faded_alpha` opacity.
+func set_ink(ink: Color, faded_alpha: float) -> void:
+	_ink = ink
+	_faded_ink = Color(ink, faded_alpha)
+	queue_redraw()
+
+
+## Back to the normal paper ink.
+func reset_ink() -> void:
+	set_ink(INK, FADED_ALPHA)
 
 
 func clear() -> void:
@@ -51,28 +66,28 @@ func _draw() -> void:
 		Kind.GRAVESTONE:
 			_draw_gravestone()
 		Kind.TITLE:
-			_draw_centered_text(_text, 38, INK, size.y * 0.4)
+			_draw_centered_text(_text, 38, _ink, size.y * 0.4)
 			var rule_y := size.y * 0.4 + 26.0
-			draw_line(Vector2(size.x / 2.0 - 60.0, rule_y), Vector2(size.x / 2.0 + 60.0, rule_y), FADED_INK, 1.5, true)
+			draw_line(Vector2(size.x / 2.0 - 60.0, rule_y), Vector2(size.x / 2.0 + 60.0, rule_y), _faded_ink, 1.5, true)
 		Kind.NOTE:
-			_draw_centered_text(_text, 22, FADED_INK, size.y / 2.0)
+			_draw_centered_text(_text, 22, _faded_ink, size.y / 2.0)
 
 
 func _draw_gravestone() -> void:
 	var outline := _stone_outline()
 	if _collected:
 		# Placeholder until collected gravestones show their real content.
-		draw_colored_polygon(outline, Color(INK, 0.06))
-		draw_polyline(outline, FADED_INK, 2.0, true)
+		draw_colored_polygon(outline, Color(_ink, 0.06))
+		draw_polyline(outline, _faded_ink, 2.0, true)
 	else:
-		_draw_dashed_polyline(outline, FADED_INK, 2.0, 10.0, 7.0)
-		_draw_centered_text("?", 84, FADED_INK, size.y / 2.0 + 10.0)
+		_draw_dashed_polyline(outline, _faded_ink, 2.0, 10.0, 7.0)
+		_draw_centered_text("?", 84, _faded_ink, size.y / 2.0 + 10.0)
 	# The ground the stone stands on.
 	var ground_y := (size.y + STONE_SIZE.y) / 2.0
 	_draw_dashed_polyline(PackedVector2Array([
 		Vector2(size.x / 2.0 - STONE_SIZE.x * 0.75, ground_y),
 		Vector2(size.x / 2.0 + STONE_SIZE.x * 0.75, ground_y),
-	]), FADED_INK, 2.0, 10.0, 7.0)
+	]), _faded_ink, 2.0, 10.0, 7.0)
 
 
 ## Closed outline of a round-topped headstone, centred on the page.
