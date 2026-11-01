@@ -1,7 +1,6 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_script"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="2_speaker"]
 [ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_content"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
@@ -72,7 +71,7 @@ theme_override_constants/separation = 8
 [node name="SpeakerLabel" type="Label" parent="Panel/Margin/VBox"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.86, 0.74, 0.52, 1)
-theme_override_fonts/font = ExtResource("2_speaker")
+theme_override_fonts/font = ExtResource("3_content")
 theme_override_font_sizes/font_size = 28
 text = "Speaker"
 

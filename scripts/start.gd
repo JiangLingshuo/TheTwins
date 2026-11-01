@@ -1,16 +1,24 @@
 extends Control
 ## Title / start screen: black background with a softly pulsing prompt.
 ## Any key, mouse click, or gamepad button starts the music and wakes the book.
-## The first time the book is read and stowed in the corner, `dialogue_file` plays.
+## When the book is first turned to page `dialogue_page`, `dialogue_file` plays
+## over the book, and page turning is locked until the dialogue ends.
 
-## Dialogue to play after the book closes.
+## Dialogue to play.
 @export_file("*.xml") var dialogue_file: String = "res://assets/dialogue/start.xml"
+## Page number (as printed at the bottom of the page) that starts the dialogue.
+## Page 0 is the inside of the cover, page 1 the first right-hand page.
+## Set to -1 to play the dialogue when the book is closed into the corner instead.
+@export var dialogue_page: int = 2
+## Seconds to wait after the page turn before the dialogue starts.
+@export var dialogue_delay: float = 0.4
 
 @onready var prompt: Label = $PromptLabel
 @onready var book: Control = $Book
 @onready var dialogue_box: Control = $DialogueBox
 
 var _started := false
+var _dialogue_played := false
 var _fade_in: Tween
 var _pulse: Tween
 
@@ -20,7 +28,8 @@ func _ready() -> void:
 	_fade_in = create_tween()
 	_fade_in.tween_property(prompt, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE)
 	_fade_in.finished.connect(_start_pulse)
-	book.closed.connect(_on_book_closed, CONNECT_ONE_SHOT)
+	book.page_changed.connect(_on_page_changed)
+	book.closed.connect(_on_book_closed)
 
 
 func _start_pulse() -> void:
@@ -52,5 +61,23 @@ func _start_game() -> void:
 	book.wake()
 
 
+func _on_page_changed(spread: int) -> void:
+	# A spread shows two pages: the left one (spread * 2) and the right one (spread * 2 + 1).
+	if dialogue_page == spread * 2 or dialogue_page == spread * 2 + 1:
+		_play_dialogue()
+
+
 func _on_book_closed() -> void:
+	if dialogue_page == -1:
+		_play_dialogue()
+
+
+func _play_dialogue() -> void:
+	if _dialogue_played:
+		return
+	_dialogue_played = true
+	book.set_locked(true)
+	await get_tree().create_timer(dialogue_delay).timeout
 	dialogue_box.play_file(dialogue_file)
+	await dialogue_box.finished
+	book.set_locked(false)

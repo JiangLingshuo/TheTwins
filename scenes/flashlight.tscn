@@ -1,0 +1,51 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/flashlight.gd" id="1_flashlight"]
+[ext_resource type="Shader" path="res://shaders/flashlight_lens.gdshader" id="2_shader"]
+[ext_resource type="Script" path="res://scripts/focus_dial.gd" id="3_dial"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="4_font"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lens"]
+shader = ExtResource("2_shader")
+
+[node name="Flashlight" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_flashlight")
+
+[node name="HiddenLayer" type="SubViewport" parent="."]
+disable_3d = true
+transparent_bg = true
+size = Vector2i(1280, 720)
+render_target_update_mode = 4
+
+[node name="Lens" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_lens")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="FocusDial" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -96.0
+offset_right = 220.0
+offset_bottom = -32.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("3_dial")
+font = ExtResource("4_font")

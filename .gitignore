@@ -1,3 +1,6 @@
+# Screenshots from tools/shots.gd
+/test_output/
+
 # Godot 4.2+ specific ignores
 ~*.dll
 

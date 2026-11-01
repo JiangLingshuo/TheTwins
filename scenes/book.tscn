@@ -1,270 +1,195 @@
-[gd_scene load_steps=15 format=3]
+[gd_scene format=3 uid="uid://jl8bitp1yt3r"]
 
-[ext_resource type="Script" path="res://scripts/book.gd" id="1_book"]
-[ext_resource type="Script" path="res://scripts/page_corner.gd" id="2_corner"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="4_semibold"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Italic.ttf" id="5_italic"]
+[ext_resource type="Script" uid="uid://dyfjl6igy3fjv" path="res://scripts/book.gd" id="1_book"]
+[ext_resource type="Script" uid="uid://6msd8gfx47sb" path="res://scripts/page_corner.gd" id="2_corner"]
+[ext_resource type="FontFile" uid="uid://ys6yv2bncks2" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
+[ext_resource type="Texture2D" path="res://assets/Art/note/notebook_page.png" id="4_page"]
+[ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
 
-[sub_resource type="StyleBoxFlat" id="Style_dark_page"]
-bg_color = Color(0.11, 0.11, 0.12, 1)
-corner_radius_top_left = 3
-corner_radius_bottom_left = 3
+[sub_resource type="StyleBoxTexture" id="Style_left_page"]
+texture = ExtResource("4_page")
+region_rect = Rect2(298, 110, 630, 876)
 
-[sub_resource type="StyleBoxFlat" id="Style_ivory_page"]
-bg_color = Color(0.95, 0.92, 0.84, 1)
-corner_radius_top_right = 3
-corner_radius_bottom_right = 3
+[sub_resource type="StyleBoxTexture" id="Style_right_page"]
+texture = ExtResource("4_page")
+region_rect = Rect2(928, 110, 630, 876)
 
-[sub_resource type="StyleBoxFlat" id="Style_cover"]
-bg_color = Color(0.13, 0.09, 0.075, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.78, 0.64, 0.38, 1)
-corner_radius_top_right = 6
-corner_radius_bottom_right = 6
-corner_radius_top_left = 2
-corner_radius_bottom_left = 2
-
-[sub_resource type="StyleBoxFlat" id="Style_cover_inner"]
-draw_center = false
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.78, 0.64, 0.38, 0.5)
-
-[sub_resource type="StyleBoxFlat" id="Style_input"]
-draw_center = false
-border_width_bottom = 1
-border_color = Color(0.78, 0.64, 0.38, 0.8)
-content_margin_left = 6.0
-content_margin_right = 6.0
-content_margin_top = 2.0
-content_margin_bottom = 2.0
-
-[sub_resource type="LabelSettings" id="Label_dark_ink"]
-font = ExtResource("3_regular")
-font_size = 26
-font_color = Color(0.86, 0.83, 0.76, 1)
+[sub_resource type="LabelSettings" id="Label_ink"]
 line_spacing = 6.0
-
-[sub_resource type="LabelSettings" id="Label_ivory_ink"]
 font = ExtResource("3_regular")
 font_size = 26
 font_color = Color(0.17, 0.14, 0.12, 1)
-line_spacing = 6.0
 
 [sub_resource type="LabelSettings" id="Label_number"]
-font = ExtResource("5_italic")
+font = ExtResource("3_regular")
 font_size = 18
-font_color = Color(0.5, 0.48, 0.44, 1)
+font_color = Color(0.3, 0.29, 0.28, 1)
 
-[sub_resource type="LabelSettings" id="Label_gold"]
-font = ExtResource("4_semibold")
-font_size = 54
-font_color = Color(0.86, 0.72, 0.45, 1)
-line_spacing = -4.0
+[sub_resource type="StyleBoxTexture" id="Style_cover"]
+texture = ExtResource("5_cover")
+region_rect = Rect2(630, 109, 657, 864)
 
-[node name="Book" type="Control"]
+[sub_resource type="StyleBoxFlat" id="Style_input"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+draw_center = false
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 0.6)
+
+[node name="Book" type="Control" unique_id=1311703695]
 layout_mode = 3
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -440.0
-offset_top = -290.0
-offset_right = 440.0
-offset_bottom = 290.0
+offset_left = -420.0
+offset_top = -292.0
+offset_right = 420.0
+offset_bottom = 292.0
 grow_horizontal = 2
 grow_vertical = 2
-pivot_offset = Vector2(440, 290)
+pivot_offset = Vector2(420, 292)
 mouse_filter = 2
 script = ExtResource("1_book")
 
-[node name="LeftPage" type="Panel" parent="."]
+[node name="LeftPage" type="Panel" parent="." unique_id=851242292]
 layout_mode = 0
-offset_right = 440.0
-offset_bottom = 580.0
-theme_override_styles/panel = SubResource("Style_dark_page")
+offset_right = 420.0
+offset_bottom = 584.0
+theme_override_styles/panel = SubResource("Style_left_page")
 
-[node name="Text" type="Label" parent="LeftPage"]
+[node name="Text" type="Label" parent="LeftPage" unique_id=452150926]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 64.0
-offset_right = 384.0
-offset_bottom = 500.0
-label_settings = SubResource("Label_dark_ink")
+offset_left = 66.0
+offset_top = 50.0
+offset_right = 386.0
+offset_bottom = 490.0
+label_settings = SubResource("Label_ink")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Number" type="Label" parent="LeftPage"]
+[node name="Number" type="Label" parent="LeftPage" unique_id=1554408958]
 layout_mode = 0
-offset_top = 520.0
-offset_right = 440.0
-offset_bottom = 550.0
+offset_left = 66.0
+offset_top = 510.0
+offset_right = 386.0
+offset_bottom = 540.0
 label_settings = SubResource("Label_number")
 horizontal_alignment = 1
 
-[node name="RightPage" type="Panel" parent="."]
+[node name="RightPage" type="Panel" parent="." unique_id=944827351]
 layout_mode = 0
-offset_left = 440.0
-offset_right = 880.0
-offset_bottom = 580.0
-theme_override_styles/panel = SubResource("Style_ivory_page")
+offset_left = 420.0
+offset_right = 840.0
+offset_bottom = 584.0
+theme_override_styles/panel = SubResource("Style_right_page")
 
-[node name="Text" type="Label" parent="RightPage"]
+[node name="Text" type="Label" parent="RightPage" unique_id=993425679]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 64.0
-offset_right = 384.0
-offset_bottom = 500.0
-label_settings = SubResource("Label_ivory_ink")
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+label_settings = SubResource("Label_ink")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Number" type="Label" parent="RightPage"]
+[node name="Number" type="Label" parent="RightPage" unique_id=1475413195]
 layout_mode = 0
-offset_top = 520.0
-offset_right = 440.0
-offset_bottom = 550.0
+offset_left = 31.0
+offset_top = 510.0
+offset_right = 351.0
+offset_bottom = 540.0
 label_settings = SubResource("Label_number")
 horizontal_alignment = 1
 
-[node name="Spine" type="ColorRect" parent="."]
-layout_mode = 0
-offset_left = 437.0
-offset_right = 443.0
-offset_bottom = 580.0
-mouse_filter = 2
-color = Color(0, 0, 0, 0.35)
-
-[node name="LeftCorner" type="Control" parent="."]
-layout_mode = 0
-offset_top = 490.0
-offset_right = 90.0
-offset_bottom = 580.0
+[node name="LeftCorner" type="Control" parent="." unique_id=297251838]
+anchors_preset = 0
+offset_left = 31.0
+offset_top = 475.0
+offset_right = 121.0
+offset_bottom = 565.0
 script = ExtResource("2_corner")
 left_side = true
-flap_color = Color(0.9, 0.86, 0.77, 1)
+flap_color = Color(0.72, 0.74, 0.77, 1)
+backdrop_color = Color(0.2, 0.2, 0.33, 1)
 
-[node name="RightCorner" type="Control" parent="."]
-layout_mode = 0
-offset_left = 790.0
-offset_top = 490.0
-offset_right = 880.0
-offset_bottom = 580.0
+[node name="RightCorner" type="Control" parent="." unique_id=1081456818]
+anchors_preset = 0
+offset_left = 716.0
+offset_top = 475.0
+offset_right = 806.0
+offset_bottom = 565.0
 script = ExtResource("2_corner")
-flap_color = Color(0.17, 0.17, 0.18, 1)
+flap_color = Color(0.72, 0.74, 0.77, 1)
+backdrop_color = Color(0.2, 0.2, 0.33, 1)
 
-[node name="FlipSheet" type="Panel" parent="."]
+[node name="FlipSheet" type="Panel" parent="." unique_id=731727759]
 layout_mode = 0
-offset_right = 440.0
-offset_bottom = 580.0
+offset_right = 420.0
+offset_bottom = 584.0
 mouse_filter = 2
-theme_override_styles/panel = SubResource("Style_ivory_page")
+theme_override_styles/panel = SubResource("Style_right_page")
 
-[node name="Text" type="Label" parent="FlipSheet"]
+[node name="Text" type="Label" parent="FlipSheet" unique_id=671834423]
 layout_mode = 0
-offset_left = 56.0
-offset_top = 64.0
-offset_right = 384.0
-offset_bottom = 500.0
-label_settings = SubResource("Label_ivory_ink")
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+label_settings = SubResource("Label_ink")
 horizontal_alignment = 1
 vertical_alignment = 1
 autowrap_mode = 3
 
-[node name="Number" type="Label" parent="FlipSheet"]
+[node name="Number" type="Label" parent="FlipSheet" unique_id=195015446]
 layout_mode = 0
-offset_top = 520.0
-offset_right = 440.0
-offset_bottom = 550.0
+offset_left = 31.0
+offset_top = 510.0
+offset_right = 351.0
+offset_bottom = 540.0
 label_settings = SubResource("Label_number")
 horizontal_alignment = 1
 
-[node name="Cover" type="Panel" parent="."]
+[node name="Cover" type="Panel" parent="." unique_id=1660621051]
 layout_mode = 0
-offset_left = 440.0
-offset_right = 880.0
+offset_left = 420.0
+offset_top = 4.0
+offset_right = 858.0
 offset_bottom = 580.0
 theme_override_styles/panel = SubResource("Style_cover")
 
-[node name="InnerBorder" type="Panel" parent="Cover"]
+[node name="NameInput" type="LineEdit" parent="Cover" unique_id=1016538121]
 layout_mode = 0
-offset_left = 18.0
-offset_top = 18.0
-offset_right = 422.0
-offset_bottom = 562.0
-mouse_filter = 2
-theme_override_styles/panel = SubResource("Style_cover_inner")
-
-[node name="Content" type="VBoxContainer" parent="Cover"]
-layout_mode = 0
-offset_left = 50.0
-offset_top = 90.0
-offset_right = 390.0
-offset_bottom = 500.0
-alignment = 1
-theme_override_constants/separation = 18
-
-[node name="Title" type="Label" parent="Cover/Content"]
-layout_mode = 2
-text = "The Twins Civilization"
-label_settings = SubResource("Label_gold")
-horizontal_alignment = 1
-autowrap_mode = 3
-
-[node name="Ornament" type="Label" parent="Cover/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.78, 0.64, 0.38, 0.8)
+offset_left = 160.0
+offset_top = 380.0
+offset_right = 380.0
+offset_bottom = 422.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
+theme_override_colors/caret_color = Color(1, 1, 1, 1)
+theme_override_colors/selection_color = Color(1, 1, 1, 0.3)
 theme_override_fonts/font = ExtResource("3_regular")
-theme_override_font_sizes/font_size = 28
-text = "⁂"
-horizontal_alignment = 1
-
-[node name="Spacer" type="Control" parent="Cover/Content"]
-custom_minimum_size = Vector2(0, 40)
-layout_mode = 2
-mouse_filter = 2
-
-[node name="NameRow" type="HBoxContainer" parent="Cover/Content"]
-layout_mode = 2
-alignment = 1
-theme_override_constants/separation = 10
-
-[node name="NameLabel" type="Label" parent="Cover/Content/NameRow"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
-theme_override_fonts/font = ExtResource("3_regular")
-theme_override_font_sizes/font_size = 28
-text = "Name:"
-
-[node name="NameInput" type="LineEdit" parent="Cover/Content/NameRow"]
-custom_minimum_size = Vector2(200, 0)
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
-theme_override_colors/font_uneditable_color = Color(0.92, 0.89, 0.82, 1)
-theme_override_colors/caret_color = Color(0.86, 0.72, 0.45, 1)
-theme_override_colors/selection_color = Color(0.78, 0.64, 0.38, 0.35)
-theme_override_fonts/font = ExtResource("5_italic")
 theme_override_font_sizes/font_size = 28
 theme_override_styles/normal = SubResource("Style_input")
-theme_override_styles/focus = SubResource("Style_input")
 theme_override_styles/read_only = SubResource("Style_input")
+theme_override_styles/focus = SubResource("Style_input")
 max_length = 20
 context_menu_enabled = false
 caret_blink = true
 
-[node name="Hint" type="Label" parent="Cover/Content"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 0.55)
-theme_override_fonts/font = ExtResource("5_italic")
+[node name="Hint" type="Label" parent="Cover" unique_id=651567210]
+layout_mode = 0
+offset_top = 450.0
+offset_right = 438.0
+offset_bottom = 476.0
+theme_override_colors/font_color = Color(1, 1, 1, 0.55)
+theme_override_fonts/font = ExtResource("3_regular")
 theme_override_font_sizes/font_size = 18
 text = "Press Enter to begin"
 horizontal_alignment = 1

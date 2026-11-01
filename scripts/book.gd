@@ -2,19 +2,24 @@ extends Control
 ## Book overlay.
 ## 1. wake(): the closed book flies in from the bottom-right corner to the centre.
 ## 2. The player writes a name on the cover and presses Enter.
-## 3. The cover swings open to the first spread (dark left page, ivory right page).
+## 3. The cover swings open to the first spread.
 ## 4. Hover a bottom corner to curl it; click it to turn the page.
 ## 5. Turning past the last page closes the book and shrinks it into a
 ##    bottom-right corner icon, then `closed` is emitted.
 ## 6. Clicking the icon brings the book back, open at the spread it was left on.
+##
+## Use write() to add text to a page: the book opens and turns to that page by
+## itself, then the text appears letter by letter with the writing sound.
 
 signal opened(player_name: String)
 signal page_changed(spread: int)
 signal closed
+## Emitted when write() has finished writing on a page.
+signal written(page_index: int)
 
-const PAGE_SIZE := Vector2(440, 580)
-const INK_ON_DARK := Color(0.86, 0.83, 0.76)
-const INK_ON_IVORY := Color(0.17, 0.14, 0.12)
+const SOUND_FLIP: AudioStream = preload("res://assets/audio/翻书声.wav")
+const SOUND_WRITE: AudioStream = preload("res://assets/audio/写字声.wav")
+const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 
 ## Page texts, in reading order. Page 0 is the inside of the cover (left),
@@ -30,6 +35,12 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 @export var icon_scale: float = 0.12
 ## Distance of the icon's centre from the bottom-right corner of the screen.
 @export var icon_margin: Vector2 = Vector2(70, 70)
+## Writing speed of write(), in characters per second.
+@export_range(1.0, 100.0, 1.0) var write_chars_per_second: float = 18.0
+## Loudness of the page turn sound, in decibels (0 = original level).
+@export_range(-40.0, 6.0, 0.5) var flip_volume_db: float = 0.0
+## Loudness of the writing sound, in decibels (0 = original level).
+@export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 0.0
 
 @onready var left_page: Panel = $LeftPage
 @onready var left_text: Label = $LeftPage/Text
@@ -37,31 +48,34 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 @onready var right_page: Panel = $RightPage
 @onready var right_text: Label = $RightPage/Text
 @onready var right_number: Label = $RightPage/Number
-@onready var spine: ColorRect = $Spine
 @onready var left_corner: PageCorner = $LeftCorner
 @onready var right_corner: PageCorner = $RightCorner
 @onready var flip_sheet: Panel = $FlipSheet
 @onready var flip_text: Label = $FlipSheet/Text
 @onready var flip_number: Label = $FlipSheet/Number
 @onready var cover: Panel = $Cover
-@onready var name_input: LineEdit = $Cover/Content/NameRow/NameInput
-@onready var hint_label: Label = $Cover/Content/Hint
+@onready var name_input: LineEdit = $Cover/NameInput
+@onready var hint_label: Label = $Cover/Hint
 
 var _spread := 0
 var _busy := true
 var _locked := false
 var _stowed := false
+var _opened := false
+var _writing := false
 var _home_position := Vector2.ZERO
-var _style_dark: StyleBox
-var _style_ivory: StyleBox
+var _style_left: StyleBox
+var _style_right: StyleBox
+var _flip_player: AudioStreamPlayer
+var _write_player: AudioStreamPlayer
 
 
 func _ready() -> void:
 	visible = false
-	_style_dark = left_page.get_theme_stylebox("panel")
-	_style_ivory = right_page.get_theme_stylebox("panel")
+	_style_left = left_page.get_theme_stylebox("panel")
+	_style_right = right_page.get_theme_stylebox("panel")
 	left_page.visible = false
-	spine.visible = false
+	right_page.visible = false  # would stick out around the closed cover
 	flip_sheet.visible = false
 	_set_corners_visible(false)
 	left_corner.pressed.connect(flip_backward)
@@ -69,12 +83,16 @@ func _ready() -> void:
 	name_input.text_submitted.connect(_on_name_submitted)
 	cover.gui_input.connect(_on_cover_gui_input)
 
+	_flip_player = _make_player(SOUND_FLIP, flip_volume_db)
+	_flip_player.max_polyphony = 3  # let the tail ring out when pages turn quickly
+	_write_player = _make_player(SOUND_WRITE, write_volume_db)
+	_write_player.finished.connect(_on_write_sound_finished)
+
 
 ## Fly the closed book in from the bottom-right corner.
 func wake() -> void:
 	await get_tree().process_frame  # make sure the layout is ready
 	_home_position = position
-	var closed_position := _home_position - Vector2(PAGE_SIZE.x / 2.0, 0)
 	var screen := get_viewport_rect().size
 
 	position = Vector2(screen.x - 120.0, screen.y - 80.0) - pivot_offset
@@ -84,7 +102,7 @@ func wake() -> void:
 	visible = true
 
 	var t := create_tween().set_parallel(true)
-	t.tween_property(self, "position", closed_position, wake_time) \
+	t.tween_property(self, "position", _closed_position(), wake_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	t.tween_property(self, "scale", Vector2.ONE, wake_time) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -101,8 +119,79 @@ func flip_forward() -> void:
 	if not _can_flip_forward():
 		close_to_icon()
 		return
+	_turn_forward()
+
+
+func flip_backward() -> void:
+	if _busy or _locked or not _can_flip_backward():
+		return
+	_turn_backward()
+
+
+## Write `text` on a page. The book opens and turns to that page by itself, and
+## the next page is written once the current one is done. By default the text
+## goes on a new line after what the page already holds; pass append = false to
+## replace it. Before the book is first opened the text is just stored.
+func write(page_index: int, text: String, append: bool = true) -> void:
+	if page_index < 0:
+		push_error("Book: cannot write on page %d" % page_index)
+		return
+	if page_index >= pages.size():
+		pages.resize(page_index + 1)
+	if not _opened:
+		pages[page_index] = _merge_text(pages[page_index], text, append)
+		return
+
+	while _busy and not _stowed:
+		await get_tree().process_frame
+	if _stowed:
+		await open_from_icon()
+	await _turn_to(page_index / 2)
 	_busy = true
 	_set_corners_visible(false)
+
+	var on_left := page_index % 2 == 0
+	var text_label := left_text if on_left else right_text
+	var number_label := left_number if on_left else right_number
+	var written_length := text_label.text.length() if append else 0
+	pages[page_index] = _merge_text(pages[page_index], text, append)
+	_fill(text_label, number_label, page_index)
+
+	var total_length := text_label.text.length()
+	text_label.visible_characters = written_length
+	_writing = true
+	_write_player.play()
+	var t := create_tween()
+	t.tween_property(text_label, "visible_characters", total_length,
+		(total_length - written_length) / write_chars_per_second)
+	await t.finished
+	_writing = false
+	_write_player.stop()
+	text_label.visible_characters = -1
+
+	_busy = false
+	_set_corners_visible(true)
+	written.emit(page_index)
+
+
+func _merge_text(existing: String, text: String, append: bool) -> String:
+	if append and not existing.is_empty():
+		return existing + "\n" + text
+	return text
+
+
+## Turn page by page until the given spread is showing.
+func _turn_to(spread: int) -> void:
+	while _spread < spread:
+		await _turn_forward()
+	while _spread > spread:
+		await _turn_backward()
+
+
+func _turn_forward() -> void:
+	_busy = true
+	_set_corners_visible(false)
+	_flip_player.play()
 	var next := _spread + 1
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
@@ -115,11 +204,10 @@ func flip_forward() -> void:
 	_finish_flip(next)
 
 
-func flip_backward() -> void:
-	if _busy or _locked or not _can_flip_backward():
-		return
+func _turn_backward() -> void:
 	_busy = true
 	_set_corners_visible(false)
+	_flip_player.play()
 	var prev := _spread - 1
 	_prepare_sheet(true, _spread * 2)
 	_fill(left_text, left_number, prev * 2)
@@ -136,10 +224,10 @@ func close_to_icon() -> void:
 	_busy = true
 	_set_corners_visible(false)
 	hint_label.visible = false
+	_flip_player.play()
 
 	# Slide back so the closed book is centred.
-	var closed_position := _home_position - Vector2(PAGE_SIZE.x / 2.0, 0)
-	create_tween().tween_property(self, "position", closed_position, flip_time * 2.0) \
+	create_tween().tween_property(self, "position", _closed_position(), flip_time * 2.0) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 	# The left page folds onto the spine...
@@ -147,7 +235,6 @@ func close_to_icon() -> void:
 	left_page.visible = false
 	await _fold_sheet(true)
 	flip_sheet.visible = false
-	spine.visible = false
 
 	# ...and comes down on the right as the front cover.
 	cover.visible = true
@@ -158,11 +245,12 @@ func close_to_icon() -> void:
 	t.tween_property(cover, "scale:x", 1.0, flip_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	t.tween_property(cover, "modulate", Color.WHITE, flip_time)
 	await t.finished
+	right_page.visible = false
 
 	# Shrink into the corner. The closed book is the right half, so offset by
 	# its distance from the pivot to centre it on the icon spot.
 	var screen := get_viewport_rect().size
-	var cover_offset := Vector2(PAGE_SIZE.x / 2.0, 0) * icon_scale
+	var cover_offset := Vector2(cover.size.x / 2.0, 0) * icon_scale
 	var icon_position := screen - icon_margin - pivot_offset - cover_offset
 	var s := create_tween().set_parallel(true)
 	s.tween_property(self, "position", icon_position, stow_time) \
@@ -184,16 +272,20 @@ func open_from_icon() -> void:
 	_stowed = false
 	cover.mouse_default_cursor_shape = Control.CURSOR_ARROW
 
-	var closed_position := _home_position - Vector2(PAGE_SIZE.x / 2.0, 0)
 	var t := create_tween().set_parallel(true)
-	t.tween_property(self, "position", closed_position, stow_time) \
+	t.tween_property(self, "position", _closed_position(), stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	t.tween_property(self, "scale", Vector2.ONE, stow_time) \
 		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 	t.tween_property(self, "rotation_degrees", 0.0, stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	await t.finished
-	_open_cover()
+	await _open_cover()
+
+
+## Where the book sits so the closed cover is in the centre of the screen.
+func _closed_position() -> Vector2:
+	return _home_position - Vector2(cover.size.x / 2.0, 0)
 
 
 func _on_cover_gui_input(event: InputEvent) -> void:
@@ -221,6 +313,7 @@ func _on_name_submitted(text: String) -> void:
 	# Let clicks on the name fall through to the cover (for the corner icon).
 	name_input.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_spread = 0
+	_opened = true
 	await _open_cover()
 	opened.emit(GameState.player_name)
 
@@ -230,6 +323,7 @@ func _open_cover() -> void:
 	_busy = true
 	_fill(right_text, right_number, _spread * 2 + 1)
 	right_page.visible = true
+	_flip_player.play()
 
 	# Slide the book so the open spread ends up centred.
 	create_tween().tween_property(self, "position", _home_position, flip_time * 2.0) \
@@ -242,7 +336,6 @@ func _open_cover() -> void:
 	t.tween_property(cover, "modulate", FOLDED_TINT, flip_time)
 	await t.finished
 	cover.visible = false
-	spine.visible = true
 
 	# ...its inside becomes the left page.
 	_prepare_sheet(true, _spread * 2)
@@ -252,6 +345,22 @@ func _open_cover() -> void:
 	_finish_flip(_spread)
 
 
+# --- Sound helpers -----------------------------------------------------------
+
+func _make_player(stream: AudioStream, volume_db: float) -> AudioStreamPlayer:
+	var player := AudioStreamPlayer.new()
+	player.stream = stream
+	player.volume_db = volume_db
+	add_child(player)
+	return player
+
+
+## Keep the writing sound going if a long text outlasts the recording.
+func _on_write_sound_finished() -> void:
+	if _writing:
+		_write_player.play()
+
+
 # --- Page turning helpers ---------------------------------------------------
 
 ## Put the turning sheet over the left or right half, showing the given page.
@@ -259,10 +368,10 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	flip_sheet.visible = true
 	flip_sheet.position = Vector2(0.0 if on_left else PAGE_SIZE.x, 0.0)
 	flip_sheet.pivot_offset = Vector2(PAGE_SIZE.x if on_left else 0.0, PAGE_SIZE.y / 2.0)
-	flip_sheet.add_theme_stylebox_override("panel", _style_dark if on_left else _style_ivory)
-	var ink := INK_ON_DARK if on_left else INK_ON_IVORY
-	flip_text.add_theme_color_override("font_color", ink)
-	flip_number.add_theme_color_override("font_color", ink)
+	flip_sheet.add_theme_stylebox_override("panel", _style_left if on_left else _style_right)
+	# The text sits at a different spot on each side, to stay centred on the paper.
+	flip_text.position = (left_text if on_left else right_text).position
+	flip_number.position = (left_number if on_left else right_number).position
 	_fill(flip_text, flip_number, page_index)
 
 

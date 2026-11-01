@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://wailp86tbexo"]
 
 [ext_resource type="Script" uid="uid://bbahcfdskoiai" path="res://scripts/start.gd" id="1_start"]
-[ext_resource type="FontFile" uid="uid://c5yx45hbe6fq4" path="res://assets/fonts/CormorantGaramond-Italic.ttf" id="2_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="2_font"]
 [ext_resource type="PackedScene" path="res://scenes/book.tscn" id="3_book"]
 [ext_resource type="PackedScene" path="res://scenes/dialogue_box.tscn" id="4_box"]
 
