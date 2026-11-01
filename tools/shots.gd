@@ -3,7 +3,7 @@ extends SceneTree
 ## it opens a game window for a few seconds).
 ## Run it with: powershell -File tools/run.ps1 shots
 ## With a scene path it just photographs that scene after `SCENE_DELAY` seconds:
-##   powershell -File tools/run.ps1 shots res://scenes/flashlight_demo.tscn
+##   powershell -File tools/run.ps1 shots res://scenes/main.tscn
 
 const OUTPUT_FOLDER := "res://test_output"
 const SCENE_DELAY := 2.0

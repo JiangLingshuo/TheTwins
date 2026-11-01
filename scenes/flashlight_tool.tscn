@@ -1,0 +1,73 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scripts/flashlight_tool.gd" id="1_tool"]
+[ext_resource type="PackedScene" path="res://scenes/flashlight.tscn" id="2_flashlight"]
+[ext_resource type="Script" path="res://scripts/focus_scale.gd" id="3_scale"]
+[ext_resource type="Texture2D" path="res://assets/Art/placeholder/flashlight_button_off.png" id="4_off"]
+[ext_resource type="Texture2D" path="res://assets/Art/placeholder/flashlight_button_on.png" id="5_on"]
+[ext_resource type="Texture2D" path="res://assets/Art/placeholder/focus_scale_bg.png" id="6_scale_bg"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="7_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="8_number"]
+
+[node name="FlashlightTool" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_tool")
+icon_off = ExtResource("4_off")
+icon_on = ExtResource("5_on")
+
+[node name="Flashlight" parent="." instance=ExtResource("2_flashlight")]
+layout_mode = 1
+
+[node name="ClickCatcher" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_default_cursor_shape = 2
+
+[node name="FocusScale" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -290.0
+offset_top = -200.0
+offset_right = -170.0
+offset_bottom = 200.0
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("3_scale")
+background = ExtResource("6_scale_bg")
+font = ExtResource("7_font")
+number_font = ExtResource("8_number")
+
+[node name="FlashlightButton" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -148.0
+offset_top = -56.0
+offset_right = -36.0
+offset_bottom = 56.0
+grow_horizontal = 0
+grow_vertical = 2
+focus_mode = 0
+mouse_default_cursor_shape = 2
+texture_normal = ExtResource("4_off")
+ignore_texture_size = true
+stretch_mode = 5
