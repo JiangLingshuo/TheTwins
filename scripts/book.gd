@@ -27,8 +27,6 @@ const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
 const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs"]
-const NotebookTabs := preload("res://scripts/notebook_tabs.gd")
-const NotebookPageArt := preload("res://scripts/notebook_page_art.gd")
 ## Fixed single-page slots in the Gravestones section (two per spread).
 const GRAVESTONE_SLOTS := 6
 
@@ -68,7 +66,7 @@ const GRAVESTONE_SLOTS := 6
 @onready var cover: Panel = $Cover
 @onready var name_input: LineEdit = $Cover/NameInput
 @onready var hint_label: Label = $Cover/Hint
-@onready var tabs: NotebookTabs = $Tabs
+@onready var tabs: Control = $Tabs
 
 var _spread := 0
 var _busy := true
@@ -505,7 +503,7 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 
 
 ## Draw the section placeholder for a page (nothing without sections).
-func _fill_art(art: NotebookPageArt, page_index: int) -> void:
+func _fill_art(art: Control, page_index: int) -> void:
 	var spread := page_index / 2
 	if not use_sections or spread >= _spread_count():
 		art.clear()
