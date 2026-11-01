@@ -62,21 +62,23 @@ texture = ExtResource("7_baby")
 
 [node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
-offset_left = 735.0
-offset_top = 420.0
-offset_right = 915.0
-offset_bottom = 680.0
+offset_left = 795.0
+offset_top = 506.667
+offset_right = 855.0
+offset_bottom = 593.333
 texture = ExtResource("9_human")
+expand_mode = 1
 script = ExtResource("8_symbol")
 rubbing_id = "infant_figure_rubbing"
 
 [node name="MoonSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
-offset_left = 790.0
-offset_top = 685.0
-offset_right = 870.0
-offset_bottom = 745.0
+offset_left = 816.667
+offset_top = 705.0
+offset_right = 843.333
+offset_bottom = 725.0
 texture = ExtResource("10_moon")
+expand_mode = 1
 script = ExtResource("8_symbol")
 rubbing_id = "infant_moon_rubbing"
 

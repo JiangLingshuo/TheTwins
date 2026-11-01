@@ -5,7 +5,8 @@ extends TextureRect
 ## Give it a white symbol on a transparent background (`texture`) and place it
 ## over the tombstone art. In the game it is drawn only `darken` darker than the
 ## stone underneath, so it is hard to see. Brushing over it with the rubbing
-## tool turns the brushed parts white; once `reveal_threshold` of the symbol has
+## tool reveals the brushed parts in the inverted stone colour (or in
+## `revealed_color`); once `reveal_threshold` of the symbol has
 ## been brushed, it fades in completely and `rubbed` is emitted.
 
 ## Emitted once, when the symbol has been fully rubbed.
@@ -15,7 +16,9 @@ signal rubbed(rubbing_id: String)
 @export var rubbing_id: String = ""
 ## How much darker than the stone the carving is drawn (0.1 = 10% darker).
 @export_range(0.0, 1.0, 0.01) var darken: float = 0.1
-## Colour of the revealed symbol.
+## Revealed symbol drawn in the inverted colour of the stone under it.
+@export var reveal_inverted: bool = true
+## Colour of the revealed symbol when `reveal_inverted` is off.
 @export var revealed_color: Color = Color.WHITE
 ## Brush radius, in screen pixels.
 @export var brush_radius: float = 22.0
@@ -49,8 +52,10 @@ func _ready() -> void:
 	_material.shader = SHADER
 	material = _material
 	_build_mask()
+	resized.connect(_on_resized)
 	_material.set_shader_parameter("darken", darken)
 	_material.set_shader_parameter("revealed_color", revealed_color)
+	_material.set_shader_parameter("reveal_inverted", reveal_inverted)
 	_material.set_shader_parameter("charcoal_strength", charcoal_strength)
 	_material.set_shader_parameter("charcoal_color", charcoal_color)
 	_use_parent_as_stone()
@@ -63,7 +68,8 @@ func brush(from_global: Vector2, to_global: Vector2) -> void:
 	var to_local := get_global_transform().affine_inverse()
 	var a := _to_mask(to_local * from_global)
 	var b := _to_mask(to_local * to_global)
-	var radius := brush_radius / get_global_transform().get_scale().x / MASK_CELL
+	var radius := brush_radius / get_global_transform().get_scale().x \
+		* _mask.get_width() / maxf(size.x, 1.0)
 	# Skip strokes that are nowhere near this symbol.
 	var area := Rect2(Vector2.ZERO, Vector2(_mask.get_size())).grow(radius)
 	if not Rect2(a, Vector2.ZERO).expand(b).grow(1.0).intersects(area):
@@ -140,7 +146,14 @@ func _stamp(center: Vector2, radius: float) -> void:
 
 
 func _to_mask(local: Vector2) -> Vector2:
-	return local / MASK_CELL
+	return local / size.max(Vector2.ONE) * Vector2(_mask.get_size())
+
+
+func _on_resized() -> void:
+	_use_parent_as_stone()
+	# Rebuild the mask at the new size unless the player has already brushed.
+	if get_touched() == 0.0 and not is_rubbed:
+		_build_mask()
 
 
 func _build_mask() -> void:
