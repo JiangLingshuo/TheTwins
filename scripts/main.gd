@@ -13,6 +13,8 @@ signal time_changed(is_day: bool)
 @export_enum("Day", "Night") var start_time: int = 0
 ## Seconds for the cross-fade between backgrounds.
 @export var transition_time: float = 0.8
+## Seconds to fade in from black when the scene opens.
+@export var fade_in_time: float = 0.8
 ## Key that switches day/night (for testing). Set to KEY_NONE to disable.
 @export var toggle_key: Key = KEY_TAB
 
@@ -33,8 +35,10 @@ var _fade: Tween
 
 func _ready() -> void:
 	is_day = start_time == 0
-	# Show the starting background straight away, without fading.
+	# Show the starting background straight away, without cross-fading.
 	_night_background.modulate.a = 0.0 if is_day else 1.0
+	modulate.a = 0.0
+	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -12,6 +12,11 @@ extends Control
 @export var dialogue_page: int = 2
 ## Seconds to wait after the page turn before the dialogue starts.
 @export var dialogue_delay: float = 0.4
+## Scene to load once the book has been closed into the corner (it starts in daytime).
+## Leave empty to stay on this screen.
+@export_file("*.tscn") var scene_after_close: String = "res://scenes/main.tscn"
+## Seconds for the fade to black before the next scene loads.
+@export var scene_fade_time: float = 0.8
 
 @onready var prompt: Label = $PromptLabel
 @onready var book: Control = $Book
@@ -69,7 +74,17 @@ func _on_page_changed(spread: int) -> void:
 
 func _on_book_closed() -> void:
 	if dialogue_page == -1:
-		_play_dialogue()
+		await _play_dialogue()
+	_go_to_next_scene()
+
+
+func _go_to_next_scene() -> void:
+	if scene_after_close.is_empty():
+		return
+	var fade := create_tween()
+	fade.tween_property(self, "modulate:a", 0.0, scene_fade_time)
+	await fade.finished
+	get_tree().change_scene_to_file(scene_after_close)
 
 
 func _play_dialogue() -> void:

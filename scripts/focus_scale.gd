@@ -17,13 +17,17 @@ signal value_changed(value: float)
 @export var background: Texture2D
 @export var font: Font
 @export var number_font: Font
+## Symbol meaning "years ago", drawn under the scale. If empty, `caption` is written instead.
+@export var unit_symbol: Texture2D
+## Size of the unit symbol, in pixels.
+@export var unit_symbol_size: float = 36.0
 @export var caption: String = "years ago"
 @export var tick_color: Color = Color(0.92, 0.89, 0.82)
 @export var needle_color: Color = Color(0.86, 0.72, 0.45)
 
 ## Height reserved for the read-out at the top and the caption at the bottom.
 const HEADER := 58.0
-const FOOTER := 34.0
+const FOOTER := 54.0
 
 var value: float = 0.0:
 	set(v):
@@ -112,6 +116,10 @@ func _draw() -> void:
 	var ns := nf.get_string_size(number, HORIZONTAL_ALIGNMENT_LEFT, -1, 34)
 	draw_string(nf, Vector2((size.x - ns.x) / 2.0, HEADER - 14.0), number,
 		HORIZONTAL_ALIGNMENT_LEFT, -1, 34, tick_color)
-	var cs := f.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 15)
-	draw_string(f, Vector2((size.x - cs.x) / 2.0, size.y - 13.0), caption,
-		HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(tick_color, 0.7))
+	if unit_symbol:
+		var s := unit_symbol_size
+		draw_texture_rect(unit_symbol, Rect2((size.x - s) / 2.0, size.y - FOOTER + (FOOTER - s) / 2.0 - 5.0, s, s), false)
+	else:
+		var cs := f.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 15)
+		draw_string(f, Vector2((size.x - cs.x) / 2.0, size.y - 13.0), caption,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(tick_color, 0.7))

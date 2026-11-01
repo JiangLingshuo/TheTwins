@@ -19,6 +19,7 @@ func _run() -> void:
 	_check_files("res://scenes", ".tscn", _check_scene)
 	_check_files("res://assets/dialogue", ".xml", _check_dialogue)
 	await _check_notebook_flow()
+	await _check_main_after_close()
 
 	print("\n%s" % ("ALL PASSED" if _failures == 0 else "%d FAILED" % _failures))
 	quit(1 if _failures > 0 else 0)
@@ -66,6 +67,7 @@ func _check_notebook_flow() -> void:
 	var book = start.get_node("Book")
 	var box = start.get_node("DialogueBox")
 	start.dialogue_page = -1  # keep the dialogue out of the way until the book closes
+	start.scene_after_close = ""  # stay here so reopening the book can be tested
 
 	book.write(1, "Stored, #PLAYER#")
 	start._start_game()
@@ -122,3 +124,22 @@ func _check_notebook_flow() -> void:
 	book.write(9, "grown")
 	await book.written
 	_expect("writing past the end adds pages", book.pages.size() == 10 and book._spread == 4)
+
+
+func _check_main_after_close() -> void:
+	change_scene_to_file("res://scenes/start.tscn")
+	await _wait(0.3)
+	var start := current_scene
+	var book = start.get_node("Book")
+	start.dialogue_page = 99  # no dialogue in this check
+	start._start_game()
+	await _wait(1.5)
+	book._on_name_submitted("Ann")
+	await _wait(1.5)
+	while book._can_flip_forward():
+		book.flip_forward()
+		await _wait(0.8)
+	book.flip_forward()  # past the last page: close the book
+	await _wait(4.0)
+	_expect("closing the book loads the main scene", current_scene != null and current_scene.name == "Main")
+	_expect("main scene starts in daytime", current_scene != null and current_scene.get("is_day") == true)
