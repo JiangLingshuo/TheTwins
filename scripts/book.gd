@@ -50,6 +50,7 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 @onready var right_number: Label = $RightPage/Number
 @onready var left_corner: PageCorner = $LeftCorner
 @onready var right_corner: PageCorner = $RightCorner
+@onready var corner_hint: CornerHint = $CornerHint
 @onready var flip_sheet: Panel = $FlipSheet
 @onready var flip_text: Label = $FlipSheet/Text
 @onready var flip_number: Label = $FlipSheet/Number
@@ -60,6 +61,7 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 var _spread := 0
 var _busy := true
 var _locked := false
+var _corner_pointed_out := false
 var _stowed := false
 var _opened := false
 var _writing := false
@@ -80,6 +82,9 @@ func _ready() -> void:
 	_set_corners_visible(false)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
+	# The page-corner hint goes away as soon as the player finds the corner.
+	right_corner.mouse_entered.connect(corner_hint.dismiss.bind(true))
+	right_corner.pressed.connect(corner_hint.dismiss.bind(true))
 	name_input.text_submitted.connect(_on_name_submitted)
 	cover.gui_input.connect(_on_cover_gui_input)
 
@@ -315,7 +320,17 @@ func _on_name_submitted(text: String) -> void:
 	_spread = 0
 	_opened = true
 	await _open_cover()
+	_point_out_corner()
 	opened.emit(GameState.player_name)
+
+
+## The first time the book opens, blink a frame around the page corner so the
+## player knows where to click to turn the page.
+func _point_out_corner() -> void:
+	if _corner_pointed_out or not right_corner.visible:
+		return
+	_corner_pointed_out = true
+	corner_hint.show_around(right_corner)
 
 
 ## Swing the cover open onto the current spread.

@@ -79,6 +79,7 @@ func _check_notebook_flow() -> void:
 	_expect("cover opening plays the flip sound", book._flip_player.playing)
 	await _wait(1.5)
 	_expect("text stored before opening shows the name", book.right_text.text == "Stored, Ann")
+	_expect("first opening points out the page corner", book._corner_pointed_out and book.corner_hint.visible)
 
 	book.write(4, "abc")
 	await _wait(0.1)
@@ -121,6 +122,7 @@ func _check_notebook_flow() -> void:
 	await _wait(2.5)
 	_expect("clicking the icon reopens the book", not book._stowed and book.scale == Vector2.ONE)
 	_expect("reopened at the same spread", book._spread == 2 and book.left_page.visible)
+	_expect("corner hint is not shown again", not book.corner_hint.visible)
 	book.write(9, "grown")
 	await book.written
 	_expect("writing past the end adds pages", book.pages.size() == 10 and book._spread == 4)
