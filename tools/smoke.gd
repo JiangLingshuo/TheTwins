@@ -171,3 +171,34 @@ func _check_main_after_close() -> void:
 	notebook_tool.open()
 	await _wait(3.0)
 	_expect("notebook reopens on the same page", notebook.is_open() and notebook.get_spread() == _autoload("GameState").notebook_spread)
+	notebook_tool.close()
+	await _wait(2.5)
+	await _check_rubbing(main)
+
+
+func _check_rubbing(main: Node) -> void:
+	var rubbing_tool = main.get_node("RubbingTool")
+	var flashlight_tool = main.get_node("FlashlightTool")
+	var symbol: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/MoonSymbol")
+	var rect := symbol.get_global_rect()
+	_scribble(symbol, rect)
+	_expect("brushing does nothing without the rubbing tool", symbol.get_touched() == 0.0)
+	flashlight_tool._set_state(flashlight_tool.State.ON)
+	rubbing_tool.set_active(true)
+	_expect("picking up the rubbing tool turns the flashlight off", flashlight_tool.state == flashlight_tool.State.OFF)
+	rubbing_tool._brush(rect.position + Vector2(2, rect.size.y / 2), rect.position + Vector2(8, rect.size.y / 2))
+	_expect("one short stroke only reveals part of the symbol", symbol.get_touched() > 0.0 and not symbol.is_rubbed)
+	_scribble(symbol, rect)
+	_expect("brushing over the symbol rubs it", symbol.is_rubbed)
+	_expect("the rubbing is recorded", _autoload("GameState").rubbings.has("infant_moon_rubbing"))
+	rubbing_tool.set_active(false)
+
+
+## Brush back and forth across `rect` a few times through the rubbing tool.
+func _scribble(symbol: RubbingSymbol, rect: Rect2) -> void:
+	var tool = symbol.get_tree().current_scene.get_node("RubbingTool")
+	for row in 6:
+		var y := rect.position.y + rect.size.y * (row + 0.5) / 6.0
+		for _pass in 2:
+			if tool.active:
+				tool._brush(Vector2(rect.position.x - 10, y), Vector2(rect.end.x + 10, y))

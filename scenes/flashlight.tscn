@@ -16,6 +16,9 @@ grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("1_flashlight")
 
+[node name="BackBufferCopy" type="BackBufferCopy" parent="."]
+copy_mode = 2
+
 [node name="Lens" type="ColorRect" parent="."]
 visible = false
 material = SubResource("ShaderMaterial_lens")

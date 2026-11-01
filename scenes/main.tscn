@@ -1,10 +1,15 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/BG_night.jpg" id="3_night"]
 [ext_resource type="PackedScene" path="res://scenes/flashlight_tool.tscn" id="4_tool"]
 [ext_resource type="PackedScene" path="res://scenes/notebook_tool.tscn" id="5_notebook"]
+[ext_resource type="PackedScene" path="res://scenes/rubbing_tool.tscn" id="6_rubbing"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/baby.png" id="7_baby"]
+[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="8_symbol"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbols/human.png" id="9_human"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbols/moon.png" id="10_moon"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -40,7 +45,45 @@ texture = ExtResource("3_night")
 expand_mode = 1
 stretch_mode = 6
 
+[node name="DayCemetery" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+scale = Vector2(0.666667, 0.666667)
+mouse_filter = 2
+
+[node name="BabyTomb" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("7_baby")
+
+[node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
+layout_mode = 0
+offset_left = 735.0
+offset_top = 420.0
+offset_right = 915.0
+offset_bottom = 680.0
+texture = ExtResource("9_human")
+script = ExtResource("8_symbol")
+rubbing_id = "infant_figure_rubbing"
+
+[node name="MoonSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
+layout_mode = 0
+offset_left = 790.0
+offset_top = 685.0
+offset_right = 870.0
+offset_bottom = 745.0
+texture = ExtResource("10_moon")
+script = ExtResource("8_symbol")
+rubbing_id = "infant_moon_rubbing"
+
 [node name="FlashlightTool" parent="." instance=ExtResource("4_tool")]
+layout_mode = 1
+
+[node name="RubbingTool" parent="." instance=ExtResource("6_rubbing")]
 layout_mode = 1
 
 [node name="NotebookTool" parent="." instance=ExtResource("5_notebook")]

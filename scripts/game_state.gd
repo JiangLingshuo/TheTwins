@@ -7,6 +7,8 @@ var player_name: String = ""
 var notebook_pages: PackedStringArray = []
 ## Spread the notebook was left open on.
 var notebook_spread: int = 0
+## Ids of the symbols the player has rubbed.
+var rubbings: Array[String] = []
 
 ## Placeholders in dialogue / page text that become the player's name.
 const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}"]

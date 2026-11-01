@@ -22,6 +22,8 @@ signal time_changed(is_day: bool)
 @onready var _night_background: TextureRect = $NightBackground
 @onready var _flashlight_tool: Control = $FlashlightTool
 @onready var _notebook_tool: Control = $NotebookTool
+@onready var _rubbing_tool: Control = $RubbingTool
+@onready var _day_cemetery: Control = $DayCemetery
 
 ## True during the day, false at night.
 var is_day: bool = true:
@@ -41,8 +43,18 @@ func _ready() -> void:
 	_night_background.modulate.a = 0.0 if is_day else 1.0
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
-	# Reading the notebook puts the flashlight away.
+	_day_cemetery.visible = is_day
+	time_changed.connect(func(day: bool) -> void: _day_cemetery.visible = day)
+	# One tool at a time: picking one up puts the other away; reading the
+	# notebook puts both away.
 	_notebook_tool.notebook_opened.connect(_flashlight_tool.turn_off)
+	_notebook_tool.notebook_opened.connect(_rubbing_tool.turn_off)
+	_rubbing_tool.state_changed.connect(func(on: bool) -> void:
+		if on:
+			_flashlight_tool.turn_off())
+	_flashlight_tool.state_changed.connect(func(state: int) -> void:
+		if state != 0:
+			_rubbing_tool.turn_off())
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
