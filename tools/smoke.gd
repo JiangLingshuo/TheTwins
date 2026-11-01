@@ -173,7 +173,48 @@ func _check_main_after_close() -> void:
 	_expect("notebook reopens on the same page", notebook.is_open() and notebook.get_spread() == _autoload("GameState").notebook_spread)
 	notebook_tool.close()
 	await _wait(2.5)
+	await _check_notebook_sections(notebook_tool)
 	await _check_rubbing(main)
+
+
+func _check_notebook_sections(notebook_tool: Node) -> void:
+	var notebook = notebook_tool.book
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("notebook has 7 spreads in 5 sections", notebook._spread_count() == 7 and notebook.tabs.get_child_count() == 5)
+	notebook.jump_to_section(0)
+	notebook.jump_to_section(3)  # ignored: a page is already turning
+	await _wait(1.0)
+	_expect("tab jumps to the first spread of its section", notebook.get_spread() == 0 and notebook.get_section() == 0)
+	_expect("all six gravestone slots start uncollected", notebook.gravestone_collected == [false, false, false, false, false, false])
+	_expect("gravestone pages show the placeholder", notebook.left_page.get_node("Art")._kind == preload("res://scripts/notebook_page_art.gd").Kind.GRAVESTONE)
+	_expect("only the current section's tab is on the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, false, false, false, false])
+	for i in 2:
+		notebook.flip_forward()
+		await _wait(0.8)
+	_expect("Gravestones has three spreads", notebook.get_section() == 0 and notebook.get_section_spread() == 2)
+	notebook.flip_forward()
+	await _wait(0.8)
+	_expect("next from Gravestones 3/3 opens Rubbings", notebook.get_spread() == 3 and notebook.get_section() == 1)
+	_expect("visited tabs move to the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, true, false, false, false])
+	notebook.flip_backward()
+	await _wait(0.8)
+	_expect("back from Rubbings returns to Gravestones 3/3", notebook.get_spread() == 2)
+	notebook.jump_to_section(4)
+	await _wait(0.8)
+	_expect("Radio Logs tab jumps in one turn", notebook.get_spread() == 6 and notebook.get_section() == 4)
+	notebook.flip_forward()
+	await _wait(2.5)
+	_expect("next from Radio Logs closes the notebook", not notebook_tool.is_open() and not notebook.visible)
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("reopens on Radio Logs", notebook.get_spread() == 6 and notebook.tabs.visible)
+	notebook.jump_to_section(0)
+	await _wait(0.8)
+	_expect("left corner shows on the first spread", notebook.left_corner.visible)
+	notebook.flip_backward()
+	await _wait(2.5)
+	_expect("previous from Gravestones 1/3 closes the notebook", not notebook_tool.is_open())
 
 
 func _check_rubbing(main: Node) -> void:

@@ -10,6 +10,10 @@ extends Control
 ##
 ## Use write() to add text to a page: the book opens and turns to that page by
 ## itself, then the text appears letter by letter with the writing sound.
+##
+## With use_sections on (the in-game notebook), the spreads are split into the
+## sections in SECTION_TITLES, with an index tab for each. Turning back past the
+## first spread closes the book as well.
 
 signal opened(player_name: String)
 signal page_changed(spread: int)
@@ -21,10 +25,18 @@ const SOUND_FLIP: AudioStream = preload("res://assets/audio/翻书声.wav")
 const SOUND_WRITE: AudioStream = preload("res://assets/audio/写字声.wav")
 const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
+## Notebook sections, in order (only used when use_sections is on).
+const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs"]
+const NotebookTabs := preload("res://scripts/notebook_tabs.gd")
+const NotebookPageArt := preload("res://scripts/notebook_page_art.gd")
+## Fixed single-page slots in the Gravestones section (two per spread).
+const GRAVESTONE_SLOTS := 6
 
 ## Page texts, in reading order. Page 0 is the inside of the cover (left),
 ## page 1 is the first right-hand page, and so on. "#PLAYER#" (or "{name}") becomes the player's name.
 @export_multiline var pages: PackedStringArray = ["", "", "", "", "", ""]
+## Split the book into sections with index tabs (the in-game notebook).
+@export var use_sections: bool = false
 ## Seconds for each half of a page turn.
 @export var flip_time: float = 0.28
 ## Seconds for the book to fly in.
@@ -56,6 +68,7 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 @onready var cover: Panel = $Cover
 @onready var name_input: LineEdit = $Cover/NameInput
 @onready var hint_label: Label = $Cover/Hint
+@onready var tabs: NotebookTabs = $Tabs
 
 var _spread := 0
 var _busy := true
@@ -68,6 +81,11 @@ var _style_left: StyleBox
 var _style_right: StyleBox
 var _flip_player: AudioStreamPlayer
 var _write_player: AudioStreamPlayer
+## Spreads in each section, in SECTION_TITLES order. The current section and the
+## spread within it are worked out from _spread, so there is one position only.
+var section_spreads: PackedInt32Array = [GRAVESTONE_SLOTS / 2, 1, 1, 1, 1]
+## Which gravestone slots hold a collected gravestone (placeholder data for now).
+var gravestone_collected: Array[bool] = []
 
 
 func _ready() -> void:
@@ -78,6 +96,12 @@ func _ready() -> void:
 	right_page.visible = false  # would stick out around the closed cover
 	flip_sheet.visible = false
 	_set_corners_visible(false)
+	tabs.visible = false
+	if use_sections:
+		gravestone_collected.resize(GRAVESTONE_SLOTS)
+		gravestone_collected.fill(false)
+		tabs.setup(SECTION_TITLES)
+		tabs.tab_pressed.connect(jump_to_section)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -123,9 +147,45 @@ func flip_forward() -> void:
 
 
 func flip_backward() -> void:
-	if _busy or _locked or not _can_flip_backward():
+	if _busy or _locked:
+		return
+	if not _can_flip_backward():
+		# The sectioned notebook closes from its first spread too.
+		if use_sections:
+			close_to_icon()
 		return
 	_turn_backward()
+
+
+## Turn straight to the first spread of a section, in a single page turn.
+func jump_to_section(section: int) -> void:
+	if _busy or _locked or _stowed or not _opened or not use_sections:
+		return
+	var target := _section_start(clampi(section, 0, section_spreads.size() - 1))
+	if target > _spread:
+		_turn_forward(target)
+	elif target < _spread:
+		_turn_backward(target)
+
+
+## Section the current spread belongs to (index into SECTION_TITLES).
+func get_section() -> int:
+	return _section_of(_spread)
+
+
+## Which spread of its section is showing (0 = the section's first spread).
+func get_section_spread() -> int:
+	return _spread - _section_start(get_section())
+
+
+## Show a gravestone slot (0 to GRAVESTONE_SLOTS - 1) as collected or not.
+func set_gravestone_collected(slot: int, collected: bool) -> void:
+	if slot < 0 or slot >= gravestone_collected.size():
+		return
+	gravestone_collected[slot] = collected
+	if is_open() and not _busy:
+		_fill(left_text, left_number, _spread * 2)
+		_fill(right_text, right_number, _spread * 2 + 1)
 
 
 ## Write `text` on a page. The book opens and turns to that page by itself, and
@@ -188,11 +248,12 @@ func _turn_to(spread: int) -> void:
 		await _turn_backward()
 
 
-func _turn_forward() -> void:
+## Turn one page forward, or to spread `to` in a single turn.
+func _turn_forward(to: int = -1) -> void:
 	_busy = true
 	_set_corners_visible(false)
 	_flip_player.play()
-	var next := _spread + 1
+	var next := _spread + 1 if to < 0 else to
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
 	_fill(right_text, right_number, next * 2 + 1)
@@ -204,11 +265,12 @@ func _turn_forward() -> void:
 	_finish_flip(next)
 
 
-func _turn_backward() -> void:
+## Turn one page back, or to spread `to` in a single turn.
+func _turn_backward(to: int = -1) -> void:
 	_busy = true
 	_set_corners_visible(false)
 	_flip_player.play()
-	var prev := _spread - 1
+	var prev := _spread - 1 if to < 0 else to
 	_prepare_sheet(true, _spread * 2)
 	_fill(left_text, left_number, prev * 2)
 	await _fold_sheet(true)
@@ -223,6 +285,7 @@ func _turn_backward() -> void:
 func close_to_icon() -> void:
 	_busy = true
 	_set_corners_visible(false)
+	tabs.visible = false
 	hint_label.visible = false
 	_flip_player.play()
 
@@ -271,7 +334,7 @@ func open_saved(saved_pages: PackedStringArray, spread: int) -> void:
 	if not saved_pages.is_empty():
 		pages = saved_pages
 	_opened = true
-	_spread = clampi(spread, 0, maxi(0, (pages.size() - 1) / 2))
+	_spread = clampi(spread, 0, maxi(0, _spread_count() - 1))
 	name_input.text = GameState.player_name
 	name_input.editable = false
 	name_input.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -407,6 +470,7 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	# The text sits at a different spot on each side, to stay centred on the paper.
 	flip_text.position = (left_text if on_left else right_text).position
 	flip_number.position = (left_number if on_left else right_number).position
+	flip_sheet.get_node("Art").position = (left_page if on_left else right_page).get_node("Art").position
 	_fill(flip_text, flip_number, page_index)
 
 
@@ -426,6 +490,9 @@ func _finish_flip(spread: int) -> void:
 	_spread = spread
 	_busy = false
 	_set_corners_visible(true)
+	if use_sections:
+		tabs.visible = true
+		tabs.set_active(get_section())
 	page_changed.emit(_spread)
 
 
@@ -433,10 +500,62 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	var content: String = pages[page_index] if page_index < pages.size() else ""
 	text_label.text = GameState.fill_placeholders(content)
 	number_label.text = str(page_index) if page_index > 0 and not content.is_empty() else ""
+	# Each page (and the turning sheet) has an Art node next to its labels.
+	_fill_art(text_label.get_parent().get_node("Art"), page_index)
+
+
+## Draw the section placeholder for a page (nothing without sections).
+func _fill_art(art: NotebookPageArt, page_index: int) -> void:
+	var spread := page_index / 2
+	if not use_sections or spread >= _spread_count():
+		art.clear()
+		return
+	var section := _section_of(spread)
+	var first_page := _section_start(section) * 2
+	if section == 0:
+		var slot := page_index - first_page
+		if slot < gravestone_collected.size():
+			art.show_gravestone(gravestone_collected[slot])
+		else:
+			art.clear()
+	elif page_index == first_page:
+		art.show_title(SECTION_TITLES[section])
+	elif page_index == first_page + 1:
+		art.show_note("No entries yet")
+	else:
+		art.clear()
+
+
+## Number of spreads the book has.
+func _spread_count() -> int:
+	if use_sections:
+		var total := 0
+		for count in section_spreads:
+			total += count
+		return total
+	return (pages.size() + 1) / 2
+
+
+## First spread of a section.
+func _section_start(section: int) -> int:
+	var start := 0
+	for i in section:
+		start += section_spreads[i]
+	return start
+
+
+## Section a spread belongs to.
+func _section_of(spread: int) -> int:
+	var end := 0
+	for i in section_spreads.size():
+		end += section_spreads[i]
+		if spread < end:
+			return i
+	return section_spreads.size() - 1
 
 
 func _can_flip_forward() -> bool:
-	return (_spread + 1) * 2 < pages.size()
+	return _spread + 1 < _spread_count()
 
 
 func _can_flip_backward() -> bool:
@@ -446,7 +565,8 @@ func _can_flip_backward() -> bool:
 func _set_corners_visible(enabled: bool) -> void:
 	left_corner.reset()
 	right_corner.reset()
-	left_corner.visible = enabled and not _locked and _can_flip_backward()
+	# With sections, the left corner on the first spread closes the book.
+	left_corner.visible = enabled and not _locked and (use_sections or _can_flip_backward())
 	# On the last spread the right corner closes the book.
 	right_corner.visible = enabled and not _locked
 

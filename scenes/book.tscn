@@ -5,6 +5,8 @@
 [ext_resource type="FontFile" uid="uid://ys6yv2bncks2" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_page.png" id="4_page"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
+[ext_resource type="Script" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
+[ext_resource type="Script" path="res://scripts/notebook_page_art.gd" id="7_art"]
 
 [sub_resource type="StyleBoxTexture" id="Style_left_page"]
 texture = ExtResource("4_page")
@@ -55,11 +57,27 @@ pivot_offset = Vector2(420, 292)
 mouse_filter = 2
 script = ExtResource("1_book")
 
+[node name="Tabs" type="Control" parent="."]
+layout_mode = 0
+offset_right = 840.0
+offset_bottom = 584.0
+mouse_filter = 2
+script = ExtResource("6_tabs")
+
 [node name="LeftPage" type="Panel" parent="." unique_id=851242292]
 layout_mode = 0
 offset_right = 420.0
 offset_bottom = 584.0
 theme_override_styles/panel = SubResource("Style_left_page")
+
+[node name="Art" type="Control" parent="LeftPage"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 50.0
+offset_right = 386.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("7_art")
 
 [node name="Text" type="Label" parent="LeftPage" unique_id=452150926]
 layout_mode = 0
@@ -87,6 +105,15 @@ offset_left = 420.0
 offset_right = 840.0
 offset_bottom = 584.0
 theme_override_styles/panel = SubResource("Style_right_page")
+
+[node name="Art" type="Control" parent="RightPage"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("7_art")
 
 [node name="Text" type="Label" parent="RightPage" unique_id=993425679]
 layout_mode = 0
@@ -135,6 +162,15 @@ offset_right = 420.0
 offset_bottom = 584.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("Style_right_page")
+
+[node name="Art" type="Control" parent="FlipSheet"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("7_art")
 
 [node name="Text" type="Label" parent="FlipSheet" unique_id=671834423]
 layout_mode = 0
