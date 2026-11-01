@@ -12,8 +12,8 @@
 | --- | --- | --- |
 | `telecomm_master.ink` | 所有无线电通信：开场、每座碑的问题、回复、隐藏潜台词、bonus 与终局对话 | 保留原文件；已有开场与小碑问答逐句复制进测试版，只调整返回路径并加入分支 |
 | `tombstone_master.ink` | 墓碑查看页：标题、场景、材质、轮廓、可见装饰等介绍；不承担无线电对话 | 保留原文件，目前仍是占位故事；七座碑介绍先写在测试版 |
-| `evidence_master.ink` | 可收集证据、文献、观察、拓印和推理结论的标题、正文、ID 与 tag | 保留原文件；测试版 INCLUDE 它，依据当前 64 条证据与 93 个推理 tag 制作调试菜单和条件 |
-| `test.ink` | 独立可运行的测试入口，将上述三类内容接成最小闭环 | 本次新增；含七座碑、26 个普通问题、证据限定的隐藏分支、全局候选、报告与终局 |
+| `evidence_master.ink` | 可收集证据、文献、观察、拓印和推理结论的标题、正文、ID 与 tag | 保留原文件；测试版 INCLUDE 它，依据当前 65 条证据与 94 个推理 tag 制作调试菜单和条件 |
+| `test.ink` | 独立可运行的测试入口，将上述三类内容接成最小闭环 | 本次新增；含七座碑、27 个普通问题、证据限定的隐藏分支、全局候选、报告与终局 |
 | `README_dialogue_zh.md` | 这份总联动说明，告诉程序和作者先怎么试 | 本次新增 |
 | `README_evidence_zh.md` | 证据字段、点击词条分类、工具和年份的详细约定 | 沿用，并加入测试入口链接 |
 | `start.xml` | 当前 Godot 已在用的旧开场格式 | 未修改，不会因添加 Ink 自动被替换 |
@@ -52,64 +52,89 @@
 
 普通通话：先选一份证据，再选碑；本次通话中不能换证据，结束后可以换证据重试，不限总次数。每问完一个问题返回该碑的问题页。夜城婴儿报告后的 bonus 单独限制为两个不同问题，不是对普通通话次数的限制。
 
-## Evidence tag 怎么触发问题
+## 证据条件与两种隐藏机制
 
-只判断本次 `submitted_tags` 是否含允许的任意一个 tag。多个可用 tag 是 OR，不要求凑齐；额外的已知资料或对应关系是另一层明确条件，不能偷换为“背包有某证据就算提交过”。
+本节以2026年11月1日最新回填表为准。测试版现在有37个主问题，另有人形回答后的两条汇合追问；主问题含27个普通问题、10个隐藏问题；另有小碑月亮问题中的1段追加隐藏回答。小碑表里两个同名“为什么人形”问题保留供作者编辑；测试只显示一次，普通回复采用本次改过的前一格，证据回复采用包含新增追问的后一格。
 
-```ink
-{has_tag(EvidenceTag.infant_appearance_mismatch):
-    // 命中特殊回复；无论提交的是设计师日记还是婴儿涂鸦。
-}
+| 机制 | 是否产生新问题 | 触发时机 | 不满足时 |
+| --- | --- | --- | --- |
+| 隐藏问题 | 是 | 开始通话时的那一份证据符合，才把该选项列出来 | 不显示问题；背包里有证据但本次没出示也不显示 |
+| 隐藏回答 | 否 | 提交普通问题时，根据本次出示证据，在基础回答之后追加内容 | 保留基础回答，省略这段追加内容 |
+| 证据回复 | 否 | 普通问题已有的证据支持版本，与无证据时的提示回复择一使用 | 使用普通提示，避免一边要求找资料、一边已经解释资料 |
+
+回填表用A列“隐藏问题”表达显示条件，用B列“隐藏回答（附证据追加）”表达追加内容。“问题回复”只是隐藏问题自身的回答，不等于一段追加隐藏回答。隐藏问题原有普通回复槽仍保留作作者草稿；在测试里，条件不符时问题根本不出现，因此不会走这个槽。
+
+多条证据仍是OR。一份证据可以同时支持多个已标明的回复，例如双生兽“重复出现”和“一夜消失”是不同依据：重复观察只讲文化共性，传说资料才解释消失含义，不把二者混为同一条提示。
+
+### 这次同步的作者改稿
+
+- 学者的晶石回答、反复出现的双生兽、消失传说与合作回答采用最新回填段落，中文草稿已初步译成英文。
+- 新增“为什么黑白配色”普通问题，保留与调查本配色的暗示。
+- 看清皮肤画并听过Aurora的反应后，带醒来伤口记录才能看到“她是否割伤自己传信”的追问；带缺少家庭成员的证据才能看到“你对学者似乎有私人感情”的追问。
+- “为什么无人拜访学者碑”只接受新证据 `scholar_no_traces` 的唯一 tag `scholar_no_visitors`，不接受夜母碑的空扫描替代。
+- 保留“长叹后暗示也许无人幸存”的作者情绪结构。反应写作主要依靠无线电可听见的呼吸、停顿、声线和杂音；不把玩家看不到的表情写成可见事实。
+
+### 当前问题条件
+
+表中证据条件均判断本次冻结的证据，而非所有背包物品。图像解释类问题还会检查具体对应关系；因此先比对、再提问。单份证据下拉按ID精确匹配，同类下拉按tag匹配，不把一份证据上所有标签都误当成新的可替代证据。
+
+| 墓碑 | 问题 | 种类 | 本次证据可接受项（任一） |
+| --- | --- | --- | --- |
+| 小碑 | How do we interpret the icon on the tombstone? | 普通问题 | `tag:infant_appearance_mismatch` |
+| 小碑 | Why is the tombstone shaped like a person? | 普通问题 | `tag:infant_identity` |
+| 小碑 | Who drew the child's real appearance? | 隐藏问题 | `tag:infant_actual_appearance / tag:family_requested_depiction` |
+| 学者 | Why is the monument shaped like a crystal? | 普通问题 | `tag:crystal_shape / tag:crystal_research_reference` |
+| 学者 | What does the two-part creature mean? | 普通问题 | `id:repeated_beast_motifs / tag:ancient_disappearance` |
+| 学者 | Did the cities ever cooperate? | 普通问题 | `tag:night_city_mineral_origin / tag:intercity_resource_exchange` |
+| 学者 | Why is the color in black and white? | 普通问题 | `无；按基础回复` |
+| 学者 | How could a picture be kept inside this crystal? | 普通问题 | `tag:skin_as_message_medium / tag:day_night_handholding` |
+| 学者 | The Scholar seems reputable in the Day City. Why is her grave never visited by anyone else? | 隐藏问题 | `tag:scholar_no_visitors` |
+| 学者 | Did she cut her own skin to send the message? | 隐藏问题 | `tag:unexplained_waking_wounds` |
+| 学者 | You seem to have some personal feelings towards the Scholar. | 隐藏问题 | `tag:missing_family_member_reference / tag:four_person_family` |
+| 太阳形碑 | Is this simply a monument to the sun? | 普通问题 | `tag:day_city_currency` |
+| 太阳形碑 | Why is the same beast on other markers? | 普通问题 | `tag:ancient_disappearance` |
+| 太阳形碑 | Do these three markers belong together? | 普通问题 | `tag:shared_family_plot / tag:three_family_markers` |
+| 太阳形碑 | Why are four people remembered by only three markers? | 普通问题 | `tag:four_person_family / tag:missing_family_member_reference` |
+| 太阳形碑 | Which family member has no place on the base? | 隐藏问题 | `tag:four_person_family / tag:missing_family_member_reference` |
+| 夜城祭坛 | What does the unfamiliar glyph say? | 普通问题 | `tag:night_blessing_glyph` |
+| 夜城祭坛 | Is this the child from the small marker? | 普通问题 | `tag:infant_memorial / tag:paired_day_night_memorials` |
+| 夜城祭坛 | Are the moon-shaped stones coins? | 普通问题 | `tag:moon_stone_offering / tag:night_blessing_reference` |
+| 夜城祭坛 | What was removed from the empty recess? | 普通问题 | `tag:removed_crystal_offering / tag:crystal_extraction_reference` |
+| 夜城祭坛 | How can you translate a symbol from a culture without a written language? | 隐藏问题 | `tag:aurora_translation_knowledge / tag:night_symbol_translation` |
+| 夜城祭坛 | Was the child in the wrong city? | 隐藏问题 | `tag:infant_appearance_mismatch / tag:infant_actual_appearance` |
+| 夜母 | Who is the figure holding the child? | 普通问题 | `tag:parent_child_image / tag:night_mother_past` |
+| 夜母 | What does the dry river border record? | 普通问题 | `tag:dry_river_motif / tag:water_source_lost` |
+| 夜母 | Why does the handholding picture resemble the Scholar's? | 普通问题 | `tag:skin_as_message_medium / tag:unexplained_waking_wounds / tag:shared_body_reference` |
+| 夜母 | Does the lack of offerings mean she was the last survivor? | 普通问题 | `tag:absence_of_readable_traces / tag:last_survivor_question` |
+| 夜母 | Was the message meant for her daughter as well? | 隐藏问题 | `tag:day_night_handholding / tag:shared_body_reference` |
+| 夜父 | Who is carrying the child? | 普通问题 | `tag:parent_child_image / tag:night_father_past` |
+| 夜父 | Did he die because the Skyway was dangerous? | 普通问题 | `tag:skyway_not_steep / tag:missed_sleeping_deadline` |
+| 夜父 | Could his death be linked to the Scholar's husband? | 普通问题 | `tag:husband_disappearance / tag:dawn_disappearances / tag:paired_day_night_death` |
+| 夜父 | What does the moon-shaped offering mean? | 普通问题 | `tag:moon_stone_offering / tag:night_blessing_reference` |
+| 夜父 | Was the original separation really a natural disaster? | 隐藏问题 | `tag:natural_collapse / tag:shared_day_night_history` |
+| 女孩 | What is the upright frame around her? | 普通问题 | `tag:upright_coffin_motif / tag:shared_day_night_history` |
+| 女孩 | Who made this marker? | 普通问题 | `tag:funerary_artist_reference` |
+| 女孩 | Do the family sculpture and the photograph belong together? | 普通问题 | `tag:family_image_reference / tag:four_person_family` |
+| 女孩 | Does disappearance always mean death? | 普通问题 | `tag:deliberate_departure / tag:two_mothers_dilemma` |
+| 女孩 | Aurora, why is this girl on the notebook you gave me? | 隐藏问题 | `tag:aurora_provided_object / tag:aurora_identity_reference` |
+
+小碑月亮普通问题在月牙与实际月亮建立对应后开放；形貌不一致的日记或涂鸦任选一份，即可在“月亮表示自然死亡”的基础回复之后追加疑点并授予 finding。没有为这段疑点另造一个隐藏问题。
+
+### 问题页顶部反馈与结束语
+
+口吻按当前问哪座碑决定，不按证据来自哪座城市决定。普通回复、支持回复和隐藏回复前都有反应旁白；开场、bonus、对质中的Aurora回复也加入了反应。正文的世界观信息不因为增加反应而省略。
+
+返回问题页时，`test_menu_feedback` 在选项之前输出当次一条随机短句：未对应、对应正确、隐藏回答后三类分别取词库。小碑优先使用作者写在本碑页的三句未对应回复。隐藏反馈优先于普通成功反馈，显示后立即清除状态，不累积旧句子，也没有单独的“继续／返回结果页”。
+
+完成比对会记录 `pending_relation_feedback`，下一次进入问题页先给对应成功反馈。结束通话从相应城市词库随机取一句，然后回主页／场景。普通通话仍不限次数，证据在一次通话中固定。
+
+`#narrator` 表示括号中的反应旁白，`#aurora` 表示她真正说出的内容。程序应分别渲染，别把反应读成Aurora的自述。`ui:radio_questions` 和 `ui:question_feedback` 用于同一问题面板，不创建新的结果窗口；完整回答可以保留在问答记录里。
+
+```
+feedback_kind = unmatched / linked / hidden / 空
 ```
 
-下面是测试版已写入的普通问答条件，便于程序查找。无匹配证据时有普通回退回答；不惩罚尝试，也不会因错误提交自动授予结论。
-
-| 碑 | 问题 | 当前提交证据可接受的 tag 任一 | 结果与补充条件 |
-| --- | --- | --- | --- |
-| 小碑 | 月亮是什么意思 | `infant_appearance_mismatch` | 原月亮回答保留；匹配后补充疑点，授予 `infant_death_doubt` |
-| 小碑 | 为什么是人形 | `infant_identity` | 原“看设计师手稿”回答保留；匹配后补充婴儿尚无职业 |
-| 晶石碑 | Why is the monument shaped like a crystal? | `crystal_shape` / `crystal_research_reference` | 对应解释或可点击词条 |
-| 晶石碑 | What does the two-part creature mean? | `ancient_disappearance` | 对应解释或可点击词条 |
-| 晶石碑 | Did the cities ever cooperate? | `night_city_mineral_origin` / `intercity_resource_exchange` | 对应解释或可点击词条 |
-| 晶石碑 | How could a picture be kept inside this crystal? | `skin_as_message_medium` / `day_night_handholding` | 对应解释或可点击词条；已知醒来新伤时才补授 `paired_skin_pictures` |
-| 太阳形碑 | Is this simply a monument to the sun? | `day_city_currency` | 仅确认与钱币的形状对应；已知 `tycoon_identity` 才出现大亨答案 |
-| 太阳形碑 | Why is the same beast on other markers? | `ancient_disappearance` | 对应解释或可点击词条 |
-| 太阳形碑 | Do these three markers belong together? | `shared_family_plot` / `three_family_markers` | 对应解释或可点击词条 |
-| 太阳形碑 | Why are four people remembered by only three markers? | `four_person_family` / `missing_family_member_reference` | 对应解释或可点击词条 |
-| 夜城祭坛 | What does the unfamiliar glyph say? | `night_blessing_glyph` | 授予 `altar_blessing_translation` |
-| 夜城祭坛 | Is this the child from the small marker? | `infant_memorial` / `paired_day_night_memorials` | 对应解释或可点击词条 |
-| 夜城祭坛 | Are the moon-shaped stones coins? | `moon_stone_offering` / `night_blessing_reference` | 授予 `moon_stone_blessing` |
-| 夜城祭坛 | What was removed from the empty recess? | `removed_crystal_offering` / `crystal_extraction_reference` | 对应解释或可点击词条 |
-| 夜母碑 | Who is the figure holding the child? | `parent_child_image` / `night_mother_past` | 对应解释或可点击词条 |
-| 夜母碑 | What does the dry river border record? | `dry_river_motif` / `water_source_lost` | 授予 `night_mother_death_finding`；先完成河床比对 `Relation.river` |
-| 夜母碑 | Why does the handholding picture resemble the Scholar's? | `skin_as_message_medium` / `unexplained_waking_wounds` / `shared_body_reference` | 对应解释或可点击词条 |
-| 夜母碑 | Does the lack of offerings mean she was the last survivor? | `absence_of_readable_traces` / `last_survivor_question` | 对应解释或可点击词条 |
-| 夜父碑 | Who is carrying the child? | `parent_child_image` / `night_father_past` | 对应解释或可点击词条 |
-| 夜父碑 | Did he die because the Skyway was dangerous? | `skyway_not_steep` / `missed_sleeping_deadline` | 授予 `night_father_death` |
-| 夜父碑 | Could his death be linked to the Scholar's husband? | `husband_disappearance` / `dawn_disappearances` / `paired_day_night_death` | 对应解释或可点击词条 |
-| 夜父碑 | What does the moon-shaped offering mean? | `moon_stone_offering` / `night_blessing_reference` | 授予 `moon_stone_blessing` |
-| 女孩碑 | What is the upright frame around her? | `upright_coffin_motif` / `shared_day_night_history` | 对应解释或可点击词条 |
-| 女孩碑 | Who made this marker? | `funerary_artist_reference` | 对应解释或可点击词条 |
-| 女孩碑 | Do the family sculpture and the photograph belong together? | `family_image_reference` / `four_person_family` | 对应解释或可点击词条 |
-| 女孩碑 | Does disappearance always mean death? | `deliberate_departure` / `two_mothers_dilemma` | 对应解释或可点击词条 |
-
-### 隐藏问题与潜台词
-
-这些问题只在本次携带的证据符合时显示；不能先把隐藏问题列出来，再让玩家猜证据。回复的 `feedback:gold` 供程序显示金框或对应音效；测试版只有文字 tag，并没有实际绘制金框。
-
-| 碑 | 隐藏问题方向 | 提交证据可接受的 tag 任一 | 额外条件 |
-| --- | --- | --- | --- |
-| 小碑 | 谁画了真实形貌 | `infant_actual_appearance` / `family_requested_depiction` | 已知 `funerary_artist_reference` 时多一句作者身份暗示 |
-| 小碑 | 死亡与另一城消失的联系 | `paired_day_night_death` | 无 |
-| 晶石碑 | Aurora 为什么熟悉皮肤画 | `skin_as_message_medium` / `day_night_handholding` | 无 |
-| 太阳形碑 | 第四个家庭成员在哪里 | `four_person_family` / `missing_family_member_reference` | 无 |
-| 夜城祭坛 | Aurora 如何翻译无文字文明符号 | `aurora_translation_knowledge` / `night_symbol_translation` | 无 |
-| 夜城祭坛 | 孩子是否生错城市 | `infant_appearance_mismatch` / `infant_actual_appearance` | 无 |
-| 夜母碑 | 图画与女儿的关系 | `day_night_handholding` / `shared_body_reference` | 测试补写，供结尾回调 |
-| 夜父碑 | 原始塌方是否自然发生 | `natural_collapse` / `shared_day_night_history` | 只质疑官方叙事，不凭共用睡棺自动证明塌方人为 |
-| 女孩碑 | Aurora 与笔记本封面 | `aurora_provided_object` / `aurora_identity_reference` | 先比对整体封面，获得 `Relation.cover` 才进入对质 |
-
-不要把 `location:aurora_transmission` 当成身份疑点；它只表示发送渠道。真正用于推理的是 `aurora_translation_knowledge` 等标签。
+随机句取自回填表“开场与结局”66至97行。反应旁白已经随句进入测试版。玩家名暂用Ink变量 `player_name`，默认 Investigator，程序可在进入故事前替换。
 
 ## 墓碑介绍与证据显示怎样分开
 
@@ -187,7 +212,7 @@ Ink 测试变量已经保存这些状态。正式程序接入时应明确由 Ink
 
 ## 后面怎样拆回 master
 
-1. 先在 `test.ink` 改问答与条件，确认测试结果符合预期。
+1. 先在回填Excel里改文案，再同步到 `test.ink` 运行条件测试。
 2. 把介绍段搬到 `tombstone_master.ink`；把 `opening`、`daybaby_tele`、`test_radio_*`、bonus、对质等无线电内容搬到 `telecomm_master.ink`。
 3. 让正式主入口声明公共变量与函数，再 INCLUDE 三个 master。每个文件只包含一次，段名与 ID 全局唯一。
 4. 正式被 INCLUDE 的内容文件不应在顶层自行启动故事；当前 telecomm 的顶层 `->opening` 需在整合时改为由正式入口调用，当前 tombstone 占位故事也需替换。本次未动这两个文件。
@@ -197,11 +222,18 @@ Ink 测试变量已经保存这些状态。正式程序接入时应明确由 Ink
 
 ## 本次已做的检查
 
-- Ink 编译通过，无编译报错。
-- 设计师日记、婴儿涂鸦分别提交，均能命中同一疑点分支并授予 finding。
+- Ink 编译通过，无编译报错；已区分证据限定的问题显示与基础回答后的隐藏追加。
+- 设计师日记、婴儿涂鸦分别提交，均在月亮基础回答后追加疑点并授予 finding。
 - 持有正确证据但提交月亮参照，不误触发疑点；通话中没有替换证据入口。
 - 探照灯错误年份不授予；2000 年正确获得婴儿涂鸦。
 - 实际走通六份报告、两个不同 bonus 问题、封面过渡、女孩碑比对、Aurora 对质及两个母亲回调。
-- 对照原稿核对开场与小碑的原有英文段落，并检查三个原 master 在本次未被覆盖。
+- 按最新回填表同步作者改稿；telecomm_master 与 tombstone_master 保留，evidence_master 仅补入作者新需的学者碑无访客观察。
 
 以上是 Ink 文本运行测试；还没有在 Godot UI 中验证工具、拖拽、金框、音频或存档接入。
+
+## 本次保存后的同步
+
+- 小碑月亮回复与设计手稿提示中，作者删除的反应不再播放。
+- 人形证据回复后的引文与思考作为旁白，不由Aurora说出；随后显示两条玩家追问，任一选项汇合到同一段“不自然停顿／大胆而危险的判断”回复，再回问题页。这是当前回答的后续选择，不额外要求新证据，也不授予新的死因结论。
+- 学者段落保留“I made that decision. I made that decision...”；夜母段落保留“I left her alone. I left her alone...”。私人情感追问的最后一句采用“Shall we return to the investigation?”。
+- 本次只同步test与本说明，回填Excel及证据源文件未改。

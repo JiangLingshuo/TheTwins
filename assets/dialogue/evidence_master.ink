@@ -1043,6 +1043,26 @@ The four figures in the statuette correspond to the family in the photograph. Th
 The complete girl-and-coffin composition on the solitary marker corresponds to the image on the diary or the investigation notebook. The person who made the monument, the writer, and the person who supplied the notebook may be connected.
 -> DONE
 
+// Scholar-specific negative observation, requested by the author in the level sheet.
+=== ev_scholar_no_traces ===
+# type:evidence
+# id:scholar_no_traces
+# title:No Later Visitors at the Crystal Monument
+# category:observation
+# location:day_cemetery
+# tool:searchlight
+# searchlight_scan_start_year:2005
+# searchlight_scan_end_year:2050
+# searchlight_scan_years_ago_min:0
+# searchlight_scan_years_ago_max:45
+# searchlight_date_status:timeline_suggestion
+# evidence_tag:scholar_no_visitors
+# evidence_tag:absence_of_readable_traces
+# evidence_tag:last_survivor_question
+// Source: author-edited 学者晶石碑!C31:D33. Negative observation, not proof of the final survivor.
+Across the checked period after the burial, the searchlight reveals no readable traces of later visits to the crystal monument. This absence alone does not establish why nobody returned.
+-> DONE
+
 // END OF EVIDENCE LIBRARY.
 // Not included: radio replies, bonus questions, report dropdown definitions,
 // unresolved chronology, or extra callback objects invented only for the HTML prototype.
