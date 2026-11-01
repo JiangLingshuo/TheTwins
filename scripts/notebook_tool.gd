@@ -1,6 +1,6 @@
 extends Control
 ## Notebook button for the game scenes.
-## Click it (or press `toggle_key`) to bring the notebook out, open on the page
+## Click it (or press Tab / N) to bring the notebook out, open on the page
 ## it was left on; click it again, click the dark area around the book, or turn
 ## past the last page to put it away. It shrinks back into the button.
 
@@ -8,8 +8,9 @@ extends Control
 signal notebook_opened
 signal notebook_closed
 
-## Key that opens and closes the notebook. Set to KEY_NONE to disable.
-@export var toggle_key: Key = KEY_N
+## Keys that open and close the notebook. Set to KEY_NONE to disable.
+@export var toggle_key: Key = KEY_TAB
+@export var alt_toggle_key: Key = KEY_N
 ## How dark the screen gets behind the open notebook.
 @export_range(0.0, 1.0, 0.05) var dim_alpha: float = 0.55
 
@@ -32,11 +33,19 @@ func _ready() -> void:
 	book.icon_margin = screen - _button.get_global_rect().get_center()
 
 
-func _unhandled_key_input(event: InputEvent) -> void:
-	if toggle_key != KEY_NONE and event.is_pressed() and not event.is_echo() \
-			and (event as InputEventKey).keycode == toggle_key:
-		toggle()
-		get_viewport().set_input_as_handled()
+func _input(event: InputEvent) -> void:
+	# Handled before the GUI so Tab isn't taken for focus navigation; ignored
+	# while typing in a text field.
+	if not (event is InputEventKey) or not event.is_pressed() or event.is_echo():
+		return
+	var key := (event as InputEventKey).keycode
+	if key == KEY_NONE or (key != toggle_key and key != alt_toggle_key):
+		return
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused is LineEdit or focused is TextEdit:
+		return
+	toggle()
+	get_viewport().set_input_as_handled()
 
 
 func is_open() -> bool:
