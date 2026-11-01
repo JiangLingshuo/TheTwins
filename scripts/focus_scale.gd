@@ -120,6 +120,6 @@ func _draw() -> void:
 		var s := unit_symbol_size
 		draw_texture_rect(unit_symbol, Rect2((size.x - s) / 2.0, size.y - FOOTER + (FOOTER - s) / 2.0 - 5.0, s, s), false)
 	else:
-		var cs := f.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 15)
-		draw_string(f, Vector2((size.x - cs.x) / 2.0, size.y - 13.0), caption,
-			HORIZONTAL_ALIGNMENT_LEFT, -1, 15, Color(tick_color, 0.7))
+		var cs := f.get_string_size(caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 16)
+		draw_string(f, Vector2((size.x - cs.x) / 2.0, size.y - FOOTER / 2.0 + 2.0), caption,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(tick_color, 0.75))
