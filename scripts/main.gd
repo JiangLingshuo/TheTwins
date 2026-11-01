@@ -4,7 +4,7 @@ extends Control
 ## with a short cross-fade between them.
 ##
 ## From other scripts: set_day(), set_night(), toggle_time(), or set `is_day`.
-## While testing, press the `toggle_key` (Tab by default) to switch.
+## While testing, press the `toggle_key` (F1 by default, a debug key) to switch.
 
 ## Emitted after the time of day changes.
 signal time_changed(is_day: bool)
@@ -16,7 +16,7 @@ signal time_changed(is_day: bool)
 ## Seconds to fade in from black when the scene opens.
 @export var fade_in_time: float = 0.8
 ## Key that switches day/night (for testing). Set to KEY_NONE to disable.
-@export var toggle_key: Key = KEY_TAB
+@export var toggle_key: Key = KEY_F1
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
