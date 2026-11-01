@@ -1,7 +1,7 @@
-class_name CornerHint
+class_name HighlightFrame
 extends Control
-## A rounded frame that blinks around another control to point it out
-## (used to show the player where to click to turn the page).
+## A rounded frame that blinks around a rectangle on screen to point something
+## out. Used by the Tutorial autoload; it follows its target while blinking.
 
 ## Emitted when the blinking has finished or was dismissed.
 signal finished
@@ -9,13 +9,14 @@ signal finished
 @export var color: Color = Color(0.86, 0.72, 0.45)
 @export var line_width: float = 3.0
 @export var corner_radius: int = 8
-## Space between the frame and the control it surrounds.
+## Space between the frame and the thing it surrounds.
 @export var padding: float = 10.0
 ## How many times the frame blinks before it fades away.
 @export var blinks: int = 3
 ## Seconds for one blink (on + off).
 @export var blink_time: float = 0.5
 
+var _target: Control
 var _tween: Tween
 
 
@@ -24,11 +25,11 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-## Blink a frame around `target` (a sibling in the same parent).
-func show_around(target: Control) -> void:
+## Blink around `target` (any Control on screen).
+func blink_around(target: Control) -> void:
 	dismiss(false)
-	position = target.position - Vector2(padding, padding)
-	size = target.size + Vector2(padding, padding) * 2.0
+	_target = target
+	_follow_target()
 	modulate.a = 0.0
 	visible = true
 	_tween = create_tween()
@@ -44,10 +45,25 @@ func dismiss(emit: bool = true) -> void:
 	if _tween:
 		_tween.kill()
 		_tween = null
+	_target = null
 	if visible:
 		visible = false
 		if emit:
 			finished.emit()
+
+
+func _process(_delta: float) -> void:
+	if visible:
+		_follow_target()
+
+
+func _follow_target() -> void:
+	if not is_instance_valid(_target) or not _target.is_visible_in_tree():
+		dismiss()
+		return
+	var rect := _target.get_global_rect().grow(padding)
+	global_position = rect.position
+	size = rect.size
 
 
 func _draw() -> void:

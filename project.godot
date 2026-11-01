@@ -19,6 +19,7 @@ config/icon="res://icon.svg"
 
 Music="*res://scripts/music.gd"
 GameState="*res://scripts/game_state.gd"
+Tutorial="*res://scripts/tutorial.gd"
 
 [display]
 

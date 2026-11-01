@@ -20,6 +20,8 @@ signal time_changed(is_day: bool)
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
+@onready var _flashlight_tool: Control = $FlashlightTool
+@onready var _notebook_tool: Control = $NotebookTool
 
 ## True during the day, false at night.
 var is_day: bool = true:
@@ -39,6 +41,8 @@ func _ready() -> void:
 	_night_background.modulate.a = 0.0 if is_day else 1.0
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
+	# Reading the notebook puts the flashlight away.
+	_notebook_tool.notebook_opened.connect(_flashlight_tool.turn_off)
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -47,6 +47,12 @@ func _exit_tree() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 
 
+## Switch the flashlight off and close the scale.
+func turn_off() -> void:
+	if state != State.OFF:
+		_set_state(State.OFF)
+
+
 func _on_button_pressed() -> void:
 	match state:
 		State.OFF:

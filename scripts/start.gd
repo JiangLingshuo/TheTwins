@@ -81,6 +81,9 @@ func _on_book_closed() -> void:
 func _go_to_next_scene() -> void:
 	if scene_after_close.is_empty():
 		return
+	# The notebook continues in the next scene with the same pages.
+	GameState.notebook_pages = book.pages
+	GameState.notebook_spread = book.get_spread()
 	var fade := create_tween()
 	fade.tween_property(self, "modulate:a", 0.0, scene_fade_time)
 	await fade.finished

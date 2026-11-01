@@ -50,7 +50,6 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 @onready var right_number: Label = $RightPage/Number
 @onready var left_corner: PageCorner = $LeftCorner
 @onready var right_corner: PageCorner = $RightCorner
-@onready var corner_hint: CornerHint = $CornerHint
 @onready var flip_sheet: Panel = $FlipSheet
 @onready var flip_text: Label = $FlipSheet/Text
 @onready var flip_number: Label = $FlipSheet/Number
@@ -61,7 +60,6 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 var _spread := 0
 var _busy := true
 var _locked := false
-var _corner_pointed_out := false
 var _stowed := false
 var _opened := false
 var _writing := false
@@ -82,9 +80,6 @@ func _ready() -> void:
 	_set_corners_visible(false)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
-	# The page-corner hint goes away as soon as the player finds the corner.
-	right_corner.mouse_entered.connect(corner_hint.dismiss.bind(true))
-	right_corner.pressed.connect(corner_hint.dismiss.bind(true))
 	name_input.text_submitted.connect(_on_name_submitted)
 	cover.gui_input.connect(_on_cover_gui_input)
 
@@ -270,6 +265,40 @@ func close_to_icon() -> void:
 	closed.emit()
 
 
+## Open an already-named book in a new scene: it flies in closed, then the cover
+## swings open on `spread`. `saved_pages` restores what was written earlier.
+func open_saved(saved_pages: PackedStringArray, spread: int) -> void:
+	if not saved_pages.is_empty():
+		pages = saved_pages
+	_opened = true
+	_spread = clampi(spread, 0, maxi(0, (pages.size() - 1) / 2))
+	name_input.text = GameState.player_name
+	name_input.editable = false
+	name_input.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hint_label.visible = false
+	await wake()
+	name_input.release_focus()
+	await _open_cover()
+	opened.emit(GameState.player_name)
+
+
+## Close the book into its icon spot (does nothing while a page is turning).
+func close() -> void:
+	if _busy or _stowed or not visible:
+		return
+	await close_to_icon()
+
+
+## True while the book is out and open (not stowed as an icon).
+func is_open() -> bool:
+	return visible and _opened and not _stowed
+
+
+## Which spread is showing (0 = inside cover + page 1).
+func get_spread() -> int:
+	return _spread
+
+
 ## Bring the book back from the corner icon and open it where it was left.
 func open_from_icon() -> void:
 	if not _stowed:
@@ -320,17 +349,8 @@ func _on_name_submitted(text: String) -> void:
 	_spread = 0
 	_opened = true
 	await _open_cover()
-	_point_out_corner()
+	Tutorial.show_once(Tutorial.TURN_PAGE, right_corner)
 	opened.emit(GameState.player_name)
-
-
-## The first time the book opens, blink a frame around the page corner so the
-## player knows where to click to turn the page.
-func _point_out_corner() -> void:
-	if _corner_pointed_out or not right_corner.visible:
-		return
-	_corner_pointed_out = true
-	corner_hint.show_around(right_corner)
 
 
 ## Swing the cover open onto the current spread.

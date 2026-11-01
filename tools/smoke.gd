@@ -36,6 +36,11 @@ func _expect(label: String, ok: bool) -> void:
 		_failures += 1
 
 
+## Autoload singletons by name (their global names don't compile in a -s script).
+func _autoload(node_name: String) -> Node:
+	return root.get_node(node_name)
+
+
 func _wait(seconds: float) -> void:
 	await create_timer(seconds).timeout
 
@@ -63,6 +68,7 @@ func _check_dialogue(path: String) -> void:
 func _check_notebook_flow() -> void:
 	change_scene_to_file("res://scenes/start.tscn")
 	await _wait(0.3)
+	_autoload("Tutorial").reset()
 	var start := current_scene
 	var book = start.get_node("Book")
 	var box = start.get_node("DialogueBox")
@@ -79,7 +85,8 @@ func _check_notebook_flow() -> void:
 	_expect("cover opening plays the flip sound", book._flip_player.playing)
 	await _wait(1.5)
 	_expect("text stored before opening shows the name", book.right_text.text == "Stored, Ann")
-	_expect("first opening points out the page corner", book._corner_pointed_out and book.corner_hint.visible)
+	var tutorial := _autoload("Tutorial")
+	_expect("first opening points out the page corner", tutorial.current_hint() == tutorial.TURN_PAGE)
 
 	book.write(4, "abc")
 	await _wait(0.1)
@@ -122,7 +129,7 @@ func _check_notebook_flow() -> void:
 	await _wait(2.5)
 	_expect("clicking the icon reopens the book", not book._stowed and book.scale == Vector2.ONE)
 	_expect("reopened at the same spread", book._spread == 2 and book.left_page.visible)
-	_expect("corner hint is not shown again", not book.corner_hint.visible)
+	_expect("page-corner hint is not shown again", tutorial.current_hint() == "" and tutorial.has_seen(tutorial.TURN_PAGE))
 	book.write(9, "grown")
 	await book.written
 	_expect("writing past the end adds pages", book.pages.size() == 10 and book._spread == 4)
@@ -138,6 +145,8 @@ func _check_main_after_close() -> void:
 	await _wait(1.5)
 	book._on_name_submitted("Ann")
 	await _wait(1.5)
+	book.write(3, "carried over")
+	await book.written
 	while book._can_flip_forward():
 		book.flip_forward()
 		await _wait(0.8)
@@ -145,3 +154,20 @@ func _check_main_after_close() -> void:
 	await _wait(4.0)
 	_expect("closing the book loads the main scene", current_scene != null and current_scene.name == "Main")
 	_expect("main scene starts in daytime", current_scene != null and current_scene.get("is_day") == true)
+
+	var main := current_scene
+	var flashlight_tool = main.get_node("FlashlightTool")
+	var notebook_tool = main.get_node("NotebookTool")
+	var notebook = notebook_tool.book
+	flashlight_tool._set_state(flashlight_tool.State.ON)
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("notebook button opens the notebook", notebook.is_open())
+	_expect("notebook keeps the pages from the start screen", notebook.pages.size() > 3 and notebook.pages[3] == "carried over")
+	_expect("opening the notebook turns the flashlight off", flashlight_tool.state == flashlight_tool.State.OFF)
+	notebook_tool.close()
+	await _wait(2.5)
+	_expect("notebook closes back into its button", not notebook.visible and not notebook_tool.is_open())
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("notebook reopens on the same page", notebook.is_open() and notebook.get_spread() == _autoload("GameState").notebook_spread)

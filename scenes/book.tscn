@@ -5,7 +5,6 @@
 [ext_resource type="FontFile" uid="uid://ys6yv2bncks2" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_page.png" id="4_page"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
-[ext_resource type="Script" path="res://scripts/corner_hint.gd" id="6_hint"]
 
 [sub_resource type="StyleBoxTexture" id="Style_left_page"]
 texture = ExtResource("4_page")
@@ -194,9 +193,3 @@ theme_override_fonts/font = ExtResource("3_regular")
 theme_override_font_sizes/font_size = 18
 text = "Press Enter to begin"
 horizontal_alignment = 1
-
-[node name="CornerHint" type="Control" parent="."]
-visible = false
-layout_mode = 0
-mouse_filter = 2
-script = ExtResource("6_hint")

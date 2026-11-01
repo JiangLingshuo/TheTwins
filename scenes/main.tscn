@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/BG_night.jpg" id="3_night"]
 [ext_resource type="PackedScene" path="res://scenes/flashlight_tool.tscn" id="4_tool"]
+[ext_resource type="PackedScene" path="res://scenes/notebook_tool.tscn" id="5_notebook"]
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -40,4 +41,7 @@ expand_mode = 1
 stretch_mode = 6
 
 [node name="FlashlightTool" parent="." instance=ExtResource("4_tool")]
+layout_mode = 1
+
+[node name="NotebookTool" parent="." instance=ExtResource("5_notebook")]
 layout_mode = 1
