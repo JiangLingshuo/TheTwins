@@ -14,7 +14,7 @@ func _run() -> void:
 	await process_frame
 	var state := root.get_node("GameState")
 	check("catalog has seven descriptions", state.content_catalog()["gravestones"].size() == 7)
-	check("catalog has 65 evidence records", state.content_catalog()["evidence"].size() == 65)
+	check("catalog has 66 evidence records including navigation sun", state.content_catalog()["evidence"].size() == 66)
 	check("no spoilers on startup", state.evidence_ids.is_empty() and state.radio_logs.is_empty())
 	state.record_gravestone("baby_tomb")
 	check("baby description populated", not state.get_gravestone_info("baby_tomb")["description"].is_empty())

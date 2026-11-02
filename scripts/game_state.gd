@@ -100,6 +100,8 @@ signal notebook_changed
 var evidence_ids: Array[String] = []
 var radio_logs: Array[Dictionary] = []
 var notebook_preview := false
+var cycle_hint_heard := false
+var cycle_tutorial_completed := false
 var _content: Dictionary = {}
 
 
@@ -232,3 +234,8 @@ func preview_notebook_content() -> void:
 		if not radio_logs.any(func(existing: Dictionary) -> bool: return existing["id"] == log["id"]):
 			radio_logs.append(log)
 	notebook_changed.emit()
+
+
+# The two sky icons have their own notebook spread, separate from ordinary rubbings.
+func regular_rubbings() -> Array[String]:
+	return rubbings.filter(func(id: String) -> bool: return id not in ["sky_sun_rubbing", "infant_moon_rubbing"])

@@ -27,7 +27,7 @@ const PAPER_SHADER: Shader = preload("res://shaders/notebook_paper.gdshader")
 const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
-const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs"]
+const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs", "Rise & Set"]
 ## Fixed single-page slots in the Gravestones section (two per spread).
 const GRAVESTONE_SLOTS := 8
 ## Gravestone id on each Gravestones slot, in page order: even slots are the
@@ -63,7 +63,7 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 @export_group("Day/Night pages")
 ## Sections (indices into SECTION_TITLES) whose spreads show a Day page on the
 ## left and a Night page on the right. Other sections keep the normal paper.
-@export var day_night_sections: PackedInt32Array = [0]
+@export var day_night_sections: PackedInt32Array = [0, 5]
 @export var day_paper: Color = Color(0.96, 0.92, 0.82)
 @export var day_ink: Color = Color(0.2, 0.15, 0.11)
 @export var night_paper: Color = Color(0.14, 0.16, 0.22)
@@ -101,7 +101,7 @@ var _flip_player: AudioStreamPlayer
 var _write_player: AudioStreamPlayer
 ## Spreads in each section, in SECTION_TITLES order. The current section and the
 ## spread within it are worked out from _spread, so there is one position only.
-var section_spreads: PackedInt32Array = [3, 1, 1, 1, 1]
+var section_spreads: PackedInt32Array = [3, 1, 1, 1, 1, 1]
 ## A rubbing changed during a page turn: refill the pages when it finishes.
 var _refresh_pending := false
 var _day_material: ShaderMaterial
@@ -199,7 +199,10 @@ func jump_to_section(section: int) -> void:
 ## Turn to the Rubbings spread that holds `rubbing_id`'s entry (entries are in
 ## collection order, rubbings_per_page per page).
 func show_rubbing(rubbing_id: String) -> void:
-	var index := GameState.rubbings.find(rubbing_id)
+	if rubbing_id in ["sky_sun_rubbing", "infant_moon_rubbing"]:
+		jump_to_section(5)
+		return
+	var index := GameState.regular_rubbings().find(rubbing_id)
 	if index < 0 or _busy or _locked or _stowed or not _opened or not use_sections:
 		return
 	var target := _section_start(1) + index / (rubbings_per_page * 2)
@@ -579,7 +582,7 @@ func _fill_rubbings(rubbing_list: Control, page_index: int) -> void:
 		rubbing_list.clear()
 		return
 	var first := (page_index - _section_start(1) * 2) * rubbings_per_page
-	rubbing_list.show_entries(GameState.rubbings.slice(first, first + rubbings_per_page))
+	rubbing_list.show_entries(GameState.regular_rubbings().slice(first, first + rubbings_per_page))
 
 
 ## Size the Rubbings section to its entries (at least one spread). The spread on
@@ -588,7 +591,7 @@ func _update_rubbing_spreads() -> void:
 	var section := _section_of(_spread)
 	var local_spread := _spread - _section_start(section)
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
-	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
+	section_spreads[1] = maxi(1, ceili(float(GameState.regular_rubbings().size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
 		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 2.0)))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
@@ -689,7 +692,7 @@ func _fill_art(art: Control, page_index: int) -> void:
 		return
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
-	if section == 0 or section >= 2 or (section == 1 and not GameState.rubbings.is_empty()):
+	if section == 0 or section >= 2 or (section == 1 and not GameState.regular_rubbings().is_empty()):
 		art.clear()  # gravestone pages / rubbing entries are shown instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])
@@ -773,9 +776,10 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		body.bbcode_enabled = false
 		reader.add_child(body)
 	var section := _section_of(page_index / 2) if use_sections else -1
-	reader.visible = section >= 2 and section != 3
+	reader.visible = section in [2, 4]
 	text_label.visible = section < 2
 	_fill_manuscript_items(text_label, page_index, section)
+	_fill_cycle_icon(text_label, page_index, section)
 	if not reader.visible:
 		return
 	var entries := GameState.notebook_entries(section)
@@ -813,3 +817,18 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 	var entries := GameState.notebook_entries(3)
 	var first := (page_index - _section_start(3) * 2) * 4
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet)
+
+
+func _fill_cycle_icon(text_label: Label, page_index: int, section: int) -> void:
+	var page := text_label.get_parent()
+	var icon: Control = page.get_node_or_null("CycleIcon")
+	if icon == null:
+		icon = Control.new()
+		icon.set_script(preload("res://scripts/cycle_icon.gd"))
+		icon.name = "CycleIcon"
+		icon.size = Vector2(150, 150)
+		icon.position = text_label.position + (text_label.size - icon.size) / 2
+		page.add_child(icon)
+	icon.visible = section == 5
+	if icon.visible:
+		icon.setup("sky_sun_rubbing" if page_index % 2 == 0 else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet)

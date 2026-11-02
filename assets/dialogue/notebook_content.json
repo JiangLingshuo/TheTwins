@@ -1,7 +1,7 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "2fa3ed44cbbcf1bc49cfc542075f96908c81d9ce271a0aaf05f7e8d7ff0f142c",
+    "evidence_master.ink": "677f7fead8a2e7ecf76b83f219950ce2f31adedce55ad41cf706d844a1259e10",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
     "telecomm_master.ink": "d1a7a4de22309942feb40b03ae1a050d72446f46bbb045c8d5fc2a5c1ac1d7d7"
   },
@@ -2372,6 +2372,35 @@
         ]
       },
       "source_knot": "ev_scholar_no_traces"
+    },
+    "sky_sun_rubbing": {
+      "gravestones": [],
+      "id": "sky_sun_rubbing",
+      "title": "The Sun in the Sky",
+      "body": "The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.",
+      "category": "rubbing",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sky_sun_rubbing"
+        ],
+        "title": [
+          "The Sun in the Sky"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_sky_sun_rubbing"
     }
   },
   "radio_answers": {

@@ -22,7 +22,7 @@ for m in knots((D/'tombstone_master.ink').read_text(encoding='utf-8-sig')):
     stones[ALIASES[tid]]={'id':ALIASES[tid],'source_id':tid,'title':meta['title'][0],'location':meta['location'][0],'description':plain(body),'sketch':'res://assets/Art/'+SKETCH[tid]}
 evidence={};owner='baby'
 starts={'crystal_marker_rubbing':'scholar','sun_reference':'sun','altar_infant_rubbing':'altar','night_mother_child_rubbing':'mother','night_father_child_rubbing':'father','girl_figure_rubbing':'girl'}
-environment={'dayfolk_appearance','moon_reference','night_city_crystal','sun_reference','ram_spirit_emblem','giant_footprint','twin_beast_trace','repeated_beast_motifs','dry_underground_river','skyway_reference','diary_cover','notebook_cover','history_coffin_illustration','day_city_coin'}
+environment={'sky_sun_rubbing','dayfolk_appearance','moon_reference','night_city_crystal','sun_reference','ram_spirit_emblem','giant_footprint','twin_beast_trace','repeated_beast_motifs','dry_underground_river','skyway_reference','diary_cover','notebook_cover','history_coffin_illustration','day_city_coin'}
 for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     if not m[1].startswith('ev_'):continue
     meta=metadata(m[2]);eid=meta['id'][0];owner=starts.get(eid,owner)

@@ -11,6 +11,8 @@ extends Control
 
 ## Emitted when a dropped rubbing matched the object under it.
 signal deciphered(rubbing_id: String, target: Control)
+## Sky substitution changes location/time, not the symbol’s funerary meaning.
+signal sky_replaced(rubbing_id: String, target: Control)
 ## Emitted when a rubbing was dropped on the scene but not on its object
 ## (`target` is the object under it, or null).
 signal mismatched(rubbing_id: String, target: Control)
@@ -29,6 +31,7 @@ const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 ## Id of the rubbing being dragged ("" when there is no drag).
 var rubbing_id := ""
 
+var _cycle_drag := false
 var _texture: Texture2D
 var _pointer := Vector2.ZERO
 var _left_book := false
@@ -64,8 +67,26 @@ func begin(id: String, pointer: Vector2) -> bool:
 	return true
 
 
+## Sky icons remain reusable after the tutorial and after ordinary deciphering.
+func begin_cycle(id: String, pointer: Vector2) -> bool:
+	if is_dragging() or not GameState.cycle_hint_heard or id not in ["sky_sun_rubbing", "infant_moon_rubbing"]:
+		return false
+	if not GameState.rubbings.has("sky_sun_rubbing") or not GameState.rubbings.has("infant_moon_rubbing"):
+		return false
+	rubbing_id = id
+	_cycle_drag = true
+	var path := GameState.get_rubbing_texture(id)
+	_texture = load(path) if not path.is_empty() and ResourceLoader.exists(path) else null
+	_pointer = pointer
+	_left_book = false
+	hide_hint()
+	queue_redraw()
+	return true
+
+
 ## Stop the drag without changing anything.
 func cancel() -> void:
+	_cycle_drag = false
 	rubbing_id = ""
 	_texture = null
 	_left_book = false
@@ -113,11 +134,18 @@ func _notification(what: int) -> void:
 
 func _drop(pointer: Vector2) -> void:
 	var id := rubbing_id
+	var cycle_drop := _cycle_drag
 	var in_scene := _left_book and get_viewport_rect().has_point(pointer)
 	cancel()
 	if not in_scene:
 		return  # released inside the book or outside the window: just cancelled
 	var target := _target_at(pointer)
+	if cycle_drop:
+		if target and ((id == "infant_moon_rubbing" and target.target_id == "sky_sun") or (id == "sky_sun_rubbing" and target.target_id == "moon" and GameState.cycle_tutorial_completed)):
+			sky_replaced.emit(id, target)
+		else:
+			mismatched.emit(id, target)
+		return
 	var wanted := GameState.get_rubbing_target(id)
 	if target and not wanted.is_empty() and target.target_id == wanted \
 			and GameState.confirm_rubbing_meaning(id, target.get_meaning()):
