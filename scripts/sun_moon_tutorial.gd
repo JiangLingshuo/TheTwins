@@ -57,7 +57,7 @@ func refresh() -> void:
 		else:
 			_set_step(Step.TOOL, "1 / 5  Pick up the rubbing tool. We will start with the sun.", _rubbing.get_node("RubbingButton"))
 	elif not has_moon:
-		_set_step(Step.MOON, "2 / 5  Now rub the small crescent at the base of the baby's marker.", _moon if _rubbing.active else _rubbing.get_node("RubbingButton"))
+		_set_step(Step.MOON, "2 / 5  There seems to be a crescent shape on the base. Make a rubbing of it.", _moon if _rubbing.active else _rubbing.get_node("RubbingButton"))
 	elif not GameState.cycle_hint_heard:
 		_speak.call_deferred()
 	elif not _notebook.is_open():

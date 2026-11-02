@@ -7,7 +7,7 @@
 1. 左上提示拿起拓印工具，高亮工具按钮。
 2. 拓印天空太阳，高亮太阳；太阳完成前不接受小碑月亮的拓印。
 3. 拓印婴儿碑基底的小月牙，高亮对应区域。普通人形拓印暂缓至教程完成后。
-4. 播放 Aurora 单句：We match symbols. What if we replaced the sun with the moon? 复用通用 DialogueBox，不接管学姐正在开发的正式无线电界面。实际播放后进入 Radio Logs，且同一流程只播放一次。
+4. 播放三句发现对话：Aurora — There seems to be a crescent shape on the base. 玩家 — Kinda similar to the shape of the moon on Earth. Aurora — Try it. 复用通用 DialogueBox，不接管学姐正在开发的正式无线电界面。实际播放后进入 Radio Logs，且同一流程只播放一次。
 5. 提示打开笔记本（Tab/N），再指引 Rise & Set 页签。名字取升起与落下的含义，避免 wax and wane 只指月相；可继续改名。
 6. 专用跨页：左白页一个太阳，右黑页一个月亮。已获取图标正常显示，未获取时淡化，不自动授予。
 7. 拖右页月亮出书本，书本收起；放到场景太阳上进入夜城，教程完成。放错可重试，图标不会消耗。

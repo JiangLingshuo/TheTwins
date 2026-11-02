@@ -50,8 +50,10 @@ func _run() -> void:
 	tutorial._dialogue._finish_line()
 	await shot("03_aurora")
 	check("tutorial line appears in radio history", state.radio_logs.any(func(log: Dictionary) -> bool: return log["id"] == "tutorial_sun_moon"))
-	tutorial._dialogue._finish_line()
-	tutorial._dialogue._advance()
+	for line_index in 3:
+		tutorial._dialogue._finish_line()
+		tutorial._dialogue._advance()
+		await wait(0.05)
 	await wait(0.5)
 	check("after dialogue asks for notebook", tutorial.step == tutorial.Step.BOOK and state.cycle_hint_heard)
 	await notebook.open()
