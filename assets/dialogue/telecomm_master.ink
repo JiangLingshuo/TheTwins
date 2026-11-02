@@ -2,10 +2,11 @@
 // Source: 墓碑表.xlsx; newer author instructions and current evidence tags override stale cells.
 // English dialogue is a test draft, not final production copy.
 // Author-edited spreadsheet dialogue, reactions and explicit hidden mechanisms synchronized on 2026-11-01.
-// Do NOT INCLUDE telecomm_master.ink or tombstone_master.ink: their test copies live here.
+// Tombstone descriptions are maintained in tombstone_master.ink and called as tunnels.
 // Evidence IDs/tags and DEV previews are generated from the current evidence_master.ink.
 // Rebuild/sync these snapshots when changing source evidence tags or prose.
 INCLUDE evidence_master.ink
+INCLUDE tombstone_master.ink
 
 LIST EvidenceId = dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces
 
@@ -55,6 +56,9 @@ VAR feedback_kind = ""
 VAR pending_relation_feedback = false
 LIST AnswerId = baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_normal_13, baby_21_hidden_23, baby_21_follow, scholar_8_supported_10, scholar_8_normal_9, scholar_12_supported_14, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_8_supported_10, sun_8_normal_9, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_21_supported_23, sun_21_normal_22, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
 VAR read_answers = ()
+LIST NightGlyph = blessing, unending_path, dry_river, ascending_path, crystal_god
+VAR queried_night_glyphs = ()
+VAR glyph_return = "altar"
 VAR scan_scholar_2005 = false
 VAR scan_scholar_2050 = false
 -> test_start
@@ -150,84 +154,49 @@ Which marker would you like to inspect?
 + [Back] -> test_hub
 
 === test_desc_baby ===
-// Source: 01_婴儿小碑!C12; latest description keeps the moon interpretation unconfirmed.
-# type:tombstone
-# tombstone_id:baby
-# location:day_cemetery
-# title:The Small Human-Shaped Marker
-A small human-shaped marker, as thin as a page of stone. A curved decoration is carved into its surface. Its base continues beneath two other monuments.
+-> tombstone_baby ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "baby"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_scholar ===
-// Source: 02_学者晶石碑!B8,C11; searchlight reveals the skin, not a high-precision camera.
-# type:tombstone
-# tombstone_id:scholar
-# location:day_cemetery
-# title:The Crystal Monument
-The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.
+-> tombstone_scholar ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "scholar"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_sun ===
-// Source: 03_大亨金钱碑!C12; latest instruction replaces coin-like naming with sun-shaped.
-# type:tombstone
-# tombstone_id:sun
-# location:day_cemetery
-# title:The Sun-Shaped Monument
-Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.
+-> tombstone_sun ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "sun"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_altar ===
-// Source: 05_婴儿夜城祭坛!B8,C12.
-# type:tombstone
-# tombstone_id:altar
-# location:night_cemetery
-# title:The White Infant Altar
-A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.
+-> tombstone_altar ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "altar"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_mother ===
-// Source: 06_夜母石碑!B8,B11; identity is not named before investigation.
-# type:tombstone
-# tombstone_id:mother
-# location:night_cemetery
-# title:The Small Stone Beside the Altar
-An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.
+-> tombstone_mother ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "mother"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_father ===
-// Source: 07_夜父石碑!B8,B13.
-# type:tombstone
-# tombstone_id:father
-# location:night_cemetery
-# title:The Other Stone Beside the Altar
-Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.
+-> tombstone_father ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "father"
     -> test_freeze_evidence
 + [Back to the cemetery] -> test_hub
 
 === test_desc_girl ===
-// Source: 04_小女孩终局碑!B8,C12; appearance does not identify Aurora by itself.
-# type:tombstone
-# tombstone_id:girl
-# location:cemetery_edge
-# title:The Solitary Human-Shaped Marker
-Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.
+-> tombstone_girl ->
 + [Contact Aurora about this marker]
     ~ active_tomb = "girl"
     -> test_freeze_evidence
@@ -1806,8 +1775,14 @@ What would you like to ask?
 + {(links ? Relation.baby_pair)} [Is this the child from the small marker?] -> test_answer_altar_12
 + {1 == 1} [Are the moon-shaped stones coins?] -> test_answer_altar_16
 + {1 == 1} [What was removed from the empty recess?] -> test_answer_altar_20
-+ {(1 == 1) && (has_tag(EvidenceTag.aurora_translation_knowledge) || has_tag(EvidenceTag.night_symbol_translation))} [How can you translate a symbol from a culture without a written language?] -> test_answer_altar_24
++ {LIST_COUNT(queried_night_glyphs) == 5} [How can you translate a symbol from a culture without a written language?] -> test_answer_altar_24
 + {(1 == 1) && (has_tag(EvidenceTag.infant_appearance_mismatch) || has_tag(EvidenceTag.infant_actual_appearance))} [Was the child in the wrong city?] -> test_answer_altar_28
++ {owned_evidence ? EvidenceId.altar_path_rubbing} [What does the geometric border on the altar mean?]
+    ~ glyph_return = "altar"
+    -> query_night_unending_path
++ {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
+    ~ glyph_return = "altar"
+    -> query_night_crystal_god
 + [Collect a word from this call] -> test_radio_terms_altar
 + [End this call] -> test_end_call
 
@@ -1816,10 +1791,13 @@ What would you like to ask?
 -> test_menu_feedback ->
 What would you like to ask?
 + {(links ? Relation.mother_child)} [Who is the figure holding the child?] -> test_answer_mother_8
-+ {(links ? Relation.river)} [What does the dry river border record?] -> test_answer_mother_12
++ {((links ? Relation.river) || (queried_night_glyphs ? NightGlyph.dry_river))} [What does the dry river border tell us about her death?] -> test_answer_mother_12
 + {(links ? Relation.skin)} [Why does the handholding picture resemble the Scholar's?] -> test_answer_mother_17
 + {1 == 1} [Does the lack of offerings mean she was the last survivor?] -> test_answer_mother_21
 + {(1 == 1) && (has_tag(EvidenceTag.day_night_handholding) || has_tag(EvidenceTag.shared_body_reference))} [Was the message meant for her daughter as well?] -> test_answer_mother_25
++ {owned_evidence ? EvidenceId.night_mother_river_rubbing} [What does the geometric border on this stone mean?]
+    ~ glyph_return = "mother"
+    -> query_night_dry_river
 + [Collect a word from this call] -> test_radio_terms_mother
 + [End this call] -> test_end_call
 
@@ -1828,10 +1806,16 @@ What would you like to ask?
 -> test_menu_feedback ->
 What would you like to ask?
 + {(links ? Relation.father_child)} [Who is carrying the child?] -> test_answer_father_8
-+ {(links ? Relation.father_path)} [Did he die because the Skyway was dangerous?] -> test_answer_father_12
++ {((links ? Relation.father_path) || (queried_night_glyphs ? NightGlyph.ascending_path))} [Did he die because the Skyway was dangerous?] -> test_answer_father_12
 + {1 == 1} [Could his death be linked to the Scholar's husband?] -> test_answer_father_16
 + {1 == 1} [What does the moon-shaped offering mean?] -> test_answer_father_20
 + {(1 == 1) && (has_tag(EvidenceTag.natural_collapse) || has_tag(EvidenceTag.shared_day_night_history))} [Was the original separation really a natural disaster?] -> test_answer_father_24
++ {owned_evidence ? EvidenceId.night_father_path_rubbing} [What does the rising pattern along the border mean?]
+    ~ glyph_return = "father"
+    -> query_night_ascending_path
++ {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
+    ~ glyph_return = "father"
+    -> query_night_crystal_god
 + [Collect a word from this call] -> test_radio_terms_father
 + [End this call] -> test_end_call
 
@@ -1873,7 +1857,7 @@ DEV: collect only words from answers you have already read.
 
 === test_radio_terms_altar ===
 DEV: collect only words from answers you have already read.
-+ {(read_answers ? AnswerId.altar_8_supported_10) || (read_answers ? AnswerId.altar_12_supported_14)} [disappearance]
++ {(queried_night_glyphs ? NightGlyph.unending_path) || (read_answers ? AnswerId.altar_8_supported_10) || (read_answers ? AnswerId.altar_12_supported_14)} [disappearance]
     ~ causes += Cause.disappearance
     # event:collect_term:disappearance
     -> test_radio_terms_altar
@@ -2482,8 +2466,10 @@ Someone was still there after the others were gone. I wonder whether the family 
 === test_answer_altar_8 ===
 # question_id:altar_8
 ~ temp supported = false
-{has_tag(EvidenceTag.night_blessing_glyph):
-To disappear is to set out on a journey without end. May the wishes of crystal remain with you.'This is what the symbol means. The border, featuring a long way, means <link="disappearance">disappearance</link>. #aurora
+{(owned_evidence ? EvidenceId.altar_blessing_glyph) || has_tag(EvidenceTag.night_blessing_glyph):
+It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well. #aurora
+~ queried_night_glyphs += NightGlyph.blessing
+# event:night_symbol_queried:blessing
 ~ read_answers += AnswerId.altar_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2492,7 +2478,7 @@ To disappear is to set out on a journey without end. May the wishes of crystal r
 # event:grant_evidence:altar_blessing_translation
 }
 {not supported:
-Send me the symbol. #aurora
+Record the symbol with your rubbing tool first. Then I can read it for you. #aurora
 ~ read_answers += AnswerId.altar_8_normal_9
 ~ feedback_kind = "unmatched"
 }
@@ -2600,7 +2586,7 @@ Compare the child with the altar infant. That will tell us who she was holding. 
 === test_answer_mother_12 ===
 # question_id:mother_12
 ~ temp supported = false
-{has_tag(EvidenceTag.dry_river_motif) || has_tag(EvidenceTag.water_source_lost):
+{submitted_id == "dry_underground_river" || has_tag(EvidenceTag.water_source_lost):
 (The first word sounds dry in her mouth. She takes another breath and continues.) #narrator
 The border matches the dry riverbed. It records <link="thirst">hunger and thirst</link> as her cause of death. #aurora
 ~ read_answers += AnswerId.mother_12_supported_14
@@ -2612,7 +2598,7 @@ The border matches the dry riverbed. It records <link="thirst">hunger and thirst
 }
 {not supported:
 (Her answer comes after a single, deliberate beat.) #narrator
-Compare the border with the dry underground river. #aurora
+The symbol means a dry river. Check the actual riverbed or the records of lost water before we conclude that she died of hunger and thirst. #aurora
 ~ read_answers += AnswerId.mother_12_normal_13
 ~ feedback_kind = "unmatched"
 }
@@ -3089,3 +3075,40 @@ The Dayfolk often get stuck in their own understanding of the world. You may wan
 {hypothesis_return == "scholar": -> test_radio_scholar}
 -> test_radio_sun
 
+
+=== query_night_unending_path ===
+# question_id:query_night_unending_path
+It means an unending journey: someone left and did not return. On a memorial, it records <link="disappearance">disappearance</link>. It does not tell us what happened to that person. #aurora
+~ queried_night_glyphs += NightGlyph.unending_path
+# event:night_symbol_queried:unending_path
+~ feedback_kind = "linked"
+-> return_night_glyph
+
+=== query_night_dry_river ===
+# question_id:query_night_dry_river
+It represents a river that has run dry. That is the meaning of the symbol. Whether it describes this place, a loss of water, or the circumstances of her death needs further evidence. #aurora
+~ queried_night_glyphs += NightGlyph.dry_river
+# event:night_symbol_queried:dry_river
+~ feedback_kind = "linked"
+-> return_night_glyph
+
+=== query_night_ascending_path ===
+# question_id:query_night_ascending_path
+A path leading upward, toward the surface. It records a journey. It does not tell us how steep the path was or why the traveller died. #aurora
+~ queried_night_glyphs += NightGlyph.ascending_path
+# event:night_symbol_queried:ascending_path
+~ feedback_kind = "linked"
+-> return_night_glyph
+
+=== query_night_crystal_god ===
+# question_id:query_night_crystal_god
+The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals. #aurora
+~ queried_night_glyphs += NightGlyph.crystal_god
+# event:night_symbol_queried:crystal_god
+~ feedback_kind = "linked"
+-> return_night_glyph
+
+=== return_night_glyph ===
+{glyph_return == "mother": -> test_radio_mother}
+{glyph_return == "father": -> test_radio_father}
+-> test_radio_altar
