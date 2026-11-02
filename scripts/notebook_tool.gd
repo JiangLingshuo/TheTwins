@@ -66,10 +66,20 @@ func open() -> void:
 	notebook_opened.emit()
 	if not _taken_out:
 		_taken_out = true
-		await book.open_saved(GameState.notebook_pages, GameState.notebook_spread)
+		# The start screen's book has no sections, so its spread is not reused here.
+		await book.open_saved(GameState.notebook_pages, GameState.notebook_section_spread)
 	else:
 		book.visible = true
 		await book.open_from_icon()
+
+
+## Open on gravestone `id`'s page next time (call it when one is recorded).
+func show_gravestone_next(id: String) -> void:
+	var spread: int = book.get_gravestone_spread(id)
+	if spread < 0 or is_open():
+		return
+	GameState.notebook_section_spread = spread
+	book.set_closed_spread(spread)
 
 
 func close() -> void:
@@ -81,6 +91,7 @@ func _on_book_closed() -> void:
 	book.visible = false
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
+	GameState.notebook_section_spread = book.get_spread()
 	_set_dim(false)
 	notebook_closed.emit()
 

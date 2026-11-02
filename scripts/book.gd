@@ -30,6 +30,18 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs"]
 ## Fixed single-page slots in the Gravestones section (two per spread).
 const GRAVESTONE_SLOTS := 6
+## Gravestone id on each Gravestones slot, in page order: even slots are the
+## Day pages on the left, odd slots the Night pages on the right. "" = not set yet.
+const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "", "", "", "", ""]
+## Notebook page info for each gravestone id (see gravestone_page.gd setup()).
+const GRAVESTONE_INFO := {
+	"baby_tomb": {
+		"sketch": "res://assets/Art/day/baby.png",
+		"description": "",
+		"rubbings": [],
+		"clues": [],
+	},
+}
 
 ## Page texts, in reading order. Page 0 is the inside of the cover (left),
 ## page 1 is the first right-hand page, and so on. "#PLAYER#" (or "{name}") becomes the player's name.
@@ -95,8 +107,6 @@ var _write_player: AudioStreamPlayer
 ## Spreads in each section, in SECTION_TITLES order. The current section and the
 ## spread within it are worked out from _spread, so there is one position only.
 var section_spreads: PackedInt32Array = [GRAVESTONE_SLOTS / 2, 1, 1, 1, 1]
-## Which gravestone slots hold a collected gravestone (placeholder data for now).
-var gravestone_collected: Array[bool] = []
 var _day_material: ShaderMaterial
 var _night_material: ShaderMaterial
 var _normal_ink: Color
@@ -113,9 +123,8 @@ func _ready() -> void:
 	flip_sheet.visible = false
 	_set_corners_visible(false)
 	tabs.visible = false
+	flip_sheet.get_node("Gravestone").set_interactive(false)  # a picture of the page
 	if use_sections:
-		gravestone_collected.resize(GRAVESTONE_SLOTS)
-		gravestone_collected.fill(false)
 		tabs.setup(SECTION_TITLES)
 		tabs.tab_pressed.connect(jump_to_section)
 	left_corner.pressed.connect(flip_backward)
@@ -194,14 +203,13 @@ func get_section_spread() -> int:
 	return _spread - _section_start(get_section())
 
 
-## Show a gravestone slot (0 to GRAVESTONE_SLOTS - 1) as collected or not.
-func set_gravestone_collected(slot: int, collected: bool) -> void:
-	if slot < 0 or slot >= gravestone_collected.size():
-		return
-	gravestone_collected[slot] = collected
-	if is_open() and not _busy:
-		_fill(left_text, left_number, _spread * 2)
-		_fill(right_text, right_number, _spread * 2 + 1)
+## True if the gravestone on a slot (0 to GRAVESTONE_SLOTS - 1) has been
+## recorded (GameState.gravestones).
+func is_gravestone_collected(slot: int) -> bool:
+	if slot < 0 or slot >= GRAVESTONE_SLOT_IDS.size():
+		return false
+	var id := GRAVESTONE_SLOT_IDS[slot]
+	return not id.is_empty() and GameState.gravestones.has(id)
 
 
 ## Write `text` on a page. The book opens and turns to that page by itself, and
@@ -267,6 +275,7 @@ func _turn_to(spread: int) -> void:
 ## Turn one page forward, or to spread `to` in a single turn.
 func _turn_forward(to: int = -1) -> void:
 	_busy = true
+	_release_page_focus()
 	_set_corners_visible(false)
 	_flip_player.play()
 	var next := _spread + 1 if to < 0 else to
@@ -284,6 +293,7 @@ func _turn_forward(to: int = -1) -> void:
 ## Turn one page back, or to spread `to` in a single turn.
 func _turn_backward(to: int = -1) -> void:
 	_busy = true
+	_release_page_focus()
 	_set_corners_visible(false)
 	_flip_player.play()
 	var prev := _spread - 1 if to < 0 else to
@@ -300,6 +310,7 @@ func _turn_backward(to: int = -1) -> void:
 ## bottom-right corner, where it stays as an icon.
 func close_to_icon() -> void:
 	_busy = true
+	_release_page_focus()
 	_set_corners_visible(false)
 	tabs.visible = false
 	hint_label.visible = false
@@ -376,6 +387,20 @@ func is_open() -> bool:
 ## Which spread is showing (0 = inside cover + page 1).
 func get_spread() -> int:
 	return _spread
+
+
+## Choose the spread a put-away book opens on next (ignored while it is open).
+func set_closed_spread(spread: int) -> void:
+	if _stowed or not _opened:
+		_spread = clampi(spread, 0, maxi(0, _spread_count() - 1))
+
+
+## Spread holding gravestone `id`'s page in the Gravestones section, or -1.
+func get_gravestone_spread(id: String) -> int:
+	var slot := GRAVESTONE_SLOT_IDS.find(id)
+	if not use_sections or id.is_empty() or slot < 0:
+		return -1
+	return _section_start(0) + slot / 2
 
 
 ## Bring the book back from the corner icon and open it where it was left.
@@ -487,6 +512,7 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	flip_text.position = (left_text if on_left else right_text).position
 	flip_number.position = (left_number if on_left else right_number).position
 	flip_sheet.get_node("Art").position = (left_page if on_left else right_page).get_node("Art").position
+	flip_sheet.get_node("Gravestone").position = (left_page if on_left else right_page).get_node("Gravestone").position
 	_fill(flip_text, flip_number, page_index)
 
 
@@ -518,7 +544,35 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	number_label.text = str(page_index) if page_index > 0 and not content.is_empty() else ""
 	# Each page (and the turning sheet) has an Art node next to its labels.
 	_fill_art(text_label.get_parent().get_node("Art"), page_index)
+	_fill_gravestone(text_label.get_parent().get_node("Gravestone"), page_index)
 	_apply_page_theme(text_label, number_label, page_index)
+
+
+## Show the gravestone page on a Gravestones slot (a blank one with a "?" sketch
+## until its gravestone is recorded), or hide it on other pages.
+func _fill_gravestone(gravestone_page: Control, page_index: int) -> void:
+	var slot := _gravestone_slot(page_index)
+	gravestone_page.visible = slot >= 0
+	if is_gravestone_collected(slot):
+		var id := GRAVESTONE_SLOT_IDS[slot]
+		gravestone_page.setup(id, GRAVESTONE_INFO.get(id, {}))
+	elif slot >= 0:
+		gravestone_page.setup_unknown()
+
+
+## Gravestones slot shown on a page, or -1 if the page is not a gravestone slot.
+func _gravestone_slot(page_index: int) -> int:
+	if not use_sections or page_index / 2 >= _spread_count() or _section_of(page_index / 2) != 0:
+		return -1
+	var slot := page_index - _section_start(0) * 2
+	return slot if slot < GRAVESTONE_SLOTS else -1
+
+
+## Take the keyboard away from the page's text fields before it turns or closes.
+func _release_page_focus() -> void:
+	var focused := get_viewport().gui_get_focus_owner()
+	if focused and is_ancestor_of(focused):
+		focused.release_focus()
 
 
 # --- Day / Night page themes -------------------------------------------------
@@ -546,6 +600,7 @@ func _make_paper_material(paper: Color) -> ShaderMaterial:
 func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) -> void:
 	var page: Panel = text_label.get_parent()
 	var art := page.get_node("Art")
+	var gravestone_page := page.get_node("Gravestone")
 	var day_night := use_sections and page_index / 2 < _spread_count() \
 		and day_night_sections.has(_section_of(page_index / 2))
 	if not day_night:
@@ -553,6 +608,7 @@ func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) 
 		text_label.label_settings.font_color = _normal_ink
 		number_label.label_settings.font_color = _normal_number_ink
 		art.reset_ink()
+		gravestone_page.set_ink(_normal_ink)
 		return
 	var is_day := page_index % 2 == 0  # Day on the left, Night on the right
 	var ink := day_ink if is_day else night_ink
@@ -560,6 +616,7 @@ func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) 
 	text_label.label_settings.font_color = ink
 	number_label.label_settings.font_color = Color(ink, 0.8)
 	art.set_ink(ink, day_faded_alpha if is_day else night_faded_alpha)
+	gravestone_page.set_ink(ink)
 
 
 ## Draw the section placeholder for a page (nothing without sections).
@@ -571,11 +628,7 @@ func _fill_art(art: Control, page_index: int) -> void:
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
 	if section == 0:
-		var slot := page_index - first_page
-		if slot < gravestone_collected.size():
-			art.show_gravestone(gravestone_collected[slot])
-		else:
-			art.clear()
+		art.clear()  # every slot shows a gravestone page instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])
 	elif page_index == first_page + 1:

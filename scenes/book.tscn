@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
 [ext_resource type="Script" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
 [ext_resource type="Script" path="res://scripts/notebook_page_art.gd" id="7_art"]
+[ext_resource type="PackedScene" path="res://scenes/gravestone_page.tscn" id="8_gravestone"]
 
 [sub_resource type="StyleBoxTexture" id="Style_left_page"]
 texture = ExtResource("4_page")
@@ -79,6 +80,14 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
 
+[node name="Gravestone" parent="LeftPage" instance=ExtResource("8_gravestone")]
+visible = false
+layout_mode = 0
+offset_left = 52.0
+offset_top = 42.0
+offset_right = 392.0
+offset_bottom = 472.0
+
 [node name="Text" type="Label" parent="LeftPage" unique_id=452150926]
 layout_mode = 0
 offset_left = 66.0
@@ -114,6 +123,14 @@ offset_right = 351.0
 offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
+
+[node name="Gravestone" parent="RightPage" instance=ExtResource("8_gravestone")]
+visible = false
+layout_mode = 0
+offset_left = 28.0
+offset_top = 42.0
+offset_right = 368.0
+offset_bottom = 472.0
 
 [node name="Text" type="Label" parent="RightPage" unique_id=993425679]
 layout_mode = 0
@@ -171,6 +188,14 @@ offset_right = 351.0
 offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
+
+[node name="Gravestone" parent="FlipSheet" instance=ExtResource("8_gravestone")]
+visible = false
+layout_mode = 0
+offset_left = 28.0
+offset_top = 42.0
+offset_right = 368.0
+offset_bottom = 472.0
 
 [node name="Text" type="Label" parent="FlipSheet" unique_id=671834423]
 layout_mode = 0

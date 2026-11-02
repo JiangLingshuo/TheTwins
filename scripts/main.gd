@@ -17,6 +17,8 @@ signal time_changed(is_day: bool)
 @export var fade_in_time: float = 0.8
 ## Key that switches day/night (for testing). Set to KEY_NONE to disable.
 @export var toggle_key: Key = KEY_F1
+## Message shown when a gravestone is recorded in the notebook.
+@export var gravestone_recorded_message: String = "New gravestone recorded in the Notebook."
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -24,6 +26,7 @@ signal time_changed(is_day: bool)
 @onready var _notebook_tool: Control = $NotebookTool
 @onready var _rubbing_tool: Control = $RubbingTool
 @onready var _day_cemetery: Control = $DayCemetery
+@onready var _toast: Control = $Toast
 
 ## True during the day, false at night.
 var is_day: bool = true:
@@ -55,6 +58,11 @@ func _ready() -> void:
 	_flashlight_tool.state_changed.connect(func(state: int) -> void:
 		if state != 0:
 			_rubbing_tool.turn_off())
+	# A gravestone emits `recorded` once, after it is collected.
+	for gravestone in get_tree().get_nodes_in_group("gravestones"):
+		gravestone.recorded.connect(func(id: String) -> void:
+			_notebook_tool.show_gravestone_next(id)
+			_toast.show_message(gravestone_recorded_message))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

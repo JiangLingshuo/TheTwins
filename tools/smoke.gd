@@ -163,6 +163,7 @@ func _check_main_after_close() -> void:
 	notebook_tool.open()
 	await _wait(3.0)
 	_expect("notebook button opens the notebook", notebook.is_open())
+	_expect("first opening shows Gravestones 1/3, not the start book's last page", notebook.get_spread() == 0 and notebook.get_section() == 0)
 	_expect("notebook keeps the pages from the start screen", notebook.pages.size() > 3 and notebook.pages[3] == "carried over")
 	_expect("opening the notebook turns the flashlight off", flashlight_tool.state == flashlight_tool.State.OFF)
 	notebook_tool.close()
@@ -174,6 +175,7 @@ func _check_main_after_close() -> void:
 	notebook_tool.close()
 	await _wait(2.5)
 	await _check_notebook_sections(notebook_tool)
+	await _check_gravestone_record(main, notebook_tool)
 	await _check_rubbing(main)
 
 
@@ -182,12 +184,16 @@ func _check_notebook_sections(notebook_tool: Node) -> void:
 	notebook_tool.open()
 	await _wait(3.0)
 	_expect("notebook has 7 spreads in 5 sections", notebook._spread_count() == 7 and notebook.tabs.get_child_count() == 5)
-	notebook.jump_to_section(0)
+	notebook.jump_to_section(2)
 	notebook.jump_to_section(3)  # ignored: a page is already turning
 	await _wait(1.0)
+	_expect("tab jump ignores a second click while turning", notebook.get_section() == 2)
+	notebook.jump_to_section(0)
+	await _wait(1.0)
 	_expect("tab jumps to the first spread of its section", notebook.get_spread() == 0 and notebook.get_section() == 0)
-	_expect("all six gravestone slots start uncollected", notebook.gravestone_collected == [false, false, false, false, false, false])
-	_expect("gravestone pages show the placeholder", notebook.left_page.get_node("Art")._kind == preload("res://scripts/notebook_page_art.gd").Kind.GRAVESTONE)
+	_expect("all six gravestone slots start uncollected", range(6).all(func(i): return not notebook.is_gravestone_collected(i)))
+	_expect("gravestone pages show a blank page with a \"?\" sketch", notebook.left_page.get_node("Gravestone").visible \
+		and notebook.left_page.get_node("Gravestone")._unknown and notebook.left_page.get_node("Art")._kind == 0)
 	_expect("Gravestones: Day page on the left, Night page on the right", notebook.left_page.material == notebook._day_material and notebook.right_page.material == notebook._night_material)
 	_expect("Night page has light ink", notebook.right_text.label_settings.font_color == notebook.night_ink and notebook.left_text.label_settings.font_color == notebook.day_ink)
 	_expect("only the current section's tab is on the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, false, false, false, false])
@@ -219,6 +225,114 @@ func _check_notebook_sections(notebook_tool: Node) -> void:
 	notebook.flip_backward()
 	await _wait(2.5)
 	_expect("previous from Gravestones 1/3 closes the notebook", not notebook_tool.is_open())
+
+
+func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
+	var game_state := _autoload("GameState")
+	var tomb = main.get_node("DayCemetery/BabyTomb")
+	var rubbing_tool = main.get_node("RubbingTool")
+	var image: Image = tomb._image
+	var used := image.get_used_rect()
+	var stone_pixel := Vector2(used.get_center())
+	var on_stone: Vector2 = tomb.get_global_transform() * (stone_pixel / Vector2(image.get_size()) * tomb.size)
+	var off_stone: Vector2 = tomb.get_global_transform() * Vector2(5, 5)
+	_expect("the stone's centre is part of the stone", image.get_pixelv(Vector2i(stone_pixel)).a > 0.5)
+
+	_move_mouse(on_stone)
+	await _wait(0.4)
+	_expect("hovering the baby tomb highlights it", tomb._material.get_shader_parameter("highlight") > 0.9)
+	_move_mouse(off_stone)
+	await _wait(0.4)
+	_expect("moving away removes the highlight", tomb._material.get_shader_parameter("highlight") < 0.01)
+
+	# Leave the notebook on another section: recording should bring it back.
+	notebook_tool.open()
+	await _wait(3.0)
+	notebook_tool.book.jump_to_section(2)
+	await _wait(1.0)
+	notebook_tool.close()
+	await _wait(2.5)
+	_expect("the notebook was left on the Clues section", notebook_tool.book.get_section() == 2)
+
+	rubbing_tool.set_active(true)
+	_click(on_stone)
+	await _wait(0.1)
+	_expect("clicks while rubbing do not record the tomb", not game_state.gravestones.has("baby_tomb"))
+	rubbing_tool.set_active(false)
+	_click(off_stone)
+	await _wait(0.1)
+	_expect("clicking beside the stone does not record it", not game_state.gravestones.has("baby_tomb"))
+	_click(on_stone)
+	_click(on_stone)
+	await _wait(0.1)
+	_expect("clicking the baby tomb records it once", game_state.gravestones.count("baby_tomb") == 1)
+	_expect("recording does not open the notebook", not notebook_tool.is_open())
+	var toast = main.get_node("Toast")
+	_expect("recording shows the toast", toast.visible and toast.get_node("Panel/Label").text == "New gravestone recorded in the Notebook.")
+	_expect("the toast never takes mouse input", toast.mouse_filter == Control.MOUSE_FILTER_IGNORE \
+		and toast.find_children("*", "Control", true, false).all(func(c): return c.mouse_filter == Control.MOUSE_FILTER_IGNORE))
+	await _wait(1.5)
+	_expect("the toast stays up for about 2 seconds", toast.visible and toast.modulate.a > 0.99)
+	await _wait(1.5)
+	_expect("the toast fades out", not toast.visible)
+	_click(on_stone)
+	await _wait(0.2)
+	_expect("clicking a recorded tomb shows no toast and no duplicate", not toast.visible and game_state.gravestones.count("baby_tomb") == 1)
+
+	var notebook = notebook_tool.book
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("the notebook opens on the newly recorded gravestone's page", notebook.get_spread() == 0)
+	var left_entry = notebook.left_page.get_node("Gravestone")
+	_expect("baby tomb page is on the left page of Gravestones 1/3", notebook.get_spread() == 0 and left_entry.visible and left_entry.gravestone_id == "baby_tomb")
+	_expect("its unknown placeholder is gone", notebook.left_page.get_node("Art")._kind == 0)
+	var right_entry = notebook.right_page.get_node("Gravestone")
+	_expect("the right page shows a blank unknown gravestone page", right_entry.visible and right_entry._unknown \
+		and right_entry.sketch.texture == null and right_entry.description.text.is_empty() \
+		and not right_entry.identity_input.editable)
+	_expect("the recorded page is no longer unknown", not left_entry._unknown and left_entry.identity_input.editable)
+	_expect("only the baby tomb is recorded", range(6).filter(func(i): return notebook.is_gravestone_collected(i)) == [0])
+	_expect("the baby tomb page uses the Day ink", left_entry.description.get_theme_color("font_color") == notebook.day_ink)
+	_expect("the sketch is cropped to the stone", left_entry.sketch.texture != null and left_entry.sketch.texture.get_size() == Vector2(used.size))
+
+	left_entry.identity_input.text = "a child"
+	left_entry.identity_input.text_changed.emit("a child")
+	left_entry.death_input.text = "unknown"
+	left_entry.death_input.text_changed.emit("unknown")
+	notebook.flip_forward()
+	await _wait(0.9)
+	notebook.flip_backward()
+	await _wait(0.9)
+	_expect("answers survive a page turn", left_entry.identity_input.text == "a child" and left_entry.death_input.text == "unknown")
+	notebook_tool.close()
+	await _wait(0.15)
+	# Closing folds the left page (the baby tomb's) over on the turning sheet.
+	var sheet_entry = notebook.flip_sheet.get_node("Gravestone")
+	_expect("the turning sheet carries the filled-in page", sheet_entry.visible and sheet_entry.identity_input.text == "a child" and not sheet_entry.identity_input.editable)
+	await _wait(2.4)
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("answers survive closing the notebook", left_entry.visible and left_entry.identity_input.text == "a child" and left_entry.death_input.text == "unknown")
+	_expect("answers are kept in GameState", game_state.gravestone_reports.get("baby_tomb", {}) == {"identity": "a child", "death": "unknown"})
+	notebook_tool.close()
+	await _wait(2.5)
+
+
+func _move_mouse(position: Vector2) -> void:
+	var motion := InputEventMouseMotion.new()
+	motion.position = position
+	motion.global_position = position
+	root.push_input(motion, true)
+
+
+func _click(position: Vector2) -> void:
+	for pressed in [true, false]:
+		var button := InputEventMouseButton.new()
+		button.button_index = MOUSE_BUTTON_LEFT
+		button.pressed = pressed
+		button.position = position
+		button.global_position = position
+		root.push_input(button, true)
 
 
 func _check_rubbing(main: Node) -> void:
