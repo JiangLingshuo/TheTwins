@@ -29,19 +29,12 @@ const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
 const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs"]
 ## Fixed single-page slots in the Gravestones section (two per spread).
-const GRAVESTONE_SLOTS := 6
+const GRAVESTONE_SLOTS := 8
 ## Gravestone id on each Gravestones slot, in page order: even slots are the
 ## Day pages on the left, odd slots the Night pages on the right. "" = not set yet.
-const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "", "", "", "", ""]
+const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scholar_tomb", "mother_tomb", "sun_tomb", "father_tomb", "girl_tomb", ""]
 ## Notebook page info for each gravestone id (see gravestone_page.gd setup()).
-const GRAVESTONE_INFO := {
-	"baby_tomb": {
-		"sketch": "res://assets/Art/day/baby.png",
-		"description": "",
-		"rubbings": [],
-		"clues": [],
-	},
-}
+
 
 ## Page texts, in reading order. Page 0 is the inside of the cover (left),
 ## page 1 is the first right-hand page, and so on. "#PLAYER#" (or "{name}") becomes the player's name.
@@ -108,7 +101,7 @@ var _flip_player: AudioStreamPlayer
 var _write_player: AudioStreamPlayer
 ## Spreads in each section, in SECTION_TITLES order. The current section and the
 ## spread within it are worked out from _spread, so there is one position only.
-var section_spreads: PackedInt32Array = [GRAVESTONE_SLOTS / 2, 1, 1, 1, 1]
+var section_spreads: PackedInt32Array = [3, 1, 1, 1, 1]
 ## A rubbing changed during a page turn: refill the pages when it finishes.
 var _refresh_pending := false
 var _day_material: ShaderMaterial
@@ -136,6 +129,7 @@ func _ready() -> void:
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
+		GameState.notebook_changed.connect(_on_rubbings_changed)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -574,6 +568,7 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	_fill_gravestone(text_label.get_parent().get_node("Gravestone"), page_index)
 	_fill_rubbings(text_label.get_parent().get_node("Rubbings"), page_index)
 	_apply_page_theme(text_label, number_label, page_index)
+	_fill_records(text_label, page_index)
 
 
 ## The collected rubbings that fall on a page of the Rubbings section, in
@@ -590,14 +585,13 @@ func _fill_rubbings(rubbing_list: Control, page_index: int) -> void:
 ## Size the Rubbings section to its entries (at least one spread). The spread on
 ## show keeps its place if it lies in a later section.
 func _update_rubbing_spreads() -> void:
-	var per_spread := rubbings_per_page * 2
-	var needed := maxi(1, ceili(float(GameState.rubbings.size()) / per_spread))
-	var change := needed - section_spreads[1]
-	if change == 0:
-		return
-	if _section_of(_spread) > 1:
-		_spread += change
-	section_spreads[1] = needed
+	var section := _section_of(_spread)
+	var local_spread := _spread - _section_start(section)
+	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
+	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
+	for index in [2, 3, 4]:
+		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 2.0)))
+	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
 
 
 ## A rubbing was recorded or deciphered: update the open pages.
@@ -620,7 +614,7 @@ func _fill_gravestone(gravestone_page: Control, page_index: int) -> void:
 	gravestone_page.visible = slot >= 0
 	if is_gravestone_collected(slot):
 		var id := GRAVESTONE_SLOT_IDS[slot]
-		gravestone_page.setup(id, GRAVESTONE_INFO.get(id, {}))
+		gravestone_page.setup(id, GameState.get_gravestone_info(id))
 	elif slot >= 0:
 		gravestone_page.setup_unknown()
 
@@ -695,7 +689,7 @@ func _fill_art(art: Control, page_index: int) -> void:
 		return
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
-	if section == 0 or (section == 1 and not GameState.rubbings.is_empty()):
+	if section == 0 or section >= 2 or (section == 1 and not GameState.rubbings.is_empty()):
 		art.clear()  # gravestone pages / rubbing entries are shown instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])
@@ -757,3 +751,65 @@ func _nudge_hint() -> void:
 		t.tween_property(hint_label, "modulate:a", 0.2, 0.12)
 		t.tween_property(hint_label, "modulate:a", 1.0, 0.12)
 	name_input.grab_focus()
+
+
+# One full-text entry per page; long documents scroll instead of being clipped.
+func _fill_records(text_label: Label, page_index: int) -> void:
+	var page := text_label.get_parent()
+	var reader: ScrollContainer = page.get_node_or_null("Records")
+	if reader == null:
+		reader = ScrollContainer.new()
+		reader.name = "Records"
+		reader.position = text_label.position
+		reader.size = text_label.size
+		reader.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		page.add_child(reader)
+		var body := RichTextLabel.new()
+		body.name = "Body"
+		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		body.fit_content = true
+		body.scroll_active = false
+		body.selection_enabled = true
+		body.bbcode_enabled = false
+		reader.add_child(body)
+	var section := _section_of(page_index / 2) if use_sections else -1
+	reader.visible = section >= 2 and section != 3
+	text_label.visible = section < 2
+	_fill_manuscript_items(text_label, page_index, section)
+	if not reader.visible:
+		return
+	var entries := GameState.notebook_entries(section)
+	var index := page_index - _section_start(section) * 2
+	var text := ""
+	if index < entries.size():
+		var entry: Dictionary = entries[index]
+		text = str(entry.get("title", "")) + "\n\n" + str(entry.get("body", ""))
+	elif index == 0:
+		text = SECTION_TITLES[section] + "\n\nNo entries yet."
+	var body: RichTextLabel = reader.get_node("Body")
+	body.add_theme_font_override("normal_font", text_label.label_settings.font)
+	body.add_theme_font_size_override("normal_font_size", 23)
+	body.add_theme_color_override("default_color", text_label.label_settings.font_color)
+	var filled := GameState.fill_placeholders(text)
+	if body.text != filled:
+		body.text = filled
+		reader.scroll_vertical = 0
+
+
+func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
+	var page := text_label.get_parent()
+	var items: ScrollContainer = page.get_node_or_null("ManuscriptItems")
+	if items == null:
+		items = ScrollContainer.new()
+		items.set_script(preload("res://scripts/manuscript_items.gd"))
+		items.name = "ManuscriptItems"
+		items.position = text_label.position
+		items.size = text_label.size
+		items.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+		page.add_child(items)
+	items.visible = section == 3
+	if section != 3:
+		return
+	var entries := GameState.notebook_entries(3)
+	var first := (page_index - _section_start(3) * 2) * 4
+	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet)

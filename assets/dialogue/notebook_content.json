@@ -1,0 +1,3586 @@
+{
+  "version": 1,
+  "sources": {
+    "evidence_master.ink": "2fa3ed44cbbcf1bc49cfc542075f96908c81d9ce271a0aaf05f7e8d7ff0f142c",
+    "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
+    "telecomm_master.ink": "d1a7a4de22309942feb40b03ae1a050d72446f46bbb045c8d5fc2a5c1ac1d7d7"
+  },
+  "gravestones": {
+    "baby_tomb": {
+      "id": "baby_tomb",
+      "source_id": "baby",
+      "title": "The Small Human-Shaped Marker",
+      "location": "day_cemetery",
+      "description": "A small human-shaped marker, as thin as a page of stone. A curved decoration is carved into its surface. Its base continues beneath two other monuments.",
+      "sketch": "res://assets/Art/day/baby.png"
+    },
+    "scholar_tomb": {
+      "id": "scholar_tomb",
+      "source_id": "scholar",
+      "title": "The Crystal Monument",
+      "location": "day_cemetery",
+      "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.",
+      "sketch": "res://assets/Art/day/scholar.png"
+    },
+    "sun_tomb": {
+      "id": "sun_tomb",
+      "source_id": "sun",
+      "title": "The Sun-Shaped Monument",
+      "location": "day_cemetery",
+      "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.",
+      "sketch": "res://assets/Art/day/the rich.png"
+    },
+    "altar_tomb": {
+      "id": "altar_tomb",
+      "source_id": "altar",
+      "title": "The White Infant Altar",
+      "location": "night_cemetery",
+      "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.",
+      "sketch": "res://assets/Art/night/alter.png"
+    },
+    "mother_tomb": {
+      "id": "mother_tomb",
+      "source_id": "mother",
+      "title": "The Small Stone Beside the Altar",
+      "location": "night_cemetery",
+      "description": "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.",
+      "sketch": "res://assets/Art/night/mother.png"
+    },
+    "father_tomb": {
+      "id": "father_tomb",
+      "source_id": "father",
+      "title": "The Other Stone Beside the Altar",
+      "location": "night_cemetery",
+      "description": "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.",
+      "sketch": "res://assets/Art/night/father.png"
+    },
+    "girl_tomb": {
+      "id": "girl_tomb",
+      "source_id": "girl",
+      "title": "The Solitary Human-Shaped Marker",
+      "location": "cemetery_edge",
+      "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.",
+      "sketch": "res://assets/Art/day/girl.png"
+    }
+  },
+  "evidence": {
+    "dayfolk_appearance": {
+      "gravestones": [],
+      "id": "dayfolk_appearance",
+      "title": "The Appearance of the Dayfolk",
+      "body": "The figure has a smooth face and the familiar outline of the Dayfolk. Its features offer a reference for the human-shaped marker.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "dayfolk_appearance"
+        ],
+        "title": [
+          "The Appearance of the Dayfolk"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "dayfolk_appearance",
+          "human_figure_reference"
+        ]
+      },
+      "source_knot": "ev_dayfolk_appearance"
+    },
+    "moon_reference": {
+      "gravestones": [],
+      "id": "moon_reference",
+      "title": "The Moon Above Night City",
+      "body": "A pale crescent is visible above the cemetery. Its outline resembles the curved decoration on the small marker, although it is not quite the shape of Earth's moon.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "moon_reference"
+        ],
+        "title": [
+          "The Moon Above Night City"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "moon_reference",
+          "moon_motif"
+        ]
+      },
+      "source_knot": "ev_moon_reference"
+    },
+    "infant_figure_rubbing": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "infant_figure_rubbing",
+      "title": "The Small Human-Shaped Marker",
+      "body": "The marker takes the shape of a person rather than the tools of an occupation. Its face follows the smooth appearance of the Dayfolk.",
+      "category": "rubbing",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_figure_rubbing"
+        ],
+        "title": [
+          "The Small Human-Shaped Marker"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "human_figure_reference",
+          "infant_memorial",
+          "dayfolk_appearance"
+        ]
+      },
+      "source_knot": "ev_infant_figure_rubbing"
+    },
+    "infant_moon_rubbing": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "infant_moon_rubbing",
+      "title": "The Small Marker's Curved Decoration",
+      "body": "A curved shape is carved into the small marker. The rubbing preserves its outline for comparison with the surrounding world.",
+      "category": "rubbing",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_moon_rubbing"
+        ],
+        "title": [
+          "The Small Marker's Curved Decoration"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "moon_motif"
+        ]
+      },
+      "source_knot": "ev_infant_moon_rubbing"
+    },
+    "designer_manuscript": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "designer_manuscript",
+      "title": "A Marker for Someone Without an Occupation",
+      "body": "A translated copy of designer manuscript\nOur cemetery usually represents a person through an icon of their occupation. This burial is different: the deceased is an infant who had not yet been assigned an occupation. None of the existing designs would do.\n\nThe family asked us not to define the child by work he had never begun. We chose a human figure instead. The child had no occupation, but he was still a person.\n\n\"A child without an occupation is a person before anything else.\"",
+      "category": "manuscript",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "designer_manuscript"
+        ],
+        "title": [
+          "A Marker for Someone Without an Occupation"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "infant_identity",
+          "occupation_marker_custom",
+          "human_figure_reference"
+        ]
+      },
+      "source_knot": "ev_designer_manuscript"
+    },
+    "designer_journal": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "designer_journal",
+      "title": "A Page of the Designer's Journal",
+      "body": "My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
+      "category": "manuscript",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "designer_journal"
+        ],
+        "title": [
+          "A Page of the Designer's Journal"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "infant_appearance_mismatch",
+          "family_requested_depiction"
+        ]
+      },
+      "source_knot": "ev_designer_journal"
+    },
+    "infant_graffiti": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "infant_graffiti",
+      "title": "A Sketch of the Infant",
+      "body": "The searchlight reveals an old sketch of the infant. His appearance differs from the smooth figure chosen for the marker.",
+      "category": "trace",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_graffiti"
+        ],
+        "title": [
+          "A Sketch of the Infant"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2000"
+        ],
+        "searchlight_years_ago": [
+          "50"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "infant_appearance_mismatch",
+          "infant_actual_appearance"
+        ]
+      },
+      "source_knot": "ev_infant_graffiti"
+    },
+    "infant_death_doubt": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "infant_death_doubt",
+      "title": "An Unresolved Death",
+      "body": "The family's chosen depiction does not match with the records of the infant's appearance. The tombstone's expression of natural death does not settle what actually happened to him. There may be unexplained circumstances behind this death.",
+      "category": "finding",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_death_doubt"
+        ],
+        "title": [
+          "An Unresolved Death"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "infant_death_unresolved",
+          "infant_appearance_mismatch"
+        ]
+      },
+      "source_knot": "ev_infant_death_doubt"
+    },
+    "shared_family_base": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "shared_family_base",
+      "title": "One Base, Three Tombs",
+      "body": "The small gravestone, the crystal monument, and the sun-shaped monument share one continuous stone base. They are not merely three separate graves standing close together.",
+      "category": "observation",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "shared_family_base"
+        ],
+        "title": [
+          "One Base, Three Tombs"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "shared_family_plot",
+          "three_family_markers",
+          "missing_family_member_reference"
+        ]
+      },
+      "source_knot": "ev_shared_family_base"
+    },
+    "crystal_marker_rubbing": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "crystal_marker_rubbing",
+      "title": "The Crystal Monument's Outline",
+      "body": "The monument is a transparent, many-sided crystal, half black and half white. The rubbing preserves the outline of its facets.",
+      "category": "rubbing",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_marker_rubbing"
+        ],
+        "title": [
+          "The Crystal Monument's Outline"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "crystal_shape",
+          "crystal_research_reference"
+        ]
+      },
+      "source_knot": "ev_crystal_marker_rubbing"
+    },
+    "scholar_beast_rubbing": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "scholar_beast_rubbing",
+      "title": "The Crystal Monument's Twin Beast",
+      "body": "A twin beast is carved on the crystal monument. Its two halves belong to one body, but their appearances differ.",
+      "category": "rubbing",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "scholar_beast_rubbing"
+        ],
+        "title": [
+          "The Crystal Monument's Twin Beast"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "twin_beast_motif",
+          "disappearance_symbol_reference"
+        ]
+      },
+      "source_knot": "ev_scholar_beast_rubbing"
+    },
+    "night_city_crystal": {
+      "gravestones": [],
+      "id": "night_city_crystal",
+      "title": "Crystal from Night City",
+      "body": "This mineral was found in Night City. Its facets resemble the outline of the crystal monument in Day City.",
+      "category": "object",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_city_crystal"
+        ],
+        "title": [
+          "Crystal from Night City"
+        ],
+        "category": [
+          "object"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "crystal_shape",
+          "night_city_mineral_origin",
+          "intercity_resource_exchange"
+        ]
+      },
+      "source_knot": "ev_night_city_crystal"
+    },
+    "skin_picture": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "skin_picture",
+      "title": "The Picture Preserved on Skin",
+      "body": "Rewound to a time before the skin decayed, the searchlight reveals the picture clearly. A member of the Dayfolk and a member of the Nightfolk reach out and clasp hands.\n\nThe lines are formed by blue blood seeping through the skin. A skin drawing with unexplained reason.",
+      "category": "trace",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "skin_picture"
+        ],
+        "title": [
+          "The Picture Preserved on Skin"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2005"
+        ],
+        "searchlight_years_ago": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "day_night_handholding",
+          "skin_as_message_medium",
+          "shared_body_reference"
+        ]
+      },
+      "source_knot": "ev_skin_picture"
+    },
+    "disappearance_inquiry": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "disappearance_inquiry",
+      "title": "The Scholar's Notes on Disappearances",
+      "body": "The unexplained disappearances in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
+      "category": "manuscript",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "disappearance_inquiry"
+        ],
+        "title": [
+          "The Scholar's Notes on Disappearances"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "dawn_disappearances",
+          "unexplained_waking_wounds",
+          "sleep_coffin_required",
+          "husband_disappearance",
+          "day_city_bias"
+        ]
+      },
+      "source_knot": "ev_disappearance_inquiry"
+    },
+    "profession_record": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "profession_record",
+      "title": "The Scholar, Her Work, and Her Patron",
+      "body": "The record describes a Day City resident who first studied this transparent mineral and discovered the energy within it. She was granted the title of Scholar.\n\nThe stones were later used to power machinery. The occupational title thus became associated with crystal research.\n\nA young man from a wealthy family was the first to invest in her research. He later became her husband and came to be known as the Tycoon.\n\nIn recognition of her outstanding contributions to Day City, the Scholar may apply for a mausoleum beyond the usual grave-marker design and have her family interred within it. For the Dayfolk, who place such importance on the rituals of death, this is the highest honor.",
+      "category": "manuscript",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "profession_record"
+        ],
+        "title": [
+          "The Scholar, Her Work, and Her Patron"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "scholar_identity",
+          "tycoon_identity",
+          "crystal_research_reference",
+          "scholar_tycoon_marriage",
+          "family_mausoleum_custom"
+        ]
+      },
+      "source_knot": "ev_profession_record"
+    },
+    "one_way_passage_order": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "one_way_passage_order",
+      "title": "An Order for a One-Way Passage",
+      "body": "An order to the Scholar: We must put an end to Nightfolk incursions at their source.\n\nThey were once allowed to take our food in exchange for the crystals they excavated. Now they neglect their work, yet continue to demand more and more from Day City.\n\nA one-way passage must be established: the Dayfolk may descend, but the Nightfolk must not be allowed to ascend.",
+      "category": "manuscript",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "one_way_passage_order"
+        ],
+        "title": [
+          "An Order for a One-Way Passage"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "one_way_passage",
+          "intercity_resource_exchange",
+          "night_city_supply_blockade",
+          "day_city_bias"
+        ]
+      },
+      "source_knot": "ev_one_way_passage_order"
+    },
+    "sun_reference": {
+      "gravestones": [],
+      "id": "sun_reference",
+      "title": "The Sun Above Day City",
+      "body": "The bright sun above Day City offers a possible reference for the monument's radiating outline. The same sun-like outline can also be compared with the pointed rims of Day City coins.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sun_reference"
+        ],
+        "title": [
+          "The Sun Above Day City"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "sun_shape",
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_sun_reference"
+    },
+    "sun_shaped_marker_rubbing": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "sun_shaped_marker_rubbing",
+      "title": "The Sun-Shaped Monument",
+      "body": "Radiating points surround the monument like a shining sun. The rubbing records its distinctive outline.",
+      "category": "rubbing",
+      "gravestone": "sun_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sun_shaped_marker_rubbing"
+        ],
+        "title": [
+          "The Sun-Shaped Monument"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "sun_shape",
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_sun_shaped_marker_rubbing"
+    },
+    "sun_shaped_beast_rubbing": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "sun_shaped_beast_rubbing",
+      "title": "The Sun-Shaped Monument's Twin Beast",
+      "body": "A small creature occupies the center of the monument. One half looks different from the other, although both are joined to the same body.",
+      "category": "rubbing",
+      "gravestone": "sun_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sun_shaped_beast_rubbing"
+        ],
+        "title": [
+          "The Sun-Shaped Monument's Twin Beast"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "twin_beast_motif",
+          "disappearance_symbol_reference"
+        ]
+      },
+      "source_knot": "ev_sun_shaped_beast_rubbing"
+    },
+    "day_city_coin": {
+      "gravestones": [],
+      "id": "day_city_coin",
+      "title": "A Coin from the Wishing Pool",
+      "body": "Circulating coins once lay in the wishing pool beneath the ram-spirit emblem. Their pointed rims form a sun-like outline, similar to the sun-shaped monument. The pool fell out of use as technology developed and people turned to other beliefs.",
+      "category": "object",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "day_city_coin"
+        ],
+        "title": [
+          "A Coin from the Wishing Pool"
+        ],
+        "category": [
+          "object"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "1990"
+        ],
+        "searchlight_years_ago": [
+          "60"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "sun_shape",
+          "day_city_currency",
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_day_city_coin"
+    },
+    "ram_spirit_emblem": {
+      "gravestones": [],
+      "id": "ram_spirit_emblem",
+      "title": "The Ram-Spirit Emblem",
+      "body": "A ram-spirit emblem stands above the wishing pool. It belongs to the religious imagery of Day City.",
+      "category": "rubbing",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "ram_spirit_emblem"
+        ],
+        "title": [
+          "The Ram-Spirit Emblem"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "day_city_belief",
+          "ram_spirit_motif"
+        ]
+      },
+      "source_knot": "ev_ram_spirit_emblem"
+    },
+    "giant_footprint": {
+      "gravestones": [],
+      "id": "giant_footprint",
+      "title": "A Giant Footprint in the Ruins",
+      "body": "A vast footprint remains in the ruins. The print alone does not reveal the full appearance of the creature that left it.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "giant_footprint"
+        ],
+        "title": [
+          "A Giant Footprint in the Ruins"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_city_ruins"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "ancient_creature_trace",
+          "twin_beast_reference"
+        ]
+      },
+      "source_knot": "ev_giant_footprint"
+    },
+    "twin_beast_trace": {
+      "gravestones": [],
+      "id": "twin_beast_trace",
+      "title": "The Creature Revealed Above the Footprint",
+      "body": "The searchlight reveals the creature that once occupied this space: one body with two strikingly different halves. Its outline can be compared with the small beasts carved on the monuments.",
+      "category": "trace",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "twin_beast_trace"
+        ],
+        "title": [
+          "The Creature Revealed Above the Footprint"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_city_ruins"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "1800"
+        ],
+        "searchlight_years_ago": [
+          "250"
+        ],
+        "searchlight_date_status": [
+          "provisional_ancient_date"
+        ],
+        "evidence_tag": [
+          "twin_beast_motif",
+          "twin_beast_reference",
+          "contrasting_halves"
+        ]
+      },
+      "source_knot": "ev_twin_beast_trace"
+    },
+    "twin_beast_account": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "twin_beast_account",
+      "title": "An Account of the Twin-Bodied Creature",
+      "body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.",
+      "category": "manuscript",
+      "gravestone": "sun_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "twin_beast_account"
+        ],
+        "title": [
+          "An Account of the Twin-Bodied Creature"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "twin_beast_reference",
+          "contrasting_halves",
+          "ancient_disappearance"
+        ]
+      },
+      "source_knot": "ev_twin_beast_account"
+    },
+    "repeated_beast_motifs": {
+      "gravestones": [],
+      "id": "repeated_beast_motifs",
+      "title": "The Same Beast on Other Graves",
+      "body": "The same twin beast appears on several other markers in Day City. It is not a decoration unique to the sun-shaped monument.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "repeated_beast_motifs"
+        ],
+        "title": [
+          "The Same Beast on Other Graves"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "twin_beast_motif",
+          "repeated_local_symbol"
+        ]
+      },
+      "source_knot": "ev_repeated_beast_motifs"
+    },
+    "family_photo": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "family_photo",
+      "title": "A Photograph of Four",
+      "body": "A photograph once stood in front of the monument. It shows four members of a family. There are only three markers on the shared base.",
+      "category": "trace",
+      "gravestone": "sun_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "family_photo"
+        ],
+        "title": [
+          "A Photograph of Four"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2000"
+        ],
+        "searchlight_years_ago": [
+          "50"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "four_person_family",
+          "missing_family_member_reference",
+          "family_image_reference"
+        ]
+      },
+      "source_knot": "ev_family_photo"
+    },
+    "altar_infant_rubbing": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "altar_infant_rubbing",
+      "title": "The Infant on the White Altar",
+      "body": "An infant rests on the white, house-shaped altar. The pose differs slightly from the human-shaped marker in Day City, but the two images invite comparison.",
+      "category": "rubbing",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "altar_infant_rubbing"
+        ],
+        "title": [
+          "The Infant on the White Altar"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "infant_memorial",
+          "night_infant_reference"
+        ]
+      },
+      "source_knot": "ev_altar_infant_rubbing"
+    },
+    "altar_path_rubbing": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "altar_path_rubbing",
+      "title": "The Altar's Unending Path",
+      "body": "A path runs along the altar's pillars. Its pattern has no visible end.",
+      "category": "rubbing",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "altar_path_rubbing"
+        ],
+        "title": [
+          "The Altar's Unending Path"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "endless_path_motif",
+          "night_departure_reference"
+        ]
+      },
+      "source_knot": "ev_altar_path_rubbing"
+    },
+    "altar_blessing_glyph": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "altar_blessing_glyph",
+      "title": "An Unfamiliar Glyph on the Altar",
+      "body": "An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.",
+      "category": "rubbing",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "altar_blessing_glyph"
+        ],
+        "title": [
+          "An Unfamiliar Glyph on the Altar"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "night_blessing_glyph",
+          "night_symbol_translation",
+          "aurora_translation_knowledge"
+        ]
+      },
+      "source_knot": "ev_altar_blessing_glyph"
+    },
+    "altar_blessing_translation": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "altar_blessing_translation",
+      "title": "A Blessing for the Unending Journey",
+      "body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "category": "finding",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "altar_blessing_translation"
+        ],
+        "title": [
+          "A Blessing for the Unending Journey"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "night_blessing_glyph",
+          "night_symbol_translation",
+          "endless_path_motif",
+          "aurora_translation_knowledge"
+        ]
+      },
+      "source_knot": "ev_altar_blessing_translation"
+    },
+    "crystal_god_rubbing": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "crystal_god_rubbing",
+      "title": "The Crystal God's Outline",
+      "body": "The altar's decoration preserves the outline of the Crystal God, but the place where the crystals once stood is now empty.",
+      "category": "rubbing",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_god_rubbing"
+        ],
+        "title": [
+          "The Crystal God's Outline"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "crystal_god_motif",
+          "night_city_belief"
+        ]
+      },
+      "source_knot": "ev_crystal_god_rubbing"
+    },
+    "removed_crystal_god": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "removed_crystal_god",
+      "title": "The Crystal Figure That Once Stood Here",
+      "body": "In the searchlight's view of the past, crystals fill the altar's empty recess and form the figure of a god. Today the crystals have been pried out.",
+      "category": "trace",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "removed_crystal_god"
+        ],
+        "title": [
+          "The Crystal Figure That Once Stood Here"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2000"
+        ],
+        "searchlight_years_ago": [
+          "50"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "crystal_god_motif",
+          "removed_crystal_offering",
+          "crystal_extraction_reference"
+        ]
+      },
+      "source_knot": "ev_removed_crystal_god"
+    },
+    "altar_moon_stone": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "altar_moon_stone",
+      "title": "A Moon-Shaped Stone on the Altar",
+      "body": "A moon-shaped stone once lay among the altar's offerings. It resembles a small token, but there is nothing here that establishes its value as currency.",
+      "category": "trace",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "altar_moon_stone"
+        ],
+        "title": [
+          "A Moon-Shaped Stone on the Altar"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2000"
+        ],
+        "searchlight_years_ago": [
+          "50"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "moon_stone_offering",
+          "night_blessing_reference",
+          "moon_motif"
+        ]
+      },
+      "source_knot": "ev_altar_moon_stone"
+    },
+    "crystal_god_prophecy": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "crystal_god_prophecy",
+      "title": "The Crystal God's Prophecy",
+      "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
+      "category": "manuscript",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_god_prophecy"
+        ],
+        "title": [
+          "The Crystal God's Prophecy"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "night_infant_reference",
+          "smooth_skinned_child",
+          "night_city_belief",
+          "aurora_translation_knowledge"
+        ]
+      },
+      "source_knot": "ev_crystal_god_prophecy"
+    },
+    "moon_stone_blessing": {
+      "gravestones": [
+        "altar_tomb"
+      ],
+      "id": "moon_stone_blessing",
+      "title": "A Blessing, Not a Payment",
+      "body": "The moon-shaped stones are offerings of blessing, not coins. The Nightfolk do not leave them as payment for goods or mark territory through them. A stone left for someone expresses a wish for their well-being.",
+      "category": "finding",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "moon_stone_blessing"
+        ],
+        "title": [
+          "A Blessing, Not a Payment"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "moon_stone_offering",
+          "night_blessing_reference",
+          "different_exchange_customs"
+        ]
+      },
+      "source_knot": "ev_moon_stone_blessing"
+    },
+    "infant_memorial_correspondence": {
+      "gravestones": [
+        "baby_tomb",
+        "altar_tomb"
+      ],
+      "id": "infant_memorial_correspondence",
+      "title": "Two Memorials to an Infant",
+      "body": "The human-shaped marker in Day City corresponds to the infant memorial in Night City. One city describes a death; the other commemorates a disappearance.",
+      "category": "finding",
+      "gravestone": "altar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_memorial_correspondence"
+        ],
+        "title": [
+          "Two Memorials to an Infant"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "infant_memorial",
+          "paired_day_night_memorials",
+          "contradictory_death_accounts"
+        ]
+      },
+      "source_knot": "ev_infant_memorial_correspondence"
+    },
+    "night_mother_child_rubbing": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_child_rubbing",
+      "title": "A Figure Holding a Child",
+      "body": "The upper part of the small stone shows a figure holding a child. The child can be compared with the infant on the altar.",
+      "category": "rubbing",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_child_rubbing"
+        ],
+        "title": [
+          "A Figure Holding a Child"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "night_infant_reference",
+          "parent_child_image",
+          "night_mother_past"
+        ]
+      },
+      "source_knot": "ev_night_mother_child_rubbing"
+    },
+    "night_mother_hands_rubbing": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_hands_rubbing",
+      "title": "Two Figures Holding Hands",
+      "body": "Below the figure holding a child, a member of the Dayfolk and a member of the Nightfolk hold their hands. The arrangement resembles the picture preserved inside the Scholar's crystal monument.",
+      "category": "rubbing",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_hands_rubbing"
+        ],
+        "title": [
+          "Two Figures Holding Hands"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "day_night_handholding",
+          "night_mother_future",
+          "shared_body_reference"
+        ]
+      },
+      "source_knot": "ev_night_mother_hands_rubbing"
+    },
+    "night_mother_river_rubbing": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_river_rubbing",
+      "title": "The Dry River Around the Stone",
+      "body": "Cracked lines surround the stone like the bed of a dried river. They form the border of the memorial rather than a separate scene in either half.",
+      "category": "rubbing",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_river_rubbing"
+        ],
+        "title": [
+          "The Dry River Around the Stone"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "dry_river_motif",
+          "night_mother_death_reference"
+        ]
+      },
+      "source_knot": "ev_night_mother_river_rubbing"
+    },
+    "dry_underground_river": {
+      "gravestones": [],
+      "id": "dry_underground_river",
+      "title": "The Underground Riverbed",
+      "body": "The underground river has dried up. Its exposed bed preserves the cracked pattern seen around the small stone.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "dry_underground_river"
+        ],
+        "title": [
+          "The Underground Riverbed"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "night_city"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "dry_river_motif",
+          "water_source_lost"
+        ]
+      },
+      "source_knot": "ev_dry_underground_river"
+    },
+    "night_mother_no_traces": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_no_traces",
+      "title": "No Readable Traces Around the Stone",
+      "body": "The searchlight reveals no discernible traces around this stone. There is no record here of later visitors or offerings.",
+      "category": "observation",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_no_traces"
+        ],
+        "title": [
+          "No Readable Traces Around the Stone"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_scan_start_year": [
+          "2005"
+        ],
+        "searchlight_scan_end_year": [
+          "2050"
+        ],
+        "searchlight_scan_years_ago_min": [
+          "0"
+        ],
+        "searchlight_scan_years_ago_max": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "absence_of_readable_traces",
+          "last_survivor_question"
+        ]
+      },
+      "source_knot": "ev_night_mother_no_traces"
+    },
+    "night_mother_death_finding": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_death_finding",
+      "title": "The Meaning of the Dry River Border",
+      "body": "The dry river border records a death from hunger and thirst. It connects the mother's fate with the loss of the underground water source.",
+      "category": "finding",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_death_finding"
+        ],
+        "title": [
+          "The Meaning of the Dry River Border"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "night_mother_death_reference",
+          "death_by_hunger_and_thirst",
+          "water_source_lost"
+        ]
+      },
+      "source_knot": "ev_night_mother_death_finding"
+    },
+    "night_father_child_rubbing": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "night_father_child_rubbing",
+      "title": "A Figure Carrying a Child",
+      "body": "The figure on the upper part of the stone carries a child on his back. The child can be compared with the infant on the altar.",
+      "category": "rubbing",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_father_child_rubbing"
+        ],
+        "title": [
+          "A Figure Carrying a Child"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "night_infant_reference",
+          "parent_child_image",
+          "night_father_past"
+        ]
+      },
+      "source_knot": "ev_night_father_child_rubbing"
+    },
+    "night_father_path_rubbing": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "night_father_path_rubbing",
+      "title": "A Figure Ascending the Path",
+      "body": "A figure climbs an upward path along the border of the stone. The route resembles the passage known as the Skyway.",
+      "category": "rubbing",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_father_path_rubbing"
+        ],
+        "title": [
+          "A Figure Ascending the Path"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "ascending_path_motif",
+          "night_father_final_journey"
+        ]
+      },
+      "source_knot": "ev_night_father_path_rubbing"
+    },
+    "night_father_god_rubbing": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "night_father_god_rubbing",
+      "title": "The Crystal God Below the Father",
+      "body": "The lower part of the stone bears the image of the Crystal God. It resembles the figure once installed on the infant's altar.",
+      "category": "rubbing",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_father_god_rubbing"
+        ],
+        "title": [
+          "The Crystal God Below the Father"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "crystal_god_motif",
+          "night_city_belief"
+        ]
+      },
+      "source_knot": "ev_night_father_god_rubbing"
+    },
+    "night_father_moon_stone": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "night_father_moon_stone",
+      "title": "A Moon-Shaped Stone Before the Father's Marker",
+      "body": "A moon-shaped stone once lay before the father's marker. It resembles the stones left as offerings on the infant's altar.",
+      "category": "trace",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_father_moon_stone"
+        ],
+        "title": [
+          "A Moon-Shaped Stone Before the Father's Marker"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2000"
+        ],
+        "searchlight_years_ago": [
+          "50"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "moon_stone_offering",
+          "night_blessing_reference",
+          "moon_motif"
+        ]
+      },
+      "source_knot": "ev_night_father_moon_stone"
+    },
+    "natural_collapse_record": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "natural_collapse_record",
+      "title": "The Collapse That Sealed the Road",
+      "body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a natural collapse sealed the road to the surface.",
+      "category": "manuscript",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "natural_collapse_record"
+        ],
+        "title": [
+          "The Collapse That Sealed the Road"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "shared_day_night_history",
+          "original_separation",
+          "natural_collapse"
+        ]
+      },
+      "source_knot": "ev_natural_collapse_record"
+    },
+    "skyway_history": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "skyway_history",
+      "title": "An Account of the Skyway",
+      "body": "The Skyway is a path cleared upward through fallen stone. It is uneven, but not steep.\n\nSearching for food and water, the Nightfolk dug and climbed in every direction. At last, they opened a route upward through the collapsed ruins.\n\nThe Dayfolk called the day they arrived \"the Day Darkness Descended.\" Much food and many livestock were taken before the Dayfolk even knew who had done it. Eventually, they discovered the passage to Night City.\n\nThe reopened route also led the Dayfolk to the shining stones the Nightfolk had excavated while searching for food and water: crystals that would later power Day City's development.\n\nThe exchange continued with each cycle of day and night. The Dayfolk brought back crystals; the Nightfolk brought back food. Each took what they needed. This balance lasted a long time.",
+      "category": "manuscript",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "skyway_history"
+        ],
+        "title": [
+          "An Account of the Skyway"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "ascending_path_motif",
+          "skyway_not_steep",
+          "intercity_resource_exchange",
+          "night_city_mineral_origin"
+        ]
+      },
+      "source_knot": "ev_skyway_history"
+    },
+    "skyway_reference": {
+      "gravestones": [],
+      "id": "skyway_reference",
+      "title": "The Path to the Surface",
+      "body": "An uneven path rises through the fallen stone toward the surface. It is not the sheer climb its name might suggest. Its shape corresponds to the ascending route carved around the father's stone.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "skyway_reference"
+        ],
+        "title": [
+          "The Path to the Surface"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "skyway"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "ascending_path_motif",
+          "skyway_not_steep",
+          "night_father_final_journey"
+        ]
+      },
+      "source_knot": "ev_skyway_reference"
+    },
+    "night_father_death": {
+      "gravestones": [
+        "father_tomb"
+      ],
+      "id": "night_father_death",
+      "title": "The Father's Search Beyond His Waking Hours",
+      "body": "The father left to search for the missing infant. The path itself was not a dangerous climb. He continued searching beyond the permitted waking hours and failed to return to a sleeping coffin in time.\n\nHis death can be compared with the report of the Scholar's husband disappearing at dawn.",
+      "category": "finding",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_father_death"
+        ],
+        "title": [
+          "The Father's Search Beyond His Waking Hours"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "sleep_coffin_required",
+          "missed_sleeping_deadline",
+          "night_father_final_journey",
+          "paired_day_night_death"
+        ]
+      },
+      "source_knot": "ev_night_father_death"
+    },
+    "paired_skin_pictures": {
+      "gravestones": [
+        "scholar_tomb",
+        "mother_tomb"
+      ],
+      "id": "paired_skin_pictures",
+      "title": "A Picture Across Day and Night",
+      "body": "The handholding figures on the mother's stone correspond to the blue marks on the Scholar's preserved skin. Together with the records of wounds appearing upon waking, they suggest that the body itself could carry a message between day and night.",
+      "category": "finding",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "paired_skin_pictures"
+        ],
+        "title": [
+          "A Picture Across Day and Night"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "day_night_handholding",
+          "skin_as_message_medium",
+          "unexplained_waking_wounds",
+          "shared_body_reference"
+        ]
+      },
+      "source_knot": "ev_paired_skin_pictures"
+    },
+    "girl_figure_rubbing": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_figure_rubbing",
+      "title": "The Girl Inside the Frame",
+      "body": "Another human figure appears on this marker, older than the infant represented by the small stone. A structure surrounds her body.",
+      "category": "rubbing",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_figure_rubbing"
+        ],
+        "title": [
+          "The Girl Inside the Frame"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "human_figure_reference",
+          "girl_memorial"
+        ]
+      },
+      "source_knot": "ev_girl_figure_rubbing"
+    },
+    "girl_coffin_rubbing": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_coffin_rubbing",
+      "title": "The Upright Frame Around the Girl",
+      "body": "The girl stands inside an upright structure with her hands joined before her chest. The surrounding frame can be compared with the illustration in the old history book.",
+      "category": "rubbing",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_coffin_rubbing"
+        ],
+        "title": [
+          "The Upright Frame Around the Girl"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "upright_coffin_motif",
+          "girl_memorial"
+        ]
+      },
+      "source_knot": "ev_girl_coffin_rubbing"
+    },
+    "girl_beast_rubbing": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_beast_rubbing",
+      "title": "The Girl's Twin-Beast Decoration",
+      "body": "A twin beast decorates the marble-like marker. It resembles the creatures carved on other Day City monuments.",
+      "category": "rubbing",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_beast_rubbing"
+        ],
+        "title": [
+          "The Girl's Twin-Beast Decoration"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "twin_beast_motif",
+          "disappearance_symbol_reference"
+        ]
+      },
+      "source_knot": "ev_girl_beast_rubbing"
+    },
+    "girl_path_rubbing": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_path_rubbing",
+      "title": "The Unending Path Around the Girl",
+      "body": "The edge of the upright frame carries the pattern of an unending path. It recalls the border on the infant's altar in Night City.",
+      "category": "rubbing",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_path_rubbing"
+        ],
+        "title": [
+          "The Unending Path Around the Girl"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "endless_path_motif",
+          "night_departure_reference"
+        ]
+      },
+      "source_knot": "ev_girl_path_rubbing"
+    },
+    "girl_signature_rubbing": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_signature_rubbing",
+      "title": "The Girl-and-Coffin Motif",
+      "body": "The girl, her joined hands, and the upright coffin form a single composition. This complete motif can be compared with the covers of the diary and the investigation notebook.",
+      "category": "rubbing",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_signature_rubbing"
+        ],
+        "title": [
+          "The Girl-and-Coffin Motif"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "girl_coffin_motif",
+          "girl_memorial",
+          "author_identity_reference"
+        ]
+      },
+      "source_knot": "ev_girl_signature_rubbing"
+    },
+    "family_statuette": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "family_statuette",
+      "title": "A Statuette of Four",
+      "body": "A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.",
+      "category": "trace",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "family_statuette"
+        ],
+        "title": [
+          "A Statuette of Four"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "cemetery_edge"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2005"
+        ],
+        "searchlight_years_ago": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "four_person_family",
+          "family_image_reference",
+          "mother_remembers_daughter"
+        ]
+      },
+      "source_knot": "ev_family_statuette"
+    },
+    "day_city_history": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "day_city_history",
+      "title": "A History of Day City",
+      "body": "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
+      "category": "manuscript",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "day_city_history"
+        ],
+        "title": [
+          "A History of Day City"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "shared_day_night_history",
+          "sleep_coffin_required",
+          "upright_coffin_motif",
+          "population_decline"
+        ]
+      },
+      "source_knot": "ev_day_city_history"
+    },
+    "history_coffin_illustration": {
+      "gravestones": [],
+      "id": "history_coffin_illustration",
+      "title": "An Upright Sleeping Coffin",
+      "body": "An illustration in the old history book shows a sleeping coffin standing upright. Its outline resembles the structure surrounding the girl on the solitary marker.",
+      "category": "rubbing",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "history_coffin_illustration"
+        ],
+        "title": [
+          "An Upright Sleeping Coffin"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "upright_coffin_motif",
+          "shared_day_night_history"
+        ]
+      },
+      "source_knot": "ev_history_coffin_illustration"
+    },
+    "girl_diary": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_diary",
+      "title": "A Diary Page, Author Unknown",
+      "body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe wants to bring her mother. But if she brings her mother, we will have to bring mine. With my mother's influence in Day City, everyone will find out. We will go through it all again.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
+      "category": "manuscript",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_diary"
+        ],
+        "title": [
+          "A Diary Page, Author Unknown"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "author_identity_reference",
+          "funerary_artist_reference",
+          "deliberate_departure",
+          "two_mothers_dilemma",
+          "resentment_toward_mother"
+        ]
+      },
+      "source_knot": "ev_girl_diary"
+    },
+    "diary_cover": {
+      "gravestones": [],
+      "id": "diary_cover",
+      "title": "The Motif on the Diary Cover",
+      "body": "The diary remains intact, as if new. It seems that it's not part of the remains collected by previous archaeologists. Its cover bears the image of a girl standing inside an upright coffin, hands joined before her chest.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "diary_cover"
+        ],
+        "title": [
+          "The Motif on the Diary Cover"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "cemetery_edge"
+        ],
+        "evidence_tag": [
+          "girl_coffin_motif",
+          "author_identity_reference",
+          "well_preserved_diary"
+        ]
+      },
+      "source_knot": "ev_diary_cover"
+    },
+    "notebook_cover": {
+      "gravestones": [],
+      "id": "notebook_cover",
+      "title": "The Cover of Your Investigation Notebook",
+      "body": "Aurora gave you this black-and-white notebook. On its cover, a girl stands inside an upright coffin, hands joined before her chest.\n\nYou have been carrying the image throughout your investigation, holding it like the girl in the monument.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "notebook_cover"
+        ],
+        "title": [
+          "The Cover of Your Investigation Notebook"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "field_notebook"
+        ],
+        "evidence_tag": [
+          "girl_coffin_motif",
+          "author_identity_reference",
+          "aurora_provided_object"
+        ]
+      },
+      "source_knot": "ev_notebook_cover"
+    },
+    "four_person_family_finding": {
+      "gravestones": [
+        "sun_tomb",
+        "girl_tomb"
+      ],
+      "id": "four_person_family_finding",
+      "title": "Four People Remembered, Three Graves Together",
+      "body": "The four figures in the statuette correspond to the family in the photograph. The shared base holds only three markers. The solitary girl's marker stands apart from that family plot.",
+      "category": "finding",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "four_person_family_finding"
+        ],
+        "title": [
+          "Four People Remembered, Three Graves Together"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "four_person_family",
+          "missing_family_member_reference",
+          "mother_remembers_daughter"
+        ]
+      },
+      "source_knot": "ev_four_person_family_finding"
+    },
+    "girl_cover_correspondence": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_cover_correspondence",
+      "title": "The Same Girl on Stone and Paper",
+      "body": "The complete girl-and-coffin composition on the solitary marker corresponds to the image on the diary or the investigation notebook. The person who made the monument, the writer, and the person who supplied the notebook may be connected.",
+      "category": "finding",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_cover_correspondence"
+        ],
+        "title": [
+          "The Same Girl on Stone and Paper"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "girl_coffin_motif",
+          "author_identity_reference",
+          "aurora_identity_reference"
+        ]
+      },
+      "source_knot": "ev_girl_cover_correspondence"
+    },
+    "scholar_no_traces": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "scholar_no_traces",
+      "title": "No Later Visitors at the Crystal Monument",
+      "body": "Across the checked period after the burial, the searchlight reveals no readable traces of later visits to the crystal monument. This absence alone does not establish why nobody returned.",
+      "category": "observation",
+      "gravestone": "scholar_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "scholar_no_traces"
+        ],
+        "title": [
+          "No Later Visitors at the Crystal Monument"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_scan_start_year": [
+          "2005"
+        ],
+        "searchlight_scan_end_year": [
+          "2050"
+        ],
+        "searchlight_scan_years_ago_min": [
+          "0"
+        ],
+        "searchlight_scan_years_ago_max": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "scholar_no_visitors",
+          "absence_of_readable_traces",
+          "last_survivor_question"
+        ]
+      },
+      "source_knot": "ev_scholar_no_traces"
+    }
+  },
+  "radio_answers": {
+    "opening_tail": {
+      "id": "opening_tail",
+      "source_knot": "opening",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "#PLAYER#",
+          "content": "Oh, my notebook’s in black and white."
+        },
+        {
+          "speaker": "#PLAYER#",
+          "content": "Aurora never told me why. I guess it’s an aesthetic choice."
+        },
+        {
+          "speaker": "??",
+          "content": "..."
+        },
+        {
+          "speaker": "??",
+          "content": "...Hello? Can you hear me?"
+        },
+        {
+          "speaker": "",
+          "content": "(It doesn't take you a second to realize who's speaking. That's the first time you hear her voice beyond your textual exchange. Her voice is huskier than you thought.)"
+        },
+        {
+          "speaker": "#PLAYER#",
+          "content": "Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook?"
+        },
+        {
+          "speaker": "#PLAYER#",
+          "content": "Yeah, I was just looking at it. Interesting color scheme."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there."
+        },
+        {
+          "speaker": "#PLAYER#",
+          "content": "Should I expect to meet anyone here?"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked."
+        },
+        {
+          "speaker": "#PLAYER#",
+          "content": "Where?"
+        },
+        {
+          "speaker": "",
+          "content": "(You might have an answer in mind. But you wait for her confirmation.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Where they remembered the dead. The cemeteries. That’s your mission: to uncover what words alone cannot tell us, through the memories they left behind."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "We don’t have much transmission time left. I have to go. Talk to you later."
+        },
+        {
+          "speaker": "",
+          "content": "(Now it’s just you, your handbook, and the faint breath of the planet.)"
+        },
+        {
+          "speaker": "",
+          "content": "(You feel a tremor in your limbs.)"
+        },
+        {
+          "speaker": "",
+          "content": "(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)"
+        },
+        {
+          "speaker": "",
+          "content": "(You’re here to gather their memories. Your steps grow steadier.)"
+        },
+        {
+          "speaker": "",
+          "content": "(Then you see it: the place where an entire civilization rests.)"
+        }
+      ]
+    },
+    "test_bonus_tail": {
+      "id": "test_bonus_tail",
+      "source_knot": "test_bonus",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her breathing steadies. She sounds ready to answer something larger than a single grave.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "You have followed their traces through both cities. What would you most like to ask now?"
+        },
+        {
+          "speaker": "",
+          "content": "(She pauses once, then sets the explanation down plainly.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "They have separate minds and take turns being awake. They share one living body. If one dies, the other cannot survive. The Dayfolk acted as if they could cut that dependence away."
+        },
+        {
+          "speaker": "",
+          "content": "(A small silence falls across the name. She answers without decorating it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Aurora is a name. It does not tell you how many people are speaking, or how many points of view they have. I know things that are not in your records."
+        },
+        {
+          "speaker": "",
+          "content": "(You hear a dry, almost amused breath. She chooses an example close to your own life.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Think of two people taking turns using one account. The account is closed. Neither can enter, but only one receives the notice. The other has no record of what happened. That is how something can die for one person and disappear for the other."
+        },
+        {
+          "speaker": "",
+          "content": "(Her answer begins firmly. A quieter note enters when she mentions the shared cemetery.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate."
+        }
+      ]
+    },
+    "test_bonus_check_tail": {
+      "id": "test_bonus_check_tail",
+      "source_knot": "test_bonus_check",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She lets out a quiet breath and brings the discussion back to the task.)"
+        }
+      ]
+    },
+    "test_confrontation_tail": {
+      "id": "test_confrontation_tail",
+      "source_knot": "test_confrontation",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(There is a long breath, and no attempt to fill it. Her answer comes out almost bare.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I made it. I wrote those pages. And I left."
+        },
+        {
+          "speaker": "",
+          "content": "(The line catches a sound too small to name. She waits before trusting herself with the next words.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I did not know. I could not bring myself to come back and find out."
+        },
+        {
+          "speaker": "",
+          "content": "(She takes in air slowly, as if she has only just noticed she needs it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "She understood something in the end. I wish I had been there to hear it."
+        },
+        {
+          "speaker": "",
+          "content": "(The first word fails her once. When she starts again, she makes herself continue.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I hated the ways she called harm protection. When it was time to leave, I would not take her with us. I was afraid she would bring that world after us. I was angry enough to let that be the whole answer."
+        },
+        {
+          "speaker": "",
+          "content": "(The effort of holding her voice steady is audible now. She no longer quite succeeds.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Now I know that an answer can keep you alive and still be something you carry for the rest of your life. I sent you because I could not bear to stand where you are standing."
+        },
+        {
+          "speaker": "",
+          "content": "(A final pause. This time she does not try to make it sound thoughtful.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "You have found what she left. I do not know what she would have said to me."
+        }
+      ]
+    },
+    "baby_8_normal_9": {
+      "id": "baby_8_normal_9",
+      "source_knot": "test_answer_baby_8",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Yes, it does look like a moon. I suppose sleep is the closest rehearsal the living have for death. When night falls, the Dayfolk slip into slumber. On this marker, the moon stands for natural death."
+        }
+      ]
+    },
+    "baby_8_additional_10": {
+      "id": "baby_8_additional_10",
+      "source_knot": "test_answer_baby_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were unexplained circumstances behind his death. Let us keep looking."
+        }
+      ]
+    },
+    "baby_17_supported_19": {
+      "id": "baby_17_supported_19",
+      "source_knot": "test_answer_baby_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
+        }
+      ]
+    },
+    "baby_17_normal_13": {
+      "id": "baby_17_normal_13",
+      "source_knot": "test_answer_baby_17",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "A design often leaves a paper shadow, #PLAYER#: a manuscript. Did you find the designer's?"
+        }
+      ]
+    },
+    "baby_21_hidden_23": {
+      "id": "baby_21_hidden_23",
+      "source_knot": "test_answer_baby_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A breath almost becomes a laugh. It never quite gets there.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I cannot tell you who drew it, #PLAYER#. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit."
+        }
+      ]
+    },
+    "baby_21_follow": {
+      "id": "baby_21_follow",
+      "source_knot": "test_answer_baby_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A softer breath follows, almost an afterthought.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "She was learning to make memorials then. Perhaps she learned too soon how much a stone could be made to hide."
+        }
+      ]
+    },
+    "scholar_8_supported_10": {
+      "id": "scholar_8_supported_10",
+      "source_knot": "test_answer_scholar_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Pride enters her voice so briefly that you cannot tell whose it is.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "As the manuscript says, they gave her the title Scholar when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of."
+        },
+        {
+          "speaker": "",
+          "content": "(You can't help thinking back to the moment when you first saw the crystal in the Night City. Unlike its transparency in the Day City, the enigmatic darkness draws you in and makes you wonder how these beautiful stones changed Day and Night.)"
+        }
+      ]
+    },
+    "scholar_8_normal_9": {
+      "id": "scholar_8_normal_9",
+      "source_knot": "test_answer_scholar_8",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "The crystal had a history before it became a memorial. #PLAYER#, find its mineral counterpart, or the record of the work it made possible."
+        }
+      ]
+    },
+    "scholar_12_supported_14": {
+      "id": "scholar_12_supported_14",
+      "source_knot": "test_answer_scholar_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A little lift in her voice. For once, encouragement arrives before caution.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Nice catch. Think of an obelisk reaching upward, promising something that might outlast a life. A funerary ornament repeated across a whole cemetery can tell us about the city's losses, #PLAYER#, as well as any one person's."
+        }
+      ]
+    },
+    "scholar_12_supported_15": {
+      "id": "scholar_12_supported_15",
+      "source_knot": "test_answer_scholar_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The last word of the old account seems to hold her for a moment. She lets it go slowly.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record disappearance. You may find other traces of what disappearance meant for the Dayfolk."
+        }
+      ]
+    },
+    "scholar_12_normal_13": {
+      "id": "scholar_12_normal_13",
+      "source_knot": "test_answer_scholar_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A faint click interrupts her breath. She waits until the channel is quiet before answering.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "A familiar shape can travel from grave to grave without telling us its name. Look for the creature beyond these stones, #PLAYER#. Perhaps a trace of it—or the same icon returning again and again."
+        }
+      ]
+    },
+    "scholar_17_supported_19": {
+      "id": "scholar_17_supported_19",
+      "source_knot": "test_answer_scholar_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence — though there is still insufficient evidence to establish whether they shared any aspect of life."
+        }
+      ]
+    },
+    "scholar_17_normal_18": {
+      "id": "scholar_17_normal_18",
+      "source_knot": "test_answer_scholar_17",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "I would be careful about asking a single stone to speak for two cities. We need some evidence that passed between them."
+        }
+      ]
+    },
+    "scholar_20_normal_21": {
+      "id": "scholar_20_normal_21",
+      "source_knot": "test_answer_scholar_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I cannot speak for her. But I believe she must have discovered something about the world she lived in. Some truth she could not leave out of her own memorial. Your notebook is black and white for a reason, too."
+        },
+        {
+          "speaker": "",
+          "content": "(You look at your notebook once again. One double-page spread accommodating two contrasting halves. Does it signal a kind of coexistence, or a history of segregation?)"
+        }
+      ]
+    },
+    "scholar_25_supported_27": {
+      "id": "scholar_25_supported_27",
+      "source_knot": "test_answer_scholar_25",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The name of neither city comes easily. A tiny catch in her breathing survives the distance intact.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "A Dayfolk and a Nightfolk, hand in hand... I never expected her to be so cruel to herself."
+        }
+      ]
+    },
+    "scholar_25_normal_26": {
+      "id": "scholar_25_normal_26",
+      "source_knot": "test_answer_scholar_25",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "I cannot make out the picture, but I am fairly sure that fragment is skin — from past research, we know that the Dayfolk have blue blood, and some of it remains on the fragment. Try the searchlight. Take it back to a time before it decayed, before we decide what it was trying to say."
+        }
+      ]
+    },
+    "scholar_31_hidden_33": {
+      "id": "scholar_31_hidden_33",
+      "source_knot": "test_answer_scholar_31",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(For a long while, only the thin electrical hum reaches you. Then a breath catches, and leaves her in a long, uneven sigh. You cannot see her, but for once the distance fails to conceal how much the question has touched her.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "… Or there is no one left to remember her. I made that decision. I made that decision..."
+        }
+      ]
+    },
+    "scholar_35_hidden_37": {
+      "id": "scholar_35_hidden_37",
+      "source_knot": "test_answer_scholar_35",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities."
+        }
+      ]
+    },
+    "scholar_39_hidden_41": {
+      "id": "scholar_39_hidden_41",
+      "source_knot": "test_answer_scholar_39",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A small intake of breath. When she answers, the warmth has returned a little too neatly, like a blanket pulled over something that is still moving.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I imagine anyone would be moved, #PLAYER#. To make your own skin carry a message—well. We need not have known her to feel that. Shall we return to the investigation?"
+        }
+      ]
+    },
+    "sun_8_supported_10": {
+      "id": "sun_8_supported_10",
+      "source_knot": "test_answer_sun_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The name arrives more carefully than the rest of the sentence, as though she has set it down rather than spoken it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The same rays circle the coins. And the occupational record names the man who funded the Scholar: the Tycoon. His stone has kept the shape of what built his fortune, but it fails to recognize the very intuition that led him to make a successful investment."
+        }
+      ]
+    },
+    "sun_8_normal_9": {
+      "id": "sun_8_normal_9",
+      "source_knot": "test_answer_sun_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her agreement is thoughtful, but she leaves the name unspoken.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The outline matches the coins. Keep that connection. We still need the occupational record before naming the owner."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I can see why you thought of the sun. Those rays do catch the eye. Still, as you know, the shape represents an occupation. We can't have Apollo the Sun God or Hou Yi the sun shooter buried here. Let's find more evidence of how the sun is linked to an identity."
+        }
+      ]
+    },
+    "sun_13_supported_15": {
+      "id": "sun_13_supported_15",
+      "source_knot": "test_answer_sun_13",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "So many stones have borrowed the same creature. Its vanishing in the old account gives the carving its meaning: disappearance. An image left behind where a life cannot be found."
+        }
+      ]
+    },
+    "sun_13_normal_14": {
+      "id": "sun_13_normal_14",
+      "source_knot": "test_answer_sun_13",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "The creature keeps returning, doesn't it? Let us give it a name before we give it a meaning. What does the old account say?"
+        },
+        {
+          "speaker": "",
+          "content": "(You feel dumb. But that clue must have lodged itself somewhere deep in your consciousness. Perhaps use your tools to observe those markers again.)"
+        }
+      ]
+    },
+    "sun_17_supported_19": {
+      "id": "sun_17_supported_19",
+      "source_knot": "test_answer_sun_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She exhales, quietly pleased. The next sentence comes without hesitation.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted."
+        }
+      ]
+    },
+    "sun_17_normal_18": {
+      "id": "sun_17_normal_18",
+      "source_knot": "test_answer_sun_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Look beneath their feet. A family resemblance may be written in the stone they stand on. Are their bases truly joined?"
+        }
+      ]
+    },
+    "sun_21_supported_23": {
+      "id": "sun_21_supported_23",
+      "source_knot": "test_answer_sun_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The line is still open, but she lets it carry nothing for a moment. When her voice returns, it is closer and lower.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "A photograph can keep a place for someone who has no stone beside the others. Count the four faces, then the three markers. The empty place matters too."
+        }
+      ]
+    },
+    "sun_21_normal_22": {
+      "id": "sun_21_normal_22",
+      "source_knot": "test_answer_sun_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She pauses before counting. The silence gives each missing number an uncomfortable weight.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Before we count who is missing, let us be sure who belongs in the picture. Compare the family image with the shared base."
+        }
+      ]
+    },
+    "sun_25_hidden_27": {
+      "id": "sun_25_hidden_27",
+      "source_knot": "test_answer_sun_25",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Silence. Only the buzzing sound reminds you that the call is not interrupted.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Someone was still there after the others were gone. I wonder whether the family left a place for her, or whether she had already begun to leave it herself."
+        }
+      ]
+    },
+    "altar_8_supported_10": {
+      "id": "altar_8_supported_10",
+      "source_knot": "test_answer_altar_8",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+        }
+      ]
+    },
+    "altar_8_normal_9": {
+      "id": "altar_8_normal_9",
+      "source_knot": "test_answer_altar_8",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Record the symbol with your rubbing tool first. Then I can read it for you."
+        }
+      ]
+    },
+    "altar_12_supported_14": {
+      "id": "altar_12_supported_14",
+      "source_knot": "test_answer_altar_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She speaks in an undisturbed tone)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Day City records a death. Night City records a disappearance. That difference does not mean there were two children. Check the figures together."
+        }
+      ]
+    },
+    "altar_12_normal_13": {
+      "id": "altar_12_normal_13",
+      "source_knot": "test_answer_altar_12",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Compare the figures first, then we'll see."
+        }
+      ]
+    },
+    "altar_16_supported_18": {
+      "id": "altar_16_supported_18",
+      "source_knot": "test_answer_altar_16",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Not everything can be interpreted with a modern mindset, and not all offerings are intended for commercial exchange. These are blessings given by the Nightfolk."
+        }
+      ]
+    },
+    "altar_16_normal_17": {
+      "id": "altar_16_normal_17",
+      "source_knot": "test_answer_altar_16",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Show me the stones first."
+        }
+      ]
+    },
+    "altar_20_supported_22": {
+      "id": "altar_20_supported_22",
+      "source_knot": "test_answer_altar_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her voice tightens around the missing object, then settles back into its usual level register.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but I cannot prove they did it. For now, you can take this as a provisional argument."
+        }
+      ]
+    },
+    "altar_20_normal_21": {
+      "id": "altar_20_normal_21",
+      "source_knot": "test_answer_altar_20",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Use the searchlight on the empty recess. We need to see what was there."
+        }
+      ]
+    },
+    "altar_24_hidden_26": {
+      "id": "altar_24_hidden_26",
+      "source_knot": "test_answer_altar_24",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The silence lasts just a fraction longer than the question seems to need. Her reply is direct.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "A symbol can be remembered without a written language. Someone who used it could pass on its meaning. I am not working from books alone."
+        }
+      ]
+    },
+    "altar_28_hidden_30": {
+      "id": "altar_28_hidden_30",
+      "source_knot": "test_answer_altar_28",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Check the division first. If it was wrong, 'born in the wrong city' may be the wrong question. Keep the two memorials together."
+        },
+        {
+          "speaker": "",
+          "content": "(Her voice stops abruptly. The night spills around you, with barely a sound. You start to think about how the Day City looked, and your call with Aurora then.)"
+        },
+        {
+          "speaker": "",
+          "content": "(It's different, definitely. Two worlds overlap in the dimension of time.）"
+        },
+        {
+          "speaker": "",
+          "content": "(Was it \"wrong\"? Or is it just a glimpse through the overlap?)"
+        }
+      ]
+    },
+    "mother_8_supported_10": {
+      "id": "mother_8_supported_10",
+      "source_knot": "test_answer_mother_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(For one word, the bluntness gives way to something gentler. Then it is gone.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "That is the altar infant. The figure is his mother in Night City."
+        }
+      ]
+    },
+    "mother_8_normal_9": {
+      "id": "mother_8_normal_9",
+      "source_knot": "test_answer_mother_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A quiet intake of breath. She answers before it has quite left her.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Compare the child with the altar infant. That will tell us who she was holding."
+        }
+      ]
+    },
+    "mother_12_supported_14": {
+      "id": "mother_12_supported_14",
+      "source_knot": "test_answer_mother_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The first word sounds dry in her mouth. She takes another breath and continues.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The border matches the dry riverbed. It records hunger and thirst as her cause of death."
+        }
+      ]
+    },
+    "mother_12_normal_13": {
+      "id": "mother_12_normal_13",
+      "source_knot": "test_answer_mother_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her answer comes after a single, deliberate beat.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The symbol means a dry river. Check the actual riverbed or the records of lost water before we conclude that she died of hunger and thirst."
+        }
+      ]
+    },
+    "mother_17_supported_19": {
+      "id": "mother_17_supported_19",
+      "source_knot": "test_answer_mother_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her voice is low and exact. Each sentence is given enough space to stand by itself.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The wounds carried over when the other person woke. A mark on the shared body could carry a message between them."
+        }
+      ]
+    },
+    "mother_17_normal_18": {
+      "id": "mother_17_normal_18",
+      "source_knot": "test_answer_mother_17",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She goes quiet long enough for you to notice your own hand tightening around the radio.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The pictures match. Now check the record of wounds appearing after sleep."
+        }
+      ]
+    },
+    "mother_21_supported_23": {
+      "id": "mother_21_supported_23",
+      "source_knot": "test_answer_mother_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The hiss of the open line grows suddenly loud. Her answer returns without its usual firmness.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "No sign of anyone returning. She may have been the last. I left her alone. I left her alone..."
+        }
+      ]
+    },
+    "mother_21_normal_22": {
+      "id": "mother_21_normal_22",
+      "source_knot": "test_answer_mother_21",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(You hear her catch an answer before it becomes a certainty. She begins again.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "One empty scan is not enough. Check the period after her burial."
+        }
+      ]
+    },
+    "mother_25_hidden_27": {
+      "id": "mother_25_hidden_27",
+      "source_knot": "test_answer_mother_25",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(There is a small pause before “daughter”. She gives you the rest without trying to soften it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Possibly. She may have understood too late to tell her daughter. The picture could have been her last attempt to explain."
+        }
+      ]
+    },
+    "father_8_supported_10": {
+      "id": "father_8_supported_10",
+      "source_knot": "test_answer_father_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her breathing slows. The answer is short, but she takes care with it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "It is the same child. The man carrying him is his father in Night City."
+        }
+      ]
+    },
+    "father_8_normal_9": {
+      "id": "father_8_normal_9",
+      "source_knot": "test_answer_father_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A brief sound of acknowledgement. She moves straight to the point.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Match the child with the altar figure before you name the parent."
+        }
+      ]
+    },
+    "father_12_supported_14": {
+      "id": "father_12_supported_14",
+      "source_knot": "test_answer_father_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A little air escapes before the answer. It is the only part of it she seems unable to keep level.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The path was uneven, but it was not a dangerous climb. He kept searching beyond the permitted waking hours and failed to reach a sleeping coffin in time."
+        }
+      ]
+    },
+    "father_12_normal_13": {
+      "id": "father_12_normal_13",
+      "source_knot": "test_answer_father_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She waits for the interference to pass, then speaks with deliberate precision.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Check the actual path or its history. An upward line does not show how steep it was."
+        }
+      ]
+    },
+    "father_16_supported_18": {
+      "id": "father_16_supported_18",
+      "source_knot": "test_answer_father_16",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She lets the two events sit in silence for a beat before joining them.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "One dies. The other disappears at dawn. Check whether these are two records of one life."
+        }
+      ]
+    },
+    "father_16_normal_17": {
+      "id": "father_16_normal_17",
+      "source_knot": "test_answer_father_16",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her words come firmly now, the dates and times given more weight than the names.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Bring the Scholar's disappearance report. We need the time her husband vanished."
+        }
+      ]
+    },
+    "father_20_supported_22": {
+      "id": "father_20_supported_22",
+      "source_knot": "test_answer_father_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her voice warms briefly. She does not make a remark about it.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "It is a blessing for the person who left. Nobody was paying for the path."
+        }
+      ]
+    },
+    "father_20_normal_21": {
+      "id": "father_20_normal_21",
+      "source_knot": "test_answer_father_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A quiet breath, then an instruction. The familiar directness is back.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Record the stone. Compare it with the altar offerings."
+        }
+      ]
+    },
+    "father_24_hidden_26": {
+      "id": "father_24_hidden_26",
+      "source_knot": "test_answer_father_24",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that."
+        }
+      ]
+    },
+    "girl_8_supported_10": {
+      "id": "girl_8_supported_10",
+      "source_knot": "test_answer_girl_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(Her voice follows the outline you have described with an attention that feels almost tender.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
+        }
+      ]
+    },
+    "girl_8_normal_9": {
+      "id": "girl_8_normal_9",
+      "source_knot": "test_answer_girl_8",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The first sound she makes is too small to be a word. She clears it away before answering.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "That frame has an older history than the girl inside it. Let us look for its shape in the book."
+        }
+      ]
+    },
+    "girl_12_supported_14": {
+      "id": "girl_12_supported_14",
+      "source_knot": "test_answer_girl_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(For a moment, the sentence seems to cost her more than it should. She finishes it anyway.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a funerary artist. Perhaps this was the one stone she could finally let speak for herself."
+        }
+      ]
+    },
+    "girl_12_normal_13": {
+      "id": "girl_12_normal_13",
+      "source_knot": "test_answer_girl_12",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She draws a slow breath. You hear her choose the safer end of the question.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "A human shape can stand for many lives. Her work may have left a clearer signature in the diary."
+        }
+      ]
+    },
+    "girl_16_supported_18": {
+      "id": "girl_16_supported_18",
+      "source_knot": "test_answer_girl_16",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Four people in the picture, three stones on the family base, and this one standing apart. Her mother left the sculpture here. Even after the girl went away, she was still part of the family her mother remembered."
+        }
+      ]
+    },
+    "girl_16_normal_17": {
+      "id": "girl_16_normal_17",
+      "source_knot": "test_answer_girl_16",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
+        }
+      ]
+    },
+    "girl_20_supported_22": {
+      "id": "girl_20_supported_22",
+      "source_knot": "test_answer_girl_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(She puts a little distance back into her voice. The effort is audible.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The diary describes a decision to leave. Disappearance is the word those left behind could give it. We should not let that word bury a girl who may have escaped."
+        }
+      ]
+    },
+    "girl_20_normal_21": {
+      "id": "girl_20_normal_21",
+      "source_knot": "test_answer_girl_20",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The silence feels less like thought than resistance. You wait until it gives way.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Read what she meant to do. A stone can remember an absence without knowing where the person went."
+        }
+      ]
+    },
+    "test_baby_personhood_tail": {
+      "id": "test_baby_personhood_tail",
+      "source_knot": "test_baby_personhood",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
+        }
+      ]
+    },
+    "test_baby_personhood_reply_tail": {
+      "id": "test_baby_personhood_reply_tail",
+      "source_knot": "test_baby_personhood_reply",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(An unnatural pause before her response, as if a piece of memory has struck her through the dozens of years.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "That's a bold and dangerous claim. Without evidence, all guesses are just conspiracy theories."
+        }
+      ]
+    },
+    "test_scholar_mausoleum_tail": {
+      "id": "test_scholar_mausoleum_tail",
+      "source_knot": "test_scholar_mausoleum",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "I didn't know she had the privilege of doing so, yet she never did. She was someone who valued reputation and recognition; she lived her life in the prescribed mold of a successful Dayfolk. But she never mentioned the mausoleum again. Why?"
+        },
+        {
+          "speaker": "",
+          "content": "(The next line is too faint that it sounds like a whisper to self.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "She might be feeling as guilty as ..."
+        },
+        {
+          "speaker": "",
+          "content": "(The last few words disperse in the humming sound)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I'm not sure whether the Scholar is eligible… Have you found any evidence related to that?"
+        }
+      ]
+    },
+    "test_disappearance_hypothesis_tail": {
+      "id": "test_disappearance_hypothesis_tail",
+      "source_knot": "test_disappearance_hypothesis",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "#PLAYER#",
+          "content": "You seem to know the link between disappearance and death, which proves the Scholar's speculation wrong. You know much more than I do. I want to know:"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "You saw that conflict — the Scholar ended up using skin as a medium to convey a message, proving her initial conclusion that the scars were caused by the Nightfolk wrong. This does not directly prove her conclusion about disappearance wrong, but I would encourage you to investigate along this thread."
+        },
+        {
+          "speaker": "",
+          "content": "(You can feel the strong implication behind her words. It feels like she knows everything but is still toying with you. You wonder if she will tell you where she's from and what she has done.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The Dayfolk often get stuck in their own understanding of the world. You may want to find more conflicts between the world they firmly believe in and the actual world around us."
+        }
+      ]
+    },
+    "test_disappearance_followups_tail": {
+      "id": "test_disappearance_followups_tail",
+      "source_knot": "test_disappearance_followups",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "They have separate minds and take turns being awake. They share one living body. If one dies, the other cannot survive. What one city records as death, the other may record as disappearance."
+        },
+        {
+          "speaker": "",
+          "content": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I am someone who belongs to this place, yet something stops me from going back."
+        }
+      ]
+    },
+    "query_night_unending_path_tail": {
+      "id": "query_night_unending_path_tail",
+      "source_knot": "query_night_unending_path",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "It means an unending journey: someone left and did not return. On a memorial, it records disappearance. It does not tell us what happened to that person."
+        }
+      ]
+    },
+    "query_night_dry_river_tail": {
+      "id": "query_night_dry_river_tail",
+      "source_knot": "query_night_dry_river",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "It represents a river that has run dry. That is the meaning of the symbol. Whether it describes this place, a loss of water, or the circumstances of her death needs further evidence."
+        }
+      ]
+    },
+    "query_night_ascending_path_tail": {
+      "id": "query_night_ascending_path_tail",
+      "source_knot": "query_night_ascending_path",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "A path leading upward, toward the surface. It records a journey. It does not tell us how steep the path was or why the traveller died."
+        }
+      ]
+    },
+    "query_night_crystal_god_tail": {
+      "id": "query_night_crystal_god_tail",
+      "source_knot": "query_night_crystal_god",
+      "preview_only": false,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+        }
+      ]
+    }
+  }
+}

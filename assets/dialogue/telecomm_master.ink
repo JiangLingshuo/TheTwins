@@ -113,19 +113,16 @@ Oh, my notebook’s in black and white. #player
 Aurora never told me why. I guess it’s an aesthetic choice. #player
 ... #??
 ...Hello? Can you hear me? #??
+(It doesn't take you a second to realize who's speaking. That's the first time you hear her voice beyond your textual exchange. Her voice is huskier than you thought.) #narrator
 Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins. #player
-(Relief reaches you first, in a breath she does not quite manage to hide.) #narrator
 Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook? #aurora
 Yeah, I was just looking at it. Interesting color scheme. #player
-(A small smile enters her voice. She lets the question settle before answering.) #narrator
 There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. #aurora
 Should I expect to meet anyone here? #player
-(The smile thins into a more thoughtful warmth. She slows when she reaches the empty places.) #narrator
 No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked. #aurora
 Where? #player
-(A little silence gathers before the answer. She gives the place its name carefully.) #narrator
+(You might have an answer in mind. But you wait for her confirmation.) #narrator
 Where they remembered the dead. The cemeteries. That’s your mission: to uncover what words alone cannot tell us, through the memories they left behind. #aurora
-(Her voice turns practical, though a trace of warmth remains after the words.) #narrator
 We don’t have much transmission time left. I have to go. Talk to you later. #aurora
 (Now it’s just you, your handbook, and the faint breath of the planet.) #narrator
 (You feel a tremor in your limbs.) #narrator

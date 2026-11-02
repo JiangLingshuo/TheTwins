@@ -58,6 +58,9 @@ var focus: float = 0.0:
 
 var _target_focus := 0.0
 var _beam_center := Vector2.ZERO
+## A selected scene position stays fixed while the year is adjusted.
+var beam_locked := false
+var _locked_global_point := Vector2.ZERO
 
 @onready var _lens: ColorRect = $Lens
 @onready var _material: ShaderMaterial = _lens.material as ShaderMaterial
@@ -76,8 +79,8 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if active:
-		var target := _lens.get_local_mouse_position()
-		_beam_center = _beam_center.lerp(target, 1.0 - exp(-follow_speed * delta))
+		var target := _lens.get_global_transform().affine_inverse() * _locked_global_point if beam_locked else _lens.get_local_mouse_position()
+		_beam_center = target if beam_locked else _beam_center.lerp(target, 1.0 - exp(-follow_speed * delta))
 		_material.set_shader_parameter("center_px", _beam_center)
 		_material.set_shader_parameter("rect_size", _lens.size)
 
@@ -91,7 +94,9 @@ func _process(delta: float) -> void:
 
 
 ## Turn the flashlight on with the beam starting at `global_position`.
-func turn_on_at(global_point: Vector2) -> void:
+func turn_on_at(global_point: Vector2, lock_position: bool = false) -> void:
+	beam_locked = lock_position
+	_locked_global_point = global_point
 	_beam_center = _lens.get_global_transform().affine_inverse() * global_point
 	_material.set_shader_parameter("center_px", _beam_center)
 	_material.set_shader_parameter("rect_size", _lens.size)

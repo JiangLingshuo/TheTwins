@@ -1,11 +1,10 @@
 extends Control
 ## Flashlight tool: a button on the right edge of the screen plus the year scale.
 ##
-## 1. Click the flashlight button: the year scale opens beside it.
-## 2. Drag the scale up/down (or scroll) to pick 0–50 years ago.
-## 3. Click anywhere else: the flashlight turns on there and follows the mouse.
-##    The scale stays open, so the year can still be adjusted while lighting.
-## 4. Click the flashlight button again: the flashlight turns off.
+## Click the button, then a scene position to lock the beam there.
+## Scroll over the scene to adjust the year; click another position to re-aim.
+## The year scale still supports dragging and scrolling without moving the beam.
+## Click the tool again or press Escape to put it away.
 
 ## Emitted when the tool changes state (see the State values).
 signal state_changed(state: int)
@@ -31,16 +30,15 @@ func _ready() -> void:
 	_scale.value_changed.connect(flashlight.set_target_focus)
 	_button.pressed.connect(_on_button_pressed)
 	_catcher.gui_input.connect(_on_catcher_input)
+	_button.tooltip_text = "Select a spot, then scroll to adjust years. Click another spot to re-aim. Esc: put away."
+	_scale.tooltip_text = "Years ago — scroll up for earlier years, down for later. The beam stays fixed."
 	_set_state(State.OFF)
 
 
-func _process(_delta: float) -> void:
-	# Hide the cursor while lighting, except over the button and the scale.
-	if state == State.ON:
-		var mouse := get_global_mouse_position()
-		var over_ui := _button.get_global_rect().has_point(mouse) \
-			or _scale.get_global_rect().has_point(mouse)
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if over_ui else Input.MOUSE_MODE_HIDDEN
+func _unhandled_key_input(event: InputEvent) -> void:
+	if state != State.OFF and event.is_action_pressed("ui_cancel"):
+		turn_off()
+		get_viewport().set_input_as_handled()
 
 
 func _exit_tree() -> void:
@@ -62,21 +60,29 @@ func _on_button_pressed() -> void:
 
 
 func _on_catcher_input(event: InputEvent) -> void:
-	if state == State.AIMING and event is InputEventMouseButton and event.pressed \
-			and event.button_index == MOUSE_BUTTON_LEFT:
-		_catcher.accept_event()
-		flashlight.turn_on_at(_catcher.get_global_transform() * event.position)
-		_set_state(State.ON)
+	if state == State.OFF or not (event is InputEventMouseButton) or not event.pressed:
+		return
+	match event.button_index:
+		MOUSE_BUTTON_LEFT:
+			_catcher.accept_event()
+			flashlight.turn_on_at(_catcher.get_global_transform() * event.position, true)
+			_set_state(State.ON)
+		MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
+			_catcher.accept_event()
+			if state == State.ON:
+				var direction := 1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1.0
+				_scale.value += direction * _scale.wheel_step * maxf(event.factor, 1.0)
 
 
 func _set_state(new_state: int) -> void:
 	state = new_state
 	_scale.visible = state != State.OFF
-	# The click catcher only waits for the "turn on" click while aiming.
-	_catcher.visible = state == State.AIMING
+	# Keep accepting scene clicks and wheel input while the beam is locked.
+	_catcher.visible = state != State.OFF
 	flashlight.active = state == State.ON
 	_button.texture_normal = icon_on if state == State.ON else icon_off
 	_button.modulate = Color(1.2, 1.15, 1.0) if state == State.AIMING else Color.WHITE
-	if state != State.ON:
-		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+	if state == State.OFF:
+		flashlight.beam_locked = false
 	state_changed.emit(state)

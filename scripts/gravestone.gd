@@ -55,7 +55,7 @@ func is_recorded() -> bool:
 func record() -> void:
 	if gravestone_id.is_empty() or is_recorded():
 		return
-	GameState.gravestones.append(gravestone_id)
+	GameState.record_gravestone(gravestone_id)
 	recorded.emit(gravestone_id)
 
 

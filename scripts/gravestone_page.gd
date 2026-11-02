@@ -63,6 +63,18 @@ func _ready() -> void:
 		input.text_changed.connect(func(_text: String) -> void: _save_report())
 		input.text_submitted.connect(func(_text: String) -> void: input.release_focus())
 	rubbings_row.sort_children.connect(queue_redraw)  # symbols are drawn over the slots
+	# The narrow information column needs scrolling for descriptions and clue text.
+	var info: Control = $Info
+	var reader := ScrollContainer.new()
+	reader.name = "InfoReader"
+	reader.position = info.position
+	reader.size = Vector2(164, 430)
+	reader.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	add_child(reader)
+	reader.get_v_scroll_bar().value_changed.connect(func(_value: float) -> void: queue_redraw())
+	info.reparent(reader)
+	info.position = Vector2.ZERO
+	info.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	set_ink(_ink)
 
 
@@ -168,7 +180,7 @@ func set_ink(ink: Color) -> void:
 
 func _draw() -> void:
 	# A faint rule between the left column and the information column.
-	var x := ($Info as Control).position.x - 12.0
+	var x := ($InfoReader as Control).position.x - 12.0
 	draw_line(Vector2(x, 4.0), Vector2(x, size.y - 4.0), Color(_ink, faded_alpha * 0.6), 1.0, true)
 	if _unknown:
 		_draw_unknown_stone(sketch.get_rect())
@@ -181,9 +193,12 @@ func _draw() -> void:
 func _draw_rubbings() -> void:
 	var ids := GameState.get_gravestone_rubbings(gravestone_id)
 	var slots := rubbings_row.get_children()
-	var origin := ($Info as Control).position + rubbings_row.position
+	var origin := get_global_transform().affine_inverse() * rubbings_row.global_position
 	for i in mini(ids.size(), slots.size()):
-		var box := Rect2(origin + slots[i].position, slots[i].size).grow(-5.0)
+		var full_box := Rect2(origin + slots[i].position, slots[i].size)
+		if not ($InfoReader as Control).get_rect().encloses(full_box):
+			continue
+		var box := full_box.grow(-5.0)
 		var path := GameState.get_rubbing_texture(ids[i])
 		if not path.is_empty() and ResourceLoader.exists(path):
 			var texture: Texture2D = load(path)
@@ -254,9 +269,18 @@ func _draw_dashed(points: PackedVector2Array, color: Color, dash := 8.0, gap := 
 
 ## Clue lines. The rubbing slots are drawn from GameState in _draw_rubbings().
 func _fill_slots(_rubbings: Array, clues: Array) -> void:
-	var lines := clues_list.get_children()
-	for i in lines.size():
-		lines[i].text = str(clues[i]) if i < clues.size() else EMPTY_CLUE
+	for child in clues_list.get_children():
+		clues_list.remove_child(child)
+		child.queue_free()
+	for entry in clues:
+		var line := Label.new()
+		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		line.text = str(entry.get("title", "")) + "\n" + str(entry.get("body", "")) if entry is Dictionary else str(entry)
+		clues_list.add_child(line)
+	if clues.is_empty():
+		var line := Label.new()
+		line.text = EMPTY_CLUE
+		clues_list.add_child(line)
 	set_ink(_ink)
 
 

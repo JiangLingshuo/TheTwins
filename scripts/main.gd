@@ -84,6 +84,11 @@ func _ready() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if OS.is_debug_build() and event.is_pressed() and not event.is_echo() and event is InputEventKey and event.keycode == KEY_F8:
+		GameState.preview_notebook_content()
+		_toast.show_message("DEV: all notebook text unlocked for this session")
+		get_viewport().set_input_as_handled()
+		return
 	if toggle_key != KEY_NONE and event.is_pressed() and not event.is_echo() \
 			and (event as InputEventKey).keycode == toggle_key:
 		toggle_time()

@@ -27,6 +27,7 @@ const PAUSE_CHARS := ".,!?;:…—"
 @onready var continue_indicator: Label = $Panel/Margin/ContinueIndicator
 
 var _lines: Array[Dictionary] = []
+var _log_session: String = ""
 var _index := -1
 var _active := false
 var _accept_input := false
@@ -46,10 +47,12 @@ func is_playing() -> bool:
 
 
 func play_file(path: String) -> void:
-	play(DialogueLoader.load_xml(path))
+	var session := "opening" if path == "res://assets/dialogue/start.xml" else path.get_file().get_basename()
+	play(DialogueLoader.load_xml(path), session)
 
 
-func play(lines: Array[Dictionary]) -> void:
+func play(lines: Array[Dictionary], log_session: String = "") -> void:
+	_log_session = log_session
 	_lines = lines
 	_index = -1
 	_active = true
@@ -116,6 +119,7 @@ func _next_line() -> void:
 	var line := _lines[_index]
 	var speaker: String = line["speaker"]
 	var content: String = line["content"]
+	GameState.append_radio_line(_log_session, line)
 	speaker_label.text = GameState.fill_placeholders(speaker)
 	speaker_label.visible = not speaker.is_empty()
 	content_label.text = GameState.fill_placeholders(content)
