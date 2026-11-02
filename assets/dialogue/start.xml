@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Dialogue for the transition scene.
-  Each <line> is one page of dialogue:
-	speaker = who is talking (leave empty for narration)
-	content = the text between the tags
-  Use <br/> inside a line for a manual line break.
--->
+<!-- Opening mapped from telecomm_master.ink: opening. Empty speaker denotes narration. -->
 <dialogue>
-	<line speaker="#PLAYER#">I wonder why my investigation notebook has two colors, black and white</line>
+	<line speaker="#PLAYER#">Oh, my notebook’s in black and white.</line>
+	<line speaker="#PLAYER#">Aurora never told me why. I guess it’s an aesthetic choice.</line>
 	<line speaker="??">...</line>
-	<line speaker="??">...Hello? Can you hear this #PLAYER#?</line>
-	<line speaker="#PLAYER#">Aurora? Is that you? My connection is finally recovered. I've landed safely</line>
-	<line speaker="Aurora">And have you looked at your handbook? </line>
-	<line speaker="#PLAYER#">Just a little bit. The colors confuse me. Any meaning behind it?</line>
-	<line speaker="Aurora">The white and black? Those are for different content, by design. </line>
-	<line speaker="Aurora">You see, the Agency have been monitoring this civilization for years, but all of a sudden it collapses into ashes.</line>
-	<line speaker="Aurora">The only thing captured is this photo, this black and white photo.</line>
-	<line speaker="#PLAYER#">We worked for years to get it, now it is the time to find the truth.</line>
-	<line speaker="Aurora">This communication will be kept active, if any future studies you would like to reference from the Agency.</line>
-	<line speaker="Aurora">Good luck.</line>
+	<line speaker="??">...Hello? Can you hear me?</line>
+	<line speaker="#PLAYER#">Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins.</line>
+	<line speaker="">(Relief reaches you first, in a breath she does not quite manage to hide.)</line>
+	<line speaker="Aurora">Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook?</line>
+	<line speaker="#PLAYER#">Yeah, I was just looking at it. Interesting color scheme.</line>
+	<line speaker="">(A small smile enters her voice. She lets the question settle before answering.)</line>
+	<line speaker="Aurora">There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there.</line>
+	<line speaker="#PLAYER#">Should I expect to meet anyone here?</line>
+	<line speaker="">(The smile thins into a more thoughtful warmth. She slows when she reaches the empty places.)</line>
+	<line speaker="Aurora">No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked.</line>
+	<line speaker="#PLAYER#">Where?</line>
+	<line speaker="">(A little silence gathers before the answer. She gives the place its name carefully.)</line>
+	<line speaker="Aurora">Where they remembered the dead. The cemeteries. That’s your mission: to uncover what words alone cannot tell us, through the memories they left behind.</line>
+	<line speaker="">(Her voice turns practical, though a trace of warmth remains after the words.)</line>
+	<line speaker="Aurora">We don’t have much transmission time left. I have to go. Talk to you later.</line>
+	<line speaker="">(Now it’s just you, your handbook, and the faint breath of the planet.)</line>
+	<line speaker="">(You feel a tremor in your limbs.)</line>
+	<line speaker="">(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)</line>
+	<line speaker="">(You’re here to gather their memories. Your steps grow steadier.)</line>
+	<line speaker="">(Then you see it: the place where an entire civilization rests.)</line>
 </dialogue>
