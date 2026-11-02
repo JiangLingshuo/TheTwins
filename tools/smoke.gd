@@ -178,6 +178,7 @@ func _check_main_after_close() -> void:
 	await _check_gravestone_record(main, notebook_tool)
 	await _check_rubbing(main)
 	await _check_rubbing_notebook(main)
+	await _check_rubbing_drag(main)
 
 
 func _check_notebook_sections(notebook_tool: Node) -> void:
@@ -363,7 +364,8 @@ func _check_rubbing_notebook(main: Node) -> void:
 	var label: Label = toast.get_node("Panel/Label")
 	var moon: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/MoonSymbol")
 	var human: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/HumanSymbol")
-	_expect("the moon rubbing comes from the baby tomb, with its texture", game_state.rubbing_records.get("infant_moon_rubbing", {}).get("gravestone") == "baby_tomb" 		and game_state.get_rubbing_texture("infant_moon_rubbing") == moon.texture.resource_path)
+	_expect("the moon rubbing comes from the baby tomb, with its texture", game_state.rubbing_records.get("infant_moon_rubbing", {}).get("gravestone") == "baby_tomb" \
+		and game_state.get_rubbing_texture("infant_moon_rubbing") == moon.texture.resource_path)
 	_expect("a rubbing shows its toast", toast.visible and label.text == "New rubbing recorded in the Notebook.")
 	_expect("collecting does not decipher", not game_state.is_rubbing_deciphered("infant_moon_rubbing") and game_state.get_rubbing_meaning("infant_moon_rubbing") == "")
 	_expect("collecting does not open the notebook", not notebook_tool.is_open())
@@ -389,10 +391,12 @@ func _check_rubbing_notebook(main: Node) -> void:
 	_expect("rubbing entries are not drawn on other sections' pages", notebook.right_page.get_node("Gravestone").visible == false)
 
 	_expect("deciphering an uncollected rubbing fails", not game_state.confirm_rubbing_meaning("no_such_rubbing", "anything"))
-	_expect("a blank meaning is refused", not game_state.confirm_rubbing_meaning("infant_moon_rubbing", "  "))
-	_expect("deciphering a collected rubbing succeeds", game_state.confirm_rubbing_meaning("infant_moon_rubbing", "Test meaning"))
-	_expect("calling it again is safe", game_state.confirm_rubbing_meaning("infant_moon_rubbing", "Test meaning") 		and game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
-	_expect("only the deciphered rubbing has a meaning", game_state.is_rubbing_deciphered("infant_moon_rubbing") 		and game_state.get_rubbing_meaning("infant_moon_rubbing") == "Test meaning" and not game_state.is_rubbing_deciphered("infant_figure_rubbing"))
+	_expect("a blank meaning is refused", not game_state.confirm_rubbing_meaning("infant_figure_rubbing", "  "))
+	_expect("deciphering a collected rubbing succeeds", game_state.confirm_rubbing_meaning("infant_figure_rubbing", "Test meaning"))
+	_expect("calling it again is safe", game_state.confirm_rubbing_meaning("infant_figure_rubbing", "Test meaning") \
+		and game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
+	_expect("only the deciphered rubbing has a meaning", game_state.is_rubbing_deciphered("infant_figure_rubbing") \
+		and game_state.get_rubbing_meaning("infant_figure_rubbing") == "Test meaning" and not game_state.is_rubbing_deciphered("infant_moon_rubbing"))
 
 	# Fill past one spread (4 per page) to get a second Rubbings spread.
 	var spreads_before: int = notebook._spread_count()
@@ -419,6 +423,148 @@ func _check_rubbing_notebook(main: Node) -> void:
 	_expect("entries survive closing and reopening", left_list._ids.slice(0, 2) == ["infant_moon_rubbing", "infant_figure_rubbing"])
 	notebook_tool.close()
 	await _wait(2.5)
+
+
+func _check_rubbing_drag(main: Node) -> void:
+	var game_state := _autoload("GameState")
+	var notebook_tool = main.get_node("NotebookTool")
+	var notebook = notebook_tool.book
+	var drag = notebook_tool.rubbing_drag
+	var toast = main.get_node("Toast")
+	var label: Label = toast.get_node("Panel/Label")
+	var moon = main.get_node("NightCemetery/Moon")
+	var moon_centre: Vector2 = moon.get_global_transform() * (moon.size / 2.0)
+	var tomb_point: Vector2 = main.get_node("DayCemetery/BabyTomb/HumanSymbol").get_global_rect().get_center()
+	var outside_book := Vector2(60, 680)
+	_expect("the Moon is a drop target named after its texture", moon.is_in_group("decipher_targets") \
+		and moon.target_id == "moon" and moon.get_meaning() == "moon")
+	_expect("the Moon only shows at night", not moon.is_visible_in_tree())
+	_expect("the moon rubbing knows its target", game_state.get_rubbing_target("infant_moon_rubbing") == "moon")
+
+	notebook_tool.open()
+	await _wait(3.0)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
+	var list = notebook.left_page.get_node("Rubbings")
+	var row_height: float = list.size.y / list.rows
+	var row := func(i: int) -> Vector2: return list.get_global_transform() * Vector2(48, row_height * (i + 0.5))
+	_move_mouse(row.call(0))
+	await _wait(0.1)
+	_expect("hovering an undeciphered rubbing shows the drag hint", drag._hint.visible)
+	_move_mouse(row.call(1))
+	await _wait(0.1)
+	_expect("a deciphered rubbing shows no hint", not drag._hint.visible)
+
+	# Released inside the book: cancelled.
+	_press(row.call(0), true)
+	_drag_mouse(row.call(0) + Vector2(20, 10))
+	_expect("pressing and moving starts a drag", drag.is_dragging() and drag.rubbing_id == "infant_moon_rubbing" and not drag._hint.visible)
+	_press(row.call(0) + Vector2(20, 10), false)
+	await _wait(0.1)
+	_expect("releasing inside the book cancels quietly", not drag.is_dragging() and notebook_tool.is_open() \
+		and not toast.visible and not game_state.is_rubbing_deciphered("infant_moon_rubbing"))
+	# Escape: cancelled.
+	_press(row.call(0), true)
+	_drag_mouse(row.call(0) + Vector2(20, 10))
+	var escape := InputEventKey.new()
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	root.push_input(escape, true)
+	_press(row.call(0) + Vector2(20, 10), false)
+	await _wait(0.1)
+	_expect("Escape cancels the drag", not drag.is_dragging() and notebook_tool.is_open() and not toast.visible)
+
+	# Day: drag out and drop on the baby tomb (not its object).
+	_press(row.call(0), true)
+	_drag_mouse(row.call(0) + Vector2(20, 10))
+	_drag_mouse(outside_book)
+	await _wait(2.5)
+	_expect("leaving the book closes the notebook, the drag goes on", not notebook_tool.is_open() and drag.is_dragging())
+	_drag_mouse(tomb_point)
+	_press(tomb_point, false)
+	await _wait(0.1)
+	_expect("dropping on the wrong object fails", not drag.is_dragging() and label.text == "This symbol doesn't seem connected to that." \
+		and toast.visible and not game_state.is_rubbing_deciphered("infant_moon_rubbing"))
+	await _wait(3.0)
+
+	# Night: another rubbing dropped on the Moon does not match.
+	main.set_night()
+	await _wait(1.0)
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("the notebook reopens on the Rubbings tab", notebook.get_section() == 1)
+	_press(row.call(2), true)
+	_drag_mouse(row.call(2) + Vector2(20, 10))
+	_drag_mouse(moon_centre)
+	await _wait(2.5)
+	_press(moon_centre, false)
+	await _wait(0.1)
+	_expect("another rubbing dropped on the Moon fails", label.text == "This symbol doesn't seem connected to that." \
+		and not game_state.is_rubbing_deciphered(list._ids[2]) and not game_state.is_rubbing_deciphered("infant_moon_rubbing"))
+	await _wait(3.0)
+
+	# Night: the moon rubbing dropped on the Moon.
+	notebook_tool.open()
+	await _wait(3.0)
+	_press(row.call(0), true)
+	_drag_mouse(row.call(0) + Vector2(20, 10))
+	_drag_mouse(moon_centre)
+	await _wait(2.5)
+	_press(moon_centre, false)
+	await _wait(0.1)
+	_expect("the moon rubbing dropped on the Moon is deciphered as \"moon\"", game_state.get_rubbing_meaning("infant_moon_rubbing") == "moon" \
+		and label.text == "Symbol deciphered! Notebook updated." and toast.visible)
+	_expect("the notebook stays closed after deciphering", not notebook_tool.is_open() and not drag.is_dragging())
+	_expect("deciphering adds no entries", game_state.rubbings.count("infant_moon_rubbing") == 1 and game_state.rubbings[0] == "infant_moon_rubbing")
+
+	notebook_tool.open()
+	await _wait(3.0)
+	_expect("the Rubbings tab shows the moon entry again", list._ids[0] == "infant_moon_rubbing")
+	_move_mouse(row.call(0))
+	await _wait(0.1)
+	_expect("the deciphered moon shows no drag hint", not drag._hint.visible)
+	_press(row.call(0), true)
+	_drag_mouse(row.call(0) + Vector2(20, 10))
+	_expect("a deciphered rubbing cannot be dragged", not drag.is_dragging())
+	_press(row.call(0) + Vector2(20, 10), false)
+
+	# Gravestone page -> its rubbing's entry.
+	notebook.jump_to_section(0)
+	await _wait(1.0)
+	var slot: Control = notebook.left_page.get_node("Gravestone").rubbings_row.get_child(1)
+	var slot_point: Vector2 = slot.get_global_transform() * (slot.size / 2.0)
+	_click(slot_point)
+	await _wait(1.0)
+	_expect("clicking a rubbing on the gravestone page opens its Rubbings spread", notebook.get_section() == 1 and notebook.get_section_spread() == 0)
+	notebook.show_rubbing("test_rubbing_6")
+	await _wait(1.0)
+	_expect("a rubbing on the second Rubbings spread is found", notebook.get_section() == 1 and notebook.get_section_spread() == 1 \
+		and list._ids.has("test_rubbing_6"))
+	notebook_tool.close()
+	await _wait(2.5)
+	main.set_day()
+	await _wait(1.0)
+
+
+## Press or release the left mouse button at `position`.
+func _press(position: Vector2, pressed: bool) -> void:
+	var button := InputEventMouseButton.new()
+	button.button_index = MOUSE_BUTTON_LEFT
+	button.pressed = pressed
+	button.position = position
+	button.global_position = position
+	if pressed:
+		button.button_mask = MOUSE_BUTTON_MASK_LEFT
+	root.push_input(button, true)
+
+
+## Move the mouse with the left button held.
+func _drag_mouse(position: Vector2) -> void:
+	var motion := InputEventMouseMotion.new()
+	motion.position = position
+	motion.global_position = position
+	motion.button_mask = MOUSE_BUTTON_MASK_LEFT
+	root.push_input(motion, true)
 
 
 ## Brush back and forth across `rect` a few times through the rubbing tool.

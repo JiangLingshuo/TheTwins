@@ -5,6 +5,10 @@ extends Control
 ## copy on the turning sheet turns with the paper like the page text.
 ##
 ## The book fills it with show_entries(); the data comes from GameState.
+##
+## Undeciphered entries can be dragged out onto the scene: hovering one shows a
+## hint and pressing + moving starts the drag. Both are handled by the notebook
+## tool's RubbingDrag (group "rubbing_drag"), shared by all entries.
 
 const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 ## Width of the symbol column.
@@ -13,6 +17,8 @@ const SYMBOL_COLUMN := 96.0
 const SYMBOL_BOX := Vector2(76, 76)
 const MEANING_SIZE := 21
 const UNKNOWN_TEXT := "Meaning unknown"
+## How far the mouse moves with the button held before a drag starts.
+const DRAG_THRESHOLD := 6.0
 
 ## Rows a page has room for (the book sets it from rubbings_per_page).
 var rows := 4
@@ -20,15 +26,27 @@ var rows := 4
 var _ids: Array = []
 var _ink := Color(0.17, 0.14, 0.12)
 var _faded_ink := Color(_ink, 0.45)
+## Whether the entries can be hovered and dragged (off for the turning sheet).
+var interactive := true:
+	set(value):
+		interactive = value
+		_update_mouse()
+var _hovered := -1
+var _pressed := -1
+var _press_position := Vector2.ZERO
 
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_update_mouse()
+	mouse_exited.connect(_set_hovered.bind(-1))
+	visibility_changed.connect(_reset_pointer)
 
 
 ## Show these rubbing ids, top to bottom.
 func show_entries(ids: Array) -> void:
 	_ids = ids.duplicate()
+	_reset_pointer()
+	_update_mouse()
 	queue_redraw()
 
 
@@ -40,6 +58,69 @@ func set_ink(ink: Color, faded_alpha: float) -> void:
 	_ink = ink
 	_faded_ink = Color(ink, faded_alpha)
 	queue_redraw()
+
+
+func _gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		if event.pressed:
+			var row := _row_at(event.position)
+			_pressed = row if _is_draggable(row) else -1
+			_press_position = event.position
+			if _pressed >= 0:
+				accept_event()
+		else:
+			_pressed = -1
+	elif event is InputEventMouseMotion:
+		if _pressed >= 0 and event.button_mask & MOUSE_BUTTON_MASK_LEFT \
+				and event.position.distance_to(_press_position) > DRAG_THRESHOLD:
+			var drag := _drag()
+			if drag:
+				drag.begin(str(_ids[_pressed]), event.global_position)
+			_pressed = -1
+			_set_hovered(-1)
+			accept_event()
+		elif _pressed < 0:
+			_set_hovered(_row_at(event.position))
+
+
+func _row_at(local: Vector2) -> int:
+	if not Rect2(Vector2.ZERO, size).has_point(local):
+		return -1
+	var row := int(local.y / (size.y / maxi(1, rows)))
+	return row if row < _ids.size() else -1
+
+
+func _is_draggable(row: int) -> bool:
+	return row >= 0 and row < _ids.size() and GameState.rubbings.has(str(_ids[row])) \
+		and not GameState.is_rubbing_deciphered(str(_ids[row]))
+
+
+## Hint over undeciphered entries only.
+func _set_hovered(row: int) -> void:
+	_hovered = row if _is_draggable(row) else -1
+	mouse_default_cursor_shape = Control.CURSOR_DRAG if _hovered >= 0 else Control.CURSOR_ARROW
+	var drag := _drag()
+	if drag == null or drag.is_dragging():
+		return
+	if _hovered >= 0:
+		drag.show_hint(get_global_mouse_position())
+	else:
+		drag.hide_hint()
+
+
+func _reset_pointer() -> void:
+	_pressed = -1
+	if _hovered >= 0 or not is_visible_in_tree():
+		_set_hovered(-1)
+
+
+func _update_mouse() -> void:
+	mouse_filter = Control.MOUSE_FILTER_STOP if interactive and not _ids.is_empty() \
+		else Control.MOUSE_FILTER_IGNORE
+
+
+func _drag() -> Control:
+	return get_tree().get_first_node_in_group("rubbing_drag") if is_inside_tree() else null
 
 
 func _draw() -> void:

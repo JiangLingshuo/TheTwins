@@ -1,0 +1,50 @@
+extends TextureRect
+## A scene object that deciphers rubbings: drop a rubbing from the notebook on
+## it, and if the rubbing's matching_target_id equals `target_id`, its meaning
+## is confirmed. Attach to any TextureRect in the scene and set `target_id`.
+##
+## The meaning shown in the notebook is `meaning`, or the texture's file name
+## without extension (moon.png -> "moon") while `meaning` is empty.
+
+## Id that RubbingSymbol.matching_target_id refers to (e.g. "moon").
+@export var target_id: String = ""
+## Meaning confirmed for a matching rubbing ("" = the texture's file name).
+@export var meaning: String = ""
+## Only drops on visible pixels count (otherwise the whole rect counts).
+@export var hit_by_alpha: bool = false
+@export_range(0.0, 1.0, 0.05) var hit_alpha: float = 0.5
+
+var _image: Image
+
+
+func _ready() -> void:
+	add_to_group("decipher_targets")
+	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if hit_by_alpha and texture:
+		_image = texture.get_image()
+		if _image and _image.is_compressed():
+			_image.decompress()
+
+
+## Meaning to confirm for a rubbing dropped here.
+func get_meaning() -> String:
+	if not meaning.is_empty():
+		return meaning
+	var source := texture
+	if source is AtlasTexture:
+		source = (source as AtlasTexture).atlas
+	return source.resource_path.get_file().get_basename() if source else ""
+
+
+## True if a screen position is on this object (and it is showing).
+func contains_point(global_point: Vector2) -> bool:
+	if not is_visible_in_tree():
+		return false
+	var local := get_global_transform().affine_inverse() * global_point
+	if not Rect2(Vector2.ZERO, size).has_point(local):
+		return false
+	if _image == null:
+		return true
+	var pixel := Vector2i(local / size * Vector2(_image.get_size()))
+	pixel = pixel.clamp(Vector2i.ZERO, _image.get_size() - Vector2i.ONE)
+	return _image.get_pixelv(pixel).a >= hit_alpha

@@ -14,6 +14,9 @@ signal rubbed(rubbing_id: String)
 
 ## Evidence id of this rubbing (as in evidence_master.ink, e.g. "infant_moon_rubbing").
 @export var rubbing_id: String = ""
+## target_id of the scene object (a DecipherTarget) this symbol is deciphered by:
+## dragging the rubbing from the notebook onto that object reveals its meaning.
+@export var matching_target_id: String = ""
 ## How much darker than the stone the carving is drawn (0.1 = 10% darker).
 @export_range(0.0, 1.0, 0.01) var darken: float = 0.1
 ## Revealed symbol drawn in the inverted colour of the stone under it.

@@ -91,8 +91,10 @@ func _connect_symbol(symbol: RubbingSymbol) -> void:
 func _on_symbol_rubbed(rubbing_id: String) -> void:
 	var gravestone_id := ""
 	var texture_path := ""
+	var target_id := ""
 	for symbol in get_tree().get_nodes_in_group("rubbing_symbols"):
 		if symbol.rubbing_id == rubbing_id:
+			target_id = symbol.matching_target_id
 			if symbol.texture:
 				texture_path = symbol.texture.resource_path
 			# The gravestone the symbol is carved on is one of its ancestors.
@@ -101,7 +103,7 @@ func _on_symbol_rubbed(rubbing_id: String) -> void:
 				gravestone_id = str(node.get("gravestone_id")) if node.get("gravestone_id") != null else ""
 				node = node.get_parent()
 			break
-	if GameState.record_rubbing(rubbing_id, gravestone_id, texture_path):
+	if GameState.record_rubbing(rubbing_id, gravestone_id, texture_path, target_id):
 		rubbing_collected.emit(rubbing_id)
 
 

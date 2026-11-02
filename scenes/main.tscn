@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
@@ -12,6 +12,12 @@
 [ext_resource type="Texture2D" path="res://assets/Art/symbols/moon.png" id="10_moon"]
 [ext_resource type="Script" path="res://scripts/gravestone.gd" id="11_gravestone"]
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/moon.png" id="13_night_moon"]
+[ext_resource type="Script" path="res://scripts/decipher_target.gd" id="14_target"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
+atlas = ExtResource("13_night_moon")
+region = Rect2(484, 92, 95, 89)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -85,6 +91,29 @@ texture = ExtResource("10_moon")
 expand_mode = 1
 script = ExtResource("8_symbol")
 rubbing_id = "infant_moon_rubbing"
+matching_target_id = "moon"
+
+[node name="NightCemetery" type="Control" parent="."]
+visible = false
+layout_mode = 3
+anchors_preset = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+scale = Vector2(0.666667, 0.666667)
+mouse_filter = 2
+
+[node name="Moon" type="TextureRect" parent="NightCemetery"]
+layout_mode = 0
+offset_left = 1105.0
+offset_top = 241.0
+offset_right = 1295.0
+offset_bottom = 419.0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_moon")
+expand_mode = 1
+stretch_mode = 5
+script = ExtResource("14_target")
+target_id = "moon"
 
 [node name="FlashlightTool" parent="." instance=ExtResource("4_tool")]
 layout_mode = 1

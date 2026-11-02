@@ -15,6 +15,8 @@ signal notebook_closed
 @export_range(0.0, 1.0, 0.05) var dim_alpha: float = 0.55
 
 @onready var book: Control = $Book
+## Drags rubbings from the notebook onto scene objects (see rubbing_drag.gd).
+@onready var rubbing_drag: Control = $RubbingDrag
 @onready var _dim: ColorRect = $Dim
 @onready var _button: TextureButton = $NotebookButton
 

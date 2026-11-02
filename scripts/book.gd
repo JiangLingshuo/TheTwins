@@ -128,7 +128,10 @@ func _ready() -> void:
 	_set_corners_visible(false)
 	tabs.visible = false
 	flip_sheet.get_node("Gravestone").set_interactive(false)  # a picture of the page
+	flip_sheet.get_node("Rubbings").interactive = false
 	if use_sections:
+		for page in [left_page, right_page]:
+			page.get_node("Gravestone").rubbing_pressed.connect(show_rubbing)
 		tabs.setup(SECTION_TITLES)
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
@@ -193,6 +196,19 @@ func jump_to_section(section: int) -> void:
 	if _busy or _locked or _stowed or not _opened or not use_sections:
 		return
 	var target := _section_start(clampi(section, 0, section_spreads.size() - 1))
+	if target > _spread:
+		_turn_forward(target)
+	elif target < _spread:
+		_turn_backward(target)
+
+
+## Turn to the Rubbings spread that holds `rubbing_id`'s entry (entries are in
+## collection order, rubbings_per_page per page).
+func show_rubbing(rubbing_id: String) -> void:
+	var index := GameState.rubbings.find(rubbing_id)
+	if index < 0 or _busy or _locked or _stowed or not _opened or not use_sections:
+		return
+	var target := _section_start(1) + index / (rubbings_per_page * 2)
 	if target > _spread:
 		_turn_forward(target)
 	elif target < _spread:

@@ -16,7 +16,8 @@ var notebook_section_spread: int = 0
 ## Ids of the symbols the player has rubbed, in the order they were collected.
 var rubbings: Array[String] = []
 ## Rubbing id -> {"gravestone": source gravestone id, "texture": symbol texture
-## path, "meaning": confirmed meaning ("" until deciphered)}.
+## path, "target": target_id of the scene object that deciphers it,
+## "meaning": confirmed meaning ("" until deciphered)}.
 var rubbing_records: Dictionary = {}
 ## Ids of the gravestones the player has recorded in the notebook (e.g. "baby_tomb").
 var gravestones: Array[String] = []
@@ -30,11 +31,13 @@ const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}"]
 
 ## Record a rubbing the first time its symbol is revealed. Returns false if it
 ## was already recorded (nothing changes then).
-func record_rubbing(rubbing_id: String, gravestone_id: String = "", texture_path: String = "") -> bool:
+func record_rubbing(rubbing_id: String, gravestone_id: String = "", texture_path: String = "",
+		target_id: String = "") -> bool:
 	if rubbing_id.is_empty() or rubbings.has(rubbing_id):
 		return false
 	rubbings.append(rubbing_id)
-	rubbing_records[rubbing_id] = {"gravestone": gravestone_id, "texture": texture_path, "meaning": ""}
+	rubbing_records[rubbing_id] = {"gravestone": gravestone_id, "texture": texture_path,
+		"target": target_id, "meaning": ""}
 	rubbings_changed.emit()
 	return true
 
@@ -65,6 +68,11 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 ## Confirmed meaning of a rubbing, or "" while it is undeciphered.
 func get_rubbing_meaning(rubbing_id: String) -> String:
 	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
+
+
+## target_id of the scene object that deciphers a rubbing ("" if none).
+func get_rubbing_target(rubbing_id: String) -> String:
+	return rubbing_records.get(rubbing_id, {}).get("target", "")
 
 
 ## Texture path of a rubbing's symbol ("" if unknown).

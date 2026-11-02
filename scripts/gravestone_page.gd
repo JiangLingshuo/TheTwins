@@ -7,6 +7,12 @@ extends Control
 ## GameState.gravestone_reports, so it survives page turns and closing the book.
 ## setup_unknown() shows the same page for a gravestone not yet recorded: a
 ## dashed "?" stone in place of the sketch and every section left blank.
+##
+## Clicking a collected rubbing in its slot emits rubbing_pressed, which the book
+## uses to turn to that rubbing's entry in the Rubbings section.
+
+## Emitted when a collected rubbing in a slot is clicked.
+signal rubbing_pressed(rubbing_id: String)
 
 @export var body_font: Font
 @export var heading_font: Font
@@ -46,6 +52,8 @@ func _ready() -> void:
 		var slot := Panel.new()
 		slot.custom_minimum_size = rubbing_slot_size
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		slot.gui_input.connect(_on_slot_input.bind(i))
 		rubbings_row.add_child(slot)
 	for i in clue_slots:
 		var line := Label.new()
@@ -107,6 +115,25 @@ func _update_inputs() -> void:
 		input.editable = value
 		input.focus_mode = Control.FOCUS_ALL if value else Control.FOCUS_NONE
 		input.mouse_filter = Control.MOUSE_FILTER_STOP if value else Control.MOUSE_FILTER_IGNORE
+	# Only slots holding a rubbing can be clicked.
+	var count := 0 if _unknown else GameState.get_gravestone_rubbings(gravestone_id).size()
+	var slots := rubbings_row.get_children()
+	for i in slots.size():
+		slots[i].mouse_filter = Control.MOUSE_FILTER_STOP if _interactive and i < count \
+			else Control.MOUSE_FILTER_IGNORE
+
+
+## A click (press and release on the slot) on a filled rubbing slot.
+func _on_slot_input(event: InputEvent, slot: int) -> void:
+	if not (event is InputEventMouseButton) or event.button_index != MOUSE_BUTTON_LEFT:
+		return
+	var slot_node: Control = rubbings_row.get_child(slot)
+	slot_node.accept_event()
+	if event.pressed or not Rect2(Vector2.ZERO, slot_node.size).has_point(event.position):
+		return
+	var ids := GameState.get_gravestone_rubbings(gravestone_id)
+	if not _unknown and slot < ids.size():
+		rubbing_pressed.emit(ids[slot])
 
 
 ## Colour everything on the page in `ink` (the page theme's text colour).

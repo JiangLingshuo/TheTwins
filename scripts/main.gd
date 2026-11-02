@@ -21,6 +21,10 @@ signal time_changed(is_day: bool)
 @export var gravestone_recorded_message: String = "New gravestone recorded in the Notebook."
 ## Message shown when a rubbing is recorded in the notebook.
 @export var rubbing_recorded_message: String = "New rubbing recorded in the Notebook."
+## Message shown when a rubbing dropped on its scene object is deciphered.
+@export var rubbing_deciphered_message: String = "Symbol deciphered! Notebook updated."
+## Message shown when a rubbing is dropped on the wrong thing.
+@export var rubbing_mismatch_message: String = "This symbol doesn't seem connected to that."
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -28,6 +32,7 @@ signal time_changed(is_day: bool)
 @onready var _notebook_tool: Control = $NotebookTool
 @onready var _rubbing_tool: Control = $RubbingTool
 @onready var _day_cemetery: Control = $DayCemetery
+@onready var _night_cemetery: Control = $NightCemetery
 @onready var _toast: Control = $Toast
 
 ## True during the day, false at night.
@@ -49,7 +54,10 @@ func _ready() -> void:
 	modulate.a = 0.0
 	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
 	_day_cemetery.visible = is_day
-	time_changed.connect(func(day: bool) -> void: _day_cemetery.visible = day)
+	_night_cemetery.visible = not is_day
+	time_changed.connect(func(day: bool) -> void:
+		_day_cemetery.visible = day
+		_night_cemetery.visible = not day)
 	# One tool at a time: picking one up puts the other away; reading the
 	# notebook puts both away.
 	_notebook_tool.notebook_opened.connect(_flashlight_tool.turn_off)
@@ -63,6 +71,11 @@ func _ready() -> void:
 	# The rubbing tool emits `rubbing_collected` once per symbol, after it is recorded.
 	_rubbing_tool.rubbing_collected.connect(func(_id: String) -> void:
 		_toast.show_message(rubbing_recorded_message))
+	# Rubbings dragged from the notebook onto the scene.
+	_notebook_tool.rubbing_drag.deciphered.connect(func(_id: String, _target: Control) -> void:
+		_toast.show_message(rubbing_deciphered_message))
+	_notebook_tool.rubbing_drag.mismatched.connect(func(_id: String, _target: Control) -> void:
+		_toast.show_message(rubbing_mismatch_message))
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
 		gravestone.recorded.connect(func(id: String) -> void:
