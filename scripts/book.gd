@@ -48,6 +48,8 @@ const GRAVESTONE_INFO := {
 @export_multiline var pages: PackedStringArray = ["", "", "", "", "", ""]
 ## Split the book into sections with index tabs (the in-game notebook).
 @export var use_sections: bool = false
+## Rubbings shown on one page of the Rubbings section (more pages follow as needed).
+@export_range(1, 8) var rubbings_per_page: int = 4
 ## Seconds for each half of a page turn.
 @export var flip_time: float = 0.28
 ## Seconds for the book to fly in.
@@ -107,6 +109,8 @@ var _write_player: AudioStreamPlayer
 ## Spreads in each section, in SECTION_TITLES order. The current section and the
 ## spread within it are worked out from _spread, so there is one position only.
 var section_spreads: PackedInt32Array = [GRAVESTONE_SLOTS / 2, 1, 1, 1, 1]
+## A rubbing changed during a page turn: refill the pages when it finishes.
+var _refresh_pending := false
 var _day_material: ShaderMaterial
 var _night_material: ShaderMaterial
 var _normal_ink: Color
@@ -127,6 +131,8 @@ func _ready() -> void:
 	if use_sections:
 		tabs.setup(SECTION_TITLES)
 		tabs.tab_pressed.connect(jump_to_section)
+		_update_rubbing_spreads()
+		GameState.rubbings_changed.connect(_on_rubbings_changed)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -512,6 +518,7 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	flip_text.position = (left_text if on_left else right_text).position
 	flip_number.position = (left_number if on_left else right_number).position
 	flip_sheet.get_node("Art").position = (left_page if on_left else right_page).get_node("Art").position
+	flip_sheet.get_node("Rubbings").position = (left_page if on_left else right_page).get_node("Rubbings").position
 	flip_sheet.get_node("Gravestone").position = (left_page if on_left else right_page).get_node("Gravestone").position
 	_fill(flip_text, flip_number, page_index)
 
@@ -531,6 +538,10 @@ func _finish_flip(spread: int) -> void:
 	flip_sheet.visible = false
 	_spread = spread
 	_busy = false
+	if _refresh_pending:
+		_refresh_pending = false
+		_fill(left_text, left_number, _spread * 2)
+		_fill(right_text, right_number, _spread * 2 + 1)
 	_set_corners_visible(true)
 	if use_sections:
 		tabs.visible = true
@@ -545,7 +556,45 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	# Each page (and the turning sheet) has an Art node next to its labels.
 	_fill_art(text_label.get_parent().get_node("Art"), page_index)
 	_fill_gravestone(text_label.get_parent().get_node("Gravestone"), page_index)
+	_fill_rubbings(text_label.get_parent().get_node("Rubbings"), page_index)
 	_apply_page_theme(text_label, number_label, page_index)
+
+
+## The collected rubbings that fall on a page of the Rubbings section, in
+## collection order (rubbings_per_page per page), or nothing on other pages.
+func _fill_rubbings(rubbing_list: Control, page_index: int) -> void:
+	rubbing_list.rows = rubbings_per_page
+	if not use_sections or page_index / 2 >= _spread_count() or _section_of(page_index / 2) != 1:
+		rubbing_list.clear()
+		return
+	var first := (page_index - _section_start(1) * 2) * rubbings_per_page
+	rubbing_list.show_entries(GameState.rubbings.slice(first, first + rubbings_per_page))
+
+
+## Size the Rubbings section to its entries (at least one spread). The spread on
+## show keeps its place if it lies in a later section.
+func _update_rubbing_spreads() -> void:
+	var per_spread := rubbings_per_page * 2
+	var needed := maxi(1, ceili(float(GameState.rubbings.size()) / per_spread))
+	var change := needed - section_spreads[1]
+	if change == 0:
+		return
+	if _section_of(_spread) > 1:
+		_spread += change
+	section_spreads[1] = needed
+
+
+## A rubbing was recorded or deciphered: update the open pages.
+func _on_rubbings_changed() -> void:
+	_update_rubbing_spreads()
+	if not is_open():
+		return
+	if _busy:
+		_refresh_pending = true  # filled when the turn finishes
+		return
+	_fill(left_text, left_number, _spread * 2)
+	_fill(right_text, right_number, _spread * 2 + 1)
+	tabs.set_active(get_section())
 
 
 ## Show the gravestone page on a Gravestones slot (a blank one with a "?" sketch
@@ -600,6 +649,7 @@ func _make_paper_material(paper: Color) -> ShaderMaterial:
 func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) -> void:
 	var page: Panel = text_label.get_parent()
 	var art := page.get_node("Art")
+	var rubbing_list := page.get_node("Rubbings")
 	var gravestone_page := page.get_node("Gravestone")
 	var day_night := use_sections and page_index / 2 < _spread_count() \
 		and day_night_sections.has(_section_of(page_index / 2))
@@ -609,6 +659,7 @@ func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) 
 		number_label.label_settings.font_color = _normal_number_ink
 		art.reset_ink()
 		gravestone_page.set_ink(_normal_ink)
+		rubbing_list.set_ink(_normal_ink, 0.45)
 		return
 	var is_day := page_index % 2 == 0  # Day on the left, Night on the right
 	var ink := day_ink if is_day else night_ink
@@ -617,6 +668,7 @@ func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) 
 	number_label.label_settings.font_color = Color(ink, 0.8)
 	art.set_ink(ink, day_faded_alpha if is_day else night_faded_alpha)
 	gravestone_page.set_ink(ink)
+	rubbing_list.set_ink(ink, day_faded_alpha if is_day else night_faded_alpha)
 
 
 ## Draw the section placeholder for a page (nothing without sections).
@@ -627,8 +679,8 @@ func _fill_art(art: Control, page_index: int) -> void:
 		return
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
-	if section == 0:
-		art.clear()  # every slot shows a gravestone page instead
+	if section == 0 or (section == 1 and not GameState.rubbings.is_empty()):
+		art.clear()  # gravestone pages / rubbing entries are shown instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])
 	elif page_index == first_page + 1:

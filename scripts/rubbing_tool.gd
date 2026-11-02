@@ -6,7 +6,7 @@ extends Control
 
 ## Emitted when the tool is picked up / put down.
 signal state_changed(is_active: bool)
-## Emitted when a symbol has been fully rubbed.
+## Emitted the first time a symbol is fully rubbed and recorded in GameState.
 signal rubbing_collected(rubbing_id: String)
 
 ## Button art when the tool is off / on.
@@ -89,9 +89,20 @@ func _connect_symbol(symbol: RubbingSymbol) -> void:
 
 
 func _on_symbol_rubbed(rubbing_id: String) -> void:
-	if not GameState.rubbings.has(rubbing_id):
-		GameState.rubbings.append(rubbing_id)
-	rubbing_collected.emit(rubbing_id)
+	var gravestone_id := ""
+	var texture_path := ""
+	for symbol in get_tree().get_nodes_in_group("rubbing_symbols"):
+		if symbol.rubbing_id == rubbing_id:
+			if symbol.texture:
+				texture_path = symbol.texture.resource_path
+			# The gravestone the symbol is carved on is one of its ancestors.
+			var node: Node = symbol.get_parent()
+			while node and gravestone_id.is_empty():
+				gravestone_id = str(node.get("gravestone_id")) if node.get("gravestone_id") != null else ""
+				node = node.get_parent()
+			break
+	if GameState.record_rubbing(rubbing_id, gravestone_id, texture_path):
+		rubbing_collected.emit(rubbing_id)
 
 
 func _draw() -> void:

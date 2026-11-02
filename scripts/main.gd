@@ -19,6 +19,8 @@ signal time_changed(is_day: bool)
 @export var toggle_key: Key = KEY_F1
 ## Message shown when a gravestone is recorded in the notebook.
 @export var gravestone_recorded_message: String = "New gravestone recorded in the Notebook."
+## Message shown when a rubbing is recorded in the notebook.
+@export var rubbing_recorded_message: String = "New rubbing recorded in the Notebook."
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -58,6 +60,9 @@ func _ready() -> void:
 	_flashlight_tool.state_changed.connect(func(state: int) -> void:
 		if state != 0:
 			_rubbing_tool.turn_off())
+	# The rubbing tool emits `rubbing_collected` once per symbol, after it is recorded.
+	_rubbing_tool.rubbing_collected.connect(func(_id: String) -> void:
+		_toast.show_message(rubbing_recorded_message))
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
 		gravestone.recorded.connect(func(id: String) -> void:

@@ -4,7 +4,7 @@ extends SceneTree
 ## Prints PASS / FAIL per check and exits with 1 if anything failed.
 ## Run it with: powershell -File tools/run.ps1 smoke
 
-const TIMEOUT_SECONDS := 90.0
+const TIMEOUT_SECONDS := 150.0
 
 var _failures := 0
 
@@ -177,6 +177,7 @@ func _check_main_after_close() -> void:
 	await _check_notebook_sections(notebook_tool)
 	await _check_gravestone_record(main, notebook_tool)
 	await _check_rubbing(main)
+	await _check_rubbing_notebook(main)
 
 
 func _check_notebook_sections(notebook_tool: Node) -> void:
@@ -351,6 +352,73 @@ func _check_rubbing(main: Node) -> void:
 	_expect("brushing over the symbol rubs it", symbol.is_rubbed)
 	_expect("the rubbing is recorded", _autoload("GameState").rubbings.has("infant_moon_rubbing"))
 	rubbing_tool.set_active(false)
+
+
+func _check_rubbing_notebook(main: Node) -> void:
+	var game_state := _autoload("GameState")
+	var rubbing_tool = main.get_node("RubbingTool")
+	var notebook_tool = main.get_node("NotebookTool")
+	var notebook = notebook_tool.book
+	var toast = main.get_node("Toast")
+	var label: Label = toast.get_node("Panel/Label")
+	var moon: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/MoonSymbol")
+	var human: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/HumanSymbol")
+	_expect("the moon rubbing comes from the baby tomb, with its texture", game_state.rubbing_records.get("infant_moon_rubbing", {}).get("gravestone") == "baby_tomb" 		and game_state.get_rubbing_texture("infant_moon_rubbing") == moon.texture.resource_path)
+	_expect("a rubbing shows its toast", toast.visible and label.text == "New rubbing recorded in the Notebook.")
+	_expect("collecting does not decipher", not game_state.is_rubbing_deciphered("infant_moon_rubbing") and game_state.get_rubbing_meaning("infant_moon_rubbing") == "")
+	_expect("collecting does not open the notebook", not notebook_tool.is_open())
+	await _wait(3.0)
+	rubbing_tool._on_symbol_rubbed("infant_moon_rubbing")  # the same symbol revealed again
+	await _wait(0.1)
+	_expect("a repeated reveal adds nothing and shows no toast", not toast.visible and game_state.rubbings.count("infant_moon_rubbing") == 1)
+
+	rubbing_tool.set_active(true)
+	_scribble(human, human.get_global_rect())
+	rubbing_tool.set_active(false)
+	_expect("rubbings keep their collection order", game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
+	_expect("the gravestone lists its rubbings in collection order", game_state.get_gravestone_rubbings("baby_tomb") == ["infant_moon_rubbing", "infant_figure_rubbing"])
+
+	notebook_tool.open()
+	await _wait(3.0)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
+	var left_list = notebook.left_page.get_node("Rubbings")
+	var right_list = notebook.right_page.get_node("Rubbings")
+	_expect("the Rubbings tab lists the rubbings in collection order", left_list._ids == ["infant_moon_rubbing", "infant_figure_rubbing"] and right_list._ids.is_empty())
+	_expect("the Rubbings title placeholder gives way to the entries", notebook.left_page.get_node("Art")._kind == 0)
+	_expect("rubbing entries are not drawn on other sections' pages", notebook.right_page.get_node("Gravestone").visible == false)
+
+	_expect("deciphering an uncollected rubbing fails", not game_state.confirm_rubbing_meaning("no_such_rubbing", "anything"))
+	_expect("a blank meaning is refused", not game_state.confirm_rubbing_meaning("infant_moon_rubbing", "  "))
+	_expect("deciphering a collected rubbing succeeds", game_state.confirm_rubbing_meaning("infant_moon_rubbing", "Test meaning"))
+	_expect("calling it again is safe", game_state.confirm_rubbing_meaning("infant_moon_rubbing", "Test meaning") 		and game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
+	_expect("only the deciphered rubbing has a meaning", game_state.is_rubbing_deciphered("infant_moon_rubbing") 		and game_state.get_rubbing_meaning("infant_moon_rubbing") == "Test meaning" and not game_state.is_rubbing_deciphered("infant_figure_rubbing"))
+
+	# Fill past one spread (4 per page) to get a second Rubbings spread.
+	var spreads_before: int = notebook._spread_count()
+	for i in 7:
+		game_state.record_rubbing("test_rubbing_%d" % i, "", "")
+	_expect("the Rubbings section grows to a second spread", notebook.section_spreads[1] == 2 and notebook._spread_count() == spreads_before + 1)
+	_expect("the open page refreshes with the new entries", left_list._ids.size() == 4 and right_list._ids.size() == 4 and right_list._ids[0] == "test_rubbing_2")
+	notebook.flip_forward()
+	await _wait(0.8)
+	_expect("the rest continue on the next spread", notebook.get_section() == 1 and left_list._ids == ["test_rubbing_6"] and right_list._ids.is_empty())
+	notebook.flip_forward()
+	await _wait(0.8)
+	_expect("after the rubbings comes Clues", notebook.get_section() == 2)
+	notebook.jump_to_section(0)
+	await _wait(1.0)
+	var entry = notebook.left_page.get_node("Gravestone")
+	_expect("the baby tomb page still has its answers", entry.identity_input.text == "a child")
+	notebook_tool.close()
+	await _wait(2.5)
+	notebook_tool.open()
+	await _wait(3.0)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
+	_expect("entries survive closing and reopening", left_list._ids.slice(0, 2) == ["infant_moon_rubbing", "infant_figure_rubbing"])
+	notebook_tool.close()
+	await _wait(2.5)
 
 
 ## Brush back and forth across `rect` a few times through the rubbing tool.

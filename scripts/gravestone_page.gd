@@ -54,6 +54,7 @@ func _ready() -> void:
 	for input: LineEdit in [identity_input, death_input]:
 		input.text_changed.connect(func(_text: String) -> void: _save_report())
 		input.text_submitted.connect(func(_text: String) -> void: input.release_focus())
+	rubbings_row.sort_children.connect(queue_redraw)  # symbols are drawn over the slots
 	set_ink(_ink)
 
 
@@ -144,6 +145,42 @@ func _draw() -> void:
 	draw_line(Vector2(x, 4.0), Vector2(x, size.y - 4.0), Color(_ink, faded_alpha * 0.6), 1.0, true)
 	if _unknown:
 		_draw_unknown_stone(sketch.get_rect())
+	else:
+		_draw_rubbings()
+
+
+## The gravestone's collected rubbings in its slots, in collection order, with a
+## tick on the deciphered ones (state from GameState, shared with the Rubbings tab).
+func _draw_rubbings() -> void:
+	var ids := GameState.get_gravestone_rubbings(gravestone_id)
+	var slots := rubbings_row.get_children()
+	var origin := ($Info as Control).position + rubbings_row.position
+	for i in mini(ids.size(), slots.size()):
+		var box := Rect2(origin + slots[i].position, slots[i].size).grow(-5.0)
+		var path := GameState.get_rubbing_texture(ids[i])
+		if not path.is_empty() and ResourceLoader.exists(path):
+			var texture: Texture2D = load(path)
+			var fit := minf(box.size.x / texture.get_width(), box.size.y / texture.get_height())
+			var drawn := Vector2(texture.get_size()) * fit
+			# White symbol art, drawn in the page's ink.
+			draw_texture_rect(texture, Rect2(box.get_center() - drawn / 2.0, drawn), false, _ink)
+		if GameState.is_rubbing_deciphered(ids[i]):
+			_draw_tick(origin + slots[i].position + Vector2(slots[i].size.x - 13.0, 2.0), 11.0)
+
+
+## A small, slightly uneven hand-drawn tick (same as on the Rubbings pages).
+func _draw_tick(at: Vector2, length: float) -> void:
+	var points := PackedVector2Array([
+		at + Vector2(0.0, 0.52) * length,
+		at + Vector2(0.14, 0.64) * length,
+		at + Vector2(0.33, 0.95) * length,
+		at + Vector2(0.58, 0.48) * length,
+		at + Vector2(1.0, 0.02) * length,
+	])
+	draw_polyline(points, _ink, 2.0, true)
+	var offset := Vector2(0.7, -0.4)
+	draw_polyline(PackedVector2Array([points[1] + offset, points[2] + offset, points[3] + offset]),
+		Color(_ink, 0.6), 1.1, true)
 
 
 ## A dashed round-topped stone with a question mark, standing in for the sketch.
@@ -188,8 +225,7 @@ func _draw_dashed(points: PackedVector2Array, color: Color, dash := 8.0, gap := 
 				left = dash if drawing else gap
 
 
-## Rubbing slots stay empty frames for now: the rubbing pictures go in them
-## once the Rubbings section lists collected rubbings (`_rubbings` holds their ids).
+## Clue lines. The rubbing slots are drawn from GameState in _draw_rubbings().
 func _fill_slots(_rubbings: Array, clues: Array) -> void:
 	var lines := clues_list.get_children()
 	for i in lines.size():

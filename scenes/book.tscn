@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
 [ext_resource type="Script" path="res://scripts/notebook_page_art.gd" id="7_art"]
 [ext_resource type="PackedScene" path="res://scenes/gravestone_page.tscn" id="8_gravestone"]
+[ext_resource type="Script" path="res://scripts/rubbing_page.gd" id="9_rubbings"]
 
 [sub_resource type="StyleBoxTexture" id="Style_left_page"]
 texture = ExtResource("4_page")
@@ -80,6 +81,15 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
 
+[node name="Rubbings" type="Control" parent="LeftPage"]
+layout_mode = 0
+offset_left = 66.0
+offset_top = 50.0
+offset_right = 386.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("9_rubbings")
+
 [node name="Gravestone" parent="LeftPage" instance=ExtResource("8_gravestone")]
 visible = false
 layout_mode = 0
@@ -123,6 +133,15 @@ offset_right = 351.0
 offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
+
+[node name="Rubbings" type="Control" parent="RightPage"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("9_rubbings")
 
 [node name="Gravestone" parent="RightPage" instance=ExtResource("8_gravestone")]
 visible = false
@@ -188,6 +207,15 @@ offset_right = 351.0
 offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
+
+[node name="Rubbings" type="Control" parent="FlipSheet"]
+layout_mode = 0
+offset_left = 31.0
+offset_top = 50.0
+offset_right = 351.0
+offset_bottom = 490.0
+mouse_filter = 2
+script = ExtResource("9_rubbings")
 
 [node name="Gravestone" parent="FlipSheet" instance=ExtResource("8_gravestone")]
 visible = false
