@@ -1,4 +1,4 @@
-// TWINS - STANDALONE LINKAGE TEST
+﻿// TWINS - STANDALONE LINKAGE TEST
 // Source: 墓碑表.xlsx; newer author instructions and current evidence tags override stale cells.
 // English dialogue is a test draft, not final production copy.
 // Author-edited spreadsheet dialogue, reactions and explicit hidden mechanisms synchronized on 2026-11-01.
@@ -44,6 +44,10 @@ VAR scan_2005 = false
 VAR scan_2050 = false
 VAR bonus_remaining = 2
 VAR bonus_done = false
+VAR hypothesis_open = false
+VAR hypothesis_skin = false
+VAR hypothesis_death = false
+VAR hypothesis_return = "sun"
 VAR return_after_terms = "hub"
 VAR natural_reply_seen = false
 VAR player_name = "Investigator"
@@ -68,6 +72,11 @@ Choose a source evidence, then contact Aurora. One evidence is frozen for the wh
 -> test_hub
 
 === test_hub ===
+// Trigger once after two distinct accepted reports in EACH city, in any order.
+{not bonus_done && LIST_COUNT((completed_reports ^ (TombId.baby, TombId.scholar, TombId.sun))) >= 2 && LIST_COUNT((completed_reports ^ (TombId.altar, TombId.mother, TombId.father))) >= 2:
+    ~ bonus_remaining = 2
+    -> test_bonus
+}
 DEV: Collected {LIST_COUNT(owned_evidence)} evidence records. Reports {LIST_COUNT(completed_reports)}/6 before the final marker. Subtexts {subtext_count}.
 DEV: Prepared evidence: {selected_id == "":none|{selected_id}}.
 + [Play the original opening] -> opening
@@ -182,7 +191,7 @@ Radiating points surround a small creature whose two halves look entirely differ
 # tombstone_id:altar
 # location:night_cemetery
 # title:The White Infant Altar
-A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty.
+A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.
 + [Contact Aurora about this marker]
     ~ active_tomb = "altar"
     -> test_freeze_evidence
@@ -634,7 +643,7 @@ This mineral was found in Night City. Its facets resemble the outline of the cry
 # ui:open_evidence:skin_picture
 Rewound to a time before the skin decayed, the searchlight reveals the picture clearly. A member of the Dayfolk and a member of the Nightfolk reach out and clasp hands.
 
-The lines are formed by blue blood seeping through the skin. A skin drawing with unexplained reason.
+The lines are formed by blue blood seeping through the skin. A drawing on skin, made for an unknown reason.
 + [Collect a highlighted term] -> test_terms
 + [Back] -> test_hub
 
@@ -1767,6 +1776,10 @@ What would you like to ask?
 + {(1 == 1) && (has_tag(EvidenceTag.scholar_no_visitors))} [The Scholar seems reputable in the Day City. Why is her grave never visited by anyone else?] -> test_answer_scholar_31
 + {(1 == 1) && (has_tag(EvidenceTag.unexplained_waking_wounds)) && (read_answers ? AnswerId.scholar_25_supported_27)} [Did she cut her own skin to send the message?] -> test_answer_scholar_35
 + {(1 == 1) && (has_tag(EvidenceTag.missing_family_member_reference) || has_tag(EvidenceTag.four_person_family)) && (read_answers ? AnswerId.scholar_25_supported_27)} [You seem to have some personal feelings towards the Scholar.] -> test_answer_scholar_39
++ [Why did the Scholar never apply for the family mausoleum?] -> test_scholar_mausoleum
++ {((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))} [Do you think the cause of disappearance aligns with what the Scholar has investigated?]
+    ~ hypothesis_return = "scholar"
+    -> test_disappearance_hypothesis
 + [Collect a word from this call] -> test_radio_terms_scholar
 + [End this call] -> test_end_call
 
@@ -1779,6 +1792,9 @@ What would you like to ask?
 + {(owned_evidence ? EvidenceId.shared_family_base)} [Do these three markers belong together?] -> test_answer_sun_17
 + {1 == 1} [Why are four people remembered by only three markers?] -> test_answer_sun_21
 + {(1 == 1) && (has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference))} [Which family member has no place on the base?] -> test_answer_sun_25
++ {((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))} [Do you think the cause of disappearance aligns with what the Scholar has investigated?]
+    ~ hypothesis_return = "sun"
+    -> test_disappearance_hypothesis
 + [Collect a word from this call] -> test_radio_terms_sun
 + [End this call] -> test_end_call
 
@@ -1786,7 +1802,7 @@ What would you like to ask?
 # ui:radio_questions
 -> test_menu_feedback ->
 What would you like to ask?
-+ {1 == 1} [What does the unfamiliar glyph say?] -> test_answer_altar_8
++ {1 == 1} [There is a symbol on the platform. What does it mean?] -> test_answer_altar_8
 + {(links ? Relation.baby_pair)} [Is this the child from the small marker?] -> test_answer_altar_12
 + {1 == 1} [Are the moon-shaped stones coins?] -> test_answer_altar_16
 + {1 == 1} [What was removed from the empty recess?] -> test_answer_altar_20
@@ -2035,11 +2051,6 @@ DEV: report={active_tomb}; identity={report_identity}; fate={report_cause}.
     # event:report_accepted:altar
     Report recorded. DEV acceptance is provisional and does not judge Aurora.
 
-    {not bonus_done:
-        ~ bonus_remaining = 2
-        -> test_bonus
-    }
-
     -> test_hub
 }
 
@@ -2070,9 +2081,9 @@ This test report is not yet supported. Check the identity, fate, and relevant ev
 -> test_reports
 
 === test_bonus ===
-// Source: 05_婴儿夜城祭坛!B13. Two bonus QUESTIONS, not an overall radio call limit.
+// Dialogue source: 05_婴儿夜城祭坛!B13. Unlock after two accepted Day City reports AND two accepted Night City reports. Two bonus QUESTIONS, not an overall radio call limit.
 (Her breathing steadies. She sounds ready to answer something larger than a single grave.) #narrator
-You have followed one child across two cities. What would you most like to ask now? #aurora
+You have followed their traces through both cities. What would you most like to ask now? #aurora
 DEV: bonus questions remaining {bonus_remaining}.
 * {bonus_remaining > 0} [What are the Dayfolk and Nightfolk?]
     (She pauses once, then sets the explanation down plainly.) #narrator
@@ -2251,14 +2262,14 @@ What would you like to ask?
 # question_id:scholar_8
 ~ temp supported = false
 {has_tag(EvidenceTag.crystal_shape) || has_tag(EvidenceTag.crystal_research_reference):
-(Her voice warms at the title. Pride enters the line so briefly that you cannot tell whose it is.) #narrator
+(Pride enters her voice so briefly that you cannot tell whose it is.) #narrator
 As the manuscript says, they gave her the title <link="scholar">Scholar</link> when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of. #aurora
+(You can't help thinking back to the moment when you first saw the crystal in the Night City. Unlike its transparency in the Day City, the enigmatic darkness draws you in and makes you wonder how these beautiful stones changed Day and Night.) #narrator
 ~ read_answers += AnswerId.scholar_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(She gives the word “crystal” a thoughtful weight. The pause that follows feels deliberate.) #narrator
 The crystal had a history before it became a memorial. {player_name}, find its mineral counterpart, or the record of the work it made possible. #aurora
 ~ read_answers += AnswerId.scholar_8_normal_9
 ~ feedback_kind = "unmatched"
@@ -2295,13 +2306,12 @@ A familiar shape can travel from grave to grave without telling us its name. Loo
 ~ temp supported = false
 {has_tag(EvidenceTag.night_city_mineral_origin) || has_tag(EvidenceTag.intercity_resource_exchange):
 (Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.) #narrator
-This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence. #aurora
+This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence — though there is still insufficient evidence to establish whether they shared any aspect of life. #aurora
 ~ read_answers += AnswerId.scholar_17_supported_19
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(You hear her inhale as if to object. What follows is gentler than the breath promised.) #narrator
 I would be careful about asking a single stone to speak for two cities. We need some evidence that passed between them. #aurora
 ~ read_answers += AnswerId.scholar_17_normal_18
 ~ feedback_kind = "unmatched"
@@ -2312,6 +2322,7 @@ I would be careful about asking a single stone to speak for two cities. We need 
 # question_id:scholar_20
 (The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.) #narrator
 I cannot speak for her. But I believe she must have discovered something about the world she lived in. Some truth she could not leave out of her own memorial. Your notebook is black and white for a reason, too. #aurora
+(You look at your notebook once again. One double-page spread accommodating two contrasting halves. Does it signal a kind of coexistence, or a history of segregation?) #narrator
 ~ read_answers += AnswerId.scholar_20_normal_21
 ~ feedback_kind = ""
 -> test_radio_scholar
@@ -2332,8 +2343,7 @@ A Dayfolk and a Nightfolk, hand in hand... I never expected her to be so cruel t
 }
 }
 {not supported:
-(Her certainty frays at the edge of the first sentence. She pauses before naming what she thinks she sees.) #narrator
-I cannot make out the picture, but I am fairly sure that fragment is skin. Try the searchlight. Take it back to a time before it decayed, before we decide what it was trying to say. #aurora
+I cannot make out the picture, but I am fairly sure that fragment is skin — from past research, we know that the Dayfolk have blue blood, and some of it remains on the fragment. Try the searchlight. Take it back to a time before it decayed, before we decide what it was trying to say. #aurora
 ~ read_answers += AnswerId.scholar_25_normal_26
 ~ feedback_kind = "unmatched"
 }
@@ -2387,7 +2397,7 @@ I imagine anyone would be moved, {player_name}. To make your own skin carry a me
 {has_tag(EvidenceTag.day_city_currency):
 {know(EvidenceTag.tycoon_identity):
 (The name arrives more carefully than the rest of the sentence, as though she has set it down rather than spoken it.) #narrator
-The same rays circle the coins. And the occupational record names the man who funded the Scholar: the <link="tycoon">Tycoon</link>. His stone has kept the shape of what built his fortune. #aurora
+The same rays circle the coins. And the occupational record names the man who funded the Scholar: the <link="tycoon">Tycoon</link>. His stone has kept the shape of what built his fortune, but it fails to recognize the very intuition that led him to make a successful investment. #aurora
 ~ read_answers += AnswerId.sun_8_supported_10
 - else:
 (Her agreement is thoughtful, but she leaves the name unspoken.) #narrator
@@ -2397,8 +2407,7 @@ The outline matches the coins. Keep that connection. We still need the occupatio
 ~ feedback_kind = "linked"
 }
 {not supported:
-(You hear a restrained, agreeable hum. She allows the suggestion a little room before answering.) #narrator
-I can see why you thought of the sun. Those rays do catch the eye. Still, let us find something more definite before we give their owner an occupation. #aurora
+I can see why you thought of the sun. Those rays do catch the eye. Still, as you know, the shape represents an occupation. We can't have Apollo the Sun God or Hou Yi the sun shooter buried here. Let's find more evidence of how the sun is linked to an identity. #aurora
 ~ read_answers += AnswerId.sun_8_normal_9
 ~ feedback_kind = "unmatched"
 }
@@ -2408,15 +2417,14 @@ I can see why you thought of the sun. Those rays do catch the eye. Still, let us
 # question_id:sun_13
 ~ temp supported = false
 {has_tag(EvidenceTag.ancient_disappearance):
-(Her voice loses a little of its brightness. The repeated shapes seem to have become a different sort of crowd.) #narrator
 So many stones have borrowed the same creature. Its vanishing in the old account gives the carving its meaning: <link="disappearance">disappearance</link>. An image left behind where a life cannot be found. #aurora
 ~ read_answers += AnswerId.sun_13_supported_15
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(There is a faint amusement in her first breath. It fades when she returns to the subject of the graves.) #narrator
 The creature keeps returning, doesn't it? Let us give it a name before we give it a meaning. What does the old account say? #aurora
+(You feel dumb. But that clue must have lodged itself somewhere deep in your consciousness. Perhaps use your tools to observe those markers again.) #narrator
 ~ read_answers += AnswerId.sun_13_normal_14
 ~ feedback_kind = "unmatched"
 }
@@ -2461,7 +2469,7 @@ Before we count who is missing, let us be sure who belongs in the picture. Compa
 === test_answer_sun_25 ===
 # question_id:sun_25
 # feedback:gold
-(She begins with an ordinary breath. Halfway out, it catches. Her answer steps carefully around it.) #narrator
+(Silence. Only the buzzing sound reminds you that the call is not interrupted.) #narrator
 Someone was still there after the others were gone. I wonder whether the family left a place for her, or whether she had already begun to leave it herself. #aurora
 ~ read_answers += AnswerId.sun_25_hidden_27
 {not (seen_subtexts ? Subtext.sun_25):
@@ -2475,8 +2483,7 @@ Someone was still there after the others were gone. I wonder whether the family 
 # question_id:altar_8
 ~ temp supported = false
 {has_tag(EvidenceTag.night_blessing_glyph):
-(She reads the shape once under her breath, then gives you the translation at an even pace.) #narrator
-It says: 'To disappear is to set out on a journey without end. May the wishes of crystal remain with you.' The border means <link="disappearance">disappearance</link>. #aurora
+To disappear is to set out on a journey without end. May the wishes of crystal remain with you.'This is what the symbol means. The border, featuring a long way, means <link="disappearance">disappearance</link>. #aurora
 ~ read_answers += AnswerId.altar_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2485,8 +2492,7 @@ It says: 'To disappear is to set out on a journey without end. May the wishes of
 # event:grant_evidence:altar_blessing_translation
 }
 {not supported:
-(A short pause. Her next words arrive cleanly through the static.) #narrator
-Show me the glyph. I need the actual shape to translate it. #aurora
+Send me the symbol. #aurora
 ~ read_answers += AnswerId.altar_8_normal_9
 ~ feedback_kind = "unmatched"
 }
@@ -2496,15 +2502,14 @@ Show me the glyph. I need the actual shape to translate it. #aurora
 # question_id:altar_12
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_memorial) || has_tag(EvidenceTag.paired_day_night_memorials):
-(She leaves a beat between the two records, giving each the same weight.) #narrator
+(She speaks in an undisturbed tone) #narrator
 Day City records a death. Night City records a <link="disappearance">disappearance</link>. That difference does not mean there were two children. Check the figures together. #aurora
 ~ read_answers += AnswerId.altar_12_supported_14
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(You hear a small breath through her nose. Her answer is measured and practical.) #narrator
-Compare the infant figures first. We need that match before we call them the same child. #aurora
+Compare the figures first, then we'll see. #aurora
 ~ read_answers += AnswerId.altar_12_normal_13
 ~ feedback_kind = "unmatched"
 }
@@ -2513,9 +2518,8 @@ Compare the infant figures first. We need that match before we call them the sam
 === test_answer_altar_16 ===
 # question_id:altar_16
 ~ temp supported = false
-{has_tag(EvidenceTag.moon_stone_offering) || has_tag(EvidenceTag.night_blessing_reference):
-(Her tone softens on the final word. Nothing else in the answer wavers.) #narrator
-They are blessings. Leaving one means wishing someone well. It is not a payment. #aurora
+{has_tag(EvidenceTag.moon_stone_offering):
+Not everything can be interpreted with a modern mindset, and not all offerings are intended for commercial exchange. These are blessings given by the Nightfolk. #aurora
 ~ read_answers += AnswerId.altar_16_supported_18
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2524,8 +2528,7 @@ They are blessings. Leaving one means wishing someone well. It is not a payment.
 # event:grant_evidence:moon_stone_blessing
 }
 {not supported:
-(A brief, dry sound of disagreement. She does not raise her voice.) #narrator
-Find one of the offerings. The shape alone does not tell us it was used as money. #aurora
+Show me the stones first. #aurora
 ~ read_answers += AnswerId.altar_16_normal_17
 ~ feedback_kind = "unmatched"
 }
@@ -2536,13 +2539,12 @@ Find one of the offerings. The shape alone does not tell us it was used as money
 ~ temp supported = false
 {has_tag(EvidenceTag.removed_crystal_offering) || has_tag(EvidenceTag.crystal_extraction_reference):
 (Her voice tightens around the missing object, then settles back into its usual level register.) #narrator
-The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but this trace does not show who took it. #aurora
+The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but I cannot prove they did it. For now, you can take this as a provisional argument. #aurora
 ~ read_answers += AnswerId.altar_20_supported_22
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(The reply is preceded by a small click on the line. She sounds focused.) #narrator
 Use the searchlight on the empty recess. We need to see what was there. #aurora
 ~ read_answers += AnswerId.altar_20_normal_21
 ~ feedback_kind = "unmatched"
@@ -2565,8 +2567,10 @@ A symbol can be remembered without a written language. Someone who used it could
 === test_answer_altar_28 ===
 # question_id:altar_28
 # feedback:gold
-(She breathes out once. It sounds like she has set aside a familiar argument.) #narrator
 Check the division first. If it was wrong, 'born in the wrong city' may be the wrong question. Keep the two memorials together. #aurora
+(Her voice stops abruptly. The night spills around you, with barely a sound. You start to think about how the Day City looked, and your call with Aurora then.) #narrator
+(It's different, definitely. Two worlds overlap in the dimension of time.） #narrator
+(Was it "wrong"? Or is it just a glimpse through the overlap?) #narrator
 ~ read_answers += AnswerId.altar_28_hidden_30
 {not (seen_subtexts ? Subtext.altar_28):
     ~ seen_subtexts += Subtext.altar_28
@@ -3031,3 +3035,57 @@ Until later. I'll be here when you have something to share. #aurora
 # event:radio_end
 ~ feedback_kind = ""
 -> test_hub
+
+=== test_scholar_mausoleum ===
+{submitted_id == "profession_record":
+I didn't know she had the privilege of doing so, yet she never did. She was someone who valued reputation and recognition; she lived her life in the prescribed mold of a successful Dayfolk. But she never mentioned the mausoleum again. Why? #aurora
+(The next line is too faint that it sounds like a whisper to self.) #narrator
+She might be feeling as guilty as ... #aurora
+(The last few words disperse in the humming sound) #narrator
+~ feedback_kind = "linked"
+- else:
+I'm not sure whether the Scholar is eligible… Have you found any evidence related to that? #aurora
+~ feedback_kind = "unmatched"
+}
+-> test_radio_scholar
+
+=== test_disappearance_hypothesis ===
+{has_tag(EvidenceTag.dawn_disappearances):
+    ~ hypothesis_open = true
+}
+{has_tag(EvidenceTag.skin_as_message_medium):
+    ~ hypothesis_skin = true
+}
+{has_tag(EvidenceTag.paired_day_night_death):
+    ~ hypothesis_death = true
+}
+{hypothesis_skin && hypothesis_death:
+You seem to know the link between disappearance and death, which proves the Scholar's speculation wrong. You know much more than I do. I want to know: #player
+-> test_disappearance_followups
+- else:
+{hypothesis_skin:
+You saw that conflict — the Scholar ended up using skin as a medium to convey a message, proving her initial conclusion that the scars were caused by the Nightfolk wrong. This does not directly prove her conclusion about disappearance wrong, but I would encourage you to investigate along this thread. #aurora
+(You can feel the strong implication behind her words. It feels like she knows everything but is still toying with you. You wonder if she will tell you where she's from and what she has done.) #narrator
+- else:
+The Dayfolk often get stuck in their own understanding of the world. You may want to find more conflicts between the world they firmly believe in and the actual world around us. #aurora
+}
+~ feedback_kind = "hidden"
+-> test_disappearance_return
+}
+
+=== test_disappearance_followups ===
+* [What is the exact rule that governs disappearance and death across the cities?]
+    They have separate minds and take turns being awake. They share one living body. If one dies, the other cannot survive. What one city records as death, the other may record as disappearance. #aurora
+    -> test_disappearance_followups
+* [Who are you?]
+    (Her voice fractures, just like the world you are standing in, a world that belongs to yesterday) #narrator
+    I am someone who belongs to this place, yet something stops me from going back. #aurora
+    -> test_disappearance_followups
++ [Return to the questions]
+    ~ feedback_kind = "hidden"
+    -> test_disappearance_return
+
+=== test_disappearance_return ===
+{hypothesis_return == "scholar": -> test_radio_scholar}
+-> test_radio_sun
+
