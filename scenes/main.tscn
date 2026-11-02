@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
@@ -17,6 +17,8 @@
 
 [ext_resource type="Texture2D" path="res://assets/Art/symbols/sky_sun.svg" id="15_sun"]
 [ext_resource type="Script" path="res://scripts/sun_moon_tutorial.gd" id="16_tutorial"]
+
+[ext_resource type="Script" path="res://scripts/radio_tool.gd" id="17_radio"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
 atlas = ExtResource("13_night_moon")
@@ -158,3 +160,13 @@ layout_mode = 1
 
 [node name="SunMoonTutorial" type="Node" parent="."]
 script = ExtResource("16_tutorial")
+
+[node name="RadioTool" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("17_radio")

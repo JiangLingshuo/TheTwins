@@ -1,0 +1,4116 @@
+{
+  "source_sha256": "d0824cf340227eb48e68b32098b02dda1b7701c14aaaa77acb9a3473d034c641",
+  "questions": [
+    {
+      "id": "baby:test_answer_baby_8",
+      "tomb": "baby_tomb",
+      "label": "How do we interpret the icon on the tombstone?",
+      "condition": "(links ? Relation.moon)",
+      "target": "test_answer_baby_8",
+      "hidden": false,
+      "candidates": [
+        "designer_journal",
+        "designer_manuscript",
+        "infant_figure_rubbing"
+      ]
+    },
+    {
+      "id": "baby:test_answer_baby_17",
+      "tomb": "baby_tomb",
+      "label": "Why is the tombstone shaped like a person?",
+      "condition": "(links ? Relation.human)",
+      "target": "test_answer_baby_17",
+      "hidden": false,
+      "candidates": [
+        "designer_manuscript",
+        "infant_graffiti",
+        "moon_reference"
+      ]
+    },
+    {
+      "id": "baby:test_answer_baby_21",
+      "tomb": "baby_tomb",
+      "label": "Who drew the child's real appearance?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance) || has_tag(EvidenceTag.family_requested_depiction))",
+      "target": "test_answer_baby_21",
+      "hidden": true,
+      "candidates": [
+        "designer_journal",
+        "designer_manuscript",
+        "infant_death_doubt"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_8",
+      "tomb": "scholar_tomb",
+      "label": "Why is the monument shaped like a crystal?",
+      "condition": "(links ? Relation.crystal)",
+      "target": "test_answer_scholar_8",
+      "hidden": false,
+      "candidates": [
+        "profession_record",
+        "skin_picture",
+        "one_way_passage_order"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_12",
+      "tomb": "scholar_tomb",
+      "label": "What does the two-part creature mean?",
+      "condition": "((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))",
+      "target": "test_answer_scholar_12",
+      "hidden": false,
+      "candidates": [
+        "repeated_beast_motifs",
+        "crystal_marker_rubbing",
+        "disappearance_inquiry"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_17",
+      "tomb": "scholar_tomb",
+      "label": "Did the cities ever cooperate?",
+      "condition": "1 == 1",
+      "target": "test_answer_scholar_17",
+      "hidden": false,
+      "candidates": [
+        "one_way_passage_order",
+        "crystal_marker_rubbing",
+        "disappearance_inquiry"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_20",
+      "tomb": "scholar_tomb",
+      "label": "Why is the color in black and white?",
+      "condition": "1 == 1",
+      "target": "test_answer_scholar_20",
+      "hidden": false,
+      "candidates": [
+        "crystal_marker_rubbing",
+        "disappearance_inquiry",
+        "one_way_passage_order"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_25",
+      "tomb": "scholar_tomb",
+      "label": "How could a picture be kept inside this crystal?",
+      "condition": "1 == 1",
+      "target": "test_answer_scholar_25",
+      "hidden": false,
+      "candidates": [
+        "skin_picture",
+        "infant_graffiti",
+        "profession_record"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_31",
+      "tomb": "scholar_tomb",
+      "label": "The Scholar seems reputable in the Day City. Why is her grave never visited by anyone else?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.scholar_no_visitors))",
+      "target": "test_answer_scholar_31",
+      "hidden": true,
+      "candidates": [
+        "scholar_no_traces",
+        "crystal_marker_rubbing",
+        "disappearance_inquiry"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_35",
+      "tomb": "scholar_tomb",
+      "label": "Did she cut her own skin to send the message?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.unexplained_waking_wounds)) && (read_answers ? AnswerId.scholar_25_supported_27)",
+      "target": "test_answer_scholar_35",
+      "hidden": true,
+      "candidates": [
+        "disappearance_inquiry",
+        "crystal_marker_rubbing",
+        "one_way_passage_order"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_scholar_39",
+      "tomb": "scholar_tomb",
+      "label": "You seem to have some personal feelings towards the Scholar.",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.missing_family_member_reference) || has_tag(EvidenceTag.four_person_family)) && (read_answers ? AnswerId.scholar_25_supported_27)",
+      "target": "test_answer_scholar_39",
+      "hidden": true,
+      "candidates": [
+        "family_photo",
+        "crystal_marker_rubbing",
+        "disappearance_inquiry"
+      ]
+    },
+    {
+      "id": "scholar:test_scholar_mausoleum",
+      "tomb": "scholar_tomb",
+      "label": "Why did the Scholar never apply for the family mausoleum?",
+      "condition": "true",
+      "target": "test_scholar_mausoleum",
+      "hidden": false,
+      "candidates": [
+        "profession_record",
+        "crystal_marker_rubbing",
+        "disappearance_inquiry"
+      ]
+    },
+    {
+      "id": "scholar:test_disappearance_hypothesis",
+      "tomb": "scholar_tomb",
+      "label": "Do you think the cause of disappearance aligns with what the Scholar has investigated?",
+      "condition": "((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))",
+      "target": "test_disappearance_hypothesis",
+      "hidden": true,
+      "candidates": [
+        "disappearance_inquiry",
+        "crystal_marker_rubbing",
+        "one_way_passage_order"
+      ]
+    },
+    {
+      "id": "sun:test_answer_sun_8",
+      "tomb": "sun_tomb",
+      "label": "Is this simply a monument to the sun?",
+      "condition": "(links ? Relation.sun)",
+      "target": "test_answer_sun_8",
+      "hidden": false,
+      "candidates": [
+        "day_city_coin",
+        "sun_reference",
+        "profession_record"
+      ]
+    },
+    {
+      "id": "sun:test_answer_sun_13",
+      "tomb": "sun_tomb",
+      "label": "Why is the same beast on other markers?",
+      "condition": "((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))",
+      "target": "test_answer_sun_13",
+      "hidden": false,
+      "candidates": [
+        "twin_beast_account",
+        "family_photo",
+        "four_person_family_finding"
+      ]
+    },
+    {
+      "id": "sun:test_answer_sun_17",
+      "tomb": "sun_tomb",
+      "label": "Do these three markers belong together?",
+      "condition": "(owned_evidence ? EvidenceId.shared_family_base)",
+      "target": "test_answer_sun_17",
+      "hidden": false,
+      "candidates": [
+        "shared_family_base",
+        "family_photo",
+        "four_person_family_finding"
+      ]
+    },
+    {
+      "id": "sun:test_answer_sun_21",
+      "tomb": "sun_tomb",
+      "label": "Why are four people remembered by only three markers?",
+      "condition": "1 == 1",
+      "target": "test_answer_sun_21",
+      "hidden": false,
+      "candidates": [
+        "family_photo",
+        "scholar_beast_rubbing",
+        "sun_reference"
+      ]
+    },
+    {
+      "id": "sun:test_answer_sun_25",
+      "tomb": "sun_tomb",
+      "label": "Which family member has no place on the base?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference))",
+      "target": "test_answer_sun_25",
+      "hidden": true,
+      "candidates": [
+        "family_photo",
+        "scholar_beast_rubbing",
+        "sun_reference"
+      ]
+    },
+    {
+      "id": "sun:test_disappearance_hypothesis",
+      "tomb": "sun_tomb",
+      "label": "Do you think the cause of disappearance aligns with what the Scholar has investigated?",
+      "condition": "((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))",
+      "target": "test_disappearance_hypothesis",
+      "hidden": true,
+      "candidates": [
+        "disappearance_inquiry",
+        "family_photo",
+        "four_person_family_finding"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_8",
+      "tomb": "altar_tomb",
+      "label": "There is a symbol on the platform. What does it mean?",
+      "condition": "1 == 1",
+      "target": "test_answer_altar_8",
+      "hidden": false,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_infant_rubbing",
+        "altar_moon_stone"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_12",
+      "tomb": "altar_tomb",
+      "label": "Is this the child from the small marker?",
+      "condition": "(links ? Relation.baby_pair)",
+      "target": "test_answer_altar_12",
+      "hidden": false,
+      "candidates": [
+        "infant_memorial_correspondence",
+        "altar_blessing_glyph",
+        "altar_blessing_translation"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_16",
+      "tomb": "altar_tomb",
+      "label": "Are the moon-shaped stones coins?",
+      "condition": "1 == 1",
+      "target": "test_answer_altar_16",
+      "hidden": false,
+      "candidates": [
+        "altar_moon_stone",
+        "day_city_coin",
+        "removed_crystal_god"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_20",
+      "tomb": "altar_tomb",
+      "label": "What was removed from the empty recess?",
+      "condition": "1 == 1",
+      "target": "test_answer_altar_20",
+      "hidden": false,
+      "candidates": [
+        "removed_crystal_god",
+        "altar_blessing_glyph",
+        "altar_blessing_translation"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_24",
+      "tomb": "altar_tomb",
+      "label": "How can you translate a symbol from a culture without a written language?",
+      "condition": "LIST_COUNT(queried_night_glyphs) == 5",
+      "target": "test_answer_altar_24",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_blessing_translation",
+        "altar_infant_rubbing"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_28",
+      "tomb": "altar_tomb",
+      "label": "Was the child in the wrong city?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.infant_appearance_mismatch) || has_tag(EvidenceTag.infant_actual_appearance))",
+      "target": "test_answer_altar_28",
+      "hidden": true,
+      "candidates": [
+        "infant_graffiti",
+        "altar_blessing_glyph",
+        "altar_blessing_translation"
+      ]
+    },
+    {
+      "id": "altar:query_night_unending_path",
+      "tomb": "altar_tomb",
+      "label": "What does the geometric border on the altar mean?",
+      "condition": "owned_evidence ? EvidenceId.altar_path_rubbing",
+      "target": "query_night_unending_path",
+      "hidden": false,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_blessing_translation",
+        "altar_infant_rubbing"
+      ]
+    },
+    {
+      "id": "altar:query_night_crystal_god",
+      "tomb": "altar_tomb",
+      "label": "What does the angular figure represent?",
+      "condition": "(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)",
+      "target": "query_night_crystal_god",
+      "hidden": false,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_blessing_translation",
+        "altar_infant_rubbing"
+      ]
+    },
+    {
+      "id": "mother:test_answer_mother_8",
+      "tomb": "mother_tomb",
+      "label": "Who is the figure holding the child?",
+      "condition": "(links ? Relation.mother_child)",
+      "target": "test_answer_mother_8",
+      "hidden": false,
+      "candidates": [
+        "night_mother_child_rubbing",
+        "night_mother_death_finding",
+        "night_mother_hands_rubbing"
+      ]
+    },
+    {
+      "id": "mother:test_answer_mother_12",
+      "tomb": "mother_tomb",
+      "label": "What does the dry river border tell us about her death?",
+      "condition": "((links ? Relation.river) || (queried_night_glyphs ? NightGlyph.dry_river))",
+      "target": "test_answer_mother_12",
+      "hidden": false,
+      "candidates": [
+        "dry_underground_river",
+        "night_mother_river_rubbing",
+        "night_mother_no_traces"
+      ]
+    },
+    {
+      "id": "mother:test_answer_mother_17",
+      "tomb": "mother_tomb",
+      "label": "Why does the handholding picture resemble the Scholar's?",
+      "condition": "(links ? Relation.skin)",
+      "target": "test_answer_mother_17",
+      "hidden": false,
+      "candidates": [
+        "night_mother_hands_rubbing",
+        "night_mother_child_rubbing",
+        "night_mother_death_finding"
+      ]
+    },
+    {
+      "id": "mother:test_answer_mother_21",
+      "tomb": "mother_tomb",
+      "label": "Does the lack of offerings mean she was the last survivor?",
+      "condition": "1 == 1",
+      "target": "test_answer_mother_21",
+      "hidden": false,
+      "candidates": [
+        "night_mother_no_traces",
+        "night_mother_child_rubbing",
+        "night_mother_death_finding"
+      ]
+    },
+    {
+      "id": "mother:test_answer_mother_25",
+      "tomb": "mother_tomb",
+      "label": "Was the message meant for her daughter as well?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.day_night_handholding) || has_tag(EvidenceTag.shared_body_reference))",
+      "target": "test_answer_mother_25",
+      "hidden": true,
+      "candidates": [
+        "night_mother_hands_rubbing",
+        "night_mother_child_rubbing",
+        "night_mother_death_finding"
+      ]
+    },
+    {
+      "id": "mother:query_night_dry_river",
+      "tomb": "mother_tomb",
+      "label": "What does the geometric border on this stone mean?",
+      "condition": "owned_evidence ? EvidenceId.night_mother_river_rubbing",
+      "target": "query_night_dry_river",
+      "hidden": false,
+      "candidates": [
+        "night_mother_child_rubbing",
+        "night_mother_death_finding",
+        "night_mother_hands_rubbing"
+      ]
+    },
+    {
+      "id": "father:test_answer_father_8",
+      "tomb": "father_tomb",
+      "label": "Who is carrying the child?",
+      "condition": "(links ? Relation.father_child)",
+      "target": "test_answer_father_8",
+      "hidden": false,
+      "candidates": [
+        "night_father_child_rubbing",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
+      "id": "father:test_answer_father_12",
+      "tomb": "father_tomb",
+      "label": "Did he die because the Skyway was dangerous?",
+      "condition": "((links ? Relation.father_path) || (queried_night_glyphs ? NightGlyph.ascending_path))",
+      "target": "test_answer_father_12",
+      "hidden": false,
+      "candidates": [
+        "skyway_reference",
+        "natural_collapse_record",
+        "night_father_path_rubbing"
+      ]
+    },
+    {
+      "id": "father:test_answer_father_16",
+      "tomb": "father_tomb",
+      "label": "Could his death be linked to the Scholar's husband?",
+      "condition": "1 == 1",
+      "target": "test_answer_father_16",
+      "hidden": false,
+      "candidates": [
+        "night_father_death",
+        "disappearance_inquiry",
+        "skyway_history"
+      ]
+    },
+    {
+      "id": "father:test_answer_father_20",
+      "tomb": "father_tomb",
+      "label": "What does the moon-shaped offering mean?",
+      "condition": "1 == 1",
+      "target": "test_answer_father_20",
+      "hidden": false,
+      "candidates": [
+        "altar_moon_stone",
+        "crystal_god_rubbing",
+        "natural_collapse_record"
+      ]
+    },
+    {
+      "id": "father:test_answer_father_24",
+      "tomb": "father_tomb",
+      "label": "Was the original separation really a natural disaster?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.natural_collapse) || has_tag(EvidenceTag.shared_day_night_history))",
+      "target": "test_answer_father_24",
+      "hidden": true,
+      "candidates": [
+        "natural_collapse_record",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
+      "id": "father:query_night_ascending_path",
+      "tomb": "father_tomb",
+      "label": "What does the rising pattern along the border mean?",
+      "condition": "owned_evidence ? EvidenceId.night_father_path_rubbing",
+      "target": "query_night_ascending_path",
+      "hidden": false,
+      "candidates": [
+        "altar_moon_stone",
+        "crystal_god_rubbing",
+        "natural_collapse_record"
+      ]
+    },
+    {
+      "id": "father:query_night_crystal_god",
+      "tomb": "father_tomb",
+      "label": "What does the angular figure represent?",
+      "condition": "(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)",
+      "target": "query_night_crystal_god",
+      "hidden": false,
+      "candidates": [
+        "altar_moon_stone",
+        "crystal_god_rubbing",
+        "natural_collapse_record"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_8",
+      "tomb": "girl_tomb",
+      "label": "What is the upright frame around her?",
+      "condition": "(links ? Relation.coffin)",
+      "target": "test_answer_girl_8",
+      "hidden": false,
+      "candidates": [
+        "history_coffin_illustration",
+        "girl_coffin_rubbing",
+        "family_statuette"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_12",
+      "tomb": "girl_tomb",
+      "label": "Who made this marker?",
+      "condition": "1 == 1",
+      "target": "test_answer_girl_12",
+      "hidden": false,
+      "candidates": [
+        "girl_diary",
+        "altar_path_rubbing",
+        "day_city_history"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_16",
+      "tomb": "girl_tomb",
+      "label": "Do the family sculpture and the photograph belong together?",
+      "condition": "(links ? Relation.family)",
+      "target": "test_answer_girl_16",
+      "hidden": false,
+      "candidates": [
+        "family_statuette",
+        "altar_path_rubbing",
+        "day_city_history"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_20",
+      "tomb": "girl_tomb",
+      "label": "Does disappearance always mean death?",
+      "condition": "1 == 1",
+      "target": "test_answer_girl_20",
+      "hidden": false,
+      "candidates": [
+        "girl_diary",
+        "altar_path_rubbing",
+        "day_city_history"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_24",
+      "tomb": "girl_tomb",
+      "label": "Aurora, why is this girl on the notebook you gave me?",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.aurora_provided_object) || has_tag(EvidenceTag.aurora_identity_reference)) && (links ? Relation.cover)",
+      "target": "test_answer_girl_24",
+      "hidden": true,
+      "candidates": [
+        "girl_cover_correspondence",
+        "altar_path_rubbing",
+        "day_city_history"
+      ]
+    }
+  ],
+  "programs": {
+    "test_answer_girl_24": [
+      {
+        "op": "tag",
+        "value": "question_id:girl_24"
+      },
+      {
+        "op": "goto",
+        "target": "test_confrontation"
+      }
+    ],
+    "test_answer_scholar_31": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_31"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(For a long while, only the thin electrical hum reaches you. Then a breath catches, and leaves her in a long, uneven sigh. You cannot see her, but for once the distance fails to conceal how much the question has touched her.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "… Or there is no one left to remember her. I made that decision. I made that decision..."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.scholar_31_hidden_33"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.scholar_31)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.scholar_31"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_sun_17": [
+      {
+        "op": "tag",
+        "value": "question_id:sun_17"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.shared_family_plot) || has_tag(EvidenceTag.three_family_markers)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She exhales, quietly pleased. The next sentence comes without hesitation.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_17_supported_19"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Look beneath their feet. A family resemblance may be written in the stone they stand on. Are their bases truly joined?"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_17_normal_18"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_sun"
+      }
+    ],
+    "test_answer_father_12": [
+      {
+        "op": "tag",
+        "value": "question_id:father_12"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.skyway_not_steep) || has_tag(EvidenceTag.missed_sleeping_deadline)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A little air escapes before the answer. It is the only part of it she seems unable to keep level.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The path was uneven, but it was not a dangerous climb. He kept searching <link=\"missed_sleeping_deadline\">beyond the permitted waking hours</link> and failed to reach a sleeping coffin in time."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_12_supported_14"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.night_father_death"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.sleep_coffin_required, EvidenceTag.missed_sleeping_deadline, EvidenceTag.night_father_final_journey, EvidenceTag.paired_day_night_death)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:night_father_death"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She waits for the interference to pass, then speaks with deliberate precision.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Check the actual path or its history. An upward line does not show how steep it was."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_12_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_father"
+      }
+    ],
+    "test_answer_girl_16": [
+      {
+        "op": "tag",
+        "value": "question_id:girl_16"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Four people in the picture, three stones on the family base, and this one standing apart. Her mother left the sculpture here. Even after the girl went away, she was still part of the family her mother remembered."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_16_supported_18"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_16_normal_17"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_altar_16": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_16"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.moon_stone_offering)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Not everything can be interpreted with a modern mindset, and not all offerings are intended for commercial exchange. These are blessings given by the Nightfolk."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_16_supported_18"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.moon_stone_blessing"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.moon_stone_offering, EvidenceTag.night_blessing_reference, EvidenceTag.different_exchange_customs)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:moon_stone_blessing"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Show me the stones first."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_16_normal_17"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_answer_mother_21": [
+      {
+        "op": "tag",
+        "value": "question_id:mother_21"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.absence_of_readable_traces) || has_tag(EvidenceTag.last_survivor_question) && submitted_id == \"night_mother_no_traces\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The hiss of the open line grows suddenly loud. Her answer returns without its usual firmness.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "No sign of anyone returning. She may have been the last. I left her alone. I left her alone..."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_21_supported_23"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(You hear her catch an answer before it becomes a certainty. She begins again.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "One empty scan is not enough. Check the period after her burial."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_21_normal_22"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_mother"
+      }
+    ],
+    "test_answer_girl_20": [
+      {
+        "op": "tag",
+        "value": "question_id:girl_20"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.deliberate_departure) || has_tag(EvidenceTag.two_mothers_dilemma)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She puts a little distance back into her voice. The effort is audible.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The diary describes a decision to leave. Disappearance is the word those left behind could give it. We should not let that word bury a girl who may have escaped."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_20_supported_22"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The silence feels less like thought than resistance. You wait until it gives way.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Read what she meant to do. A stone can remember an absence without knowing where the person went."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_20_normal_21"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_baby_17": [
+      {
+        "op": "tag",
+        "value": "question_id:baby_17"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.infant_identity)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.baby_17_supported_19"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "goto",
+            "target": "test_baby_personhood"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "A design often leaves a paper shadow, #PLAYER#: a manuscript. Did you find the designer's?"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.baby_17_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_baby"
+      }
+    ],
+    "test_answer_sun_21": [
+      {
+        "op": "tag",
+        "value": "question_id:sun_21"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The line is still open, but she lets it carry nothing for a moment. When her voice returns, it is closer and lower.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "A photograph can keep a place for someone who has no stone beside the others. Count the four faces, then the three markers. The empty place matters too."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_21_supported_23"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She pauses before counting. The silence gives each missing number an uncomfortable weight.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Before we count who is missing, let us be sure who belongs in the picture. Compare the family image with the shared base."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_21_normal_22"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_sun"
+      }
+    ],
+    "test_answer_scholar_17": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_17"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.night_city_mineral_origin) || has_tag(EvidenceTag.intercity_resource_exchange)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence — though there is still insufficient evidence to establish whether they shared any aspect of life."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_17_supported_19"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I would be careful about asking a single stone to speak for two cities. We need some evidence that passed between them."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_17_normal_18"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_father_16": [
+      {
+        "op": "tag",
+        "value": "question_id:father_16"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.paired_day_night_death)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She lets the two events sit in silence for a beat before joining them.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "One dies. The other disappears at dawn. Check whether these are two records of one life."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_16_supported_18"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her words come firmly now, the dates and times given more weight than the names.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Bring the Scholar's <link=\"disappearance\">disappearance</link> report. We need the time her husband vanished."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_16_normal_17"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_father"
+      }
+    ],
+    "test_answer_altar_24": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_24"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The silence lasts just a fraction longer than the question seems to need. Her reply is direct.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "A symbol can be remembered without a written language. Someone who used it could pass on its meaning. I am not working from books alone."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.altar_24_hidden_26"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.altar_24)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.altar_24"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_answer_father_8": [
+      {
+        "op": "tag",
+        "value": "question_id:father_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_father_past)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her breathing slows. The answer is short, but she takes care with it.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "It is the same child. The man carrying him is his <link=\"night_father\">father in Night City</link>."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_8_supported_10"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A brief sound of acknowledgement. She moves straight to the point.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Match the child with the altar figure before you name the parent."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_father"
+      }
+    ],
+    "test_answer_scholar_25": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_25"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.day_night_handholding)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The name of neither city comes easily. A tiny catch in her breathing survives the distance intact.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "A Dayfolk and a Nightfolk, hand in hand... I never expected her to be so cruel to herself."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_25_supported_27"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "if",
+            "condition": "know(EvidenceTag.unexplained_waking_wounds)",
+            "then": [
+              {
+                "op": "set",
+                "code": "owned_evidence += EvidenceId.paired_skin_pictures"
+              },
+              {
+                "op": "set",
+                "code": "known_tags += (EvidenceTag.day_night_handholding, EvidenceTag.skin_as_message_medium, EvidenceTag.unexplained_waking_wounds, EvidenceTag.shared_body_reference)"
+              },
+              {
+                "op": "tag",
+                "value": "event:grant_evidence:paired_skin_pictures"
+              }
+            ],
+            "else": []
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I cannot make out the picture, but I am fairly sure that fragment is skin — from past research, we know that the Dayfolk have blue blood, and some of it remains on the fragment. Try the searchlight. Take it back to a time before it decayed, before we decide what it was trying to say."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_25_normal_26"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_baby_8": [
+      {
+        "op": "tag",
+        "value": "question_id:baby_8"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Yes, it does look like a moon. I suppose sleep is the closest rehearsal the living have for death. When night falls, the Dayfolk slip into slumber. On this marker, the moon stands for <link=\"natural\">natural death</link>."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.baby_8_normal_9"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.infant_appearance_mismatch)",
+        "then": [
+          {
+            "op": "tag",
+            "value": "feedback:gold"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were <link=\"unexplained death\">unexplained circumstances</link> behind his death. Let us keep looking."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.baby_8_additional_10"
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.infant_death_doubt"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.infant_death_unresolved, EvidenceTag.infant_appearance_mismatch)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:infant_death_doubt"
+          },
+          {
+            "op": "if",
+            "condition": "not (seen_subtexts ? Subtext.baby_8_additional)",
+            "then": [
+              {
+                "op": "set",
+                "code": "seen_subtexts += Subtext.baby_8_additional"
+              },
+              {
+                "op": "set",
+                "code": "subtext_count += 1"
+              }
+            ],
+            "else": []
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"hidden\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_baby"
+      }
+    ],
+    "query_night_unending_path": [
+      {
+        "op": "tag",
+        "value": "question_id:query_night_unending_path"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It means an unending journey: someone left and did not return. On a memorial, it records <link=\"disappearance\">disappearance</link>. It does not tell us what happened to that person."
+      },
+      {
+        "op": "set",
+        "code": "queried_night_glyphs += NightGlyph.unending_path"
+      },
+      {
+        "op": "tag",
+        "value": "event:night_symbol_queried:unending_path"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "goto",
+        "target": "return_night_glyph"
+      }
+    ],
+    "query_night_dry_river": [
+      {
+        "op": "tag",
+        "value": "question_id:query_night_dry_river"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It represents a river that has run dry. That is the meaning of the symbol. Whether it describes this place, a loss of water, or the circumstances of her death needs further evidence."
+      },
+      {
+        "op": "set",
+        "code": "queried_night_glyphs += NightGlyph.dry_river"
+      },
+      {
+        "op": "tag",
+        "value": "event:night_symbol_queried:dry_river"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "goto",
+        "target": "return_night_glyph"
+      }
+    ],
+    "test_answer_father_20": [
+      {
+        "op": "tag",
+        "value": "question_id:father_20"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.moon_stone_offering) || has_tag(EvidenceTag.night_blessing_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her voice warms briefly. She does not make a remark about it.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "It is a blessing for the person who left. Nobody was paying for the path."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_20_supported_22"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.moon_stone_blessing"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.moon_stone_offering, EvidenceTag.night_blessing_reference, EvidenceTag.different_exchange_customs)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:moon_stone_blessing"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A quiet breath, then an instruction. The familiar directness is back.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Record the stone. Compare it with the altar offerings."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.father_20_normal_21"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_father"
+      }
+    ],
+    "test_baby_personhood": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Does that mean they treated him as an independent person?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_baby_personhood_reply"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "All person deserves a fair treatment. Did he receive?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_baby_personhood_reply"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_answer_father_24": [
+      {
+        "op": "tag",
+        "value": "question_id:father_24"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.father_24_hidden_26"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.father_24)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.father_24"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_father"
+      }
+    ],
+    "test_answer_altar_8": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "(owned_evidence ? EvidenceId.altar_blessing_glyph) || has_tag(EvidenceTag.night_blessing_glyph)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+          },
+          {
+            "op": "set",
+            "code": "queried_night_glyphs += NightGlyph.blessing"
+          },
+          {
+            "op": "tag",
+            "value": "event:night_symbol_queried:blessing"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_8_supported_10"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.altar_blessing_translation"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.night_blessing_glyph, EvidenceTag.night_symbol_translation, EvidenceTag.endless_path_motif, EvidenceTag.aurora_translation_knowledge)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:altar_blessing_translation"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Record the symbol with your rubbing tool first. Then I can read it for you."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_answer_mother_8": [
+      {
+        "op": "tag",
+        "value": "question_id:mother_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_mother_past)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(For one word, the bluntness gives way to something gentler. Then it is gone.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "That is the altar infant. The figure is his <link=\"night_mother\">mother in Night City</link>."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_8_supported_10"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A quiet intake of breath. She answers before it has quite left her.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Compare the child with the altar infant. That will tell us who she was holding."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_mother"
+      }
+    ],
+    "test_answer_mother_12": [
+      {
+        "op": "tag",
+        "value": "question_id:mother_12"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "submitted_id == \"dry_underground_river\" || has_tag(EvidenceTag.water_source_lost)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The first word sounds dry in her mouth. She takes another breath and continues.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The border matches the dry riverbed. It records <link=\"thirst\">hunger and thirst</link> as her cause of death."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_12_supported_14"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          },
+          {
+            "op": "set",
+            "code": "owned_evidence += EvidenceId.night_mother_death_finding"
+          },
+          {
+            "op": "set",
+            "code": "known_tags += (EvidenceTag.night_mother_death_reference, EvidenceTag.death_by_hunger_and_thirst, EvidenceTag.water_source_lost)"
+          },
+          {
+            "op": "tag",
+            "value": "event:grant_evidence:night_mother_death_finding"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her answer comes after a single, deliberate beat.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The symbol means a dry river. Check the actual riverbed or the records of lost water before we conclude that she died of hunger and thirst."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_12_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_mother"
+      }
+    ],
+    "test_answer_scholar_12": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_12"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "submitted_id == \"repeated_beast_motifs\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A little lift in her voice. For once, encouragement arrives before caution.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Nice catch. Think of an obelisk reaching upward, promising something that might outlast a life. A funerary ornament repeated across a whole cemetery can tell us about the city's losses, #PLAYER#, as well as any one person's."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_12_supported_14"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.ancient_disappearance)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The last word of the old account seems to hold her for a moment. She lets it go slowly.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record <link=\"disappearance\">disappearance</link>. You may find other traces of what disappearance meant for the Dayfolk."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_12_supported_15"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A faint click interrupts her breath. She waits until the channel is quiet before answering.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "A familiar shape can travel from grave to grave without telling us its name. Look for the creature beyond these stones, #PLAYER#. Perhaps a trace of it—or the same icon returning again and again."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_12_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_girl_12": [
+      {
+        "op": "tag",
+        "value": "question_id:girl_12"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.funerary_artist_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(For a moment, the sentence seems to cost her more than it should. She finishes it anyway.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a <link=\"funerary_artist\">funerary artist</link>. Perhaps this was the one stone she could finally let speak for herself."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_12_supported_14"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She draws a slow breath. You hear her choose the safer end of the question.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "A human shape can stand for many lives. Her work may have left a clearer signature in the diary."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_12_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "query_night_crystal_god": [
+      {
+        "op": "tag",
+        "value": "question_id:query_night_crystal_god"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+      },
+      {
+        "op": "set",
+        "code": "queried_night_glyphs += NightGlyph.crystal_god"
+      },
+      {
+        "op": "tag",
+        "value": "event:night_symbol_queried:crystal_god"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "goto",
+        "target": "return_night_glyph"
+      }
+    ],
+    "test_answer_scholar_35": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_35"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.scholar_35_hidden_37"
+      },
+      {
+        "op": "set",
+        "code": "owned_evidence += EvidenceId.paired_skin_pictures"
+      },
+      {
+        "op": "set",
+        "code": "known_tags += (EvidenceTag.day_night_handholding, EvidenceTag.skin_as_message_medium, EvidenceTag.unexplained_waking_wounds, EvidenceTag.shared_body_reference)"
+      },
+      {
+        "op": "tag",
+        "value": "event:grant_evidence:paired_skin_pictures"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.scholar_35)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.scholar_35"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "query_night_ascending_path": [
+      {
+        "op": "tag",
+        "value": "question_id:query_night_ascending_path"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "A path leading upward, toward the surface. It records a journey. It does not tell us how steep the path was or why the traveller died."
+      },
+      {
+        "op": "set",
+        "code": "queried_night_glyphs += NightGlyph.ascending_path"
+      },
+      {
+        "op": "tag",
+        "value": "event:night_symbol_queried:ascending_path"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "goto",
+        "target": "return_night_glyph"
+      }
+    ],
+    "test_answer_altar_28": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_28"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Check the division first. If it was wrong, 'born in the wrong city' may be the wrong question. Keep the two memorials together."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Her voice stops abruptly. The night spills around you, with barely a sound. You start to think about how the Day City looked, and your call with Aurora then.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(It's different, definitely. Two worlds overlap in the dimension of time.）"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Was it \"wrong\"? Or is it just a glimpse through the overlap?)"
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.altar_28_hidden_30"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.altar_28)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.altar_28"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_baby_personhood_reply": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(An unnatural pause before her response, as if a piece of memory has struck her through the dozens of years.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "That's a bold and dangerous claim. Without evidence, all guesses are just conspiracy theories."
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_baby"
+      }
+    ],
+    "test_answer_scholar_8": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.crystal_shape) || has_tag(EvidenceTag.crystal_research_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Pride enters her voice so briefly that you cannot tell whose it is.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "As the manuscript says, they gave her the title <link=\"scholar\">Scholar</link> when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of."
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(You can't help thinking back to the moment when you first saw the crystal in the Night City. Unlike its transparency in the Day City, the enigmatic darkness draws you in and makes you wonder how these beautiful stones changed Day and Night.)"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_8_supported_10"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The crystal had a history before it became a memorial. #PLAYER#, find its mineral counterpart, or the record of the work it made possible."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.scholar_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_baby_21": [
+      {
+        "op": "tag",
+        "value": "question_id:baby_21"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A breath almost becomes a laugh. It never quite gets there.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I cannot tell you who drew it, #PLAYER#. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.baby_21_hidden_23"
+      },
+      {
+        "op": "if",
+        "condition": "know(EvidenceTag.funerary_artist_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(A softer breath follows, almost an afterthought.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "She was learning to make memorials then. Perhaps she learned too soon how much a stone could be made to hide."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.baby_21_follow"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.baby_21)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.baby_21"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_baby"
+      }
+    ],
+    "test_answer_sun_13": [
+      {
+        "op": "tag",
+        "value": "question_id:sun_13"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.ancient_disappearance)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "So many stones have borrowed the same creature. Its vanishing in the old account gives the carving its meaning: <link=\"disappearance\">disappearance</link>. An image left behind where a life cannot be found."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_13_supported_15"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The creature keeps returning, doesn't it? Let us give it a name before we give it a meaning. What does the old account say?"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(You feel dumb. But that clue must have lodged itself somewhere deep in your consciousness. Perhaps use your tools to observe those markers again.)"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_13_normal_14"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_sun"
+      }
+    ],
+    "test_answer_sun_25": [
+      {
+        "op": "tag",
+        "value": "question_id:sun_25"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Silence. Only the buzzing sound reminds you that the call is not interrupted.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Someone was still there after the others were gone. I wonder whether the family left a place for her, or whether she had already begun to leave it herself."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.sun_25_hidden_27"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.sun_25)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.sun_25"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_sun"
+      }
+    ],
+    "test_scholar_mausoleum": [
+      {
+        "op": "if",
+        "condition": "submitted_id == \"profession_record\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I didn't know she had the privilege of doing so, yet she never did. She was someone who valued reputation and recognition; she lived her life in the prescribed mold of a successful Dayfolk. But she never mentioned the mausoleum again. Why?"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The next line is too faint that it sounds like a whisper to self.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "She might be feeling as guilty as ..."
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The last few words disperse in the humming sound)"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I'm not sure whether the Scholar is eligible… Have you found any evidence related to that?"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ]
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_scholar_39": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_39"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A small intake of breath. When she answers, the warmth has returned a little too neatly, like a blanket pulled over something that is still moving.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I imagine anyone would be moved, #PLAYER#. To make your own skin carry a message—well. We need not have known her to feel that. Shall we return to the investigation?"
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.scholar_39_hidden_41"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.scholar_39)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.scholar_39"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_scholar_20": [
+      {
+        "op": "tag",
+        "value": "question_id:scholar_20"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I cannot speak for her. But I believe she must have discovered something about the world she lived in. Some truth she could not leave out of her own memorial. Your notebook is black and white for a reason, too."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You look at your notebook once again. One double-page spread accommodating two contrasting halves. Does it signal a kind of coexistence, or a history of segregation?)"
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.scholar_20_normal_21"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_altar_12": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_12"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.infant_memorial) || has_tag(EvidenceTag.paired_day_night_memorials)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She speaks in an undisturbed tone)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Day City records a death. Night City records a <link=\"disappearance\">disappearance</link>. That difference does not mean there were two children. Check the figures together."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_12_supported_14"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Compare the figures first, then we'll see."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_12_normal_13"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_answer_mother_25": [
+      {
+        "op": "tag",
+        "value": "question_id:mother_25"
+      },
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(There is a small pause before “daughter”. She gives you the rest without trying to soften it.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Possibly. She may have understood too late to tell her daughter. The picture could have been her last attempt to explain."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.mother_25_hidden_27"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.mother_25)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.mother_25"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_mother"
+      }
+    ],
+    "test_answer_altar_20": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_20"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.removed_crystal_offering) || has_tag(EvidenceTag.crystal_extraction_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her voice tightens around the missing object, then settles back into its usual level register.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but I cannot prove they did it. For now, you can take this as a provisional argument."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_20_supported_22"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Use the searchlight on the empty recess. We need to see what was there."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.altar_20_normal_21"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
+    "test_answer_girl_8": [
+      {
+        "op": "tag",
+        "value": "question_id:girl_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.upright_coffin_motif) || has_tag(EvidenceTag.shared_day_night_history)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her voice follows the outline you have described with an attention that feels almost tender.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_8_supported_10"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The first sound she makes is too small to be a word. She clears it away before answering.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "That frame has an older history than the girl inside it. Let us look for its shape in the book."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.girl_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_mother_17": [
+      {
+        "op": "tag",
+        "value": "question_id:mother_17"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.shared_body_reference)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her voice is low and exact. Each sentence is given enough space to stand by itself.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The wounds carried over when the other person woke. A mark on the shared body could carry a message between them."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_17_supported_19"
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She goes quiet long enough for you to notice your own hand tightening around the radio.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "The pictures match. Now check the record of wounds appearing after sleep."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.mother_17_normal_18"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_mother"
+      }
+    ],
+    "test_confrontation": [
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "The girl, the coffin, the hands. This is not just a similar decoration."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(There is a long breath, and no attempt to fill it. Her answer comes out almost bare.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I made it. I wrote those pages. And I left."
+      },
+      {
+        "op": "set",
+        "code": "final_confronted = true"
+      },
+      {
+        "op": "if",
+        "condition": "not (seen_subtexts ? Subtext.final)",
+        "then": [
+          {
+            "op": "set",
+            "code": "seen_subtexts += Subtext.final"
+          },
+          {
+            "op": "set",
+            "code": "subtext_count += 1"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "tag",
+        "value": "event:aurora_confronted"
+      },
+      {
+        "op": "if",
+        "condition": "know(EvidenceTag.mother_remembers_daughter)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "She left the family sculpture here, after you were gone."
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(The line catches a sound too small to name. She waits before trusting herself with the next words.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I did not know. I could not bring myself to come back and find out."
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "know(EvidenceTag.day_night_handholding)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "The handholding picture was still there, in both cities."
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(She takes in air slowly, as if she has only just noticed she needs it.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "She understood something in the end. I wish I had been there to hear it."
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The first word fails her once. When she starts again, she makes herself continue.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I hated the ways she called harm protection. When it was time to leave, I would not take her with us. I was afraid she would bring that world after us. I was angry enough to let that be the whole answer."
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "And now?"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The effort of holding her voice steady is audible now. She no longer quite succeeds.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Now I know that an answer can keep you alive and still be something you carry for the rest of your life. I sent you because I could not bear to stand where you are standing."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A final pause. This time she does not try to make it sound thoughtful.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "You have found what she left. I do not know what she would have said to me."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Record Aurora as the girl's identity",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "identities += Identity.aurora"
+              },
+              {
+                "op": "tag",
+                "value": "event:collect_term:aurora"
+              },
+              {
+                "op": "goto",
+                "target": "test_radio_girl"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Record her departure; leave the conversation open",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "causes += Cause.escape"
+              },
+              {
+                "op": "tag",
+                "value": "event:collect_term:escape"
+              },
+              {
+                "op": "goto",
+                "target": "test_open_ending"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_disappearance_hypothesis": [
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.dawn_disappearances)",
+        "then": [
+          {
+            "op": "set",
+            "code": "hypothesis_open = true"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.skin_as_message_medium)",
+        "then": [
+          {
+            "op": "set",
+            "code": "hypothesis_skin = true"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.paired_day_night_death)",
+        "then": [
+          {
+            "op": "set",
+            "code": "hypothesis_death = true"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "hypothesis_skin && hypothesis_death",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "You seem to know the link between disappearance and death, which proves the Scholar's speculation wrong. You know much more than I do. I want to know:"
+          },
+          {
+            "op": "goto",
+            "target": "test_disappearance_followups"
+          }
+        ],
+        "else": [
+          {
+            "op": "if",
+            "condition": "hypothesis_skin",
+            "then": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "You saw that conflict — the Scholar ended up using skin as a medium to convey a message, proving her initial conclusion that the scars were caused by the Nightfolk wrong. This does not directly prove her conclusion about disappearance wrong, but I would encourage you to investigate along this thread."
+              },
+              {
+                "op": "line",
+                "speaker": "",
+                "text": "(You can feel the strong implication behind her words. It feels like she knows everything but is still toying with you. You wonder if she will tell you where she's from and what she has done.)"
+              }
+            ],
+            "else": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The Dayfolk often get stuck in their own understanding of the world. You may want to find more conflicts between the world they firmly believe in and the actual world around us."
+              }
+            ]
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"hidden\""
+          },
+          {
+            "op": "goto",
+            "target": "test_disappearance_return"
+          }
+        ]
+      }
+    ],
+    "test_answer_sun_8": [
+      {
+        "op": "tag",
+        "value": "question_id:sun_8"
+      },
+      {
+        "op": "set",
+        "code": "temp supported = false"
+      },
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.day_city_currency)",
+        "then": [
+          {
+            "op": "if",
+            "condition": "know(EvidenceTag.tycoon_identity)",
+            "then": [
+              {
+                "op": "line",
+                "speaker": "",
+                "text": "(The name arrives more carefully than the rest of the sentence, as though she has set it down rather than spoken it.)"
+              },
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The same rays circle the coins. And the occupational record names the man who funded the Scholar: the <link=\"tycoon\">Tycoon</link>. His stone has kept the shape of what built his fortune, but it fails to recognize the very intuition that led him to make a successful investment."
+              },
+              {
+                "op": "set",
+                "code": "read_answers += AnswerId.sun_8_supported_10"
+              }
+            ],
+            "else": [
+              {
+                "op": "line",
+                "speaker": "",
+                "text": "(Her agreement is thoughtful, but she leaves the name unspoken.)"
+              },
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The outline matches the coins. Keep that connection. We still need the occupational record before naming the owner."
+              }
+            ]
+          },
+          {
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "not supported",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I can see why you thought of the sun. Those rays do catch the eye. Still, as you know, the shape represents an occupation. We can't have Apollo the Sun God or Hou Yi the sun shooter buried here. Let's find more evidence of how the sun is linked to an identity."
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.sun_8_normal_9"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_sun"
+      }
+    ],
+    "test_disappearance_followups": [
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "What is the exact rule that governs disappearance and death across the cities?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "They have separate minds and take turns being awake. They share one living body. If one dies, the other cannot survive. What one city records as death, the other may record as disappearance."
+              },
+              {
+                "op": "goto",
+                "target": "test_disappearance_followups"
+              }
+            ],
+            "once": true
+          },
+          {
+            "label": "Who are you?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "line",
+                "speaker": "",
+                "text": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday)"
+              },
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "I am someone who belongs to this place, yet something stops me from going back."
+              },
+              {
+                "op": "goto",
+                "target": "test_disappearance_followups"
+              }
+            ],
+            "once": true
+          },
+          {
+            "label": "Return to the questions",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "feedback_kind = \"hidden\""
+              },
+              {
+                "op": "goto",
+                "target": "test_disappearance_return"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_open_ending": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "The radio stays open."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You have enough to describe what happened. There are things a report cannot answer for the people who lived through them."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You leave a space beneath the last line."
+      },
+      {
+        "op": "tag",
+        "value": "event:open_ending"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Return to the test hub",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_hub"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "End",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "END"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ]
+  },
+  "groups": {
+    "dayfolk_appearance": {
+      "id": "dayfolk_appearance",
+      "title": "The Appearance of the Dayfolk",
+      "members": [
+        "dayfolk_appearance"
+      ],
+      "signature": "tags:dayfolk_appearance,human_figure_reference"
+    },
+    "moon_reference": {
+      "id": "moon_reference",
+      "title": "The Moon Above Night City",
+      "members": [
+        "moon_reference"
+      ],
+      "signature": "tags:moon_motif,moon_reference"
+    },
+    "infant_figure_rubbing": {
+      "id": "infant_figure_rubbing",
+      "title": "The Small Human-Shaped Marker",
+      "members": [
+        "infant_figure_rubbing"
+      ],
+      "signature": "tags:dayfolk_appearance,human_figure_reference,infant_memorial"
+    },
+    "infant_moon_rubbing": {
+      "id": "infant_moon_rubbing",
+      "title": "The Small Marker's Curved Decoration",
+      "members": [
+        "infant_moon_rubbing"
+      ],
+      "signature": "tags:moon_motif"
+    },
+    "designer_manuscript": {
+      "id": "designer_manuscript",
+      "title": "A Marker for Someone Without an Occupation",
+      "members": [
+        "designer_manuscript"
+      ],
+      "signature": "tags:human_figure_reference,infant_identity,occupation_marker_custom"
+    },
+    "designer_journal": {
+      "id": "designer_journal",
+      "title": "A Page of the Designer's Journal",
+      "members": [
+        "designer_journal"
+      ],
+      "signature": "tags:family_requested_depiction,infant_appearance_mismatch"
+    },
+    "infant_graffiti": {
+      "id": "infant_graffiti",
+      "title": "A Sketch of the Infant",
+      "members": [
+        "infant_graffiti"
+      ],
+      "signature": "tags:infant_actual_appearance,infant_appearance_mismatch"
+    },
+    "infant_death_doubt": {
+      "id": "infant_death_doubt",
+      "title": "An Unresolved Death",
+      "members": [
+        "infant_death_doubt"
+      ],
+      "signature": "tags:infant_appearance_mismatch,infant_death_unresolved"
+    },
+    "shared_family_base": {
+      "id": "shared_family_base",
+      "title": "One Base, Three Tombs",
+      "members": [
+        "shared_family_base"
+      ],
+      "signature": "tags:missing_family_member_reference,shared_family_plot,three_family_markers"
+    },
+    "crystal_marker_rubbing": {
+      "id": "crystal_marker_rubbing",
+      "title": "The Crystal Monument's Outline",
+      "members": [
+        "crystal_marker_rubbing"
+      ],
+      "signature": "tags:crystal_research_reference,crystal_shape"
+    },
+    "scholar_beast_rubbing": {
+      "id": "scholar_beast_rubbing",
+      "title": "Twin-beast symbol records",
+      "members": [
+        "scholar_beast_rubbing",
+        "sun_shaped_beast_rubbing",
+        "girl_beast_rubbing"
+      ],
+      "signature": "tags:disappearance_symbol_reference,twin_beast_motif"
+    },
+    "night_city_crystal": {
+      "id": "night_city_crystal",
+      "title": "Crystal from Night City",
+      "members": [
+        "night_city_crystal"
+      ],
+      "signature": "tags:crystal_shape,intercity_resource_exchange,night_city_mineral_origin"
+    },
+    "skin_picture": {
+      "id": "skin_picture",
+      "title": "The Picture Preserved on Skin",
+      "members": [
+        "skin_picture"
+      ],
+      "signature": "tags:day_night_handholding,shared_body_reference,skin_as_message_medium"
+    },
+    "disappearance_inquiry": {
+      "id": "disappearance_inquiry",
+      "title": "The Scholar's Notes on Disappearances",
+      "members": [
+        "disappearance_inquiry"
+      ],
+      "signature": "tags:dawn_disappearances,day_city_bias,husband_disappearance,sleep_coffin_required,unexplained_waking_wounds"
+    },
+    "profession_record": {
+      "id": "profession_record",
+      "title": "The Scholar, Her Work, and Her Patron",
+      "members": [
+        "profession_record"
+      ],
+      "signature": "id:profession_record"
+    },
+    "one_way_passage_order": {
+      "id": "one_way_passage_order",
+      "title": "An Order for a One-Way Passage",
+      "members": [
+        "one_way_passage_order"
+      ],
+      "signature": "tags:day_city_bias,intercity_resource_exchange,night_city_supply_blockade,one_way_passage"
+    },
+    "sun_reference": {
+      "id": "sun_reference",
+      "title": "Sun shape records",
+      "members": [
+        "sun_reference",
+        "sun_shaped_marker_rubbing"
+      ],
+      "signature": "tags:sun_motif,sun_shape"
+    },
+    "day_city_coin": {
+      "id": "day_city_coin",
+      "title": "A Coin from the Wishing Pool",
+      "members": [
+        "day_city_coin"
+      ],
+      "signature": "tags:day_city_currency,sun_motif,sun_shape"
+    },
+    "ram_spirit_emblem": {
+      "id": "ram_spirit_emblem",
+      "title": "The Ram-Spirit Emblem",
+      "members": [
+        "ram_spirit_emblem"
+      ],
+      "signature": "tags:day_city_belief,ram_spirit_motif"
+    },
+    "giant_footprint": {
+      "id": "giant_footprint",
+      "title": "A Giant Footprint in the Ruins",
+      "members": [
+        "giant_footprint"
+      ],
+      "signature": "tags:ancient_creature_trace,twin_beast_reference"
+    },
+    "twin_beast_trace": {
+      "id": "twin_beast_trace",
+      "title": "The Creature Revealed Above the Footprint",
+      "members": [
+        "twin_beast_trace"
+      ],
+      "signature": "tags:contrasting_halves,twin_beast_motif,twin_beast_reference"
+    },
+    "twin_beast_account": {
+      "id": "twin_beast_account",
+      "title": "An Account of the Twin-Bodied Creature",
+      "members": [
+        "twin_beast_account"
+      ],
+      "signature": "tags:ancient_disappearance,contrasting_halves,twin_beast_reference"
+    },
+    "repeated_beast_motifs": {
+      "id": "repeated_beast_motifs",
+      "title": "The Same Beast on Other Graves",
+      "members": [
+        "repeated_beast_motifs"
+      ],
+      "signature": "id:repeated_beast_motifs"
+    },
+    "family_photo": {
+      "id": "family_photo",
+      "title": "A Photograph of Four",
+      "members": [
+        "family_photo"
+      ],
+      "signature": "tags:family_image_reference,four_person_family,missing_family_member_reference"
+    },
+    "altar_infant_rubbing": {
+      "id": "altar_infant_rubbing",
+      "title": "The Infant on the White Altar",
+      "members": [
+        "altar_infant_rubbing"
+      ],
+      "signature": "tags:infant_memorial,night_infant_reference"
+    },
+    "altar_path_rubbing": {
+      "id": "altar_path_rubbing",
+      "title": "Unending path symbols",
+      "members": [
+        "altar_path_rubbing",
+        "girl_path_rubbing"
+      ],
+      "signature": "tags:endless_path_motif,night_departure_reference"
+    },
+    "altar_blessing_glyph": {
+      "id": "altar_blessing_glyph",
+      "title": "An Unfamiliar Glyph on the Altar",
+      "members": [
+        "altar_blessing_glyph"
+      ],
+      "signature": "tags:aurora_translation_knowledge,night_blessing_glyph,night_symbol_translation"
+    },
+    "altar_blessing_translation": {
+      "id": "altar_blessing_translation",
+      "title": "A Blessing for the Unending Journey",
+      "members": [
+        "altar_blessing_translation"
+      ],
+      "signature": "tags:aurora_translation_knowledge,endless_path_motif,night_blessing_glyph,night_symbol_translation"
+    },
+    "crystal_god_rubbing": {
+      "id": "crystal_god_rubbing",
+      "title": "Crystal God symbols",
+      "members": [
+        "crystal_god_rubbing",
+        "night_father_god_rubbing"
+      ],
+      "signature": "tags:crystal_god_motif,night_city_belief"
+    },
+    "removed_crystal_god": {
+      "id": "removed_crystal_god",
+      "title": "The Crystal Figure That Once Stood Here",
+      "members": [
+        "removed_crystal_god"
+      ],
+      "signature": "tags:crystal_extraction_reference,crystal_god_motif,removed_crystal_offering"
+    },
+    "altar_moon_stone": {
+      "id": "altar_moon_stone",
+      "title": "Moon-shaped offerings",
+      "members": [
+        "altar_moon_stone",
+        "night_father_moon_stone"
+      ],
+      "signature": "tags:moon_motif,moon_stone_offering,night_blessing_reference"
+    },
+    "crystal_god_prophecy": {
+      "id": "crystal_god_prophecy",
+      "title": "The Crystal God's Prophecy",
+      "members": [
+        "crystal_god_prophecy"
+      ],
+      "signature": "tags:aurora_translation_knowledge,night_city_belief,night_infant_reference,smooth_skinned_child"
+    },
+    "moon_stone_blessing": {
+      "id": "moon_stone_blessing",
+      "title": "A Blessing, Not a Payment",
+      "members": [
+        "moon_stone_blessing"
+      ],
+      "signature": "tags:different_exchange_customs,moon_stone_offering,night_blessing_reference"
+    },
+    "infant_memorial_correspondence": {
+      "id": "infant_memorial_correspondence",
+      "title": "Two Memorials to an Infant",
+      "members": [
+        "infant_memorial_correspondence"
+      ],
+      "signature": "tags:contradictory_death_accounts,infant_memorial,paired_day_night_memorials"
+    },
+    "night_mother_child_rubbing": {
+      "id": "night_mother_child_rubbing",
+      "title": "A Figure Holding a Child",
+      "members": [
+        "night_mother_child_rubbing"
+      ],
+      "signature": "tags:night_infant_reference,night_mother_past,parent_child_image"
+    },
+    "night_mother_hands_rubbing": {
+      "id": "night_mother_hands_rubbing",
+      "title": "Two Figures Holding Hands",
+      "members": [
+        "night_mother_hands_rubbing"
+      ],
+      "signature": "tags:day_night_handholding,night_mother_future,shared_body_reference"
+    },
+    "night_mother_river_rubbing": {
+      "id": "night_mother_river_rubbing",
+      "title": "The Dry River Around the Stone",
+      "members": [
+        "night_mother_river_rubbing"
+      ],
+      "signature": "tags:dry_river_motif,night_mother_death_reference"
+    },
+    "dry_underground_river": {
+      "id": "dry_underground_river",
+      "title": "The Underground Riverbed",
+      "members": [
+        "dry_underground_river"
+      ],
+      "signature": "id:dry_underground_river"
+    },
+    "night_mother_no_traces": {
+      "id": "night_mother_no_traces",
+      "title": "No Readable Traces Around the Stone",
+      "members": [
+        "night_mother_no_traces"
+      ],
+      "signature": "id:night_mother_no_traces"
+    },
+    "night_mother_death_finding": {
+      "id": "night_mother_death_finding",
+      "title": "The Meaning of the Dry River Border",
+      "members": [
+        "night_mother_death_finding"
+      ],
+      "signature": "tags:death_by_hunger_and_thirst,night_mother_death_reference,water_source_lost"
+    },
+    "night_father_child_rubbing": {
+      "id": "night_father_child_rubbing",
+      "title": "A Figure Carrying a Child",
+      "members": [
+        "night_father_child_rubbing"
+      ],
+      "signature": "tags:night_father_past,night_infant_reference,parent_child_image"
+    },
+    "night_father_path_rubbing": {
+      "id": "night_father_path_rubbing",
+      "title": "A Figure Ascending the Path",
+      "members": [
+        "night_father_path_rubbing"
+      ],
+      "signature": "tags:ascending_path_motif,night_father_final_journey"
+    },
+    "natural_collapse_record": {
+      "id": "natural_collapse_record",
+      "title": "The Collapse That Sealed the Road",
+      "members": [
+        "natural_collapse_record"
+      ],
+      "signature": "tags:natural_collapse,original_separation,shared_day_night_history"
+    },
+    "skyway_history": {
+      "id": "skyway_history",
+      "title": "An Account of the Skyway",
+      "members": [
+        "skyway_history"
+      ],
+      "signature": "tags:ascending_path_motif,intercity_resource_exchange,night_city_mineral_origin,skyway_not_steep"
+    },
+    "skyway_reference": {
+      "id": "skyway_reference",
+      "title": "The Path to the Surface",
+      "members": [
+        "skyway_reference"
+      ],
+      "signature": "tags:ascending_path_motif,night_father_final_journey,skyway_not_steep"
+    },
+    "night_father_death": {
+      "id": "night_father_death",
+      "title": "The Father's Search Beyond His Waking Hours",
+      "members": [
+        "night_father_death"
+      ],
+      "signature": "tags:missed_sleeping_deadline,night_father_final_journey,paired_day_night_death,sleep_coffin_required"
+    },
+    "paired_skin_pictures": {
+      "id": "paired_skin_pictures",
+      "title": "A Picture Across Day and Night",
+      "members": [
+        "paired_skin_pictures"
+      ],
+      "signature": "tags:day_night_handholding,shared_body_reference,skin_as_message_medium,unexplained_waking_wounds"
+    },
+    "girl_figure_rubbing": {
+      "id": "girl_figure_rubbing",
+      "title": "The Girl Inside the Frame",
+      "members": [
+        "girl_figure_rubbing"
+      ],
+      "signature": "tags:girl_memorial,human_figure_reference"
+    },
+    "girl_coffin_rubbing": {
+      "id": "girl_coffin_rubbing",
+      "title": "The Upright Frame Around the Girl",
+      "members": [
+        "girl_coffin_rubbing"
+      ],
+      "signature": "tags:girl_memorial,upright_coffin_motif"
+    },
+    "girl_signature_rubbing": {
+      "id": "girl_signature_rubbing",
+      "title": "The Girl-and-Coffin Motif",
+      "members": [
+        "girl_signature_rubbing"
+      ],
+      "signature": "tags:author_identity_reference,girl_coffin_motif,girl_memorial"
+    },
+    "family_statuette": {
+      "id": "family_statuette",
+      "title": "A Statuette of Four",
+      "members": [
+        "family_statuette"
+      ],
+      "signature": "tags:family_image_reference,four_person_family,mother_remembers_daughter"
+    },
+    "day_city_history": {
+      "id": "day_city_history",
+      "title": "A History of Day City",
+      "members": [
+        "day_city_history"
+      ],
+      "signature": "tags:population_decline,shared_day_night_history,sleep_coffin_required,upright_coffin_motif"
+    },
+    "history_coffin_illustration": {
+      "id": "history_coffin_illustration",
+      "title": "An Upright Sleeping Coffin",
+      "members": [
+        "history_coffin_illustration"
+      ],
+      "signature": "tags:shared_day_night_history,upright_coffin_motif"
+    },
+    "girl_diary": {
+      "id": "girl_diary",
+      "title": "A Diary Page, Author Unknown",
+      "members": [
+        "girl_diary"
+      ],
+      "signature": "tags:author_identity_reference,deliberate_departure,funerary_artist_reference,resentment_toward_mother,two_mothers_dilemma"
+    },
+    "diary_cover": {
+      "id": "diary_cover",
+      "title": "The Motif on the Diary Cover",
+      "members": [
+        "diary_cover"
+      ],
+      "signature": "tags:author_identity_reference,girl_coffin_motif,well_preserved_diary"
+    },
+    "notebook_cover": {
+      "id": "notebook_cover",
+      "title": "The Cover of Your Investigation Notebook",
+      "members": [
+        "notebook_cover"
+      ],
+      "signature": "tags:aurora_provided_object,author_identity_reference,girl_coffin_motif"
+    },
+    "four_person_family_finding": {
+      "id": "four_person_family_finding",
+      "title": "Four People Remembered, Three Graves Together",
+      "members": [
+        "four_person_family_finding"
+      ],
+      "signature": "tags:four_person_family,missing_family_member_reference,mother_remembers_daughter"
+    },
+    "girl_cover_correspondence": {
+      "id": "girl_cover_correspondence",
+      "title": "The Same Girl on Stone and Paper",
+      "members": [
+        "girl_cover_correspondence"
+      ],
+      "signature": "tags:aurora_identity_reference,author_identity_reference,girl_coffin_motif"
+    },
+    "scholar_no_traces": {
+      "id": "scholar_no_traces",
+      "title": "No Later Visitors at the Crystal Monument",
+      "members": [
+        "scholar_no_traces"
+      ],
+      "signature": "tags:absence_of_readable_traces,last_survivor_question,scholar_no_visitors"
+    }
+  },
+  "evidence_groups": {
+    "dayfolk_appearance": "dayfolk_appearance",
+    "moon_reference": "moon_reference",
+    "infant_figure_rubbing": "infant_figure_rubbing",
+    "infant_moon_rubbing": "infant_moon_rubbing",
+    "designer_manuscript": "designer_manuscript",
+    "designer_journal": "designer_journal",
+    "infant_graffiti": "infant_graffiti",
+    "infant_death_doubt": "infant_death_doubt",
+    "shared_family_base": "shared_family_base",
+    "crystal_marker_rubbing": "crystal_marker_rubbing",
+    "scholar_beast_rubbing": "scholar_beast_rubbing",
+    "night_city_crystal": "night_city_crystal",
+    "skin_picture": "skin_picture",
+    "disappearance_inquiry": "disappearance_inquiry",
+    "profession_record": "profession_record",
+    "one_way_passage_order": "one_way_passage_order",
+    "sun_reference": "sun_reference",
+    "sun_shaped_marker_rubbing": "sun_reference",
+    "sun_shaped_beast_rubbing": "scholar_beast_rubbing",
+    "day_city_coin": "day_city_coin",
+    "ram_spirit_emblem": "ram_spirit_emblem",
+    "giant_footprint": "giant_footprint",
+    "twin_beast_trace": "twin_beast_trace",
+    "twin_beast_account": "twin_beast_account",
+    "repeated_beast_motifs": "repeated_beast_motifs",
+    "family_photo": "family_photo",
+    "altar_infant_rubbing": "altar_infant_rubbing",
+    "altar_path_rubbing": "altar_path_rubbing",
+    "altar_blessing_glyph": "altar_blessing_glyph",
+    "altar_blessing_translation": "altar_blessing_translation",
+    "crystal_god_rubbing": "crystal_god_rubbing",
+    "removed_crystal_god": "removed_crystal_god",
+    "altar_moon_stone": "altar_moon_stone",
+    "crystal_god_prophecy": "crystal_god_prophecy",
+    "moon_stone_blessing": "moon_stone_blessing",
+    "infant_memorial_correspondence": "infant_memorial_correspondence",
+    "night_mother_child_rubbing": "night_mother_child_rubbing",
+    "night_mother_hands_rubbing": "night_mother_hands_rubbing",
+    "night_mother_river_rubbing": "night_mother_river_rubbing",
+    "dry_underground_river": "dry_underground_river",
+    "night_mother_no_traces": "night_mother_no_traces",
+    "night_mother_death_finding": "night_mother_death_finding",
+    "night_father_child_rubbing": "night_father_child_rubbing",
+    "night_father_path_rubbing": "night_father_path_rubbing",
+    "night_father_god_rubbing": "crystal_god_rubbing",
+    "night_father_moon_stone": "altar_moon_stone",
+    "natural_collapse_record": "natural_collapse_record",
+    "skyway_history": "skyway_history",
+    "skyway_reference": "skyway_reference",
+    "night_father_death": "night_father_death",
+    "paired_skin_pictures": "paired_skin_pictures",
+    "girl_figure_rubbing": "girl_figure_rubbing",
+    "girl_coffin_rubbing": "girl_coffin_rubbing",
+    "girl_beast_rubbing": "scholar_beast_rubbing",
+    "girl_path_rubbing": "altar_path_rubbing",
+    "girl_signature_rubbing": "girl_signature_rubbing",
+    "family_statuette": "family_statuette",
+    "day_city_history": "day_city_history",
+    "history_coffin_illustration": "history_coffin_illustration",
+    "girl_diary": "girl_diary",
+    "diary_cover": "diary_cover",
+    "notebook_cover": "notebook_cover",
+    "four_person_family_finding": "four_person_family_finding",
+    "girl_cover_correspondence": "girl_cover_correspondence",
+    "scholar_no_traces": "scholar_no_traces"
+  },
+  "defaults": {
+    "owned_evidence": [],
+    "known_tags": [],
+    "selected_id": "",
+    "selected_tags": [],
+    "submitted_id": "",
+    "submitted_tags": [],
+    "active_tomb": "",
+    "identities": [],
+    "causes": [],
+    "clue_words": "",
+    "collected_words": [],
+    "report_identity": [],
+    "report_cause": [],
+    "completed_reports": [],
+    "links": [],
+    "seen_subtexts": [],
+    "subtext_count": 0,
+    "reports_submitted": false,
+    "girl_revealed": false,
+    "final_confronted": false,
+    "searchlight_year": 2050,
+    "scan_2005": false,
+    "scan_2050": false,
+    "bonus_remaining": 2,
+    "bonus_done": false,
+    "hypothesis_open": false,
+    "hypothesis_skin": false,
+    "hypothesis_death": false,
+    "hypothesis_return": "sun",
+    "return_after_terms": "hub",
+    "natural_reply_seen": false,
+    "player_name": "Investigator",
+    "feedback_kind": "",
+    "pending_relation_feedback": false,
+    "read_answers": [],
+    "queried_night_glyphs": [],
+    "glyph_return": "altar",
+    "scan_scholar_2005": false,
+    "scan_scholar_2050": false
+  }
+}

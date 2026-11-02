@@ -84,6 +84,8 @@ func _ready() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if GameState.radio_modal_open:
+		return
 	if OS.is_debug_build() and event.is_pressed() and not event.is_echo() and event is InputEventKey and event.keycode == KEY_F8:
 		GameState.preview_notebook_content()
 		_toast.show_message("DEV: all notebook text unlocked for this session")

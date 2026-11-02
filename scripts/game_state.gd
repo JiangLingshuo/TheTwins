@@ -100,6 +100,8 @@ signal notebook_changed
 var evidence_ids: Array[String] = []
 var radio_logs: Array[Dictionary] = []
 var notebook_preview := false
+var radio_progress: Dictionary = {}
+var radio_modal_open := false
 var cycle_hint_heard := false
 var cycle_tutorial_completed := false
 var _content: Dictionary = {}
@@ -176,6 +178,9 @@ func append_radio_line(session_id: String, line: Dictionary) -> void:
 			break
 	if log.is_empty():
 		log = {"id": session_id, "title": "Opening transmission" if session_id == "opening" else "Radio transmission", "lines": [], "body": ""}
+		if session_id.begins_with("radio:"):
+			var stone_id := session_id.split(":")[1]
+			log["title"] = "Aurora — " + str(get_gravestone_info(stone_id).get("title", "Radio transmission"))
 		radio_logs.append(log)
 	log["lines"].append(line.duplicate())
 	var speaker: String = line.get("speaker", "")
