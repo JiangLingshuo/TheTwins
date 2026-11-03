@@ -33,8 +33,8 @@ const EMPTY_CLUE := "—"
 static var _sketch_cache: Dictionary = {}
 
 @onready var sketch: TextureRect = $Sketch
-@onready var identity_input: LineEdit = $Form/IdentityInput
-@onready var death_input: LineEdit = $Form/DeathInput
+@onready var identity_input: OptionButton = $Form/IdentityInput
+@onready var death_input: OptionButton = $Form/DeathInput
 @onready var description: Label = $Info/Description
 @onready var rubbings_row: HBoxContainer = $Info/Rubbings
 @onready var clues_list: VBoxContainer = $Info/Clues
@@ -59,9 +59,9 @@ func _ready() -> void:
 		var line := Label.new()
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		clues_list.add_child(line)
-	for input: LineEdit in [identity_input, death_input]:
-		input.text_changed.connect(func(_text: String) -> void: _save_report())
-		input.text_submitted.connect(func(_text: String) -> void: input.release_focus())
+	identity_input.item_selected.connect(func(index: int) -> void: GameState.set_report_choice(gravestone_id, "identity", str(identity_input.get_item_metadata(index))))
+	death_input.item_selected.connect(func(index: int) -> void: GameState.set_report_choice(gravestone_id, "death", str(death_input.get_item_metadata(index))))
+	GameState.notebook_changed.connect(_refresh_options)
 	rubbings_row.sort_children.connect(queue_redraw)  # symbols are drawn over the slots
 	# The narrow information column needs scrolling for descriptions and clue text.
 	var info: Control = $Info
@@ -89,8 +89,7 @@ func setup(id: String, info: Dictionary) -> void:
 	_fill_slots(info.get("rubbings", []), info.get("clues", []))
 	var report: Dictionary = GameState.gravestone_reports.get(id, {})
 	_filling = true
-	identity_input.text = report.get("identity", "")
-	death_input.text = report.get("death", "")
+	_refresh_options()
 	_filling = false
 	_update_inputs()
 	queue_redraw()
@@ -104,8 +103,7 @@ func setup_unknown() -> void:
 	sketch.texture = null
 	description.text = ""
 	_filling = true
-	identity_input.text = ""
-	death_input.text = ""
+	_refresh_options()
 	_filling = false
 	for line: Label in clues_list.get_children():
 		line.text = ""
@@ -121,10 +119,10 @@ func set_interactive(value: bool) -> void:
 
 func _update_inputs() -> void:
 	var value := _interactive and not _unknown
-	for input: LineEdit in [identity_input, death_input]:
+	for input: OptionButton in [identity_input, death_input]:
 		if not value and input.has_focus():
 			input.release_focus()
-		input.editable = value
+		input.disabled = not value
 		input.focus_mode = Control.FOCUS_ALL if value else Control.FOCUS_NONE
 		input.mouse_filter = Control.MOUSE_FILTER_STOP if value else Control.MOUSE_FILTER_IGNORE
 	# Only slots holding a rubbing can be clicked.
@@ -159,16 +157,12 @@ func set_ink(ink: Color) -> void:
 		label.add_theme_color_override("font_color", ink)
 	for line: Label in clues_list.get_children():
 		line.add_theme_color_override("font_color", ink if line.text != EMPTY_CLUE else faded)
-	for input: LineEdit in [identity_input, death_input]:
+	for input: OptionButton in [identity_input, death_input]:
 		input.add_theme_font_override("font", body_font)
 		input.add_theme_color_override("font_color", ink)
-		input.add_theme_color_override("font_uneditable_color", ink)
-		input.add_theme_color_override("caret_color", ink)
-		input.add_theme_color_override("selection_color", Color(ink, 0.25))
-		var underline: StyleBoxFlat = input.get_theme_stylebox("normal").duplicate()
-		underline.border_color = Color(ink, 0.6)
-		for style in ["normal", "read_only", "focus"]:
-			input.add_theme_stylebox_override(style, underline)
+		input.add_theme_color_override("font_hover_color", ink)
+		input.add_theme_color_override("font_pressed_color", ink)
+		input.add_theme_font_size_override("font_size", 16)
 	var frame := StyleBoxFlat.new()
 	frame.draw_center = false
 	frame.set_border_width_all(1)
@@ -284,13 +278,25 @@ func _fill_slots(_rubbings: Array, clues: Array) -> void:
 	set_ink(_ink)
 
 
-func _save_report() -> void:
-	if _filling or gravestone_id.is_empty():
-		return
-	GameState.gravestone_reports[gravestone_id] = {
-		"identity": identity_input.text,
-		"death": death_input.text,
-	}
+func _refresh_options() -> void:
+	if not is_node_ready(): return
+	var report: Dictionary = GameState.gravestone_reports.get(gravestone_id, {})
+	for pair in [[identity_input, "identities", "identity", GameState.IDENTITY_LABELS], [death_input, "causes", "death", GameState.CAUSE_LABELS]]:
+		var input: OptionButton = pair[0]
+		input.clip_text = true
+		input.fit_to_longest_item = false
+		input.custom_minimum_size = Vector2(0, 30)
+		input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		input.clear()
+		input.add_item("Select…")
+		input.set_item_metadata(0, "")
+		input.selected = 0
+		for value in GameState.report_options(pair[1], gravestone_id):
+			input.add_item(pair[3].get(value, value))
+			var index := input.item_count - 1
+			input.set_item_metadata(index, value)
+			if report.get(pair[2], "") == value: input.selected = index
+		input.tooltip_text = (pair[3].get(report.get(pair[2], ""), "Select a collected term") as String) + "\nCollect underlined terms from radio replies. Identities can only be assigned once."
 
 
 ## The texture cut down to its visible (non-transparent) part, so a stone drawn

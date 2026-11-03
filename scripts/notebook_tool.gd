@@ -36,6 +36,8 @@ func _ready() -> void:
 
 
 func _input(event: InputEvent) -> void:
+	if GameState.radio_modal_open or GameState.camera_modal_open:
+		return
 	# Handled before the GUI so Tab isn't taken for focus navigation; ignored
 	# while typing in a text field.
 	if not (event is InputEventKey) or not event.is_pressed() or event.is_echo():

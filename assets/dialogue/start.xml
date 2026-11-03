@@ -1,24 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- Opening mapped from telecomm_master.ink: opening. Empty speaker denotes narration. -->
+<?xml version='1.0' encoding='utf-8'?>
 <dialogue>
-	<line speaker="#PLAYER#">Oh, my notebook’s in black and white.</line>
-	<line speaker="#PLAYER#">Aurora never told me why. I guess it’s an aesthetic choice.</line>
-	<line speaker="??">...</line>
-	<line speaker="??">...Hello? Can you hear me?</line>
-	<line speaker="">(It doesn't take you a second to realize who's speaking. That's the first time you hear her voice beyond your textual exchange. Her voice is huskier than you thought.)</line>
-	<line speaker="#PLAYER#">Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins.</line>
-	<line speaker="Aurora">Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook?</line>
-	<line speaker="#PLAYER#">Yeah, I was just looking at it. Interesting color scheme.</line>
-	<line speaker="Aurora">There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there.</line>
-	<line speaker="#PLAYER#">Should I expect to meet anyone here?</line>
-	<line speaker="Aurora">No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked.</line>
-	<line speaker="#PLAYER#">Where?</line>
-	<line speaker="">(You might have an answer in mind. But you wait for her confirmation.)</line>
-	<line speaker="Aurora">Where they remembered the dead. The cemeteries. That’s your mission: to uncover what words alone cannot tell us, through the memories they left behind.</line>
-	<line speaker="Aurora">We don’t have much transmission time left. I have to go. Talk to you later.</line>
-	<line speaker="">(Now it’s just you, your handbook, and the faint breath of the planet.)</line>
-	<line speaker="">(You feel a tremor in your limbs.)</line>
-	<line speaker="">(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)</line>
-	<line speaker="">(You’re here to gather their memories. Your steps grow steadier.)</line>
-	<line speaker="">(Then you see it: the place where an entire civilization rests.)</line>
+  <line speaker="#PLAYER#">Oh, my notebook’s in black and white.</line>
+  <line speaker="#PLAYER#">Aurora never told me why. I guess it’s an aesthetic choice.</line>
+  <line speaker="??">...</line>
+  <line speaker="??">...Hello? Can you hear me?</line>
+  <line speaker="">(It doesn't take you a second to realize who's speaking. That's the first time you hear her voice beyond your textual exchange. Her voice is huskier than you thought.)</line>
+  <line speaker="#PLAYER#">Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins.</line>
+  <line speaker="Aurora">Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook?</line>
+  <line speaker="#PLAYER#">Yeah, I was just looking at it. Interesting color scheme.</line>
+  <line speaker="Aurora">There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there.</line>
+  <line speaker="#PLAYER#">Should I expect to meet anyone here?</line>
+  <line speaker="Aurora">No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked.</line>
+  <line speaker="#PLAYER#">Where?</line>
+  <line speaker="">(You might have an answer in mind. But you wait for her confirmation.)</line>
+  <line speaker="Aurora">Where they remembered the dead. The cemeteries. That’s your mission: to uncover what words alone cannot tell us, through the memories they left behind.</line>
+  <line speaker="Aurora">We don’t have much transmission time left. I have to go. Talk to you later.</line>
+  <line speaker="">(Now it’s just you, your handbook, and the faint breath of the planet.)</line>
+  <line speaker="">(You feel a tremor in your limbs.)</line>
+  <line speaker="">(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)</line>
+  <line speaker="">(You’re here to gather their memories. Your steps grow steadier.)</line>
+  <line speaker="">(Then you see it: the place where an entire civilization rests.)</line>
 </dialogue>

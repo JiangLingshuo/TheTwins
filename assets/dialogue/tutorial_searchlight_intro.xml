@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dialogue>
+  <line speaker="#PLAYER#">Apart from the rubbing tool, I was also given this searchlight. Let me check…</line>
+  <line speaker="#PLAYER#">“Rewind time to see the traces of the past.” Interesting.</line>
+  <line speaker="#PLAYER#">Let me point it at the small marker and see what was here fifty years ago.</line>
+</dialogue>

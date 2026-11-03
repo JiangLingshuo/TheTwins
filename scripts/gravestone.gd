@@ -67,6 +67,8 @@ func _input(event: InputEvent) -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if gravestone_id == "baby_tomb" and not GameState.tutorial_record_intro_heard and not GameState.investigation_tutorial_completed:
+		return # first marker is registered by the guided rubbing/open-notebook sequence
 	if event is InputEventMouseButton and event.pressed \
 			and event.button_index == MOUSE_BUTTON_LEFT and _is_on_stone(event):
 		get_viewport().set_input_as_handled()

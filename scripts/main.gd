@@ -42,6 +42,7 @@ var is_day: bool = true:
 			return
 		is_day = value
 		_fade_backgrounds()
+		GameState.current_city_day = is_day
 		time_changed.emit(is_day)
 
 var _fade: Tween
@@ -49,6 +50,8 @@ var _fade: Tween
 
 func _ready() -> void:
 	is_day = start_time == 0
+	GameState.current_city_day = is_day
+	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.
 	_night_background.modulate.a = 0.0 if is_day else 1.0
 	modulate.a = 0.0
@@ -84,6 +87,8 @@ func _ready() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
+	if GameState.radio_modal_open or GameState.camera_modal_open:
+		return
 	if OS.is_debug_build() and event.is_pressed() and not event.is_echo() and event is InputEventKey and event.keycode == KEY_F8:
 		GameState.preview_notebook_content()
 		_toast.show_message("DEV: all notebook text unlocked for this session")
@@ -116,3 +121,44 @@ func _fade_backgrounds() -> void:
 	_fade = create_tween()
 	_fade.tween_property(_night_background, "modulate:a", 0.0 if is_day else 1.0, transition_time) \
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+
+
+func _add_investigation_targets() -> void:
+	# Source dates come from evidence metadata; positions are editable layout placeholders.
+	var target_script = load("res://scripts/historical_target.gd")
+	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/searchlight_placeholders.json"))
+	var max_year := 50.0
+	for spec in layout["records"]:
+		var target = TextureRect.new()
+		target.set_script(target_script)
+		target.name = spec["node"]
+		target.evidence_id = spec["evidence_id"]
+		target.target_id = spec["target_id"]
+		var metadata: Dictionary = GameState.get_evidence(spec["evidence_id"]).get("metadata", {})
+		target.years_ago = float(metadata.get("searchlight_years_ago", [spec["years_ago"]])[0])
+		target.position = Vector2(spec["position"][0], spec["position"][1])
+		target.size = Vector2(310, 110)
+		target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		if spec.has("texture"): target.texture = load("res://assets/Art/symbols/" + spec["texture"])
+		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(760, 480, 220, 300)
+		target.caption = spec["caption"]
+		target.meaning = spec["meaning"]
+		target.required_grave = spec.get("required_grave", "")
+		target.date_status = metadata.get("searchlight_date_status", [spec.get("date_status", "")])[0]
+		if metadata.has("searchlight_scan_years_ago_min"):
+			target.scan_years.append(float(metadata["searchlight_scan_years_ago_min"][0]))
+			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
+		max_year = maxf(max_year, target.years_ago)
+		(_day_cemetery if spec["city"] == "day" else _night_cemetery).add_child(target)
+	var symbol := TextureRect.new()
+	symbol.set_script(load("res://scripts/rubbing_symbol.gd"))
+	symbol.name = "SunMarkerSymbol"
+	symbol.position = Vector2(220, 680)
+	symbol.size = Vector2(100, 100)
+	symbol.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	symbol.texture = load("res://assets/Art/symbols/sky_sun.svg")
+	symbol.rubbing_id = "sun_shaped_marker_rubbing"
+	symbol.matching_target_id = "day_city_coin"
+	_day_cemetery.add_child(symbol)
+	_flashlight_tool.flashlight.focus_max = max_year
+	_flashlight_tool.get_node("FocusScale").max_value = max_year

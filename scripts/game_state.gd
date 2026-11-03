@@ -100,6 +100,10 @@ signal notebook_changed
 var evidence_ids: Array[String] = []
 var radio_logs: Array[Dictionary] = []
 var notebook_preview := false
+var radio_progress: Dictionary = {}
+var radio_modal_open := false
+var cycle_hint_heard := false
+var cycle_tutorial_completed := false
 var _content: Dictionary = {}
 
 
@@ -158,7 +162,7 @@ func notebook_entries(section: int) -> Array[Dictionary]:
 	for id in evidence_ids:
 		var entry := get_evidence(id)
 		var category: String = entry.get("category", "")
-		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"] and entry.get("gravestone", "").is_empty()):
+		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"]):
 			entries.append(entry)
 	return entries
 
@@ -174,6 +178,9 @@ func append_radio_line(session_id: String, line: Dictionary) -> void:
 			break
 	if log.is_empty():
 		log = {"id": session_id, "title": "Opening transmission" if session_id == "opening" else "Radio transmission", "lines": [], "body": ""}
+		if session_id.begins_with("radio:"):
+			var stone_id := session_id.split(":")[1]
+			log["title"] = "Aurora — " + str(get_gravestone_info(stone_id).get("title", "Radio transmission"))
 		radio_logs.append(log)
 	log["lines"].append(line.duplicate())
 	var speaker: String = line.get("speaker", "")
@@ -194,6 +201,7 @@ func record_radio_answer(answer_id: String, session_id: String) -> bool:
 
 # Supports the existing Ink grant/collect/translation event conventions.
 func apply_notebook_event(tag: String) -> void:
+	if tag == "event:decipher_human": confirm_rubbing_meaning("infant_figure_rubbing", "A person without an assigned occupation")
 	if tag.begins_with("event:grant_evidence:"):
 		record_evidence(tag.trim_prefix("event:grant_evidence:"))
 	if tag.begins_with("event:night_symbol_queried:"):
@@ -232,3 +240,93 @@ func preview_notebook_content() -> void:
 		if not radio_logs.any(func(existing: Dictionary) -> bool: return existing["id"] == log["id"]):
 			radio_logs.append(log)
 	notebook_changed.emit()
+
+
+# The two sky icons have their own notebook spread, separate from ordinary rubbings.
+func regular_rubbings() -> Array[String]:
+	return rubbings.filter(func(id: String) -> bool: return id not in ["sky_sun_rubbing", "infant_moon_rubbing"])
+
+
+var investigation_tutorial_completed := false
+var tutorial_night_heard := false
+var tutorial_hidden_heard := false
+var current_city_day := true
+const IDENTITY_LABELS := {"infant": "Infant", "scholar": "Scholar", "tycoon": "Tycoon", "divine_messenger": "Divine Messenger", "night_mother": "Holy Mother", "night_father": "Holy Father", "aurora": "Aurora", "funerary_artist": "Funerary Artist"}
+const CAUSE_LABELS := {"natural": "Natural death", "unexplained": "Unexplained circumstances", "hunger_and_thirst": "Hunger and thirst", "disappearance": "Disappearance", "missed_sleeping_deadline": "Exceeded the day/night limit", "escape": "Departure"}
+
+func report_options(pool: String, tomb_id: String) -> Array[String]:
+	var result: Array[String] = []
+	for value in radio_progress.get(pool, []):
+		if pool == "identities":
+			var used := false
+			for other in gravestone_reports:
+				if other != tomb_id and gravestone_reports[other].get("identity", "") == value: used = true
+			if used: continue
+		result.append(value)
+	return result
+
+func set_report_choice(tomb_id: String, field: String, value: String) -> bool:
+	if tomb_id not in gravestones or field not in ["identity", "death"]: return false
+	if not value.is_empty() and value not in report_options("identities" if field == "identity" else "causes", tomb_id): return false
+	var report: Dictionary = gravestone_reports.get(tomb_id, {}).duplicate()
+	report[field] = value
+	gravestone_reports[tomb_id] = report
+	notebook_changed.emit()
+	return true
+
+func rubbing_display(id: String) -> String:
+	var meaning := get_rubbing_meaning(id)
+	return ("☾" if id == "infant_moon_rubbing" else get_evidence(id).get("title", id)) + (" → " + meaning if not meaning.is_empty() else " · undeciphered")
+
+
+# Negative scans retain checked endpoints when the scene is recreated.
+var searchlight_scan_progress: Dictionary = {}
+
+
+var tutorial_day_return_heard := false
+var tutorial_record_intro_heard := false
+var tutorial_keyword_ack_heard := false
+var tutorial_radio_intro_heard := false
+var tutorial_end_heard := false
+signal term_collected(term_id: String)
+
+func collect_term(id: String) -> void:
+	var identities := {"infant": "infant", "scholar": "scholar", "tycoon": "tycoon", "divine_messenger": "divine_messenger", "night_mother": "night_mother", "night_father": "night_father", "aurora": "aurora", "funerary_artist": "funerary_artist"}
+	var causes := {"natural": "natural", "unexplained death": "unexplained", "thirst": "hunger_and_thirst", "disappearance": "disappearance", "missed_sleeping_deadline": "missed_sleeping_deadline", "escape": "escape"}
+	var pool := "identities" if identities.has(id) else ("causes" if causes.has(id) else "clue_terms")
+	var value: String = identities.get(id, causes.get(id, id))
+	var stored: Variant = radio_progress.get(pool, [])
+	var values: Array = stored if stored is Array else ([] if str(stored).is_empty() else [str(stored)])
+	if not values.has(value): values.append(value)
+	radio_progress[pool] = values
+	# Signals let the tutorial respond without hard-coding the source UI.
+	term_collected.emit(id)
+	notebook_changed.emit()
+
+func deliver_day_manuscripts() -> void:
+	for id in content_catalog().get("evidence", {}):
+		var entry := get_evidence(id)
+		if entry.get("category", "") != "manuscript": continue
+		var places: Array = entry.get("metadata", {}).get("related_location", [])
+		if "night_cemetery" in places: continue
+		if "day_cemetery" in places or entry.get("gravestone", "") in ["baby_tomb", "scholar_tomb", "sun_tomb", "girl_tomb"]: record_evidence(id)
+
+
+func finish_current_manuscript() -> void:
+	var id: String = radio_progress.get("active_manuscript", "")
+	if id.is_empty(): return
+	var finished: Array = radio_progress.get("finished_manuscripts", [])
+	if not finished.has(id): finished.append(id)
+	radio_progress["finished_manuscripts"] = finished
+	radio_progress["active_manuscript"] = ""
+
+
+var tutorial_searchlight_intro_heard := false
+var tutorial_searchlight_found_heard := false
+
+
+var camera_modal_open := false
+var camera_tutorial_pending := false
+var camera_tutorial_completed := false
+var formal_investigation_started := false
+var camera_observations: Dictionary = {}

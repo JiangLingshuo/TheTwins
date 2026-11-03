@@ -1066,3 +1066,15 @@ Across the checked period after the burial, the searchlight reveals no readable 
 // END OF EVIDENCE LIBRARY.
 // Not included: radio replies, bonus questions, report dropdown definitions,
 // unresolved chronology, or extra callback objects invented only for the HTML prototype.
+
+
+// Tutorial sky icon: a reusable navigation rubbing, not an occupation clue.
+=== ev_sky_sun_rubbing ===
+# type:evidence
+# id:sky_sun_rubbing
+# title:The Sun in the Sky
+# category:rubbing
+# location:day_cemetery
+# evidence_tag:sun_motif
+The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.
+-> DONE

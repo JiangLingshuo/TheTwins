@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dialogue>
+  <line speaker="Aurora">Nice job. Now you have two questions to work with: who is commemorated by this tombstone, and how did they die?</line>
+  <line speaker="#PLAYER#">I have no idea how to approach this.</line>
+  <line speaker="Aurora">Don't worry. I've translated some manuscripts to help with your work. You'll find them under the Manuscripts tab. Translation takes time, so I'll send more from time to time, choosing the pieces most relevant to your progress.</line>
+  <line speaker="#PLAYER#">Thanks. I'll take some time to read them. Talk to you later.</line>
+</dialogue>

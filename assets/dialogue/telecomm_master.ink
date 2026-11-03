@@ -1,4 +1,4 @@
-﻿// TWINS - STANDALONE LINKAGE TEST
+// TWINS - STANDALONE LINKAGE TEST
 // Source: 墓碑表.xlsx; newer author instructions and current evidence tags override stale cells.
 // English dialogue is a test draft, not final production copy.
 // Author-edited spreadsheet dialogue, reactions and explicit hidden mechanisms synchronized on 2026-11-01.
@@ -2124,7 +2124,7 @@ You look down at the cover. You look back at the stone.
 // Test completion of 04!B15 and the author's open-ending brief; no verdict choice.
 # feedback:gold
 The girl, the coffin, the hands. This is not just a similar decoration.#player
-(There is a long breath, and no attempt to fill it. Her answer comes out almost bare.) #narrator
+(The channel remains open. A breath goes in, trembles, comes out. When she finally speaks, the familiar softness has nowhere to hide.) #narrator
 I made it. I wrote those pages. And I left. #aurora
 ~ final_confronted = true
 {not (seen_subtexts ? Subtext.final):
@@ -2146,7 +2146,7 @@ I made it. I wrote those pages. And I left. #aurora
 I hated the ways she called harm protection. When it was time to leave, I would not take her with us. I was afraid she would bring that world after us. I was angry enough to let that be the whole answer. #aurora
 And now?#player
 (The effort of holding her voice steady is audible now. She no longer quite succeeds.) #narrator
-Now I know that an answer can keep you alive and still be something you carry for the rest of your life. I sent you because I could not bear to stand where you are standing. #aurora
+Now I keep returning to the moment we left. Everything I hated was still there. So was my mother. I sent you because I could not bear to stand where you are standing. #aurora
 (A final pause. This time she does not try to make it sound thoughtful.) #narrator
 You have found what she left. I do not know what she would have said to me. #aurora
 + [Record Aurora as the girl's identity]
@@ -2160,7 +2160,7 @@ You have found what she left. I do not know what she would have said to me. #aur
 
 === test_open_ending ===
 The radio stays open.
-You have enough to describe what happened. There are things a report cannot answer for the people who lived through them.
+You can record who left, and who stayed. Across the receiver, someone is still breathing. The next line does not come.
 You leave a space beneath the last line.
 # event:open_ending
 + [Return to the test hub] -> test_hub
@@ -2174,10 +2174,15 @@ Across the checked period after the burial, the searchlight reveals no readable 
 
 === test_answer_baby_8 ===
 # question_id:baby_8
+{has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance)):
 Yes, it does look like a moon. I suppose sleep is the closest rehearsal the living have for death. When night falls, the Dayfolk slip into slumber. On this marker, the moon stands for <link="natural">natural death</link>. #aurora
 ~ read_answers += AnswerId.baby_8_normal_9
 ~ feedback_kind = "linked"
-{has_tag(EvidenceTag.infant_appearance_mismatch):
+- else:
+The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk. #aurora
+~ feedback_kind = "unmatched"
+}
+{has_tag(EvidenceTag.infant_actual_appearance):
 # feedback:gold
 (The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.) #narrator
 The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were <link="unexplained death">unexplained circumstances</link> behind his death. Let us keep looking. #aurora
@@ -2198,8 +2203,9 @@ The moon offers a peaceful ending, but that is the story the family chose to put
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_identity):
 (Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.) #narrator
-Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
+Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link="infant">infant</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
 ~ read_answers += AnswerId.baby_17_supported_19
+# event:decipher_human
 ~ supported = true
 ~ feedback_kind = "linked"
 -> test_baby_personhood
@@ -2234,8 +2240,8 @@ She was learning to make memorials then. Perhaps she learned too soon how much a
 -> test_menu_feedback ->
 What would you like to ask?
 + {(links ? Relation.moon)} [How do we interpret the icon on the tombstone?] -> test_answer_baby_8
-+ {(links ? Relation.human)} [Why is the tombstone shaped like a person?] -> test_answer_baby_17
-+ {(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance) || has_tag(EvidenceTag.family_requested_depiction))} [Who drew the child's real appearance?] -> test_answer_baby_21
++ {(owned_evidence ? EvidenceId.infant_figure_rubbing)} [Why is the tombstone shaped like a person?] -> test_answer_baby_17
++ {(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance))} [Who drew the child's real appearance?] -> test_answer_baby_21
 + [Collect a word from this call] -> test_radio_terms_baby
 + [End this call] -> test_end_call
 
@@ -2654,8 +2660,8 @@ Possibly. She may have understood too late to tell her daughter. The picture cou
 # question_id:father_8
 ~ temp supported = false
 {has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_father_past):
-(Her breathing slows. The answer is short, but she takes care with it.) #narrator
-It is the same child. The man carrying him is his <link="night_father">father in Night City</link>. #aurora
+(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.) #narrator
+The same child. Look at the way he is held. The man carrying him is his <link="night_father">father in Night City</link>. #aurora
 ~ read_answers += AnswerId.father_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2672,7 +2678,7 @@ Match the child with the altar figure before you name the parent. #aurora
 # question_id:father_12
 ~ temp supported = false
 {has_tag(EvidenceTag.skyway_not_steep) || has_tag(EvidenceTag.missed_sleeping_deadline):
-(A little air escapes before the answer. It is the only part of it she seems unable to keep level.) #narrator
+(A sharp breath brushes the microphone. She waits for it to pass before giving you the facts.) #narrator
 The path was uneven, but it was not a dangerous climb. He kept searching <link="missed_sleeping_deadline">beyond the permitted waking hours</link> and failed to reach a sleeping coffin in time. #aurora
 ~ read_answers += AnswerId.father_12_supported_14
 ~ supported = true
@@ -2693,8 +2699,8 @@ Check the actual path or its history. An upward line does not show how steep it 
 # question_id:father_16
 ~ temp supported = false
 {has_tag(EvidenceTag.paired_day_night_death):
-(She lets the two events sit in silence for a beat before joining them.) #narrator
-One dies. The other disappears at dawn. Check whether these are two records of one life. #aurora
+(Two short taps reach you through the receiver. Then nothing. When she speaks, each event gets its own sentence.) #narrator
+One dies during the night. The other disappears at dawn. Put the times beside each other. You may be looking at two records of one life. #aurora
 ~ read_answers += AnswerId.father_16_supported_18
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2711,8 +2717,8 @@ Bring the Scholar's <link="disappearance">disappearance</link> report. We need t
 # question_id:father_20
 ~ temp supported = false
 {has_tag(EvidenceTag.moon_stone_offering) || has_tag(EvidenceTag.night_blessing_reference):
-(Her voice warms briefly. She does not make a remark about it.) #narrator
-It is a blessing for the person who left. Nobody was paying for the path. #aurora
+(The word comes more softly than the explanation. You almost miss it beneath the static.) #narrator
+A blessing for the person who left. Someone wanted him to travel well. The stone was an offering, not payment for the path. #aurora
 ~ read_answers += AnswerId.father_20_supported_22
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2745,8 +2751,8 @@ The history calls it natural. Shared coffins weaken the claim that there was no 
 # question_id:girl_8
 ~ temp supported = false
 {has_tag(EvidenceTag.upright_coffin_motif) || has_tag(EvidenceTag.shared_day_night_history):
-(Her voice follows the outline you have described with an attention that feels almost tender.) #narrator
-An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow. #aurora
+(You describe the frame. Her breath catches at its upper edge, as though your finger has touched something she can feel.) #narrator
+An upright sleeping coffin, like the one in the old illustration. A place to wait for another waking. Strange, perhaps, to give that shape to a memorial—unless someone hoped the story would continue outside it. #aurora
 ~ read_answers += AnswerId.girl_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2763,8 +2769,8 @@ That frame has an older history than the girl inside it. Let us look for its sha
 # question_id:girl_12
 ~ temp supported = false
 {has_tag(EvidenceTag.funerary_artist_reference):
-(For a moment, the sentence seems to cost her more than it should. She finishes it anyway.) #narrator
-The diary writer carved memorials and came to question the stories they were asked to preserve. She was a <link="funerary_artist">funerary artist</link>. Perhaps this was the one stone she could finally let speak for herself. #aurora
+(A faint scrape, then the sound of a hand passing over the microphone. Her voice returns carefully composed.) #narrator
+The diary writer was a <link="funerary_artist">funerary artist</link>. She carved the stories other people wanted remembered, until she began to wonder what her own hands were leaving out. Perhaps this stone was an attempt to answer herself. #aurora
 ~ read_answers += AnswerId.girl_12_supported_14
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2782,7 +2788,7 @@ A human shape can stand for many lives. Her work may have left a clearer signatu
 ~ temp supported = false
 {has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family):
 (A breath shivers against the microphone. When she speaks, the composure is there, but thinner.) #narrator
-Four people in the picture, three stones on the family base, and this one standing apart. Her mother left the sculpture here. Even after the girl went away, she was still part of the family her mother remembered. #aurora
+Four faces in the photograph. Three stones together. And this one, a little way apart. Her mother left the sculpture here. Even after the girl went away, those small carved hands still held a place for her. #aurora
 ~ read_answers += AnswerId.girl_16_supported_18
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2799,8 +2805,8 @@ Let us put the four little figures beside the four faces. We should know the fam
 # question_id:girl_20
 ~ temp supported = false
 {has_tag(EvidenceTag.deliberate_departure) || has_tag(EvidenceTag.two_mothers_dilemma):
-(She puts a little distance back into her voice. The effort is audible.) #narrator
-The diary describes a decision to leave. Disappearance is the word those left behind could give it. We should not let that word bury a girl who may have escaped. #aurora
+(She draws out the first word, then presses the rest into an even rhythm. You hear how much work the evenness takes.) #narrator
+The diary describes a decision to leave. Those left behind had a word for the empty place: disappearance. But the person who left may have called it something else. A beginning, perhaps. We should leave room for that. #aurora
 ~ read_answers += AnswerId.girl_20_supported_22
 ~ supported = true
 ~ feedback_kind = "linked"
