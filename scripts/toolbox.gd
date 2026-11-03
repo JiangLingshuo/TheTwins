@@ -5,6 +5,9 @@ extends Control
 ## While closed, the button shows the active tool's icon with a highlight ring;
 ## the icon follows the tools' real state, so it never goes out of sync.
 
+## Emitted when the tray opens (true) or closes (false). The tray starts closed.
+signal tray_toggled(expanded: bool)
+
 ## Ring drawn around the active tool (collapsed button and tray entry).
 const ACTIVE_RING := Color(1.0, 0.86, 0.52, 0.95)
 const TOOLBOX_ICON := preload("res://assets/Art/symbols/toolbox.svg")
@@ -72,15 +75,17 @@ func _ready() -> void:
 func reveal() -> void:
 	var notebook := get_parent().get_node_or_null("NotebookTool")
 	if notebook and notebook.is_open(): return
-	if tray and not GameState.camera_modal_open and not GameState.radio_modal_open:
+	if tray and not tray.visible and not GameState.camera_modal_open and not GameState.radio_modal_open:
 		tray.show()
 		_refresh_button()
+		tray_toggled.emit(true)
 
 ## Close the tray. Never changes which tool is active.
 func collapse() -> void:
-	if tray:
+	if tray and tray.visible:
 		tray.hide()
 		_refresh_button()
+		tray_toggled.emit(false)
 
 func toggle() -> void:
 	if tray.visible: collapse()

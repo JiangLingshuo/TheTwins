@@ -15,6 +15,8 @@ signal finished
 @export var blinks: int = 3
 ## Seconds for one blink (on + off).
 @export var blink_time: float = 0.5
+## Keep pulsing until dismissed instead of stopping after `blinks`.
+@export var loop: bool = false
 
 var _target: Control
 var _tween: Tween
@@ -33,6 +35,12 @@ func blink_around(target: Control) -> void:
 	modulate.a = 0.0
 	visible = true
 	_tween = create_tween()
+	if loop:
+		# A gentle, endless pulse; the caller dismisses it.
+		_tween.set_loops()
+		_tween.tween_property(self, "modulate:a", 0.9, blink_time).set_trans(Tween.TRANS_SINE)
+		_tween.tween_property(self, "modulate:a", 0.25, blink_time).set_trans(Tween.TRANS_SINE)
+		return
 	for i in blinks:
 		_tween.tween_property(self, "modulate:a", 1.0, blink_time * 0.4).set_trans(Tween.TRANS_SINE)
 		_tween.tween_property(self, "modulate:a", 0.15, blink_time * 0.6).set_trans(Tween.TRANS_SINE)

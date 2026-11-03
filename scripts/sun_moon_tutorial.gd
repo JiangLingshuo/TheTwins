@@ -14,6 +14,9 @@ var _notebook: Control
 var _rubbing: Control
 var _moon: RubbingSymbol
 var _human: RubbingSymbol
+var _box: Control
+var _skip_button: Button
+var _shake_tween: Tween
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -23,6 +26,8 @@ func _ready() -> void:
 	_moon = _main.get_node("DayCemetery/BabyTomb/MoonSymbol")
 	_human = _main.get_node("DayCemetery/BabyTomb/HumanSymbol")
 	_build_guide()
+	_box = _main.get_node_or_null("Toolbox")
+	if _box: _box.tray_toggled.connect(func(_expanded: bool) -> void: refresh())
 	_rubbing.state_changed.connect(func(_on: bool) -> void: refresh())
 	_rubbing.rubbing_collected.connect(func(_id: String) -> void: refresh())
 	_notebook.notebook_opened.connect(func() -> void: refresh())
@@ -56,6 +61,9 @@ func refresh() -> void:
 	elif not has_moon:
 		if _rubbing.active:
 			_set_step(Step.MOON, "1 / 4  There seems to be a crescent shape on the base. Make a rubbing of it.", _moon)
+		elif _box and _box.tray and not _box.tray.visible:
+			# Onboarding, part one: the toolbox starts folded; only it can be clicked.
+			_set_step(Step.TOOL, "1 / 4  Open the toolbox.", _box.button)
 		else:
 			_set_step(Step.TOOL, "1 / 4  Pick up the rubbing tool to record the crescent on the small marker.", _rubbing.get_node("RubbingButton"))
 	elif not GameState.cycle_hint_heard:
@@ -67,12 +75,44 @@ func refresh() -> void:
 	else:
 		_set_step(Step.DRAG, "4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
 
+func _input(event: InputEvent) -> void:
+	# Onboarding (open Toolbox -> pick Rubbing Tool): only a left click on the
+	# highlighted control gets through. Anything else is blocked and the hint shakes.
+	if step != Step.TOOL or _speaking or _skipping or not is_instance_valid(_highlight_target):
+		return
+	if event is InputEventMouseMotion or not event.is_pressed() or event.is_echo():
+		return
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		var point: Vector2 = event.position
+		if _highlight_target.get_global_rect().has_point(point):
+			return
+		if _skip_button.is_visible_in_tree() and _skip_button.get_global_rect().has_point(point):
+			return
+	get_viewport().set_input_as_handled()
+	if event is InputEventKey and event.keycode in [KEY_SHIFT, KEY_CTRL, KEY_ALT, KEY_META]:
+		return
+	if event is InputEventMouseButton and event.button_index not in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE]:
+		return # wheel: blocked quietly
+	_shake_hint()
+
+func _shake_hint() -> void:
+	if _shake_tween and _shake_tween.is_running():
+		return
+	var home := _panel.position.x
+	_shake_tween = create_tween()
+	for offset in [10.0, -8.0, 6.0, -4.0, 0.0]:
+		_shake_tween.tween_property(_panel, "position:x", home + offset, 0.05)
+
 func _set_step(value: Step, text: String, target: Control) -> void:
 	var box := _main.get_node_or_null("Toolbox")
 	if box and target:
 		target = box.proxy_for(target)
-		box.reveal_for(target)
+		# The toolbox stays folded: point at its button until the player opens it.
+		if box.tray and box.tray.is_ancestor_of(target) and not box.tray.visible:
+			target = box.button
 	step = value
+	# Gated onboarding steps pulse until done; other hints blink a few times.
+	_highlight.loop = value == Step.TOOL
 	_text.text = text
 	var radio := _main.get_node_or_null("RadioTool")
 	if radio and radio.is_open():
@@ -144,12 +184,12 @@ func _build_guide() -> void:
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_text.add_theme_font_size_override("font_size", 18)
 	stack.add_child(_text)
-	var skip_button := Button.new()
-	skip_button.text = "DEV — skip tutorial"
-	skip_button.visible = OS.is_debug_build()
-	skip_button.size_flags_horizontal = Control.SIZE_SHRINK_END
-	skip_button.pressed.connect(skip)
-	stack.add_child(skip_button)
+	_skip_button = Button.new()
+	_skip_button.text = "DEV — skip tutorial"
+	_skip_button.visible = OS.is_debug_build()
+	_skip_button.size_flags_horizontal = Control.SIZE_SHRINK_END
+	_skip_button.pressed.connect(skip)
+	stack.add_child(_skip_button)
 	_main.add_child(_panel)
 	_highlight = HighlightFrame.new()
 	_highlight.z_index = 59
