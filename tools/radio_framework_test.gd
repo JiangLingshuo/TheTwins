@@ -44,6 +44,7 @@ func _run() -> void:
 	check("wrong proof keeps ordinary answer exclusive", joined(result).contains("Did you find the designer") and not joined(result).contains("Before we ask why"))
 	result = model.send(human_q, group("designer_manuscript"))
 	check("designer manuscript supports human explanation", not result.has("error") and joined(result).contains("without an identifiable occupation") and result.get("feedback") == "linked")
+	check("updated human answer has no deleted followups", result.get("choices", []).is_empty())
 	result = model.send(human_q, "")
 	check("previous supported reply cannot leak into ordinary reply", joined(result).contains("Did you find the designer") and not joined(result).contains("Before we ask why") and result.get("choices", []).is_empty())
 	check("locked record cannot be submitted", model.send(moon_q, group("infant_graffiti")).has("error"))

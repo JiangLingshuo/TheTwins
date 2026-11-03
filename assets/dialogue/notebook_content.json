@@ -3,7 +3,7 @@
   "sources": {
     "evidence_master.ink": "7313602e32d1db8136b60869cde39b0965e240cbad4fe51ed545431ea8a11e48",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "8f2c4727f68bcad8d977be610431ceba7c13623ebf879f35ed1a2ed14204be6a"
+    "telecomm_master.ink": "581a574f6244b9d2c1f86f7d57f52ff18bb6f3b0ca83b6d2e98572fa57cb0bce"
   },
   "gravestones": {
     "baby_tomb": {
@@ -2622,7 +2622,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(There is a long breath, and no attempt to fill it. Her answer comes out almost bare.)"
+          "content": "(The channel remains open. A breath goes in, trembles, comes out. When she finally speaks, the familiar softness has nowhere to hide.)"
         },
         {
           "speaker": "Aurora",
@@ -2658,7 +2658,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "Now I know that an answer can keep you alive and still be something you carry for the rest of your life. I sent you because I could not bear to stand where you are standing."
+          "content": "Now I keep returning to the moment we left. Everything I hated was still there. So was my mother. I sent you because I could not bear to stand where you are standing."
         },
         {
           "speaker": "",
@@ -2703,12 +2703,12 @@
       "source_knot": "test_answer_baby_17",
       "lines": [
         {
-          "speaker": "",
-          "content": "(Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.)"
+          "speaker": "Aurora",
+          "content": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
         },
         {
-          "speaker": "Aurora",
-          "content": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This infant was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
+          "speaker": "",
+          "content": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
         }
       ]
     },
@@ -2727,12 +2727,12 @@
       "source_knot": "test_answer_baby_21",
       "lines": [
         {
-          "speaker": "",
-          "content": "(A breath almost becomes a laugh. It never quite gets there.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "I cannot tell you who drew it, #PLAYER#. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit."
+        },
+        {
+          "speaker": "",
+          "content": "(She seems to have personal feelings about this topic.)"
         }
       ]
     },
@@ -3310,11 +3310,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(Her breathing slows. The answer is short, but she takes care with it.)"
+          "content": "(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.)"
         },
         {
           "speaker": "Aurora",
-          "content": "It is the same child. The man carrying him is his father in Night City."
+          "content": "The same child. Look at the way he is held. The man carrying him is his father in Night City."
         }
       ]
     },
@@ -3338,7 +3338,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(A little air escapes before the answer. It is the only part of it she seems unable to keep level.)"
+          "content": "(A sharp breath brushes the microphone. She waits for it to pass before giving you the facts.)"
         },
         {
           "speaker": "Aurora",
@@ -3366,11 +3366,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(She lets the two events sit in silence for a beat before joining them.)"
+          "content": "(Two short taps reach you through the receiver. Then nothing. When she speaks, each event gets its own sentence.)"
         },
         {
           "speaker": "Aurora",
-          "content": "One dies. The other disappears at dawn. Check whether these are two records of one life."
+          "content": "One dies during the night. The other disappears at dawn. Put the times beside each other. You may be looking at two records of one life."
         }
       ]
     },
@@ -3394,11 +3394,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(Her voice warms briefly. She does not make a remark about it.)"
+          "content": "(The word comes more softly than the explanation. You almost miss it beneath the static.)"
         },
         {
           "speaker": "Aurora",
-          "content": "It is a blessing for the person who left. Nobody was paying for the path."
+          "content": "A blessing for the person who left. Someone wanted him to travel well. The stone was an offering, not payment for the path."
         }
       ]
     },
@@ -3436,11 +3436,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(Her voice follows the outline you have described with an attention that feels almost tender.)"
+          "content": "(You describe the frame. Her breath catches at its upper edge, as though your finger has touched something she can feel.)"
         },
         {
           "speaker": "Aurora",
-          "content": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
+          "content": "An upright sleeping coffin, like the one in the old illustration. A place to wait for another waking. Strange, perhaps, to give that shape to a memorial—unless someone hoped the story would continue outside it."
         }
       ]
     },
@@ -3464,11 +3464,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(For a moment, the sentence seems to cost her more than it should. She finishes it anyway.)"
+          "content": "(A faint scrape, then the sound of a hand passing over the microphone. Her voice returns carefully composed.)"
         },
         {
           "speaker": "Aurora",
-          "content": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a funerary artist. Perhaps this was the one stone she could finally let speak for herself."
+          "content": "The diary writer was a funerary artist. She carved the stories other people wanted remembered, until she began to wonder what her own hands were leaving out. Perhaps this stone was an attempt to answer herself."
         }
       ]
     },
@@ -3496,7 +3496,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "Four people in the picture, three stones on the family base, and this one standing apart. Her mother left the sculpture here. Even after the girl went away, she was still part of the family her mother remembered."
+          "content": "Four faces in the photograph. Three stones together. And this one, a little way apart. Her mother left the sculpture here. Even after the girl went away, those small carved hands still held a place for her."
         }
       ]
     },
@@ -3520,11 +3520,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(She puts a little distance back into her voice. The effort is audible.)"
+          "content": "(She draws out the first word, then presses the rest into an even rhythm. You hear how much work the evenness takes.)"
         },
         {
           "speaker": "Aurora",
-          "content": "The diary describes a decision to leave. Disappearance is the word those left behind could give it. We should not let that word bury a girl who may have escaped."
+          "content": "The diary describes a decision to leave. Those left behind had a word for the empty place: disappearance. But the person who left may have called it something else. A beginning, perhaps. We should leave room for that."
         }
       ]
     },
@@ -3539,32 +3539,6 @@
         {
           "speaker": "Aurora",
           "content": "Read what she meant to do. A stone can remember an absence without knowing where the person went."
-        }
-      ]
-    },
-    "test_baby_personhood_tail": {
-      "id": "test_baby_personhood_tail",
-      "source_knot": "test_baby_personhood",
-      "preview_only": true,
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
-        }
-      ]
-    },
-    "test_baby_personhood_reply_tail": {
-      "id": "test_baby_personhood_reply_tail",
-      "source_knot": "test_baby_personhood_reply",
-      "preview_only": false,
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(An unnatural pause before her response, as if a piece of memory has struck her through the dozens of years.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "That's a bold and dangerous claim. Without evidence, all guesses are just conspiracy theories."
         }
       ]
     },

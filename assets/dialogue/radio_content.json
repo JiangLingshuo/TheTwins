@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "b81a5436a76a30662429f2db035cba09f237e1773e638d5ad29b46379ae81b99",
+  "source_sha256": "92962774b24ec490ed12381276f6ab382d5b3ed88d5b48ef95a2ba9bb120727e",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -1101,13 +1101,13 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.)"
+            "speaker": "Aurora",
+            "text": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link=\"infant\">child</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
           },
           {
             "op": "line",
-            "speaker": "Aurora",
-            "text": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link=\"infant\">infant</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
+            "speaker": "",
+            "text": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
           },
           {
             "op": "set",
@@ -1124,10 +1124,6 @@
           {
             "op": "set",
             "code": "feedback_kind = \"linked\""
-          },
-          {
-            "op": "goto",
-            "target": "test_baby_personhood"
           }
         ],
         "else": []
@@ -1168,13 +1164,13 @@
       },
       {
         "op": "line",
-        "speaker": "",
-        "text": "(A breath almost becomes a laugh. It never quite gets there.)"
+        "speaker": "Aurora",
+        "text": "I cannot tell you who drew it, #PLAYER#. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit."
       },
       {
         "op": "line",
-        "speaker": "Aurora",
-        "text": "I cannot tell you who drew it, #PLAYER#. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit."
+        "speaker": "",
+        "text": "(She seems to have personal feelings about this topic.)"
       },
       {
         "op": "set",
@@ -3098,60 +3094,6 @@
       {
         "op": "goto",
         "target": "test_radio_sun"
-      }
-    ],
-    "test_baby_personhood": [
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
-      },
-      {
-        "op": "choices",
-        "items": [
-          {
-            "label": "Does that mean they treated him as an independent person?",
-            "condition": "true",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_baby_personhood_reply"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "All person deserves a fair treatment. Did he receive?",
-            "condition": "true",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_baby_personhood_reply"
-              }
-            ],
-            "once": false
-          }
-        ]
-      }
-    ],
-    "test_baby_personhood_reply": [
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(An unnatural pause before her response, as if a piece of memory has struck her through the dozens of years.)"
-      },
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "That's a bold and dangerous claim. Without evidence, all guesses are just conspiracy theories."
-      },
-      {
-        "op": "set",
-        "code": "feedback_kind = \"\""
-      },
-      {
-        "op": "goto",
-        "target": "test_radio_baby"
       }
     ],
     "test_confrontation": [

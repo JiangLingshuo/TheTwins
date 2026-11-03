@@ -2202,13 +2202,12 @@ The moon offers a peaceful ending, but that is the story the family chose to put
 # question_id:baby_17
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_identity):
-(Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.) #narrator
-Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link="infant">infant</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
+Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link="infant">child</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
+("A child without an occupation is a person before anything else", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?) #narrator
 ~ read_answers += AnswerId.baby_17_supported_19
 # event:decipher_human
 ~ supported = true
 ~ feedback_kind = "linked"
--> test_baby_personhood
 }
 {not supported:
 A design often leaves a paper shadow, {player_name}: a manuscript. Did you find the designer's? #aurora
@@ -2218,10 +2217,14 @@ A design often leaves a paper shadow, {player_name}: a manuscript. Did you find 
 -> test_radio_baby
 
 === test_answer_baby_21 ===
+// Author draft: 婴儿小碑 C19. Hidden question has no ordinary runtime branch.
+// (She repeats your word under her breath. “Real.” The channel carries the faint shape of a question she never asked, or a story she never told.)
+//
+// I wonder which face you mean by 'real', {player_name}: the one the family remembered, or the one their story could not make room for. We should find something firmer than hearsay before we choose between them.
 # question_id:baby_21
 # feedback:gold
-(A breath almost becomes a laugh. It never quite gets there.) #narrator
 I cannot tell you who drew it, {player_name}. Perhaps someone had grown tired of seeing the same approved face carved over every life that did not fit. #aurora
+(She seems to have personal feelings about this topic.) #narrator
 ~ read_answers += AnswerId.baby_21_hidden_23
 {know(EvidenceTag.funerary_artist_reference):
 (A softer breath follows, almost an afterthought.) #narrator
@@ -2823,17 +2826,6 @@ Read what she meant to do. A stone can remember an absence without knowing where
 # question_id:girl_24
 -> test_confrontation
 
-=== test_baby_personhood ===
-("A child without an occupation is a person before anything else", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?) #narrator
-+ [Does that mean they treated him as an independent person?] -> test_baby_personhood_reply
-+ [All person deserves a fair treatment. Did he receive?] -> test_baby_personhood_reply
-
-=== test_baby_personhood_reply ===
-(An unnatural pause before her response, as if a piece of memory has struck her through the dozens of years.) #narrator
-That's a bold and dangerous claim. Without evidence, all guesses are just conspiracy theories. #aurora
-~ feedback_kind = ""
--> test_radio_baby
-
 === test_radio_terms_baby ===
 DEV: collect only words from answers you have already read.
 + {(read_answers ? AnswerId.baby_8_normal_9)} [natural death]
@@ -2873,15 +2865,12 @@ Keep looking. We can return to the question when you find something. #aurora
 {active_tomb == "baby":
 ~ temp baby_pick = RANDOM(0,2)
 {baby_pick == 0:
-(A soft breath brushes the line.) #narrator
 Keep looking, {player_name}. There is still a missing piece between the question and the stone. #aurora
 }
 {baby_pick == 1:
-(Her voice returns with a little of its warmth restored.) #narrator
 For now, let the stones have the next word. They may tell you what I cannot yet. #aurora
 }
 {baby_pick == 2:
-(You hear a quiet, thoughtful hum.) #narrator
 {player_name}, leave a little room for the next discovery. We can return to this when you find a match. #aurora
 }
 - else:
