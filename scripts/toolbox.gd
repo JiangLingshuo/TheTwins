@@ -1,16 +1,27 @@
 extends Control
+## Toolbox button on the right edge. Click it to open the tool tray; click it
+## again, or anywhere outside, to close it. Choosing a tool presses that tool's
+## own button (the tools keep their activation logic) and closes the tray.
+## While closed, the button shows the active tool's icon with a highlight ring;
+## the icon follows the tools' real state, so it never goes out of sync.
+
+## Ring drawn around the active tool (collapsed button and tray entry).
+const ACTIVE_RING := Color(1.0, 0.86, 0.52, 0.95)
+const TOOLBOX_ICON := preload("res://assets/Art/symbols/toolbox.svg")
+
 var button: TextureButton
 var tray: PanelContainer
-var _elapsed := 0.0
 var _proxies: Dictionary = {}
+var _active_record: Dictionary = {}
 func _ready() -> void:
 	await get_tree().process_frame
-	z_index = 50
+	# Layering comes from the node order in main.tscn: above the scene tools,
+	# below the notebook, radio, camera, tutorial and dialogue boxes.
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	button = TextureButton.new()
 	button.name = "ToolboxButton"
-	button.texture_normal = preload("res://assets/Art/symbols/toolbox.svg")
+	button.texture_normal = TOOLBOX_ICON
 	button.ignore_texture_size = true
 	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(button)
@@ -18,8 +29,9 @@ func _ready() -> void:
 	button.offset_left = -148; button.offset_right = -36
 	button.offset_top = -184; button.offset_bottom = -72
 	button.tooltip_text = "Tools — rubbing, searchlight, camera"
-	button.mouse_entered.connect(reveal)
-	button.pressed.connect(reveal)
+	button.pressed.connect(toggle)
+	button.draw.connect(func() -> void:
+		if not _active_record.is_empty() and not tray.visible: _draw_ring(button))
 	tray = PanelContainer.new()
 	tray.name = "ToolsTray"
 	add_child(tray)
@@ -44,29 +56,97 @@ func _ready() -> void:
 		proxy.custom_minimum_size = Vector2(84, 80)
 		proxy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(proxy)
-		proxy.pressed.connect(func() -> void: tool.pressed.emit(); tray.hide())
+		proxy.pressed.connect(func() -> void: _select(tool))
+		proxy.draw.connect(func() -> void:
+			if _active_record.get("source") == tool: _draw_ring(proxy))
 		_proxies[tool.get_instance_id()] = {"source": tool, "button": proxy}
 		tool.hide()
-	tray.hide()
+	collapse()
+	# Opening the notebook (button, Tab / N, or scripted) closes the tray.
+	# The radio has no signal; _process watches GameState.radio_modal_open.
+	var notebook := get_parent().get_node_or_null("NotebookTool")
+	if notebook: notebook.notebook_opened.connect(collapse)
 	var guide := get_parent().get_node_or_null("SunMoonTutorial")
 	if guide: guide.refresh.call_deferred()
+## Open the tray (expand).
 func reveal() -> void:
+	var notebook := get_parent().get_node_or_null("NotebookTool")
+	if notebook and notebook.is_open(): return
 	if tray and not GameState.camera_modal_open and not GameState.radio_modal_open:
 		tray.show()
-		_elapsed = 0.0
+		_refresh_button()
+
+## Close the tray. Never changes which tool is active.
+func collapse() -> void:
+	if tray:
+		tray.hide()
+		_refresh_button()
+
+func toggle() -> void:
+	if tray.visible: collapse()
+	else: reveal()
+
 func proxy_for(target: Control) -> Control:
 	return _proxies.get(target.get_instance_id(), {}).get("button", target)
 
 func reveal_for(target: Control) -> void:
 	if tray and tray.is_ancestor_of(target): reveal()
-func _process(delta: float) -> void:
+
+func _select(tool: TextureButton) -> void:
+	# The tool's own button toggles it; picking the active tool again puts it away.
+	tool.pressed.emit()
+	collapse()
+
+func _input(event: InputEvent) -> void:
+	# A press anywhere outside the tray and button closes the tray. The click
+	# itself still reaches whatever is under it.
+	if not tray or not tray.visible or _tutorial_holds_tray(): return
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		var point: Vector2 = event.position
+		if not tray.get_global_rect().has_point(point) and not button.get_global_rect().has_point(point):
+			collapse()
+
+func _tutorial_holds_tray() -> bool:
+	# The tutorial may point at a tool inside the tray; keep it open meanwhile.
+	var guide := get_parent().get_node_or_null("SunMoonTutorial")
+	var target = guide.get("_highlight_target") if guide else null
+	return is_instance_valid(target) and tray.is_ancestor_of(target)
+
+func _process(_delta: float) -> void:
 	for record in _proxies.values():
 		record["button"].disabled = record["source"].disabled
 		record["button"].modulate = record["source"].modulate
 		record["button"].tooltip_text = record["source"].tooltip_text
-	if not tray or not tray.visible: return
-	var guide := get_parent().get_node_or_null("SunMoonTutorial")
-	if guide and guide.get("_highlight_target") and tray.is_ancestor_of(guide.get("_highlight_target")): return
-	var region := tray.get_global_rect().merge(button.get_global_rect()).grow(14)
-	_elapsed = 0.0 if region.has_point(get_global_mouse_position()) else _elapsed + delta
-	if _elapsed > 0.35: tray.hide()
+		# Tool icons change with their state (e.g. icon_on / icon_off).
+		if record["button"].texture_normal != record["source"].texture_normal:
+			record["button"].texture_normal = record["source"].texture_normal
+	if tray and tray.visible and (GameState.camera_modal_open or GameState.radio_modal_open):
+		collapse()
+	_refresh_button()
+
+## Show the active tool on the collapsed button; the toolbox icon otherwise.
+func _refresh_button() -> void:
+	if not button: return
+	var active := {}
+	for record in _proxies.values():
+		if _is_active(record["source"].get_parent()):
+			active = record
+			break
+	var changed: bool = active.get("source") != _active_record.get("source")
+	_active_record = active
+	var icon: Texture2D = TOOLBOX_ICON if active.is_empty() or tray.visible else active["source"].texture_normal
+	if button.texture_normal != icon or changed:
+		button.texture_normal = icon
+		button.queue_redraw()
+		for record in _proxies.values(): record["button"].queue_redraw()
+
+func _is_active(tool: Node) -> bool:
+	if tool.get("active") == true: return true # RubbingTool
+	if tool.get("state") is int and tool.get("state") != 0: return true # FlashlightTool (AIMING or ON)
+	return tool.name == "CameraTool" and GameState.camera_modal_open
+
+func _draw_ring(target: Control) -> void:
+	var centre := target.size * 0.5
+	var radius := minf(target.size.x, target.size.y) * 0.5
+	target.draw_arc(centre, radius + 6.0, 0.0, TAU, 64, Color(ACTIVE_RING, 0.18), 8.0, true)
+	target.draw_arc(centre, radius + 3.0, 0.0, TAU, 64, ACTIVE_RING, 2.5, true)

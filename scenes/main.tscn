@@ -171,6 +171,9 @@ layout_mode = 1
 [node name="RubbingTool" parent="." instance=ExtResource("6_rubbing")]
 layout_mode = 1
 
+[node name="Toolbox" type="Control" parent="."]
+script = ExtResource("19_box")
+
 [node name="NotebookTool" parent="." instance=ExtResource("5_notebook")]
 layout_mode = 1
 
@@ -192,6 +195,3 @@ script = ExtResource("17_radio")
 
 [node name="CameraTool" type="Control" parent="."]
 script = ExtResource("18_camera")
-
-[node name="Toolbox" type="Control" parent="."]
-script = ExtResource("19_box")
