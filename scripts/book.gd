@@ -69,6 +69,8 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Sections (indices into SECTION_TITLES) whose spreads show a Day page on the
 ## left and a Night page on the right. Other sections keep the normal paper.
 @export var day_night_sections: PackedInt32Array = [0, 5]
+## Without sections: give every spread the Day/Night pages (the start book).
+@export var day_night_all_spreads: bool = false
 @export var day_paper: Color = Color(0.96, 0.92, 0.82)
 @export var day_ink: Color = Color(0.2, 0.15, 0.11)
 @export var night_paper: Color = Color(0.14, 0.16, 0.22)
@@ -681,8 +683,8 @@ func _apply_page_theme(text_label: Label, number_label: Label, page_index: int) 
 	var art := page.get_node("Art")
 	var rubbing_list := page.get_node("Rubbings")
 	var gravestone_page := page.get_node("Gravestone")
-	var day_night := use_sections and page_index / 2 < _spread_count() \
-		and day_night_sections.has(_section_of(page_index / 2))
+	var day_night := (not use_sections and day_night_all_spreads) or (use_sections \
+		and page_index / 2 < _spread_count() and day_night_sections.has(_section_of(page_index / 2)))
 	if not day_night:
 		page.material = null
 		text_label.label_settings.font_color = _normal_ink

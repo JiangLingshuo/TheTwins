@@ -12,7 +12,7 @@
       "title": "The Small Human-Shaped Marker",
       "location": "day_cemetery",
       "description": "A small human-shaped marker, as thin as a page of stone. A curved decoration is carved into its surface. Its base continues beneath two other monuments.",
-      "sketch": "res://assets/Art/day/草稿/baby.png"
+      "sketch": "res://assets/Art/day/baby_single.png"
     },
     "scholar_tomb": {
       "id": "scholar_tomb",

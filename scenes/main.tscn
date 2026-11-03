@@ -1,14 +1,14 @@
 [gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
-[ext_resource type="Texture2D" path="res://assets/Art/day/草稿/BG_Day.jpg" id="2_day"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/BG_night.jpg" id="3_night"]
 [ext_resource type="PackedScene" path="res://scenes/flashlight_tool.tscn" id="4_tool"]
 [ext_resource type="PackedScene" path="res://scenes/notebook_tool.tscn" id="5_notebook"]
 [ext_resource type="PackedScene" path="res://scenes/rubbing_tool.tscn" id="6_rubbing"]
-[ext_resource type="Texture2D" path="res://assets/Art/day/草稿/baby.png" id="7_baby"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/baby_scene.png" id="7_baby"]
 [ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="8_symbol"]
-[ext_resource type="Texture2D" path="res://assets/Art/symbols/human.png" id="9_human"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/day.png" id="9_human"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/moon.png" id="10_moon"]
 [ext_resource type="Script" path="res://scripts/gravestone.gd" id="11_gravestone"]
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
@@ -22,6 +22,14 @@
 
 [ext_resource type="Script" path="res://scripts/camera_tool.gd" id="18_camera"]
 [ext_resource type="Script" path="res://scripts/toolbox.gd" id="19_box"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/sun.png" id="20_sun_art"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/fountain.png" id="21_fountain"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/footprint.png" id="22_footprint"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/energy.png" id="23_energy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sun"]
+atlas = ExtResource("20_sun_art")
+region = Rect2(1423, 78, 144, 161)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
 atlas = ExtResource("13_night_moon")
@@ -69,6 +77,27 @@ offset_bottom = 1080.0
 scale = Vector2(0.666667, 0.666667)
 mouse_filter = 2
 
+[node name="EnergyLamp" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("23_energy")
+
+[node name="Fountain" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("21_fountain")
+
+[node name="Footprint" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("22_footprint")
+
 [node name="BabyTomb" type="TextureRect" parent="DayCemetery"]
 layout_mode = 0
 offset_right = 1920.0
@@ -80,10 +109,10 @@ gravestone_id = "baby_tomb"
 
 [node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
-offset_left = 795.0
-offset_top = 506.667
-offset_right = 855.0
-offset_bottom = 593.333
+offset_left = 568.0
+offset_top = 274.0
+offset_right = 1130.0
+offset_bottom = 836.0
 texture = ExtResource("9_human")
 expand_mode = 1
 script = ExtResource("8_symbol")
@@ -91,10 +120,10 @@ rubbing_id = "infant_figure_rubbing"
 
 [node name="MoonSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
-offset_left = 816.667
-offset_top = 705.0
-offset_right = 843.333
-offset_bottom = 725.0
+offset_left = 798.0
+offset_top = 539.0
+offset_right = 903.0
+offset_bottom = 644.0
 texture = ExtResource("10_moon")
 expand_mode = 1
 script = ExtResource("8_symbol")
@@ -103,16 +132,16 @@ matching_target_id = "moon"
 
 [node name="Sun" type="TextureRect" parent="DayCemetery"]
 layout_mode = 0
-offset_left = 1340.0
-offset_top = 90.0
-offset_right = 1484.0
-offset_bottom = 234.0
+offset_left = 1423.0
+offset_top = 78.0
+offset_right = 1567.0
+offset_bottom = 239.0
 mouse_filter = 2
-texture = ExtResource("15_sun")
-self_modulate = Color(0.6, 0.34, 0.1, 1)
+texture = SubResource("AtlasTexture_sun")
 expand_mode = 1
 script = ExtResource("14_target")
 target_id = "sky_sun"
+meaning = "sky_sun"
 
 [node name="NightCemetery" type="Control" parent="."]
 visible = false
