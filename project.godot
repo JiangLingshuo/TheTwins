@@ -20,6 +20,7 @@ config/icon="res://icon.svg"
 Music="*res://scripts/music.gd"
 GameState="*res://scripts/game_state.gd"
 Tutorial="*res://scripts/tutorial.gd"
+MCPRuntimeServer="*res://addons/godot_mcp_toolkit/runtime/mcp_runtime_server.gd"
 
 [display]
 
@@ -28,9 +29,17 @@ window/size/viewport_height=720
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godot_mcp_toolkit/plugin.cfg")
+
 [gui]
 
 theme/custom_font="res://assets/fonts/CormorantGaramond-Regular.ttf"
+
+[mcp_toolkit]
+
+server/version="latest"
 
 [physics]
 
