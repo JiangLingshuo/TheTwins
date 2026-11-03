@@ -18,6 +18,17 @@ signal term_selected(term_id: String)
 @export_range(0.0, 1.0, 0.05) var dim_alpha: float = 0.5
 ## Seconds for the box to fade in / out.
 @export var fade_time: float = 0.3
+## Strength of the animated radio static behind the text (0 = plain dark panel).
+## Finer settings are uniforms on Panel/RadioStatic's material (shaders/radio_static.gdshader).
+@export_range(0.0, 2.0, 0.05) var static_intensity: float = 1.0:
+	set(value):
+		static_intensity = value
+		if is_node_ready():
+			_apply_static_intensity()
+## Frame drawn around the panel; transparent by default so the soft edges show.
+@export var frame_color: Color = Color(0.92, 0.89, 0.82, 0.0)
+## Frame shown when a reply is marked "hidden" (radio feedback).
+@export var hidden_frame_color: Color = Color(1.0, 0.8, 0.35, 0.7)
 
 const PAUSE_CHARS := ".,!?;:…—"
 
@@ -45,6 +56,7 @@ func _ready() -> void:
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	continue_indicator.visible = false
+	_apply_static_intensity()
 	content_label.meta_clicked.connect(_on_term_clicked)
 	_term_notice = Label.new()
 	_term_notice.name = "TermNotice"
@@ -202,9 +214,20 @@ func _on_content_input(event: InputEvent) -> void:
 func set_feedback(kind: String) -> void:
 	_feedback_kind = kind
 	var frame := panel.get_theme_stylebox("panel").duplicate() as StyleBoxFlat
-	frame.border_color = Color(1.0, 0.8, 0.35, 0.95) if kind == "hidden" else Color(0.92, 0.89, 0.82, 0.45)
-	frame.set_border_width_all(2 if kind == "hidden" else 1)
+	frame.border_color = hidden_frame_color if kind == "hidden" else frame_color
+	frame.set_border_width_all(2 if kind == "hidden" else 0)
 	panel.add_theme_stylebox_override("panel", frame)
+
+
+func _apply_static_intensity() -> void:
+	var static_rect := panel.get_node_or_null("RadioStatic") as Control
+	if static_rect and static_rect.material is ShaderMaterial:
+		var mat := static_rect.material as ShaderMaterial
+		mat.set_shader_parameter("intensity", static_intensity)
+		mat.set_shader_parameter("panel_size", static_rect.size)
+		# The shader grows the band from the panel's size, so keep it current.
+		if not static_rect.resized.is_connected(_apply_static_intensity):
+			static_rect.resized.connect(_apply_static_intensity)
 
 
 ## Use the same panel, margins, dimmer and fonts for interactive radio menus.

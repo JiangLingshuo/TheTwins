@@ -1,19 +1,16 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_content"]
+[ext_resource type="Shader" path="res://shaders/radio_static.gdshader" id="4_static"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
-bg_color = Color(0.03, 0.03, 0.035, 0.92)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.92, 0.89, 0.82, 0.45)
-corner_radius_top_left = 2
-corner_radius_top_right = 2
-corner_radius_bottom_right = 2
-corner_radius_bottom_left = 2
+bg_color = Color(0, 0, 0, 0)
+border_color = Color(0.92, 0.89, 0.82, 0)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_static"]
+resource_local_to_scene = true
+shader = ExtResource("4_static")
 
 [sub_resource type="LabelSettings" id="LabelSettings_indicator"]
 font = ExtResource("3_content")
@@ -54,6 +51,11 @@ grow_horizontal = 2
 grow_vertical = 0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_box")
+
+[node name="RadioStatic" type="ColorRect" parent="Panel"]
+material = SubResource("ShaderMaterial_static")
+layout_mode = 2
+mouse_filter = 2
 
 [node name="Margin" type="MarginContainer" parent="Panel"]
 layout_mode = 2
