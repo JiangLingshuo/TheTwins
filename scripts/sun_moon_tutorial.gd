@@ -1,6 +1,9 @@
 extends Node
 ## A small ordered tutorial; all progression survives scene recreation in GameState.
 enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, DONE }
+## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
+@export var step1_notebook_message := "Notebook updated: the moon and sun are recorded in Rise & Set."
+const SKY_SUN_TEXTURE := "res://assets/Art/symbols/sky_sun.svg"
 var step := Step.TOOL
 var _speaking := false
 var _skipping := false
@@ -52,9 +55,9 @@ func refresh() -> void:
 		return
 	var has_moon := GameState.rubbings.has("infant_moon_rubbing")
 	_moon.collection_enabled = true
-	# Navigation aid supplied when the first Rise & Set instruction begins.
+	# Both icons are recorded with the crescent; this covers games saved before that.
 	if has_moon and GameState.cycle_hint_heard and not GameState.rubbings.has("sky_sun_rubbing"):
-		GameState.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
+		_record_cycle_symbols()
 	_human.collection_enabled = GameState.cycle_tutorial_completed
 	if GameState.cycle_tutorial_completed:
 		_guide_investigation()
@@ -76,9 +79,15 @@ func refresh() -> void:
 		_set_step(Step.DRAG, "4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
 
 func _input(event: InputEvent) -> void:
+	if _skipping:
+		return
+	# Until the crescent is rubbed (and while Aurora explains it), the notebook stays shut.
+	if step in [Step.MOON, Step.AURORA]:
+		_block_notebook(event)
+		return
 	# Onboarding (open Toolbox -> pick Rubbing Tool): only a left click on the
 	# highlighted control gets through. Anything else is blocked and the hint shakes.
-	if step != Step.TOOL or _speaking or _skipping or not is_instance_valid(_highlight_target):
+	if step != Step.TOOL or _speaking or not is_instance_valid(_highlight_target):
 		return
 	if event is InputEventMouseMotion or not event.is_pressed() or event.is_echo():
 		return
@@ -94,6 +103,16 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index not in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE]:
 		return # wheel: blocked quietly
 	_shake_hint()
+
+func _block_notebook(event: InputEvent) -> void:
+	var opens := false
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		opens = _notebook.get_node("NotebookButton").get_global_rect().has_point(event.position)
+	elif event is InputEventKey and event.pressed and not event.echo:
+		opens = event.keycode in [_notebook.toggle_key, _notebook.alt_toggle_key]
+	if opens:
+		get_viewport().set_input_as_handled()
+		_shake_hint()
 
 func _shake_hint() -> void:
 	if _shake_tween and _shake_tween.is_running():
@@ -130,14 +149,29 @@ func _speak() -> void:
 	if _speaking or _skipping or GameState.cycle_hint_heard:
 		return
 	_speaking = true
+	# Step 1 feedback, in order: the crescent was rubbed (rubbing_collected) ->
+	# record both icons -> Aurora's line -> "Notebook updated" -> Step 2.
+	_record_cycle_symbols()
 	_set_step(Step.AURORA, "Aurora is on the line…", null)
+	# Put the brush down while she talks (it hides the cursor), pick it up after.
 	_rubbing.turn_off()
 	_main.get_node("FlashlightTool").turn_off()
 	_dialogue.play_file("res://assets/dialogue/tutorial_sun_moon.xml")
 	await _dialogue.finished
 	GameState.cycle_hint_heard = true
+	_rubbing.set_active(true)
+	_main.get_node("Toast").show_message(step1_notebook_message)
 	_speaking = false
 	refresh()
+
+## Record the crescent's and the sky sun's icons (both appear in Rise & Set and
+## Rubbings), deciphered with their icon file names as temporary meanings.
+## Safe to call again: recording and deciphering only change things once.
+func _record_cycle_symbols() -> void:
+	GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
+	for id in ["infant_moon_rubbing", "sky_sun_rubbing"]:
+		if GameState.rubbings.has(id) and not GameState.is_rubbing_deciphered(id):
+			GameState.confirm_rubbing_meaning(id, GameState.get_rubbing_texture(id).get_file().get_basename())
 
 func _on_sky_replaced(id: String, _target: Control) -> void:
 	if id == "infant_moon_rubbing":
@@ -155,8 +189,8 @@ func skip() -> void:
 	if _speaking:
 		return
 	_skipping = true
-	GameState.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
 	GameState.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
+	_record_cycle_symbols()
 	GameState.cycle_hint_heard = true
 	GameState.cycle_tutorial_completed = true
 	GameState.investigation_tutorial_completed = true

@@ -72,8 +72,10 @@ func _ready() -> void:
 		if state != 0:
 			_rubbing_tool.turn_off())
 	# The rubbing tool emits `rubbing_collected` once per symbol, after it is recorded.
-	_rubbing_tool.rubbing_collected.connect(func(_id: String) -> void:
-		_toast.show_message(rubbing_recorded_message))
+	_rubbing_tool.rubbing_collected.connect(func(id: String) -> void:
+		# The tutorial announces the crescent itself, after Aurora's line.
+		if id != "infant_moon_rubbing":
+			_toast.show_message(rubbing_recorded_message))
 	# Rubbings dragged from the notebook onto the scene.
 	_notebook_tool.rubbing_drag.deciphered.connect(func(_id: String, _target: Control) -> void:
 		_toast.show_message(rubbing_deciphered_message))

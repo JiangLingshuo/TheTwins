@@ -223,7 +223,7 @@ func show_rubbing(rubbing_id: String) -> void:
 	if rubbing_id in ["sky_sun_rubbing", "infant_moon_rubbing"]:
 		jump_to_section(5)
 		return
-	var index := GameState.regular_rubbings().find(rubbing_id)
+	var index := GameState.rubbings.find(rubbing_id)
 	if index < 0 or _busy or _locked or _stowed or not _opened or not use_sections:
 		return
 	var target := _section_start(1) + index / (rubbings_per_page * 2)
@@ -606,7 +606,7 @@ func _fill_rubbings(rubbing_list: Control, page_index: int) -> void:
 		rubbing_list.clear()
 		return
 	var first := (page_index - _section_start(1) * 2) * rubbings_per_page
-	rubbing_list.show_entries(GameState.regular_rubbings().slice(first, first + rubbings_per_page))
+	rubbing_list.show_entries(GameState.rubbings.slice(first, first + rubbings_per_page))
 
 
 ## Size the Rubbings section to its entries (at least one spread). The spread on
@@ -615,7 +615,7 @@ func _update_rubbing_spreads() -> void:
 	var section := _section_of(_spread)
 	var local_spread := _spread - _section_start(section)
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
-	section_spreads[1] = maxi(1, ceili(float(GameState.regular_rubbings().size()) / (rubbings_per_page * 2)))
+	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
 		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 1.0)))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
@@ -716,7 +716,7 @@ func _fill_art(art: Control, page_index: int) -> void:
 		return
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
-	if section == 0 or section >= 2 or (section == 1 and not GameState.regular_rubbings().is_empty()):
+	if section == 0 or section >= 2 or (section == 1 and not GameState.rubbings.is_empty()):
 		art.clear()  # gravestone pages / rubbing entries are shown instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])

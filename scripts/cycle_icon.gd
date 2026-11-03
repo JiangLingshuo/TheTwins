@@ -5,6 +5,7 @@ var interactive := true
 var ink := Color.WHITE
 var _pressed := false
 var _press_point := Vector2.ZERO
+var _texture: Texture2D
 
 func setup(id: String, color: Color, can_interact: bool) -> void:
 	rubbing_id = id
@@ -31,7 +32,11 @@ func _gui_input(event: InputEvent) -> void:
 
 func _draw() -> void:
 	var path := "res://assets/Art/symbols/sky_sun.svg" if rubbing_id == "sky_sun_rubbing" else "res://assets/Art/symbol/moon.png"
-	var texture: Texture2D = load(path)
+	# Keep the texture referenced: drawing only stores its RID, and an icon nothing
+	# else uses (the sky sun) would otherwise be freed and draw as a solid square.
+	if _texture == null or _texture.resource_path != path:
+		_texture = load(path)
+	var texture := _texture
 	var fit := minf(size.x / texture.get_width(), size.y / texture.get_height())
 	var drawn := Vector2(texture.get_size()) * fit
 	draw_texture_rect(texture, Rect2((size - drawn) / 2, drawn), false, Color(ink, 1.0 if GameState.rubbings.has(rubbing_id) else 0.12))

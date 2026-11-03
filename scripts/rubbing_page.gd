@@ -33,6 +33,10 @@ var interactive := true:
 		_update_mouse()
 var _hovered := -1
 var _pressed := -1
+## Symbol textures by path. Drawing only stores a texture's RID, so the textures
+## must stay referenced or an icon nothing else uses (the sky sun) is freed and
+## draws as a solid square.
+var _textures: Dictionary = {}
 var _press_position := Vector2.ZERO
 
 
@@ -137,7 +141,9 @@ func _draw_entry(id: String, row: Rect2) -> void:
 	# Symbol, centred in the left column.
 	var box := Rect2(row.position + Vector2((SYMBOL_COLUMN - SYMBOL_BOX.x) / 2.0, (row.size.y - SYMBOL_BOX.y) / 2.0), SYMBOL_BOX)
 	var path := GameState.get_rubbing_texture(id)
-	var texture: Texture2D = load(path) if not path.is_empty() and ResourceLoader.exists(path) else null
+	if not _textures.has(path):
+		_textures[path] = load(path) if not path.is_empty() and ResourceLoader.exists(path) else null
+	var texture: Texture2D = _textures[path]
 	if texture:
 		var fit := minf(box.size.x / texture.get_width(), box.size.y / texture.get_height())
 		var drawn := Vector2(texture.get_size()) * fit
