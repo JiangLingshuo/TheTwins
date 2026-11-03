@@ -10,9 +10,9 @@ var player_name: String = ""
 var notebook_pages: PackedStringArray = []
 ## Spread the notebook was left open on.
 var notebook_spread: int = 0
-## Spread the in-game (sectioned) notebook opens on: where it was last left, or
-## the page of the latest recorded gravestone. 0 = first page of Gravestones.
-var notebook_section_spread: int = 0
+## A page the in-game notebook was asked to open on next (e.g. a newly recorded
+## gravestone), or -1 for the default: the first spread of Rise & Set.
+var notebook_section_spread: int = -1
 ## Ids of the symbols the player has rubbed, in the order they were collected.
 var rubbings: Array[String] = []
 ## Rubbing id -> {"gravestone": source gravestone id, "texture": symbol texture

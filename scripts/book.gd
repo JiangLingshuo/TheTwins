@@ -32,7 +32,12 @@ const PAPER_SHADER: Shader = preload("res://shaders/notebook_paper.gdshader")
 const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
+## A section's index in this list is its id everywhere (get_section(), tabs, etc.).
 const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs", "Rise & Set"]
+## The order the sections appear in the book, as ids: Rise & Set comes first.
+const SECTION_ORDER: PackedInt32Array = [5, 0, 1, 2, 3, 4]
+## Section the notebook opens on unless asked for a particular page.
+const RISE_AND_SET := 5
 ## Fixed single-page slots in the Gravestones section (two per spread).
 const GRAVESTONE_SLOTS := 8
 ## Gravestone id on each Gravestones slot, in page order: even slots are the
@@ -132,7 +137,7 @@ func _ready() -> void:
 	if use_sections:
 		for page in [left_page, right_page]:
 			page.get_node("Gravestone").rubbing_pressed.connect(show_rubbing)
-		tabs.setup(SECTION_TITLES)
+		tabs.setup(SECTION_TITLES, SECTION_ORDER)
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
@@ -731,10 +736,17 @@ func _spread_count() -> int:
 	return (pages.size() + 1) / 2
 
 
-## First spread of a section.
+## First spread of the section the notebook opens on by default (Rise & Set).
+func get_opening_spread() -> int:
+	return _section_start(RISE_AND_SET)
+
+
+## First spread of a section (sections are laid out in SECTION_ORDER).
 func _section_start(section: int) -> int:
 	var start := 0
-	for i in section:
+	for i in SECTION_ORDER:
+		if i == section:
+			break
 		start += section_spreads[i]
 	return start
 
@@ -742,11 +754,11 @@ func _section_start(section: int) -> int:
 ## Section a spread belongs to.
 func _section_of(spread: int) -> int:
 	var end := 0
-	for i in section_spreads.size():
+	for i in SECTION_ORDER:
 		end += section_spreads[i]
 		if spread < end:
 			return i
-	return section_spreads.size() - 1
+	return SECTION_ORDER[SECTION_ORDER.size() - 1]
 
 
 func _can_flip_forward() -> bool:

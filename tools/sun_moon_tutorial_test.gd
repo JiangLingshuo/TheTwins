@@ -55,7 +55,8 @@ func _run() -> void:
 	check("after dialogue asks for notebook", tutorial.step == tutorial.Step.BOOK and state.cycle_hint_heard)
 	await notebook.open()
 	await wait(0.2)
-	check("opening notebook asks for dedicated tab", tutorial.step == tutorial.Step.TAB)
+	# The notebook opens on Rise & Set (its first section), so no tab step is needed.
+	check("opening notebook lands on Rise & Set", notebook.book.get_section() == 5 and tutorial.step == tutorial.Step.DRAG)
 	notebook.book.jump_to_section(5)
 	await wait(0.9)
 	check("dedicated spread prompts moon drag", tutorial.step == tutorial.Step.DRAG)

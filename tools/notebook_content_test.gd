@@ -38,7 +38,7 @@ func _run() -> void:
 	book._opened = true
 	book._busy = false
 	book.visible = true
-	book._fill(book.left_text, book.left_number, 0)
+	book._fill(book.left_text, book.left_number, book._section_start(0) * 2)
 	check("notebook description uses catalog", book.left_page.get_node("Gravestone").description.text == state.get_gravestone_info("baby_tomb")["description"])
 	for section in [2, 4]:
 		var page_index: int = book._section_start(section) * 2

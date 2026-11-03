@@ -8,13 +8,14 @@ signal tab_pressed(section: int)
 
 const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 
-## Tab colours, one per section (provisional, from the art palette).
+## Tab colours, one per section id (provisional, from the art palette).
 @export var colors: Array[Color] = [
 	Color(0.18, 0.29, 0.42),  # deep blue
 	Color(0.25, 0.54, 0.55),  # teal
 	Color(0.66, 0.78, 0.85),  # pale blue
 	Color(0.89, 0.57, 0.48),  # coral / peach
 	Color(0.85, 0.76, 0.48),  # muted yellow
+	Color(0.44, 0.39, 0.55),  # muted twilight violet (Rise & Set)
 ]
 ## Size of a tab: x is across the book's edge, y is along it.
 @export var tab_size: Vector2 = Vector2(60, 112)
@@ -36,14 +37,20 @@ const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 
 var _tabs: Array[Tab] = []
 var _active := -1
+## Section ids in the order their tabs run down the book.
+var _order: PackedInt32Array = []
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 
-## Create one tab per section title.
-func setup(titles: PackedStringArray) -> void:
+## Create one tab per section title. `order` lists the section ids top to
+## bottom (default: the order of `titles`); tabs keep their section id.
+func setup(titles: PackedStringArray, order: PackedInt32Array = []) -> void:
+	_order = order
+	if _order.is_empty():
+		for i in titles.size(): _order.append(i)
 	if titles.size() > 1:
 		tab_spacing = minf(tab_spacing, (size.y - first_tab_y - tab_size.y - 16) / (titles.size() - 1))
 	for i in titles.size():
@@ -61,13 +68,14 @@ func setup(titles: PackedStringArray) -> void:
 func set_active(section: int) -> void:
 	var instant := _active < 0
 	_active = section
-	for i in _tabs.size():
+	for rank in _order.size():
+		var i := _order[rank]
 		var tab := _tabs[i]
-		tab.on_left = i <= section
+		tab.on_left = rank <= _rank(section)
 		tab.shade = 0.0 if i == section else inactive_shade
 		tab.text_inset = (active_reach if i == section else inactive_reach) / 2.0
 		tab.queue_redraw()
-		move_child(tab, i)  # lower tabs overlap the ones above them...
+		move_child(tab, rank)  # lower tabs overlap the ones above them...
 		var target := _tab_position(i)
 		if instant:
 			tab.position = target
@@ -78,10 +86,15 @@ func set_active(section: int) -> void:
 		move_child(_tabs[section], -1)  # ...and the active one lies on top.
 
 
+## Place of section `i` down the book (0 = top).
+func _rank(i: int) -> int:
+	return _order.find(i)
+
+
 func _tab_position(i: int) -> Vector2:
 	var reach := active_reach if i == _active else inactive_reach
-	var y := first_tab_y + i * tab_spacing
-	if i <= _active:
+	var y := first_tab_y + _rank(i) * tab_spacing
+	if _rank(i) <= _rank(_active):
 		return Vector2(left_edge_inset - reach, y)
 	return Vector2(size.x - right_edge_inset + reach - tab_size.x, y)
 

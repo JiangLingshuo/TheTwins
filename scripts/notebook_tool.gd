@@ -1,8 +1,9 @@
 extends Control
 ## Notebook button for the game scenes.
-## Click it (or press Tab / N) to bring the notebook out, open on the page
-## it was left on; click it again, click the dark area around the book, or turn
-## past the last page to put it away. It shrinks back into the button.
+## Click it (or press Tab / N) to bring the notebook out, open on Rise & Set
+## (or on a page asked for, e.g. a new gravestone); click it again, click the
+## dark area around the book, or turn past the last page to put it away. It
+## shrinks back into the button.
 
 ## Emitted when the notebook comes out / is put away.
 signal notebook_opened
@@ -68,11 +69,17 @@ func open() -> void:
 		return
 	_set_dim(true)
 	notebook_opened.emit()
+	# Open on Rise & Set, unless a page was asked for (see show_gravestone_next).
+	var spread: int = GameState.notebook_section_spread
+	if spread < 0:
+		spread = book.get_opening_spread()
+	GameState.notebook_section_spread = -1
 	if not _taken_out:
 		_taken_out = true
 		# The start screen's book has no sections, so its spread is not reused here.
-		await book.open_saved(GameState.notebook_pages, GameState.notebook_section_spread)
+		await book.open_saved(GameState.notebook_pages, spread)
 	else:
+		book.set_closed_spread(spread)
 		book.visible = true
 		await book.open_from_icon()
 
@@ -95,7 +102,6 @@ func _on_book_closed() -> void:
 	book.visible = false
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
-	GameState.notebook_section_spread = book.get_spread()
 	_set_dim(false)
 	notebook_closed.emit()
 
