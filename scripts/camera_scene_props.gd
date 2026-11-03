@@ -3,7 +3,7 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for path in ["scholar.png", "the rich.png"]:
 		var image := TextureRect.new()
-		image.texture = load("res://assets/Art/day/" + path)
+		image.texture = load("res://assets/Art/day/草稿/" + path)
 		image.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		add_child(image)
 	var beast: Texture2D = load("res://assets/Art/symbols/beast_camera.svg")

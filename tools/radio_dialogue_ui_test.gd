@@ -30,7 +30,7 @@ func _run() -> void:
 	state.tutorial_night_heard = true
 	state.record_gravestone("baby_tomb")
 	state.record_evidence("infant_graffiti")
-	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbols/moon.png", "moon")
+	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
 	state.confirm_rubbing_meaning("infant_moon_rubbing", "Moon")
 	change_scene_to_file("res://scenes/main.tscn")
 	await wait(1.0)

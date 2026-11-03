@@ -12,7 +12,7 @@
       "title": "The Small Human-Shaped Marker",
       "location": "day_cemetery",
       "description": "A small human-shaped marker, as thin as a page of stone. A curved decoration is carved into its surface. Its base continues beneath two other monuments.",
-      "sketch": "res://assets/Art/day/baby.png"
+      "sketch": "res://assets/Art/day/草稿/baby.png"
     },
     "scholar_tomb": {
       "id": "scholar_tomb",
@@ -20,7 +20,7 @@
       "title": "The Crystal Monument",
       "location": "day_cemetery",
       "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.",
-      "sketch": "res://assets/Art/day/scholar.png"
+      "sketch": "res://assets/Art/day/草稿/scholar.png"
     },
     "sun_tomb": {
       "id": "sun_tomb",
@@ -28,7 +28,7 @@
       "title": "The Sun-Shaped Monument",
       "location": "day_cemetery",
       "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.",
-      "sketch": "res://assets/Art/day/the rich.png"
+      "sketch": "res://assets/Art/day/草稿/the rich.png"
     },
     "altar_tomb": {
       "id": "altar_tomb",
@@ -60,7 +60,7 @@
       "title": "The Solitary Human-Shaped Marker",
       "location": "cemetery_edge",
       "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.",
-      "sketch": "res://assets/Art/day/girl.png"
+      "sketch": "res://assets/Art/day/草稿/girl.png"
     }
   },
   "evidence": {

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bupyjx81qam2a"
-path="res://.godot/imported/the rich.png-5bd0179ff4e38639e20c8c74966df558.ctex"
+uid="uid://bbdqgt3lxv1hb"
+path="res://.godot/imported/ladder.png-e81f1806ab3bc9573aed40a9972b118c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/the rich.png"
-dest_files=["res://.godot/imported/the rich.png-5bd0179ff4e38639e20c8c74966df558.ctex"]
+source_file="res://assets/Art/symbol/ladder.png"
+dest_files=["res://.godot/imported/ladder.png-e81f1806ab3bc9573aed40a9972b118c.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://6815cnw76s72"
-path="res://.godot/imported/girl.png-406219a24651ae243271515f17992b83.ctex"
+uid="uid://bj4pvhy25s6ut"
+path="res://.godot/imported/night.png-c13590ea0dd86deccd95dd499b6d03d6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/girl.png"
-dest_files=["res://.godot/imported/girl.png-406219a24651ae243271515f17992b83.ctex"]
+source_file="res://assets/Art/symbol/night.png"
+dest_files=["res://.godot/imported/night.png-c13590ea0dd86deccd95dd499b6d03d6.ctex"]
 
 [params]
 
