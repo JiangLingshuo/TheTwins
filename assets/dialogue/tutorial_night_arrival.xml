@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <dialogue>
   <line speaker="#PLAYER#">Wow, where have I been?</line>
   <line speaker="Aurora">You relocated to the underground Night City, and had a good rest until the moon rose.</line>

@@ -1,38 +1,143 @@
 {
   "baby:test_answer_baby_8": [
     "infant_moon_rubbing",
-    "designer_journal",
-    "infant_figure_rubbing"
+    "infant_graffiti",
+    "designer_manuscript"
   ],
   "baby:test_answer_baby_17": [
     "designer_manuscript",
+    "infant_figure_rubbing",
+    "infant_graffiti"
+  ],
+  "baby:test_answer_baby_21": [
     "infant_graffiti",
-    "moon_reference"
+    "designer_journal",
+    "infant_figure_rubbing"
   ],
   "scholar:test_answer_scholar_8": [
     "profession_record",
     "skin_picture",
     "one_way_passage_order"
   ],
+  "scholar:test_answer_scholar_12": [
+    "twin_beast_account",
+    "scholar_beast_rubbing",
+    "giant_footprint"
+  ],
+  "scholar:test_answer_scholar_17": [
+    "one_way_passage_order",
+    "skin_picture",
+    "profession_record"
+  ],
+  "scholar:test_answer_scholar_20": [
+    "crystal_marker_rubbing",
+    "skin_picture",
+    "notebook_cover"
+  ],
   "scholar:test_answer_scholar_25": [
     "skin_picture",
     "infant_graffiti",
     "profession_record"
   ],
+  "scholar:test_answer_scholar_31": [
+    "scholar_no_traces",
+    "profession_record",
+    "shared_family_base"
+  ],
+  "scholar:test_answer_scholar_35": [
+    "disappearance_inquiry",
+    "skin_picture",
+    "infant_graffiti"
+  ],
+  "scholar:test_answer_scholar_39": [
+    "family_photo",
+    "profession_record",
+    "skin_picture"
+  ],
   "sun:test_answer_sun_8": [
     "day_city_coin",
     "sun_reference",
+    "ram_spirit_emblem"
+  ],
+  "sun:test_answer_sun_13": [
+    "twin_beast_account",
+    "repeated_beast_motifs",
+    "giant_footprint"
+  ],
+  "sun:test_answer_sun_17": [
+    "shared_family_base",
+    "family_photo",
     "profession_record"
+  ],
+  "sun:test_answer_sun_21": [
+    "family_photo",
+    "profession_record",
+    "infant_figure_rubbing"
+  ],
+  "sun:test_answer_sun_25": [
+    "family_photo",
+    "profession_record",
+    "designer_journal"
+  ],
+  "altar:test_answer_altar_8": [
+    "altar_blessing_glyph",
+    "altar_path_rubbing",
+    "crystal_god_rubbing"
+  ],
+  "altar:test_answer_altar_12": [
+    "infant_memorial_correspondence",
+    "infant_graffiti",
+    "crystal_god_prophecy"
   ],
   "altar:test_answer_altar_16": [
     "altar_moon_stone",
     "day_city_coin",
-    "removed_crystal_god"
+    "moon_reference"
+  ],
+  "altar:test_answer_altar_20": [
+    "removed_crystal_god",
+    "crystal_god_rubbing",
+    "night_city_crystal"
+  ],
+  "altar:test_answer_altar_24": [
+    "altar_blessing_glyph",
+    "crystal_god_prophecy",
+    "natural_collapse_record"
+  ],
+  "altar:test_answer_altar_28": [
+    "infant_graffiti",
+    "crystal_god_prophecy",
+    "altar_infant_rubbing"
+  ],
+  "mother:test_answer_mother_8": [
+    "night_mother_child_rubbing",
+    "altar_infant_rubbing",
+    "family_photo"
   ],
   "mother:test_answer_mother_12": [
     "dry_underground_river",
     "night_mother_river_rubbing",
     "night_mother_no_traces"
+  ],
+  "mother:test_answer_mother_17": [
+    "skin_picture",
+    "night_mother_child_rubbing",
+    "infant_graffiti"
+  ],
+  "mother:test_answer_mother_21": [
+    "night_mother_no_traces",
+    "dry_underground_river",
+    "one_way_passage_order"
+  ],
+  "mother:test_answer_mother_25": [
+    "night_mother_hands_rubbing",
+    "family_photo",
+    "girl_diary"
+  ],
+  "father:test_answer_father_8": [
+    "night_father_child_rubbing",
+    "altar_infant_rubbing",
+    "family_photo"
   ],
   "father:test_answer_father_12": [
     "skyway_reference",
@@ -44,9 +149,79 @@
     "disappearance_inquiry",
     "skyway_history"
   ],
+  "father:test_answer_father_20": [
+    "night_father_moon_stone",
+    "day_city_coin",
+    "night_father_path_rubbing"
+  ],
+  "father:test_answer_father_24": [
+    "natural_collapse_record",
+    "one_way_passage_order",
+    "skyway_history"
+  ],
   "girl:test_answer_girl_8": [
     "history_coffin_illustration",
-    "girl_coffin_rubbing",
-    "family_statuette"
+    "girl_signature_rubbing",
+    "diary_cover"
+  ],
+  "girl:test_answer_girl_12": [
+    "girl_diary",
+    "diary_cover",
+    "girl_signature_rubbing"
+  ],
+  "girl:test_answer_girl_16": [
+    "family_statuette",
+    "shared_family_base",
+    "girl_figure_rubbing"
+  ],
+  "girl:test_answer_girl_20": [
+    "girl_diary",
+    "disappearance_inquiry",
+    "girl_beast_rubbing"
+  ],
+  "girl:test_answer_girl_24": [
+    "girl_cover_correspondence",
+    "diary_cover",
+    "girl_signature_rubbing"
+  ],
+  "scholar:test_scholar_mausoleum": [
+    "profession_record",
+    "shared_family_base",
+    "scholar_no_traces"
+  ],
+  "scholar:test_disappearance_hypothesis": [
+    "disappearance_inquiry",
+    "scholar_beast_rubbing",
+    "twin_beast_account"
+  ],
+  "sun:test_disappearance_hypothesis": [
+    "disappearance_inquiry",
+    "scholar_beast_rubbing",
+    "twin_beast_account"
+  ],
+  "altar:query_night_unending_path": [
+    "altar_path_rubbing",
+    "altar_blessing_glyph",
+    "crystal_god_rubbing"
+  ],
+  "altar:query_night_crystal_god": [
+    "crystal_god_rubbing",
+    "altar_path_rubbing",
+    "altar_moon_stone"
+  ],
+  "mother:query_night_dry_river": [
+    "night_mother_river_rubbing",
+    "night_mother_hands_rubbing",
+    "night_mother_child_rubbing"
+  ],
+  "father:query_night_ascending_path": [
+    "night_father_path_rubbing",
+    "night_father_child_rubbing",
+    "night_father_god_rubbing"
+  ],
+  "father:query_night_crystal_god": [
+    "night_father_god_rubbing",
+    "night_father_path_rubbing",
+    "night_father_moon_stone"
   ]
 }

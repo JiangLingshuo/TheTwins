@@ -70,6 +70,10 @@ func refresh() -> void:
 		_set_step(Step.DRAG, "5 / 5  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
 
 func _set_step(value: Step, text: String, target: Control) -> void:
+	var box := _main.get_node_or_null("Toolbox")
+	if box and target:
+		target = box.proxy_for(target)
+		box.reveal_for(target)
 	step = value
 	_text.text = text
 	var radio := _main.get_node_or_null("RadioTool")
@@ -200,6 +204,12 @@ func _guide_investigation() -> void:
 		_set_step(Step.DONE, "Return to the manuscript list and read A Page of the Designer's Journal as well. Its account may give you another question.", null)
 	elif not GameState.tutorial_radio_intro_heard and ("designer_manuscript" not in progress.get("finished_manuscripts", []) or "designer_journal" not in progress.get("finished_manuscripts", [])):
 		_set_step(Step.DONE, "Take your time reading. When finished, return to the manuscript list or close the notebook.", null)
+	elif not GameState.tutorial_searchlight_intro_heard:
+		_play_milestone.call_deferred("tutorial_searchlight_intro", "tutorial_searchlight_intro_heard")
+	elif not GameState.evidence_ids.has("infant_graffiti"):
+		_guide_searchlight()
+	elif not GameState.tutorial_searchlight_found_heard:
+		_play_milestone.call_deferred("tutorial_searchlight_found", "tutorial_searchlight_found_heard")
 	elif not GameState.tutorial_radio_intro_heard:
 		_play_milestone.call_deferred("tutorial_radio_ready", "tutorial_radio_intro_heard")
 	elif not read.has("baby_8_normal_9"):
@@ -208,14 +218,12 @@ func _guide_investigation() -> void:
 		_set_step(Step.DONE, "Click the underlined natural death in Aurora's reply. You can also use Read last reply to collect a missed term.", null)
 	elif not read.has("baby_17_supported_19"):
 		_set_step(Step.DONE, "Ask why the marker is shaped like a person. Submit the designer's manuscript; continue through Aurora's follow-up.", radio._button if not radio.is_open() else null)
-	elif not GameState.evidence_ids.has("infant_graffiti"):
-		_set_step(Step.DONE, "End the call. Search behind the small marker at 50 years ago (2000). Select a spot, then scroll to focus.", _main.get_node("FlashlightTool/FlashlightButton"))
 	elif not GameState.tutorial_hidden_heard:
 		_hidden_hint.call_deferred()
 	elif not read.has("baby_21_hidden_23"):
 		_set_step(Step.DONE, "Contact Aurora. Place A Sketch of the Infant in the slot before choosing a question: a hidden question about its artist will appear.", radio._button if not radio.is_open() else null)
 	elif not read.has("baby_8_additional_10"):
-		_set_step(Step.DONE, "Ask about the icon again with the designer's journal. Evidence can also add a hidden answer to an existing question.", null)
+		_set_step(Step.DONE, "Ask about the icon again with A Sketch of the Infant, revealed by the searchlight. Compare the child's actual appearance with the family's chosen image to question the recorded death.", null)
 	elif "unexplained" not in progress.get("causes", []):
 		_set_step(Step.DONE, "Collect the underlined unexplained circumstances from Aurora's reply.", null)
 	else:
@@ -293,6 +301,22 @@ func _finish_investigation() -> void:
 	GameState.tutorial_end_heard = true
 	GameState.deliver_day_manuscripts()
 	GameState.investigation_tutorial_completed = true
+	GameState.camera_tutorial_pending = true
+	await _main.get_node("CameraTool").play_tutorial()
 	_speaking = false
 	_main.get_node("Toast").show_message("New Day City manuscripts received. Your investigation continues.")
 	refresh()
+
+
+func _guide_searchlight() -> void:
+	var tool := _main.get_node("FlashlightTool")
+	if _notebook.is_open():
+		_set_step(Step.DONE, "Close the notebook (Tab / N). Next, use the searchlight to investigate the small marker's past.", _notebook.get_node("NotebookButton"))
+	elif tool.state == 0:
+		_set_step(Step.DONE, "Pick up the searchlight. It can reveal traces that are no longer visible in the present.", tool.get_node("FlashlightButton"))
+	elif tool.state == 1:
+		_set_step(Step.DONE, "Click the figure or base of the small marker to lock the light there. The beam stays fixed while you adjust the year.", _human)
+	elif absf(tool.flashlight.focus - 50.0) > tool.flashlight.perfect_tolerance:
+		_set_step(Step.DONE, "Scroll the mouse wheel to 50 years ago (2000). Shift + scroll moves 10 years at a time.", tool.get_node("FocusScale"))
+	else:
+		_set_step(Step.DONE, "Keep the light on the small marker for a moment. If nothing appears, click its figure or base to re-aim.", _human)

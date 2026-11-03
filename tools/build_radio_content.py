@@ -122,7 +122,17 @@ for q in questions:
     if q['id'] in overrides:
         q['candidates']=[eid_to_group[eid] for eid in overrides[q['id']]]
         assert len(set(q['candidates']))==3,q['id']
-assert set(overrides).issubset({q['id'] for q in questions})
+assert set(overrides)=={q['id'] for q in questions}, 'Every question needs an authored triple'
+# Ordinary distractors must not satisfy a supported-answer tag. The infant moon
+# question deliberately retains a second valid record for its appended answer.
+for q in questions:
+    if q['hidden'] or q['id']=='baby:test_answer_baby_8' or q['target']=='test_disappearance_hypothesis':
+        continue
+    tags, ids=relevant_atoms(blocks[q['target']])
+    for gid in q['candidates'][1:]:
+        for eid in groups[gid]['members']:
+            assert eid not in ids and not tags.intersection(catalog['evidence'][eid]['metadata'].get('evidence_tag',[])), (q['id'],eid)
+
 
 defaults={}
 for name,value in re.findall(r'^VAR (\w+) = ([^\n]+)',source,re.M):
@@ -131,6 +141,9 @@ for name,value in re.findall(r'^VAR (\w+) = ([^\n]+)',source,re.M):
     elif value.startswith('"'):defaults[name]=json.loads(value)
     elif value.isdigit():defaults[name]=int(value)
 programs=dict(sorted(programs.items()))
-out={'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'questions':questions,'programs':programs,'groups':groups,'evidence_groups':eid_to_group,'defaults':defaults}
+stage_candidates=json.loads((D/'radio_stage_candidates.json').read_text())
+for ids in stage_candidates.values():
+    assert len(ids)==3 and len({eid_to_group[eid] for eid in ids})==3
+out={'stage_candidates':stage_candidates,'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'questions':questions,'programs':programs,'groups':groups,'evidence_groups':eid_to_group,'defaults':defaults}
 (D/'radio_content.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('Radio export:',len(questions),'questions,',len(programs),'programs,',len(groups),'submission groups.')

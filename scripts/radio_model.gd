@@ -131,8 +131,10 @@ func questions_for(tomb_id: String, slot_group: String = "") -> Array[Dictionary
 func candidates(question: Dictionary, slot_group: String = "") -> Array:
 	var choices: Array = question["candidates"].duplicate()
 	if question["target"] == "test_disappearance_hypothesis" and progress.get("hypothesis_open", false):
-		var preferred := "skin_picture" if not progress.get("hypothesis_skin", false) else "night_father_death"
-		choices = [data["evidence_groups"][preferred], data["evidence_groups"]["disappearance_inquiry"], data["evidence_groups"]["profession_record"]]
+		var stage := "skin" if not progress.get("hypothesis_skin", false) else "death"
+		choices = []
+		for id in data["stage_candidates"][stage]:
+			choices.append(data["evidence_groups"][id])
 	if question["hidden"] and not slot_group.is_empty() and not choices.has(slot_group):
 		choices[0] = slot_group # preserve an accepted alternative that revealed this question
 	return choices

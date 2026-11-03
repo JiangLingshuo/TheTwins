@@ -29,6 +29,7 @@ func _run() -> void:
 	state.cycle_hint_heard = true
 	state.tutorial_night_heard = true
 	state.record_gravestone("baby_tomb")
+	state.record_evidence("infant_graffiti")
 	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbols/moon.png", "moon")
 	state.confirm_rubbing_meaning("infant_moon_rubbing", "Moon")
 	change_scene_to_file("res://scenes/main.tscn")
@@ -75,7 +76,7 @@ func _run() -> void:
 	await finish_reply()
 	check("replay neither reruns Ink nor duplicates logs", log["lines"].size() == log_size)
 	radio._select_question(question)
-	radio._set_slot(radio.model.data["evidence_groups"]["designer_journal"])
+	radio._set_slot(radio.model.data["evidence_groups"]["infant_graffiti"])
 	radio._send()
 	await wait(0.4)
 	box._finish_line()

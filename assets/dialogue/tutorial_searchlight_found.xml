@@ -1,0 +1,5 @@
+<?xml version='1.0' encoding='utf-8'?>
+<dialogue>
+  <line speaker="#PLAYER#">A drawing… This child looks different from the figure on the marker.</line>
+  <line speaker="#PLAYER#">I've recorded the sketch in Clues. I can find it there, and beside the marker's entry in the notebook.</line>
+</dialogue>

@@ -56,7 +56,7 @@ func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, off
 		_button("← Manuscripts", Vector2.ZERO, 190, func() -> void: back_requested.emit(), font, ink)
 	else:
 		_label("Continued" if not left and offset + 1 < count else "", font, ink, Vector2.ZERO, Vector2(320, 30), 19)
-	_label(title, font, ink, Vector2(0, 38), Vector2(320, 62), 23)
+	_label(title, font, ink, Vector2(0, 30), Vector2(320, 52), 22)
 	body = RichTextLabel.new()
 	body.name = "DocumentBody"
 	body.position = Vector2(0, 108)
@@ -70,9 +70,17 @@ func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, off
 	body.add_theme_font_size_override("normal_font_size", 22)
 	body.add_theme_color_override("default_color", ink)
 	var content := GameState.fill_placeholders(chunk).replace("[", "[lb]")
-	content = RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').sub(content, '[url=$1][u]$2[/u][/url]', true)
+	content = RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').sub(content, '[url=$1][color=#843c42][u]$2[/u][/color][/url]', true)
 	if manuscript and "infant" not in GameState.radio_progress.get("manuscript_keywords", []):
-		content = content.replace('[url=infant][u]infant[/u][/url]', '[url=infant][wave amp=2.0 freq=2.5][u]infant[/u][/wave][/url]')
+		content = content.replace('[url=infant][color=#843c42][u]infant[/u][/color][/url]', '[url=infant][color=#843c42][wave amp=3.0 freq=2.5][u]infant[/u][/wave][/color][/url]')
+	if manuscript and chunk.contains('<link="infant">') and "infant" not in GameState.radio_progress.get("manuscript_keywords", []):
+		var ripple = preload("res://scripts/keyword_ripple.gd").new()
+		ripple.name = "KeywordRipple"
+		ripple.position = Vector2(0, 84)
+		ripple.size = Vector2(320, 26)
+		ripple.tint = Color("843c42")
+		add_child(ripple)
+		_label("Click the underlined keyword.", font, Color("843c42"), Vector2(36, 86), Vector2(280, 24), 17)
 	body.text = content
 	body.mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
 	body.meta_clicked.connect(func(meta: Variant) -> void: keyword_selected.emit(str(meta)), CONNECT_DEFERRED)

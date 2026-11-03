@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <dialogue>
   <line speaker="Aurora">Nice job. Now you have two questions to work with: who is commemorated by this tombstone, and how did they die?</line>
   <line speaker="#PLAYER#">I have no idea how to approach this.</line>

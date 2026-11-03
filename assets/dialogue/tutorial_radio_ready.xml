@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <dialogue>
   <line speaker="#PLAYER#">Perhaps I should call Aurora to cross-check my findings so far.</line>
   <line speaker="Aurora">Choose the marker, then a question. Send a relevant record with it, and we can work out what your observations mean. Some records let you ask questions you couldn't ask before. Others reveal more in an answer you've already heard.</line>

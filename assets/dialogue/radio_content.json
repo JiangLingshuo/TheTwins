@@ -1,5 +1,17 @@
 {
-  "source_sha256": "1a49b6e97106ae6060ea96eb1fde2fcdda0e307ea5d16ee306a6528edf82d6eb",
+  "stage_candidates": {
+    "skin": [
+      "skin_picture",
+      "designer_journal",
+      "night_mother_child_rubbing"
+    ],
+    "death": [
+      "night_father_death",
+      "twin_beast_account",
+      "skyway_reference"
+    ]
+  },
+  "source_sha256": "b81a5436a76a30662429f2db035cba09f237e1773e638d5ad29b46379ae81b99",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -10,8 +22,8 @@
       "hidden": false,
       "candidates": [
         "infant_moon_rubbing",
-        "designer_journal",
-        "infant_figure_rubbing"
+        "infant_graffiti",
+        "designer_manuscript"
       ]
     },
     {
@@ -23,21 +35,21 @@
       "hidden": false,
       "candidates": [
         "designer_manuscript",
-        "infant_graffiti",
-        "moon_reference"
+        "infant_figure_rubbing",
+        "infant_graffiti"
       ]
     },
     {
       "id": "baby:test_answer_baby_21",
       "tomb": "baby_tomb",
       "label": "Who drew the child's real appearance?",
-      "condition": "(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance) || has_tag(EvidenceTag.family_requested_depiction))",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance))",
       "target": "test_answer_baby_21",
       "hidden": true,
       "candidates": [
+        "infant_graffiti",
         "designer_journal",
-        "designer_manuscript",
-        "infant_death_doubt"
+        "infant_figure_rubbing"
       ]
     },
     {
@@ -61,9 +73,9 @@
       "target": "test_answer_scholar_12",
       "hidden": false,
       "candidates": [
-        "repeated_beast_motifs",
-        "crystal_marker_rubbing",
-        "disappearance_inquiry"
+        "twin_beast_account",
+        "scholar_beast_rubbing",
+        "giant_footprint"
       ]
     },
     {
@@ -75,8 +87,8 @@
       "hidden": false,
       "candidates": [
         "one_way_passage_order",
-        "crystal_marker_rubbing",
-        "disappearance_inquiry"
+        "skin_picture",
+        "profession_record"
       ]
     },
     {
@@ -88,8 +100,8 @@
       "hidden": false,
       "candidates": [
         "crystal_marker_rubbing",
-        "disappearance_inquiry",
-        "one_way_passage_order"
+        "skin_picture",
+        "notebook_cover"
       ]
     },
     {
@@ -114,8 +126,8 @@
       "hidden": true,
       "candidates": [
         "scholar_no_traces",
-        "crystal_marker_rubbing",
-        "disappearance_inquiry"
+        "profession_record",
+        "shared_family_base"
       ]
     },
     {
@@ -127,8 +139,8 @@
       "hidden": true,
       "candidates": [
         "disappearance_inquiry",
-        "crystal_marker_rubbing",
-        "one_way_passage_order"
+        "skin_picture",
+        "infant_graffiti"
       ]
     },
     {
@@ -140,8 +152,8 @@
       "hidden": true,
       "candidates": [
         "family_photo",
-        "crystal_marker_rubbing",
-        "disappearance_inquiry"
+        "profession_record",
+        "skin_picture"
       ]
     },
     {
@@ -153,8 +165,8 @@
       "hidden": false,
       "candidates": [
         "profession_record",
-        "crystal_marker_rubbing",
-        "disappearance_inquiry"
+        "shared_family_base",
+        "scholar_no_traces"
       ]
     },
     {
@@ -166,8 +178,8 @@
       "hidden": true,
       "candidates": [
         "disappearance_inquiry",
-        "crystal_marker_rubbing",
-        "one_way_passage_order"
+        "scholar_beast_rubbing",
+        "twin_beast_account"
       ]
     },
     {
@@ -180,7 +192,7 @@
       "candidates": [
         "day_city_coin",
         "sun_reference",
-        "profession_record"
+        "ram_spirit_emblem"
       ]
     },
     {
@@ -192,8 +204,8 @@
       "hidden": false,
       "candidates": [
         "twin_beast_account",
-        "family_photo",
-        "four_person_family_finding"
+        "repeated_beast_motifs",
+        "giant_footprint"
       ]
     },
     {
@@ -206,7 +218,7 @@
       "candidates": [
         "shared_family_base",
         "family_photo",
-        "four_person_family_finding"
+        "profession_record"
       ]
     },
     {
@@ -218,8 +230,8 @@
       "hidden": false,
       "candidates": [
         "family_photo",
-        "scholar_beast_rubbing",
-        "sun_reference"
+        "profession_record",
+        "infant_figure_rubbing"
       ]
     },
     {
@@ -231,8 +243,8 @@
       "hidden": true,
       "candidates": [
         "family_photo",
-        "scholar_beast_rubbing",
-        "sun_reference"
+        "profession_record",
+        "designer_journal"
       ]
     },
     {
@@ -244,8 +256,8 @@
       "hidden": true,
       "candidates": [
         "disappearance_inquiry",
-        "family_photo",
-        "four_person_family_finding"
+        "scholar_beast_rubbing",
+        "twin_beast_account"
       ]
     },
     {
@@ -257,8 +269,8 @@
       "hidden": false,
       "candidates": [
         "altar_blessing_glyph",
-        "altar_infant_rubbing",
-        "altar_moon_stone"
+        "altar_path_rubbing",
+        "crystal_god_rubbing"
       ]
     },
     {
@@ -270,8 +282,8 @@
       "hidden": false,
       "candidates": [
         "infant_memorial_correspondence",
-        "altar_blessing_glyph",
-        "altar_blessing_translation"
+        "infant_graffiti",
+        "crystal_god_prophecy"
       ]
     },
     {
@@ -284,7 +296,7 @@
       "candidates": [
         "altar_moon_stone",
         "day_city_coin",
-        "removed_crystal_god"
+        "moon_reference"
       ]
     },
     {
@@ -296,8 +308,8 @@
       "hidden": false,
       "candidates": [
         "removed_crystal_god",
-        "altar_blessing_glyph",
-        "altar_blessing_translation"
+        "crystal_god_rubbing",
+        "night_city_crystal"
       ]
     },
     {
@@ -309,8 +321,8 @@
       "hidden": true,
       "candidates": [
         "altar_blessing_glyph",
-        "altar_blessing_translation",
-        "altar_infant_rubbing"
+        "crystal_god_prophecy",
+        "natural_collapse_record"
       ]
     },
     {
@@ -322,8 +334,8 @@
       "hidden": true,
       "candidates": [
         "infant_graffiti",
-        "altar_blessing_glyph",
-        "altar_blessing_translation"
+        "crystal_god_prophecy",
+        "altar_infant_rubbing"
       ]
     },
     {
@@ -334,9 +346,9 @@
       "target": "query_night_unending_path",
       "hidden": false,
       "candidates": [
+        "altar_path_rubbing",
         "altar_blessing_glyph",
-        "altar_blessing_translation",
-        "altar_infant_rubbing"
+        "crystal_god_rubbing"
       ]
     },
     {
@@ -347,9 +359,9 @@
       "target": "query_night_crystal_god",
       "hidden": false,
       "candidates": [
-        "altar_blessing_glyph",
-        "altar_blessing_translation",
-        "altar_infant_rubbing"
+        "crystal_god_rubbing",
+        "altar_path_rubbing",
+        "altar_moon_stone"
       ]
     },
     {
@@ -361,8 +373,8 @@
       "hidden": false,
       "candidates": [
         "night_mother_child_rubbing",
-        "night_mother_death_finding",
-        "night_mother_hands_rubbing"
+        "altar_infant_rubbing",
+        "family_photo"
       ]
     },
     {
@@ -386,9 +398,9 @@
       "target": "test_answer_mother_17",
       "hidden": false,
       "candidates": [
-        "night_mother_hands_rubbing",
+        "skin_picture",
         "night_mother_child_rubbing",
-        "night_mother_death_finding"
+        "infant_graffiti"
       ]
     },
     {
@@ -400,8 +412,8 @@
       "hidden": false,
       "candidates": [
         "night_mother_no_traces",
-        "night_mother_child_rubbing",
-        "night_mother_death_finding"
+        "dry_underground_river",
+        "one_way_passage_order"
       ]
     },
     {
@@ -413,8 +425,8 @@
       "hidden": true,
       "candidates": [
         "night_mother_hands_rubbing",
-        "night_mother_child_rubbing",
-        "night_mother_death_finding"
+        "family_photo",
+        "girl_diary"
       ]
     },
     {
@@ -425,9 +437,9 @@
       "target": "query_night_dry_river",
       "hidden": false,
       "candidates": [
-        "night_mother_child_rubbing",
-        "night_mother_death_finding",
-        "night_mother_hands_rubbing"
+        "night_mother_river_rubbing",
+        "night_mother_hands_rubbing",
+        "night_mother_child_rubbing"
       ]
     },
     {
@@ -439,8 +451,8 @@
       "hidden": false,
       "candidates": [
         "night_father_child_rubbing",
-        "altar_moon_stone",
-        "crystal_god_rubbing"
+        "altar_infant_rubbing",
+        "family_photo"
       ]
     },
     {
@@ -478,8 +490,8 @@
       "hidden": false,
       "candidates": [
         "altar_moon_stone",
-        "crystal_god_rubbing",
-        "natural_collapse_record"
+        "day_city_coin",
+        "night_father_path_rubbing"
       ]
     },
     {
@@ -491,8 +503,8 @@
       "hidden": true,
       "candidates": [
         "natural_collapse_record",
-        "altar_moon_stone",
-        "crystal_god_rubbing"
+        "one_way_passage_order",
+        "skyway_history"
       ]
     },
     {
@@ -503,9 +515,9 @@
       "target": "query_night_ascending_path",
       "hidden": false,
       "candidates": [
-        "altar_moon_stone",
-        "crystal_god_rubbing",
-        "natural_collapse_record"
+        "night_father_path_rubbing",
+        "night_father_child_rubbing",
+        "crystal_god_rubbing"
       ]
     },
     {
@@ -516,9 +528,9 @@
       "target": "query_night_crystal_god",
       "hidden": false,
       "candidates": [
-        "altar_moon_stone",
         "crystal_god_rubbing",
-        "natural_collapse_record"
+        "night_father_path_rubbing",
+        "altar_moon_stone"
       ]
     },
     {
@@ -530,8 +542,8 @@
       "hidden": false,
       "candidates": [
         "history_coffin_illustration",
-        "girl_coffin_rubbing",
-        "family_statuette"
+        "girl_signature_rubbing",
+        "diary_cover"
       ]
     },
     {
@@ -543,8 +555,8 @@
       "hidden": false,
       "candidates": [
         "girl_diary",
-        "altar_path_rubbing",
-        "day_city_history"
+        "diary_cover",
+        "girl_signature_rubbing"
       ]
     },
     {
@@ -556,8 +568,8 @@
       "hidden": false,
       "candidates": [
         "family_statuette",
-        "altar_path_rubbing",
-        "day_city_history"
+        "shared_family_base",
+        "girl_figure_rubbing"
       ]
     },
     {
@@ -569,8 +581,8 @@
       "hidden": false,
       "candidates": [
         "girl_diary",
-        "altar_path_rubbing",
-        "day_city_history"
+        "disappearance_inquiry",
+        "scholar_beast_rubbing"
       ]
     },
     {
@@ -582,8 +594,8 @@
       "hidden": true,
       "candidates": [
         "girl_cover_correspondence",
-        "altar_path_rubbing",
-        "day_city_history"
+        "diary_cover",
+        "girl_signature_rubbing"
       ]
     }
   ],
@@ -1220,7 +1232,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_appearance_mismatch))",
+        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
         "then": [
           {
             "op": "line",
@@ -1250,7 +1262,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.infant_appearance_mismatch)",
+        "condition": "has_tag(EvidenceTag.infant_actual_appearance)",
         "then": [
           {
             "op": "tag",
@@ -1325,7 +1337,7 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(A little air escapes before the answer. It is the only part of it she seems unable to keep level.)"
+            "text": "(A sharp breath brushes the microphone. She waits for it to pass before giving you the facts.)"
           },
           {
             "op": "line",
@@ -1405,12 +1417,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(She lets the two events sit in silence for a beat before joining them.)"
+            "text": "(Two short taps reach you through the receiver. Then nothing. When she speaks, each event gets its own sentence.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "One dies. The other disappears at dawn. Check whether these are two records of one life."
+            "text": "One dies during the night. The other disappears at dawn. Put the times beside each other. You may be looking at two records of one life."
           },
           {
             "op": "set",
@@ -1473,12 +1485,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(Her voice warms briefly. She does not make a remark about it.)"
+            "text": "(The word comes more softly than the explanation. You almost miss it beneath the static.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "It is a blessing for the person who left. Nobody was paying for the path."
+            "text": "A blessing for the person who left. Someone wanted him to travel well. The stone was an offering, not payment for the path."
           },
           {
             "op": "set",
@@ -1600,12 +1612,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(Her breathing slows. The answer is short, but she takes care with it.)"
+            "text": "(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "It is the same child. The man carrying him is his <link=\"night_father\">father in Night City</link>."
+            "text": "The same child. Look at the way he is held. The man carrying him is his <link=\"night_father\">father in Night City</link>."
           },
           {
             "op": "set",
@@ -1668,12 +1680,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(For a moment, the sentence seems to cost her more than it should. She finishes it anyway.)"
+            "text": "(A faint scrape, then the sound of a hand passing over the microphone. Her voice returns carefully composed.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a <link=\"funerary_artist\">funerary artist</link>. Perhaps this was the one stone she could finally let speak for herself."
+            "text": "The diary writer was a <link=\"funerary_artist\">funerary artist</link>. She carved the stories other people wanted remembered, until she began to wonder what her own hands were leaving out. Perhaps this stone was an attempt to answer herself."
           },
           {
             "op": "set",
@@ -1741,7 +1753,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "Four people in the picture, three stones on the family base, and this one standing apart. Her mother left the sculpture here. Even after the girl went away, she was still part of the family her mother remembered."
+            "text": "Four faces in the photograph. Three stones together. And this one, a little way apart. Her mother left the sculpture here. Even after the girl went away, those small carved hands still held a place for her."
           },
           {
             "op": "set",
@@ -1804,12 +1816,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(She puts a little distance back into her voice. The effort is audible.)"
+            "text": "(She draws out the first word, then presses the rest into an even rhythm. You hear how much work the evenness takes.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "The diary describes a decision to leave. Disappearance is the word those left behind could give it. We should not let that word bury a girl who may have escaped."
+            "text": "The diary describes a decision to leave. Those left behind had a word for the empty place: disappearance. But the person who left may have called it something else. A beginning, perhaps. We should leave room for that."
           },
           {
             "op": "set",
@@ -1882,12 +1894,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(Her voice follows the outline you have described with an attention that feels almost tender.)"
+            "text": "(You describe the frame. Her breath catches at its upper edge, as though your finger has touched something she can feel.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
+            "text": "An upright sleeping coffin, like the one in the old illustration. A place to wait for another waking. Strange, perhaps, to give that shape to a memorial—unless someone hoped the story would continue outside it."
           },
           {
             "op": "set",
@@ -3155,7 +3167,7 @@
       {
         "op": "line",
         "speaker": "",
-        "text": "(There is a long breath, and no attempt to fill it. Her answer comes out almost bare.)"
+        "text": "(The channel remains open. A breath goes in, trembles, comes out. When she finally speaks, the familiar softness has nowhere to hide.)"
       },
       {
         "op": "line",
@@ -3252,7 +3264,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "Now I know that an answer can keep you alive and still be something you carry for the rest of your life. I sent you because I could not bear to stand where you are standing."
+        "text": "Now I keep returning to the moment we left. Everything I hated was still there. So was my mother. I sent you because I could not bear to stand where you are standing."
       },
       {
         "op": "line",
@@ -3459,7 +3471,7 @@
       {
         "op": "line",
         "speaker": "",
-        "text": "You have enough to describe what happened. There are things a report cannot answer for the people who lived through them."
+        "text": "You can record who left, and who stayed. Across the receiver, someone is still breathing. The next line does not come."
       },
       {
         "op": "line",

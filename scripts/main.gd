@@ -87,7 +87,7 @@ func _ready() -> void:
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if GameState.radio_modal_open:
+	if GameState.radio_modal_open or GameState.camera_modal_open:
 		return
 	if OS.is_debug_build() and event.is_pressed() and not event.is_echo() and event is InputEventKey and event.keycode == KEY_F8:
 		GameState.preview_notebook_content()
@@ -140,6 +140,7 @@ func _add_investigation_targets() -> void:
 		target.size = Vector2(310, 110)
 		target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		if spec.has("texture"): target.texture = load("res://assets/Art/symbols/" + spec["texture"])
+		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(760, 480, 220, 300)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
 		target.required_grave = spec.get("required_grave", "")

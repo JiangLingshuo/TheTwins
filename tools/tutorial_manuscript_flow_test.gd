@@ -90,7 +90,31 @@ func _run() -> void:
 	check("opening journal does not interrupt reading with radio dialogue", not tutorial._speaking and not state.tutorial_radio_intro_heard)
 	items.show_list()
 	await drain(tutorial._dialogue)
-	check("reading both documents introduces radio", state.tutorial_radio_intro_heard and radio._can_open())
+	check("reading both documents introduces searchlight first", state.tutorial_searchlight_intro_heard and not state.tutorial_radio_intro_heard and not radio._can_open())
+	notebook.close()
+	await wait(0.8)
+	var lamp = main.get_node("FlashlightTool/Flashlight")
+	lamp.focus = 40.0
+	lamp._target_focus = 40.0
+	lamp.turn_on_at(main.get_node("DayCemetery/BabyTomb/HumanSymbol").get_global_rect().get_center(), true)
+	await wait(0.8)
+	check("wrong year cannot bypass searchlight tutorial", not state.evidence_ids.has("infant_graffiti") and not radio._can_open())
+	# Use the actual tool wheel input to move 40 -> 50, while the beam remains pinned.
+	var tool_lamp = main.get_node("FlashlightTool")
+	tool_lamp._set_state(tool_lamp.State.ON)
+	tool_lamp._scale.value = 40.0
+	var wheel := InputEventMouseButton.new()
+	wheel.button_index = MOUSE_BUTTON_WHEEL_UP
+	wheel.pressed = true
+	wheel.shift_pressed = true
+	wheel.position = Vector2(100, 100)
+	tool_lamp._on_catcher_input(wheel)
+	await wait(1.3)
+	await drain(tutorial._dialogue)
+	await drain(tutorial._dialogue)
+	check("50-year scan precedes radio", state.evidence_ids.has("infant_graffiti") and state.tutorial_searchlight_found_heard and state.tutorial_radio_intro_heard)
+	check("collected sketch visible in Clues", state.notebook_entries(2).any(func(e: Dictionary) -> bool: return e["id"] == "infant_graffiti"))
+	check("collected sketch remains beside its gravestone", state.get_gravestone_info("baby_tomb")["clues"].any(func(e: Dictionary) -> bool: return e["id"] == "infant_graffiti"))
 	radio.open()
 	radio._start_call("baby_tomb")
 	check("no more empty recorded-gravestone radio state", radio._tomb == "baby_tomb")
@@ -101,12 +125,6 @@ func _run() -> void:
 		radio._follow(radio._followups[0])
 		await drain(radio._reply_box)
 	radio.close()
-	var lamp = main.get_node("FlashlightTool/Flashlight")
-	var sketch = main.get_node("DayCemetery/InfantSketch")
-	lamp.focus = 50.0
-	lamp._target_focus = 50.0
-	lamp.turn_on_at(sketch.get_global_rect().get_center(), true)
-	await wait(1.0)
 	await drain(tutorial._dialogue)
 	check("searchlight and hidden-question teaching reached", state.evidence_ids.has("infant_graffiti") and state.tutorial_hidden_heard)
 	radio.open()
@@ -114,13 +132,22 @@ func _run() -> void:
 	radio._set_slot(radio.model.data["evidence_groups"]["infant_graffiti"])
 	check("evidence reveals hidden question", radio.model.questions_for("baby_tomb", radio._slot).any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_baby_21"))
 	await send("test_answer_baby_21", "infant_graffiti")
-	await send("test_answer_baby_8", "designer_journal")
+	await send("test_answer_baby_8", "infant_graffiti")
 	radio._collect_term("unexplained death")
 	radio.close()
 	state.set_report_choice("baby_tomb", "identity", "infant")
 	state.set_report_choice("baby_tomb", "death", "unexplained")
 	tutorial.refresh()
 	await drain(tutorial._dialogue)
+	var camera = main.get_node("CameraTool")
+	await drain_camera(camera._dialogue)
+	await wait(1.3)
+	await drain_camera(camera._dialogue)
+	check("camera starts after infant report", camera._overlay.visible and state.camera_tutorial_pending)
+	for id in ["base_scholar", "base_infant", "base_sun"]: camera._select_spot(id)
+	await wait(0.4)
+	await drain_camera(camera._dialogue)
+	check("camera finishes formal investigation handoff", state.camera_tutorial_completed and state.formal_investigation_started and state.evidence_ids.has("shared_family_base"))
 	check("closing dialogue completes tutorial", state.tutorial_end_heard and state.investigation_tutorial_completed)
 	check("all eight Day manuscripts delivered", state.notebook_entries(3).size() == 8)
 	check("Night manuscripts remain locked", not state.evidence_ids.has("crystal_god_prophecy") and not state.evidence_ids.has("skyway_history") and not state.evidence_ids.has("natural_collapse_record"))
@@ -134,3 +161,11 @@ func _run() -> void:
 	check("existing rubbing with missing grave recovers automatically", state.gravestones.has("baby_tomb") and state.tutorial_record_intro_heard)
 	print("TUTORIAL MANUSCRIPT FLOW: " + ("ALL PASSED" if failures == 0 else str(failures) + " FAILED"))
 	quit(0 if failures == 0 else 1)
+
+func drain_camera(box) -> void:
+	await wait(0.4)
+	for i in 45:
+		if not box.is_playing(): break
+		if box._accept_input: box._finish_line(); box._advance()
+		await wait(0.04)
+	await wait(0.4)

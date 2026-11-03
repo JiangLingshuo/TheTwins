@@ -7,6 +7,7 @@ extends "res://scripts/decipher_target.gd"
 @export var scan_years: Array[float] = []
 @export var required_grave := ""
 @export var date_status := ""
+@export var extra_aim_rect := Rect2()
 var discovered := false
 var exposure := 0.0
 var _sample := -1
@@ -62,7 +63,8 @@ func apply_flashlight(lamp: Flashlight) -> void:
 	var point := lamp._locked_global_point if lamp.beam_locked else get_global_mouse_position()
 	var illuminated: bool = lamp.active and get_parent().is_visible_in_tree() and _unlocked()
 	# Use the text card's area as the aim target so adjacent same-year cards do not auto-collect.
-	illuminated = illuminated and get_global_rect().grow(16).has_point(point)
+	var local_point: Vector2 = get_parent().get_global_transform().affine_inverse() * point
+	illuminated = illuminated and (get_global_rect().grow(16).has_point(point) or (extra_aim_rect.has_area() and extra_aim_rect.has_point(local_point)))
 	var sample := -1
 	if scan_years.is_empty():
 		if absf(lamp.focus - years_ago) <= lamp.perfect_tolerance: sample = 0

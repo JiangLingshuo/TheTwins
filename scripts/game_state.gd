@@ -162,7 +162,7 @@ func notebook_entries(section: int) -> Array[Dictionary]:
 	for id in evidence_ids:
 		var entry := get_evidence(id)
 		var category: String = entry.get("category", "")
-		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"] and entry.get("gravestone", "").is_empty()):
+		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"]):
 			entries.append(entry)
 	return entries
 
@@ -319,3 +319,14 @@ func finish_current_manuscript() -> void:
 	if not finished.has(id): finished.append(id)
 	radio_progress["finished_manuscripts"] = finished
 	radio_progress["active_manuscript"] = ""
+
+
+var tutorial_searchlight_intro_heard := false
+var tutorial_searchlight_found_heard := false
+
+
+var camera_modal_open := false
+var camera_tutorial_pending := false
+var camera_tutorial_completed := false
+var formal_investigation_started := false
+var camera_observations: Dictionary = {}

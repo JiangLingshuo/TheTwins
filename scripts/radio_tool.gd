@@ -21,6 +21,7 @@ var _render_pending := false
 var _tutorial_hint: Label
 var _reply_box: Control
 var _reply_playing := false
+var _previous_layout: VBoxContainer
 
 func _ready() -> void:
 	z_index = 80
@@ -61,7 +62,7 @@ func _reposition_button() -> void:
 
 func _process(_delta: float) -> void:
 	_button.disabled = not _can_open()
-	_button.tooltip_text = "Contact Aurora" if _can_open() else "Read the translated manuscripts and collect a keyword first."
+	_button.tooltip_text = "Contact Aurora" if _can_open() else "Read the manuscripts, then use the searchlight to inspect the marker 50 years ago."
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if is_open() and not _reply_playing and event.is_action_pressed("ui_cancel"):
@@ -102,6 +103,7 @@ func _label(text: String, font_size: int = 22) -> Label:
 	var label := Label.new()
 	label.text = text
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.size.x = 800
 	label.add_theme_font_override("font", FONT)
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", Color(0.94, 0.92, 0.8))
@@ -110,7 +112,16 @@ func _label(text: String, font_size: int = 22) -> Label:
 func _action(text: String, callback: Callable, disabled: bool = false) -> Button:
 	var button := Button.new()
 	button.custom_minimum_size.x = maxf(110.0, FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
-	button.custom_minimum_size.y = maxf(34, ceili(text.length() / 48.0) * 21 + 10)
+	var wrapped := ""
+	var row := ""
+	for word in text.split(" "):
+		if not row.is_empty() and (row + " " + word).length() > 44:
+			wrapped += row + "\n"
+			row = word
+		else: row += (" " if not row.is_empty() else "") + word
+	wrapped += row
+	button.custom_minimum_size.y = maxf(34, wrapped.split("\n").size() * 22 + 10)
+	button.size = Vector2(360, button.custom_minimum_size.y)
 	button.disabled = disabled
 	var frame := StyleBoxFlat.new()
 	frame.bg_color = Color(0.085, 0.085, 0.095)
@@ -122,7 +133,10 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	hover.bg_color = Color(0.16, 0.16, 0.18)
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("focus", hover)
-	var title := _label(text, 20)
+	var title := _label(wrapped, 20)
+	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.clip_text = true
+	button.tooltip_text = text
 	button.add_child(title)
 	title.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	title.offset_left = 10
@@ -151,15 +165,12 @@ func _scroll_stack(parent: Control, minimum_height: float) -> VBoxContainer:
 func _render() -> void:
 	_render_pending = false
 	if not is_open() or _reply_playing: return
-	if _layout:
-		_menu_host.remove_child(_layout)
-		_layout.queue_free()
+	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
+	_previous_layout = _layout
 	_layout = VBoxContainer.new()
 	_layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_layout.size = Vector2(_menu_host.size.x, 400)
 	_layout.add_theme_constant_override("separation", 6)
-	_menu_host.add_child(_layout)
-	_overlay.show_menu()
-	_overlay.set_feedback(_feedback)
 	var header := HBoxContainer.new()
 	_layout.add_child(header)
 	var title := _label("FIELD RADIO / AURORA" if _tomb.is_empty() else GameState.get_gravestone_info(_tomb).get("title", "FIELD RADIO"), 24)
@@ -175,6 +186,7 @@ func _render() -> void:
 			var info := GameState.get_gravestone_info(id)
 			list.add_child(_action(info.get("title", id), _start_call.bind(id)))
 		if list.get_child_count() == 0: list.add_child(_label("No recorded gravestones in this city yet. Return to Day City to continue the small marker investigation." if not GameState.current_city_day else "Record a Day City gravestone in your notebook first."))
+		_commit_layout()
 		return
 	var status := _label(_status if not _status.is_empty() else "Choose a question, or place evidence to reveal a hidden question.", 18)
 	if _feedback == "hidden": status.add_theme_color_override("font_color", Color(1, 0.8, 0.35))
@@ -237,6 +249,20 @@ func _render() -> void:
 		actions.add_child(_action("Send evidence" if not _slot.is_empty() else "Ask", _send, not _followups.is_empty()))
 		actions.add_child(_action("Back", _clear_question))
 
+	_commit_layout()
+
+func _commit_layout() -> void:
+	_menu_host.add_child(_layout)
+	if is_instance_valid(_previous_layout):
+		var focused := get_viewport().gui_get_focus_owner()
+		if focused and _previous_layout.is_ancestor_of(focused): focused.release_focus()
+		_menu_host.remove_child(_previous_layout)
+		_previous_layout.queue_free()
+	_previous_layout = null
+	_overlay.show_menu()
+	_overlay.set_feedback(_feedback)
+	_panel.offset_top = -450
+
 func _start_call(id: String) -> void:
 	if _reply_playing: return
 	_tomb = id
@@ -281,6 +307,8 @@ func _set_slot(id: String) -> void:
 func _clear_slot() -> void:
 	if _reply_playing: return
 	_slot = ""
+	if _question.get("hidden", false): _question = {}
+	_status = "Evidence removed. Choose another record."
 	_queue_render()
 
 func _set_filter(index: int) -> void:
@@ -348,6 +376,7 @@ func _collect_term(meta: Variant) -> void:
 
 
 func _can_open() -> bool:
+	if GameState.camera_modal_open: return false
 	var guide := get_parent().get_node_or_null("SunMoonTutorial")
 	if guide and guide.get("_speaking"): return false
-	return GameState.cycle_tutorial_completed and (GameState.tutorial_radio_intro_heard or GameState.investigation_tutorial_completed or GameState.notebook_preview)
+	return GameState.cycle_tutorial_completed and ((GameState.tutorial_radio_intro_heard and GameState.evidence_ids.has("infant_graffiti")) or GameState.investigation_tutorial_completed or GameState.notebook_preview)

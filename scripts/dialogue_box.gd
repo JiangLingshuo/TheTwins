@@ -37,13 +37,23 @@ var _char_timer := 0.0
 var _indicator_tween: Tween
 var _hovered_meta := ""
 var _feedback_kind := ""
+var _term_notice: Label
+var _term_notice_tween: Tween
 
 
 func _ready() -> void:
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	continue_indicator.visible = false
-	content_label.meta_clicked.connect(func(meta: Variant) -> void: term_selected.emit(str(meta)))
+	content_label.meta_clicked.connect(_on_term_clicked)
+	_term_notice = Label.new()
+	_term_notice.name = "TermNotice"
+	_term_notice.add_theme_font_override("font", content_label.get_theme_font("normal_font"))
+	_term_notice.add_theme_font_size_override("font_size", 20)
+	_term_notice.add_theme_color_override("font_color", Color("e1b3b5"))
+	_term_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	panel.get_node("Margin/VBox").add_child(_term_notice)
+	_term_notice.hide()
 	content_label.meta_hover_started.connect(func(meta: Variant) -> void: _hovered_meta = str(meta))
 	content_label.meta_hover_ended.connect(func(_meta: Variant) -> void: _hovered_meta = "")
 	content_label.gui_input.connect(_on_content_input)
@@ -62,6 +72,7 @@ func play_file(path: String) -> void:
 func play(lines: Array[Dictionary], log_session: String = "") -> void:
 	speaker_label.show()
 	content_label.show()
+	if is_instance_valid(_term_notice): _term_notice.hide()
 	_log_session = log_session
 	_lines = lines
 	_index = -1
@@ -179,13 +190,14 @@ func _stop_indicator() -> void:
 func _rich_content(text: String) -> String:
 	# Authoring remains Ink <link="id">word</link>; escape literal BBCode brackets.
 	text = text.replace("[", "[lb]")
-	return RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').sub(text, '[url=$1][u]$2[/u][/url]', true)
+	return RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').sub(text, '[url=$1][color=#d18b8e][u]$2[/u][/color][/url]', true)
 
 func _on_content_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		content_label.accept_event()
 		# A term click collects it and stays on the same line.
 		if _hovered_meta.is_empty(): _advance()
+		else: _on_term_clicked(_hovered_meta)
 
 func set_feedback(kind: String) -> void:
 	_feedback_kind = kind
@@ -208,3 +220,18 @@ func show_menu() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	modulate.a = 1.0
 	show()
+
+
+func _on_term_clicked(meta: Variant) -> void:
+	var id := str(meta)
+	term_selected.emit(id)
+	var text := id
+	for match in RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').search_all(_lines[_index].get("content", "") if _index >= 0 else ""):
+		if match.get_string(1) == id: text = match.get_string(2)
+	_term_notice.text = "✓ Recorded: " + text
+	_term_notice.show()
+	_term_notice.modulate.a = 1.0
+	if _term_notice_tween: _term_notice_tween.kill()
+	_term_notice_tween = create_tween()
+	_term_notice_tween.tween_interval(2.0)
+	_term_notice_tween.tween_property(_term_notice, "modulate:a", 0.0, 0.4)

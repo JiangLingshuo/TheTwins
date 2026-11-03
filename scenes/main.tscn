@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=3]
+[gd_scene load_steps=21 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
@@ -19,6 +19,9 @@
 [ext_resource type="Script" path="res://scripts/sun_moon_tutorial.gd" id="16_tutorial"]
 
 [ext_resource type="Script" path="res://scripts/radio_tool.gd" id="17_radio"]
+
+[ext_resource type="Script" path="res://scripts/camera_tool.gd" id="18_camera"]
+[ext_resource type="Script" path="res://scripts/toolbox.gd" id="19_box"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
 atlas = ExtResource("13_night_moon")
@@ -170,3 +173,9 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 script = ExtResource("17_radio")
+
+[node name="CameraTool" type="Control" parent="."]
+script = ExtResource("18_camera")
+
+[node name="Toolbox" type="Control" parent="."]
+script = ExtResource("19_box")
