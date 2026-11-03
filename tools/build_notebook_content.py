@@ -5,7 +5,7 @@ import json,re,hashlib
 ROOT=Path(__file__).resolve().parents[1] if Path(__file__).parent.name=='tools' else Path('C:/godotproject/TheTwins')
 D=ROOT/'assets/dialogue'
 ALIASES={'baby':'baby_tomb','scholar':'scholar_tomb','sun':'sun_tomb','altar':'altar_tomb','mother':'mother_tomb','father':'father_tomb','girl':'girl_tomb'}
-SKETCH={'baby':'day/草稿/baby.png','scholar':'day/草稿/scholar.png','sun':'day/草稿/the rich.png','altar':'night/alter.png','mother':'night/mother.png','father':'night/father.png','girl':'day/草稿/girl.png'}
+SKETCH={'baby':'day/baby_single.png','scholar':'day/草稿/scholar.png','sun':'day/草稿/the rich.png','altar':'night/alter.png','mother':'night/mother.png','father':'night/father.png','girl':'day/草稿/girl.png'}
 def plain(s):
     return re.sub(r'<link="[^"]+">(.*?)</link>',r'\1',s).replace('{player_name}','#PLAYER#')
 def knots(text):

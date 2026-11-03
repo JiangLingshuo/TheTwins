@@ -35,8 +35,8 @@
       "evidence_id": "day_city_coin",
       "city": "day",
       "position": [
-        360,
-        820
+        1462,
+        520
       ],
       "caption": "Wishing-pool coin",
       "target_id": "day_city_coin",
@@ -50,8 +50,8 @@
       "evidence_id": "twin_beast_trace",
       "city": "day",
       "position": [
-        1300,
-        250
+        1250,
+        740
       ],
       "caption": "Twin beast above giant footprint",
       "target_id": "twin_beast_trace",
@@ -64,8 +64,8 @@
       "evidence_id": "family_photo",
       "city": "day",
       "position": [
-        1220,
-        860
+        300,
+        880
       ],
       "caption": "Four-person photograph before sun marker",
       "target_id": "family_photo",
@@ -138,8 +138,8 @@
       "evidence_id": "family_statuette",
       "city": "day",
       "position": [
-        1410,
-        550
+        1580,
+        760
       ],
       "caption": "Girl marker: four-person statuette",
       "target_id": "family_statuette",

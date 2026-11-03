@@ -156,7 +156,7 @@ func _add_investigation_targets() -> void:
 	symbol.position = Vector2(220, 680)
 	symbol.size = Vector2(100, 100)
 	symbol.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	symbol.texture = load("res://assets/Art/symbols/sky_sun.svg")
+	symbol.texture = load("res://assets/Art/symbol/coin&sun.png")
 	symbol.rubbing_id = "sun_shaped_marker_rubbing"
 	symbol.matching_target_id = "day_city_coin"
 	_day_cemetery.add_child(symbol)

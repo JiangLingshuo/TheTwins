@@ -41,6 +41,7 @@ vertical_alignment = 1
 
 [node name="Book" parent="." unique_id=1865872905 instance=ExtResource("3_book")]
 layout_mode = 1
+day_night_all_spreads = true
 
 [node name="DialogueBox" parent="." unique_id=1429802619 instance=ExtResource("4_box")]
 layout_mode = 1
