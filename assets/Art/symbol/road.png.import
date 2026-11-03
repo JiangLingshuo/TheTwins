@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://caoss8tiyf3ts"
-path="res://.godot/imported/spar god.png-1f79c02bc7f0c183fc5c276c99d37180.ctex"
+uid="uid://cfvgy8larnlyw"
+path="res://.godot/imported/road.png-e7b86a3f46428faad7050a12b7660448.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/spar god.png"
-dest_files=["res://.godot/imported/spar god.png-1f79c02bc7f0c183fc5c276c99d37180.ctex"]
+source_file="res://assets/Art/symbol/road.png"
+dest_files=["res://.godot/imported/road.png-e7b86a3f46428faad7050a12b7660448.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://vi8tyfe4kldu"
-path="res://.godot/imported/spar.png-cd9a323683c1ae28b2d9526148db2ea1.ctex"
+uid="uid://dsh6l0yxlhc8"
+path="res://.godot/imported/day.png-81d1e56ae790755675d580d4ccc4fa66.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/spar.png"
-dest_files=["res://.godot/imported/spar.png-cd9a323683c1ae28b2d9526148db2ea1.ctex"]
+source_file="res://assets/Art/symbol/day.png"
+dest_files=["res://.godot/imported/day.png-81d1e56ae790755675d580d4ccc4fa66.ctex"]
 
 [params]
 

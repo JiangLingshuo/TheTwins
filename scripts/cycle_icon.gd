@@ -30,7 +30,7 @@ func _gui_input(event: InputEvent) -> void:
 		accept_event()
 
 func _draw() -> void:
-	var path := "res://assets/Art/symbols/sky_sun.svg" if rubbing_id == "sky_sun_rubbing" else "res://assets/Art/symbols/moon.png"
+	var path := "res://assets/Art/symbols/sky_sun.svg" if rubbing_id == "sky_sun_rubbing" else "res://assets/Art/symbol/moon.png"
 	var texture: Texture2D = load(path)
 	var fit := minf(size.x / texture.get_width(), size.y / texture.get_height())
 	var drawn := Vector2(texture.get_size()) * fit

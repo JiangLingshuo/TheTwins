@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bj4pvhy25s6ut"
-path="res://.godot/imported/night.png-2b866d2e5c06d9a9f3666aff4e32e2ce.ctex"
+uid="uid://c0s4n258nae5n"
+path="res://.godot/imported/dry.png-a41a5bf047bfed60d34bdd9caca76fef.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/night.png"
-dest_files=["res://.godot/imported/night.png-2b866d2e5c06d9a9f3666aff4e32e2ce.ctex"]
+source_file="res://assets/Art/symbol/dry.png"
+dest_files=["res://.godot/imported/dry.png-a41a5bf047bfed60d34bdd9caca76fef.ctex"]
 
 [params]
 

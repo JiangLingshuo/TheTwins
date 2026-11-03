@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bwfdr5d0aruv1"
-path="res://.godot/imported/hand in hand.png-9156453e5905138cc231ee64f8e05f58.ctex"
+uid="uid://bj4pvhy25s6ut"
+path="res://.godot/imported/night.png-c13590ea0dd86deccd95dd499b6d03d6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/hand in hand.png"
-dest_files=["res://.godot/imported/hand in hand.png-9156453e5905138cc231ee64f8e05f58.ctex"]
+source_file="res://assets/Art/symbol/night.png"
+dest_files=["res://.godot/imported/night.png-c13590ea0dd86deccd95dd499b6d03d6.ctex"]
 
 [params]
 

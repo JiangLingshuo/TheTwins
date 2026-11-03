@@ -41,7 +41,7 @@ func _run() -> void:
 	state = root.get_node("GameState")
 	# Return from the already verified sky-switch section, with no recorded grave.
 	state.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
-	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbols/moon.png", "moon")
+	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
 	state.confirm_rubbing_meaning("infant_moon_rubbing", "Moon")
 	state.cycle_tutorial_completed = true
 	state.cycle_hint_heard = true

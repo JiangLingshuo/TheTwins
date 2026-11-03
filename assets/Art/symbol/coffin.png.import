@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cfvgy8larnlyw"
-path="res://.godot/imported/road.png-3c8b75a7a66b61def3804b1a60844308.ctex"
+uid="uid://bty5iwaliq8xr"
+path="res://.godot/imported/coffin.png-515004ec9630ce64252ac19d8eb83102.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/road.png"
-dest_files=["res://.godot/imported/road.png-3c8b75a7a66b61def3804b1a60844308.ctex"]
+source_file="res://assets/Art/symbol/coffin.png"
+dest_files=["res://.godot/imported/coffin.png-515004ec9630ce64252ac19d8eb83102.ctex"]
 
 [params]
 

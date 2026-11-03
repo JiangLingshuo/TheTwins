@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dscybam8ualf1"
-path="res://.godot/imported/girl.png-e9984982596b600f1621bc4356f0d6e0.ctex"
+uid="uid://dhe3iq11e08bo"
+path="res://.godot/imported/coin&sun.png-71fa19a6a8200ab4a49e591c72a3375a.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/girl.png"
-dest_files=["res://.godot/imported/girl.png-e9984982596b600f1621bc4356f0d6e0.ctex"]
+source_file="res://assets/Art/symbol/coin&sun.png"
+dest_files=["res://.godot/imported/coin&sun.png-71fa19a6a8200ab4a49e591c72a3375a.ctex"]
 
 [params]
 

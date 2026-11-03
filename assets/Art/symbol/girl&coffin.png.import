@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bty5iwaliq8xr"
-path="res://.godot/imported/coffin.png-fdce838212981dbc1c1335d4944778ef.ctex"
+uid="uid://daynb88ca5ts1"
+path="res://.godot/imported/girl&coffin.png-18f810ba1fb108d509b3708f946e65cc.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/coffin.png"
-dest_files=["res://.godot/imported/coffin.png-fdce838212981dbc1c1335d4944778ef.ctex"]
+source_file="res://assets/Art/symbol/girl&coffin.png"
+dest_files=["res://.godot/imported/girl&coffin.png-18f810ba1fb108d509b3708f946e65cc.ctex"]
 
 [params]
 

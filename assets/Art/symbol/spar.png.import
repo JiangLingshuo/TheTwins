@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhe3iq11e08bo"
-path="res://.godot/imported/coin&sun.png-1ec86e394db630f6f90d1c790a00c8c1.ctex"
+uid="uid://vi8tyfe4kldu"
+path="res://.godot/imported/spar.png-8bc72fc45009d1d7f2ad107f0f4effcb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/coin&sun.png"
-dest_files=["res://.godot/imported/coin&sun.png-1ec86e394db630f6f90d1c790a00c8c1.ctex"]
+source_file="res://assets/Art/symbol/spar.png"
+dest_files=["res://.godot/imported/spar.png-8bc72fc45009d1d7f2ad107f0f4effcb.ctex"]
 
 [params]
 

@@ -118,7 +118,7 @@ func skip() -> void:
 		return
 	_skipping = true
 	GameState.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
-	GameState.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbols/moon.png", "moon")
+	GameState.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
 	GameState.cycle_hint_heard = true
 	GameState.cycle_tutorial_completed = true
 	GameState.investigation_tutorial_completed = true

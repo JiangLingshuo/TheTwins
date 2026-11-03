@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c2jmngeajl3wu"
-path="res://.godot/imported/moon.png-126f2d11a0c274fe4bb77d784bcba419.ctex"
+uid="uid://caoss8tiyf3ts"
+path="res://.godot/imported/spar god.png-9fd2ed4916d8156c35b9592ade6eec83.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/moon.png"
-dest_files=["res://.godot/imported/moon.png-126f2d11a0c274fe4bb77d784bcba419.ctex"]
+source_file="res://assets/Art/symbol/spar god.png"
+dest_files=["res://.godot/imported/spar god.png-9fd2ed4916d8156c35b9592ade6eec83.ctex"]
 
 [params]
 
