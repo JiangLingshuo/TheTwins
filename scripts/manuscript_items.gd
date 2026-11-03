@@ -1,4 +1,6 @@
-extends ScrollContainer
+extends Control
+signal document_requested(id: String)
+signal list_requested
 ## A notebook page of manuscript cards. Clicking a card opens its full text.
 
 var _entries: Array[Dictionary] = []
@@ -37,20 +39,7 @@ func _rebuild() -> void:
 	_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_stack.add_theme_constant_override("separation", 12)
 	add_child(_stack)
-	scroll_vertical = 0
-	if not _selected.is_empty():
-		var back := Button.new()
-		back.name = "BackToManuscripts"
-		back.text = "← Manuscripts"
-		back.disabled = not _interactive
-		back.add_theme_font_override("font", _font)
-		back.add_theme_font_size_override("font_size", 21)
-		back.pressed.connect(show_list)
-		_stack.add_child(back)
-		var entry := GameState.get_evidence(_selected)
-		_stack.add_child(_label(entry.get("title", ""), 25))
-		_stack.add_child(_label(entry.get("body", ""), 23))
-		return
+	_stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_stack.add_child(_label("Manuscripts", 26))
 	if _entries.is_empty():
 		_stack.add_child(_label("No documents received yet.", 21))
@@ -86,8 +75,23 @@ func show_document(id: String) -> void:
 	if not _interactive or not _entries.any(func(entry: Dictionary) -> bool: return entry["id"] == id):
 		return
 	_selected = id
-	_rebuild()
+	GameState.radio_progress["active_manuscript"] = id
+	var read: Array = GameState.radio_progress.get("read_manuscripts", [])
+	if not read.has(id): read.append(id)
+	GameState.radio_progress["read_manuscripts"] = read
+	document_requested.emit(id)
 
 func show_list() -> void:
+	list_requested.emit()
+	GameState.finish_current_manuscript()
 	_selected = ""
 	_rebuild()
+
+
+func _collect_keyword(meta: Variant) -> void:
+	if not _interactive: return
+	var id := str(meta)
+	var notes: Array = GameState.radio_progress.get("manuscript_keywords", [])
+	if not notes.has(id): notes.append(id)
+	GameState.radio_progress["manuscript_keywords"] = notes
+	GameState.collect_term(id)

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialogue>
+  <line speaker="#PLAYER#">Wow, where have I been?</line>
+  <line speaker="Aurora">You relocated to the underground Night City, and had a good rest until the moon rose.</line>
+  <line speaker="#PLAYER#">How come I wasn't aware of anything?</line>
+  <line speaker="Aurora">It's the magical notebook playing a trick on you… (She giggles.) Just kidding. Previous archaeologists observed something similar. Your consciousness in Day and Night seems to separate on the Twins.</line>
+  <line speaker="#PLAYER#">Then how should I proceed with my investigation?</line>
+  <line speaker="Aurora">Use the notebook to record and compare. Ask about each city at its own time of day: Day City in daylight, Night City at night.</line>
+  <line speaker="Aurora">You've made progress. You've established the link between the crescent icon and the moon.</line>
+  <line speaker="#PLAYER#">But that tells me nothing about what the moon means as a symbol in Day City.</line>
+  <line speaker="Aurora">You can ask over the field radio—but only when the sun rises.</line>
+  <line speaker="#PLAYER#">Then let me bring back the sun.</line>
+</dialogue>

@@ -43,15 +43,18 @@ func _run() -> void:
 	for section in [2, 4]:
 		var page_index: int = book._section_start(section) * 2
 		book._fill(book.left_text, book.left_number, page_index)
-		var reader = book.left_page.get_node("Records")
-		check("section %d shows full text reader" % section, reader.visible and not reader.get_node("Body").text.is_empty())
+		var reader = book.left_page.get_node("SpreadReader")
+		check("section %d shows full text reader" % section, reader.visible and not reader.body.text.is_empty())
+	book._spread = book._section_start(3)
 	book._fill(book.left_text, book.left_number, book._section_start(3) * 2)
 	var items = book.left_page.get_node("ManuscriptItems")
 	check("manuscript list shows received document cards", items.visible and items._entries.size() == 2 and items._selected.is_empty())
 	items._stack.get_node("designer_manuscript").pressed.emit()
-	check("click opens selected full manuscript", items._selected == "designer_manuscript" and items._stack.get_node("BackToManuscripts") != null)
-	items._stack.get_node("BackToManuscripts").pressed.emit()
-	check("back restores manuscript list", items._selected.is_empty() and items._stack.has_node("designer_journal"))
+	await process_frame
+	await process_frame
+	check("click opens selected full manuscript across spread", book._reading_document == "designer_manuscript" and book.right_page.get_node("SpreadReader").visible)
+	book._close_reading_document()
+	check("back restores manuscript list", items.visible and items._stack.has_node("designer_journal"))
 	check("final grave not exposed", book.section_spreads[0] == 3)
 	state.preview_notebook_content()
 	await process_frame

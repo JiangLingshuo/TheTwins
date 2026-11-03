@@ -75,13 +75,17 @@ theme_override_fonts/font = ExtResource("3_content")
 theme_override_font_sizes/font_size = 28
 text = "Speaker"
 
-[node name="ContentLabel" type="Label" parent="Panel/Margin/VBox"]
+[node name="ContentLabel" type="RichTextLabel" parent="Panel/Margin/VBox"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
-theme_override_fonts/font = ExtResource("3_content")
-theme_override_font_sizes/font_size = 30
+theme_override_colors/default_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_fonts/normal_font = ExtResource("3_content")
+theme_override_font_sizes/normal_font_size = 30
 theme_override_constants/line_spacing = 4
+bbcode_enabled = true
+fit_content = true
+custom_minimum_size = Vector2(0, 110)
+mouse_filter = 0
 text = "Dialogue text goes here."
 autowrap_mode = 3
 visible_characters_behavior = 1

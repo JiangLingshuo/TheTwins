@@ -50,3 +50,7 @@ python tools/build_radio_content.py
 - 继续运行 sun_moon_tutorial_test.gd、notebook_content_test.gd、flashlight_input_test.gd 保证本分支其他交互不受影响。
 
 另附 radio-to-searchlight-proposal.md：从无线电移到探照灯的文案整理建议。该清单尚未改写当前获取配置。
+
+
+## 当前UI补充
+问题列表、证据槽和回答已统一复用开场 scenes/dialogue_box.tscn；详细说明见 [radio-shared-dialogue-ui.md](radio-shared-dialogue-ui.md)。Ink源与既有条件逻辑不变。

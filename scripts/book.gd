@@ -18,6 +18,11 @@ extends Control
 signal opened(player_name: String)
 signal page_changed(spread: int)
 signal closed
+var _reading_document := ""
+var _reading_offsets: Dictionary = {}
+var _reading_cache: Dictionary = {}
+var _reading_count := 0
+var _reading_key := ""
 ## Emitted when write() has finished writing on a page.
 signal written(page_index: int)
 
@@ -129,7 +134,7 @@ func _ready() -> void:
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
-		GameState.notebook_changed.connect(_on_rubbings_changed)
+		GameState.notebook_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -166,6 +171,9 @@ func wake() -> void:
 
 
 func flip_forward() -> void:
+	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) + 2 < _reading_count:
+		_step_reading(2)
+		return
 	if _busy or _locked:
 		return
 	if not _can_flip_forward():
@@ -175,6 +183,9 @@ func flip_forward() -> void:
 
 
 func flip_backward() -> void:
+	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) > 0:
+		_step_reading(-2)
+		return
 	if _busy or _locked:
 		return
 	if not _can_flip_backward():
@@ -187,6 +198,9 @@ func flip_backward() -> void:
 
 ## Turn straight to the first spread of a section, in a single page turn.
 func jump_to_section(section: int) -> void:
+	if section != 3 and not _reading_document.is_empty():
+		GameState.finish_current_manuscript()
+		_reading_document = ""
 	if _busy or _locked or _stowed or not _opened or not use_sections:
 		return
 	var target := _section_start(clampi(section, 0, section_spreads.size() - 1))
@@ -548,6 +562,9 @@ func _fold_sheet(folding: bool) -> void:
 
 
 func _finish_flip(spread: int) -> void:
+	if use_sections and _section_of(spread) != 3 and not _reading_document.is_empty():
+		GameState.finish_current_manuscript()
+		_reading_document = ""
 	flip_sheet.visible = false
 	_spread = spread
 	_busy = false
@@ -593,7 +610,7 @@ func _update_rubbing_spreads() -> void:
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
 	section_spreads[1] = maxi(1, ceili(float(GameState.regular_rubbings().size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
-		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 2.0)))
+		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 1.0)))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
 
 
@@ -756,68 +773,95 @@ func _nudge_hint() -> void:
 	name_input.grab_focus()
 
 
-# One full-text entry per page; long documents scroll instead of being clipped.
+# Text readers use both physical pages; no per-page vertical scrollbar.
 func _fill_records(text_label: Label, page_index: int) -> void:
 	var page := text_label.get_parent()
-	var reader: ScrollContainer = page.get_node_or_null("Records")
-	if reader == null:
-		reader = ScrollContainer.new()
-		reader.name = "Records"
-		reader.position = text_label.position
-		reader.size = text_label.size
-		reader.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-		page.add_child(reader)
-		var body := RichTextLabel.new()
-		body.name = "Body"
-		body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		body.fit_content = true
-		body.scroll_active = false
-		body.selection_enabled = true
-		body.bbcode_enabled = false
-		reader.add_child(body)
 	var section := _section_of(page_index / 2) if use_sections else -1
-	reader.visible = section in [2, 4]
 	text_label.visible = section < 2
 	_fill_manuscript_items(text_label, page_index, section)
 	_fill_cycle_icon(text_label, page_index, section)
-	if not reader.visible:
-		return
-	var entries := GameState.notebook_entries(section)
-	var index := page_index - _section_start(section) * 2
-	var text := ""
-	if index < entries.size():
-		var entry: Dictionary = entries[index]
-		text = str(entry.get("title", "")) + "\n\n" + str(entry.get("body", ""))
-	elif index == 0:
-		text = SECTION_TITLES[section] + "\n\nNo entries yet."
-	var body: RichTextLabel = reader.get_node("Body")
-	body.add_theme_font_override("normal_font", text_label.label_settings.font)
-	body.add_theme_font_size_override("normal_font_size", 23)
-	body.add_theme_color_override("default_color", text_label.label_settings.font_color)
-	var filled := GameState.fill_placeholders(text)
-	if body.text != filled:
-		body.text = filled
-		reader.scroll_vertical = 0
-
+	var reader: Control = page.get_node_or_null("SpreadReader")
+	if reader == null:
+		reader = Control.new()
+		reader.set_script(preload("res://scripts/spread_reader.gd"))
+		reader.name = "SpreadReader"
+		reader.position = text_label.position
+		reader.size = text_label.size
+		page.add_child(reader)
+		reader.back_requested.connect(_close_reading_document, CONNECT_DEFERRED)
+		reader.step_requested.connect(_step_reading, CONNECT_DEFERRED)
+		reader.keyword_selected.connect(_reading_keyword, CONNECT_DEFERRED)
+	reader.visible = section in [2, 4] or (section == 3 and not _reading_document.is_empty())
+	if not reader.visible: return
+	var entry: Dictionary = {}
+	if section == 3:
+		entry = GameState.get_evidence(_reading_document)
+	else:
+		var entries := GameState.notebook_entries(section)
+		var index := page_index / 2 - _section_start(section)
+		if index < entries.size(): entry = entries[index]
+	var title: String = entry.get("title", SECTION_TITLES[section])
+	var raw: String = entry.get("interactive_body", entry.get("body", "No entries yet."))
+	raw = GameState.fill_placeholders(raw)
+	var key := str(section) + ":" + str(entry.get("id", "empty"))
+	var cache_key := key + ":" + str(raw.hash())
+	if not _reading_cache.has(cache_key):
+		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, 300)
+	var chunks: Array = _reading_cache[cache_key]
+	var offset: int = mini(_reading_offsets.get(key, 0), maxi(0, (chunks.size() - 1) / 2 * 2))
+	var side := page_index % 2
+	var chunk: String = chunks[offset + side] if offset + side < chunks.size() else ""
+	if page != flip_sheet:
+		_reading_key = key
+		_reading_count = chunks.size()
+	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet)
 
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
-	var items: ScrollContainer = page.get_node_or_null("ManuscriptItems")
+	var items: Control = page.get_node_or_null("ManuscriptItems")
 	if items == null:
-		items = ScrollContainer.new()
+		items = Control.new()
 		items.set_script(preload("res://scripts/manuscript_items.gd"))
 		items.name = "ManuscriptItems"
 		items.position = text_label.position
 		items.size = text_label.size
-		items.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 		page.add_child(items)
-	items.visible = section == 3
-	if section != 3:
-		return
+		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
+		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
+	items.visible = section == 3 and _reading_document.is_empty()
+	if section != 3: return
 	var entries := GameState.notebook_entries(3)
 	var first := (page_index - _section_start(3) * 2) * 4
+	if _reading_document.is_empty(): items._selected = ""
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet)
 
+func _open_reading_document(id: String) -> void:
+	_reading_document = id
+	_refresh_reading()
+
+func _close_reading_document() -> void:
+	GameState.finish_current_manuscript()
+	_reading_document = ""
+	_refresh_reading()
+
+func _step_reading(delta: int) -> void:
+	var current: int = _reading_offsets.get(_reading_key, 0)
+	_reading_offsets[_reading_key] = clampi(current + delta, 0, maxi(0, (_reading_count - 1) / 2 * 2))
+	_refresh_reading()
+
+func _reading_keyword(id: String) -> void:
+	if get_section() == 3:
+		var notes: Array = GameState.radio_progress.get("manuscript_keywords", [])
+		if not notes.has(id): notes.append(id)
+		GameState.radio_progress["manuscript_keywords"] = notes
+	GameState.collect_term(id)
+
+func _refresh_reading() -> void:
+	if _busy:
+		_refresh_pending = true
+		return
+	_fill(left_text, left_number, _spread * 2)
+	_fill(right_text, right_number, _spread * 2 + 1)
 
 func _fill_cycle_icon(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()

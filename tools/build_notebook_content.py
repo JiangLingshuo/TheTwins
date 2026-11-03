@@ -30,7 +30,7 @@ for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     cat=meta['category'][0];tomb='' if eid in environment else ALIASES[owner]
     if eid=='scholar_no_traces':tomb=ALIASES['scholar']
     owners={'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
-    evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
+    evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'interactive_body':body,'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
 radio={}
 for m in knots((D/'telecomm_master.ink').read_text(encoding='utf-8-sig')):
     if not m[1].startswith(('test_answer_','query_night_','opening','test_bonus','test_confrontation','test_open_ending','test_scholar_mausoleum','test_disappearance_','test_baby_personhood')):continue

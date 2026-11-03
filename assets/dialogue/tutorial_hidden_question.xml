@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialogue>
+  <line speaker="#PLAYER#">People don't know what they don't know. Only with certain materials can I ask deeper questions about this civilization—and the people who once lived here.</line>
+  <line speaker="Aurora">Let the sketch change the question. Place it in the evidence slot before you choose what to ask.</line>
+</dialogue>

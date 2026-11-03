@@ -8,6 +8,7 @@ var _press_point := Vector2.ZERO
 
 func setup(id: String, color: Color, can_interact: bool) -> void:
 	rubbing_id = id
+	tooltip_text = GameState.rubbing_display(id) if GameState.rubbings.has(id) else "Not yet recorded"
 	ink = color
 	interactive = can_interact
 	mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE

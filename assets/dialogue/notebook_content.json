@@ -3,7 +3,7 @@
   "sources": {
     "evidence_master.ink": "677f7fead8a2e7ecf76b83f219950ce2f31adedce55ad41cf706d844a1259e10",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "d1a7a4de22309942feb40b03ae1a050d72446f46bbb045c8d5fc2a5c1ac1d7d7"
+    "telecomm_master.ink": "665ffe76c89d8030583544fc1e7f50d606aea125a4aa98e73004d09c4e4bcd47"
   },
   "gravestones": {
     "baby_tomb": {
@@ -69,6 +69,7 @@
       "id": "dayfolk_appearance",
       "title": "The Appearance of the Dayfolk",
       "body": "The figure has a smooth face and the familiar outline of the Dayfolk. Its features offer a reference for the human-shaped marker.",
+      "interactive_body": "The figure has a smooth face and the familiar outline of the Dayfolk. Its features offer a reference for the human-shaped marker.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -102,6 +103,7 @@
       "id": "moon_reference",
       "title": "The Moon Above Night City",
       "body": "A pale crescent is visible above the cemetery. Its outline resembles the curved decoration on the small marker, although it is not quite the shape of Earth's moon.",
+      "interactive_body": "A pale crescent is visible above the cemetery. Its outline resembles the curved decoration on the small marker, although it is not quite the shape of Earth's moon.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -137,6 +139,7 @@
       "id": "infant_figure_rubbing",
       "title": "The Small Human-Shaped Marker",
       "body": "The marker takes the shape of a person rather than the tools of an occupation. Its face follows the smooth appearance of the Dayfolk.",
+      "interactive_body": "The marker takes the shape of a person rather than the tools of an occupation. Its face follows the smooth appearance of the Dayfolk.",
       "category": "rubbing",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -170,6 +173,7 @@
       "id": "infant_moon_rubbing",
       "title": "The Small Marker's Curved Decoration",
       "body": "A curved shape is carved into the small marker. The rubbing preserves its outline for comparison with the surrounding world.",
+      "interactive_body": "A curved shape is carved into the small marker. The rubbing preserves its outline for comparison with the surrounding world.",
       "category": "rubbing",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -201,6 +205,7 @@
       "id": "designer_manuscript",
       "title": "A Marker for Someone Without an Occupation",
       "body": "A translated copy of designer manuscript\nOur cemetery usually represents a person through an icon of their occupation. This burial is different: the deceased is an infant who had not yet been assigned an occupation. None of the existing designs would do.\n\nThe family asked us not to define the child by work he had never begun. We chose a human figure instead. The child had no occupation, but he was still a person.\n\n\"A child without an occupation is a person before anything else.\"",
+      "interactive_body": "A translated copy of designer manuscript\nOur cemetery usually represents a person through an icon of their occupation. This burial is different: the deceased is an <link=\"infant\">infant</link> who had not yet been assigned an occupation. None of the existing designs would do.\n\nThe family asked us not to define the child by work he had never begun. We chose a human figure instead. The child had no occupation, but he was still a person.\n\n\"A child without an occupation is a person before anything else.\"",
       "category": "manuscript",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -237,6 +242,7 @@
       "id": "designer_journal",
       "title": "A Page of the Designer's Journal",
       "body": "My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
+      "interactive_body": "My <link=\"student\">student</link> visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
       "category": "manuscript",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -272,6 +278,7 @@
       "id": "infant_graffiti",
       "title": "A Sketch of the Infant",
       "body": "The searchlight reveals an old sketch of the infant. His appearance differs from the smooth figure chosen for the marker.",
+      "interactive_body": "The searchlight reveals an old sketch of the infant. His appearance differs from the smooth figure chosen for the marker.",
       "category": "trace",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -316,6 +323,7 @@
       "id": "infant_death_doubt",
       "title": "An Unresolved Death",
       "body": "The family's chosen depiction does not match with the records of the infant's appearance. The tombstone's expression of natural death does not settle what actually happened to him. There may be unexplained circumstances behind this death.",
+      "interactive_body": "The family's chosen depiction does not match with the records of the infant's appearance. The tombstone's expression of natural death does not settle what actually happened to him. There may be <link=\"unexplained death\">unexplained circumstances</link> behind this death.",
       "category": "finding",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -348,6 +356,7 @@
       "id": "shared_family_base",
       "title": "One Base, Three Tombs",
       "body": "The small gravestone, the crystal monument, and the sun-shaped monument share one continuous stone base. They are not merely three separate graves standing close together.",
+      "interactive_body": "The small gravestone, the crystal monument, and the sun-shaped monument share one continuous stone base. They are not merely three separate graves standing close together.",
       "category": "observation",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -384,6 +393,7 @@
       "id": "crystal_marker_rubbing",
       "title": "The Crystal Monument's Outline",
       "body": "The monument is a transparent, many-sided crystal, half black and half white. The rubbing preserves the outline of its facets.",
+      "interactive_body": "The monument is a transparent, many-sided crystal, half black and half white. The rubbing preserves the outline of its facets.",
       "category": "rubbing",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -416,6 +426,7 @@
       "id": "scholar_beast_rubbing",
       "title": "The Crystal Monument's Twin Beast",
       "body": "A twin beast is carved on the crystal monument. Its two halves belong to one body, but their appearances differ.",
+      "interactive_body": "A twin beast is carved on the crystal monument. Its two halves belong to one body, but their appearances differ.",
       "category": "rubbing",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -446,6 +457,7 @@
       "id": "night_city_crystal",
       "title": "Crystal from Night City",
       "body": "This mineral was found in Night City. Its facets resemble the outline of the crystal monument in Day City.",
+      "interactive_body": "This mineral was found in Night City. Its facets resemble the outline of the crystal monument in Day City.",
       "category": "object",
       "gravestone": "",
       "metadata": {
@@ -479,6 +491,7 @@
       "id": "skin_picture",
       "title": "The Picture Preserved on Skin",
       "body": "Rewound to a time before the skin decayed, the searchlight reveals the picture clearly. A member of the Dayfolk and a member of the Nightfolk reach out and clasp hands.\n\nThe lines are formed by blue blood seeping through the skin. A skin drawing with unexplained reason.",
+      "interactive_body": "Rewound to a time before the skin decayed, the searchlight reveals the picture clearly. A member of the Dayfolk and a member of the Nightfolk reach out and clasp hands.\n\nThe lines are formed by blue blood seeping through the skin. A skin drawing with unexplained reason.",
       "category": "trace",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -524,6 +537,7 @@
       "id": "disappearance_inquiry",
       "title": "The Scholar's Notes on Disappearances",
       "body": "The unexplained disappearances in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
+      "interactive_body": "The unexplained <link=\"disappearance\">disappearances</link> in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found <link=\"fresh_wounds\">fresh wounds</link> upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
       "category": "manuscript",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -562,6 +576,7 @@
       "id": "profession_record",
       "title": "The Scholar, Her Work, and Her Patron",
       "body": "The record describes a Day City resident who first studied this transparent mineral and discovered the energy within it. She was granted the title of Scholar.\n\nThe stones were later used to power machinery. The occupational title thus became associated with crystal research.\n\nA young man from a wealthy family was the first to invest in her research. He later became her husband and came to be known as the Tycoon.\n\nIn recognition of her outstanding contributions to Day City, the Scholar may apply for a mausoleum beyond the usual grave-marker design and have her family interred within it. For the Dayfolk, who place such importance on the rituals of death, this is the highest honor.",
+      "interactive_body": "The record describes a Day City resident who first studied this transparent mineral and discovered the energy within it. She was granted the title of <link=\"scholar\">Scholar</link>.\n\nThe stones were later used to power machinery. The occupational title thus became associated with crystal research.\n\nA young man from a wealthy family was the first to invest in her research. He later became her husband and came to be known as the <link=\"tycoon\">Tycoon</link>.\n\nIn recognition of her outstanding contributions to Day City, the Scholar may apply for a mausoleum beyond the usual grave-marker design and have her family interred within it. For the Dayfolk, who place such importance on the rituals of death, this is the highest honor.",
       "category": "manuscript",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -600,6 +615,7 @@
       "id": "one_way_passage_order",
       "title": "An Order for a One-Way Passage",
       "body": "An order to the Scholar: We must put an end to Nightfolk incursions at their source.\n\nThey were once allowed to take our food in exchange for the crystals they excavated. Now they neglect their work, yet continue to demand more and more from Day City.\n\nA one-way passage must be established: the Dayfolk may descend, but the Nightfolk must not be allowed to ascend.",
+      "interactive_body": "An order to the Scholar: We must put an end to Nightfolk incursions at their source.\n\nThey were once allowed to take our food in exchange for the crystals they excavated. Now they neglect their work, yet continue to demand more and more from Day City.\n\nA one-way passage must be established: the Dayfolk may descend, but the Nightfolk must not be allowed to ascend.",
       "category": "manuscript",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -635,6 +651,7 @@
       "id": "sun_reference",
       "title": "The Sun Above Day City",
       "body": "The bright sun above Day City offers a possible reference for the monument's radiating outline. The same sun-like outline can also be compared with the pointed rims of Day City coins.",
+      "interactive_body": "The bright sun above Day City offers a possible reference for the monument's radiating outline. The same sun-like outline can also be compared with the pointed rims of Day City coins.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -670,6 +687,7 @@
       "id": "sun_shaped_marker_rubbing",
       "title": "The Sun-Shaped Monument",
       "body": "Radiating points surround the monument like a shining sun. The rubbing records its distinctive outline.",
+      "interactive_body": "Radiating points surround the monument like a shining sun. The rubbing records its distinctive outline.",
       "category": "rubbing",
       "gravestone": "sun_tomb",
       "metadata": {
@@ -702,6 +720,7 @@
       "id": "sun_shaped_beast_rubbing",
       "title": "The Sun-Shaped Monument's Twin Beast",
       "body": "A small creature occupies the center of the monument. One half looks different from the other, although both are joined to the same body.",
+      "interactive_body": "A small creature occupies the center of the monument. One half looks different from the other, although both are joined to the same body.",
       "category": "rubbing",
       "gravestone": "sun_tomb",
       "metadata": {
@@ -732,6 +751,7 @@
       "id": "day_city_coin",
       "title": "A Coin from the Wishing Pool",
       "body": "Circulating coins once lay in the wishing pool beneath the ram-spirit emblem. Their pointed rims form a sun-like outline, similar to the sun-shaped monument. The pool fell out of use as technology developed and people turned to other beliefs.",
+      "interactive_body": "Circulating coins once lay in the wishing pool beneath the ram-spirit emblem. Their pointed rims form a sun-like outline, similar to the sun-shaped monument. The pool fell out of use as technology developed and people turned to other beliefs.",
       "category": "object",
       "gravestone": "",
       "metadata": {
@@ -772,6 +792,7 @@
       "id": "ram_spirit_emblem",
       "title": "The Ram-Spirit Emblem",
       "body": "A ram-spirit emblem stands above the wishing pool. It belongs to the religious imagery of Day City.",
+      "interactive_body": "A ram-spirit emblem stands above the wishing pool. It belongs to the religious imagery of Day City.",
       "category": "rubbing",
       "gravestone": "",
       "metadata": {
@@ -802,6 +823,7 @@
       "id": "giant_footprint",
       "title": "A Giant Footprint in the Ruins",
       "body": "A vast footprint remains in the ruins. The print alone does not reveal the full appearance of the creature that left it.",
+      "interactive_body": "A vast footprint remains in the ruins. The print alone does not reveal the full appearance of the creature that left it.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -835,6 +857,7 @@
       "id": "twin_beast_trace",
       "title": "The Creature Revealed Above the Footprint",
       "body": "The searchlight reveals the creature that once occupied this space: one body with two strikingly different halves. Its outline can be compared with the small beasts carved on the monuments.",
+      "interactive_body": "The searchlight reveals the creature that once occupied this space: one body with two strikingly different halves. Its outline can be compared with the small beasts carved on the monuments.",
       "category": "trace",
       "gravestone": "",
       "metadata": {
@@ -880,6 +903,7 @@
       "id": "twin_beast_account",
       "title": "An Account of the Twin-Bodied Creature",
       "body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.",
+      "interactive_body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.",
       "category": "manuscript",
       "gravestone": "sun_tomb",
       "metadata": {
@@ -914,6 +938,7 @@
       "id": "repeated_beast_motifs",
       "title": "The Same Beast on Other Graves",
       "body": "The same twin beast appears on several other markers in Day City. It is not a decoration unique to the sun-shaped monument.",
+      "interactive_body": "The same twin beast appears on several other markers in Day City. It is not a decoration unique to the sun-shaped monument.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -949,6 +974,7 @@
       "id": "family_photo",
       "title": "A Photograph of Four",
       "body": "A photograph once stood in front of the monument. It shows four members of a family. There are only three markers on the shared base.",
+      "interactive_body": "A photograph once stood in front of the monument. It shows four members of a family. There are only three markers on the shared base.",
       "category": "trace",
       "gravestone": "sun_tomb",
       "metadata": {
@@ -994,6 +1020,7 @@
       "id": "altar_infant_rubbing",
       "title": "The Infant on the White Altar",
       "body": "An infant rests on the white, house-shaped altar. The pose differs slightly from the human-shaped marker in Day City, but the two images invite comparison.",
+      "interactive_body": "An infant rests on the white, house-shaped altar. The pose differs slightly from the human-shaped marker in Day City, but the two images invite comparison.",
       "category": "rubbing",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1026,6 +1053,7 @@
       "id": "altar_path_rubbing",
       "title": "The Altar's Unending Path",
       "body": "A path runs along the altar's pillars. Its pattern has no visible end.",
+      "interactive_body": "A path runs along the altar's pillars. Its pattern has no visible end.",
       "category": "rubbing",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1058,6 +1086,7 @@
       "id": "altar_blessing_glyph",
       "title": "An Unfamiliar Glyph on the Altar",
       "body": "An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.",
+      "interactive_body": "An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.",
       "category": "rubbing",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1091,6 +1120,7 @@
       "id": "altar_blessing_translation",
       "title": "A Blessing for the Unending Journey",
       "body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "interactive_body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
       "category": "finding",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1125,6 +1155,7 @@
       "id": "crystal_god_rubbing",
       "title": "The Crystal God's Outline",
       "body": "The altar's decoration preserves the outline of the Crystal God, but the place where the crystals once stood is now empty.",
+      "interactive_body": "The altar's decoration preserves the outline of the Crystal God, but the place where the crystals once stood is now empty.",
       "category": "rubbing",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1157,6 +1188,7 @@
       "id": "removed_crystal_god",
       "title": "The Crystal Figure That Once Stood Here",
       "body": "In the searchlight's view of the past, crystals fill the altar's empty recess and form the figure of a god. Today the crystals have been pried out.",
+      "interactive_body": "In the searchlight's view of the past, crystals fill the altar's empty recess and form the figure of a god. Today the crystals have been pried out.",
       "category": "trace",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1202,6 +1234,7 @@
       "id": "altar_moon_stone",
       "title": "A Moon-Shaped Stone on the Altar",
       "body": "A moon-shaped stone once lay among the altar's offerings. It resembles a small token, but there is nothing here that establishes its value as currency.",
+      "interactive_body": "A moon-shaped stone once lay among the altar's offerings. It resembles a small token, but there is nothing here that establishes its value as currency.",
       "category": "trace",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1247,6 +1280,7 @@
       "id": "crystal_god_prophecy",
       "title": "The Crystal God's Prophecy",
       "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
+      "interactive_body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
       "category": "manuscript",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1284,6 +1318,7 @@
       "id": "moon_stone_blessing",
       "title": "A Blessing, Not a Payment",
       "body": "The moon-shaped stones are offerings of blessing, not coins. The Nightfolk do not leave them as payment for goods or mark territory through them. A stone left for someone expresses a wish for their well-being.",
+      "interactive_body": "The moon-shaped stones are offerings of blessing, not coins. The Nightfolk do not leave them as payment for goods or mark territory through them. A stone left for someone expresses a wish for their well-being.",
       "category": "finding",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1318,6 +1353,7 @@
       "id": "infant_memorial_correspondence",
       "title": "Two Memorials to an Infant",
       "body": "The human-shaped marker in Day City corresponds to the infant memorial in Night City. One city describes a death; the other commemorates a disappearance.",
+      "interactive_body": "The human-shaped marker in Day City corresponds to the infant memorial in Night City. One city describes a death; the other commemorates a <link=\"disappearance\">disappearance</link>.",
       "category": "finding",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1351,6 +1387,7 @@
       "id": "night_mother_child_rubbing",
       "title": "A Figure Holding a Child",
       "body": "The upper part of the small stone shows a figure holding a child. The child can be compared with the infant on the altar.",
+      "interactive_body": "The upper part of the small stone shows a figure holding a child. The child can be compared with the infant on the altar.",
       "category": "rubbing",
       "gravestone": "mother_tomb",
       "metadata": {
@@ -1384,6 +1421,7 @@
       "id": "night_mother_hands_rubbing",
       "title": "Two Figures Holding Hands",
       "body": "Below the figure holding a child, a member of the Dayfolk and a member of the Nightfolk hold their hands. The arrangement resembles the picture preserved inside the Scholar's crystal monument.",
+      "interactive_body": "Below the figure holding a child, a member of the Dayfolk and a member of the Nightfolk hold their hands. The arrangement resembles the picture preserved inside the Scholar's crystal monument.",
       "category": "rubbing",
       "gravestone": "mother_tomb",
       "metadata": {
@@ -1417,6 +1455,7 @@
       "id": "night_mother_river_rubbing",
       "title": "The Dry River Around the Stone",
       "body": "Cracked lines surround the stone like the bed of a dried river. They form the border of the memorial rather than a separate scene in either half.",
+      "interactive_body": "Cracked lines surround the stone like the bed of a dried river. They form the border of the memorial rather than a separate scene in either half.",
       "category": "rubbing",
       "gravestone": "mother_tomb",
       "metadata": {
@@ -1447,6 +1486,7 @@
       "id": "dry_underground_river",
       "title": "The Underground Riverbed",
       "body": "The underground river has dried up. Its exposed bed preserves the cracked pattern seen around the small stone.",
+      "interactive_body": "The underground river has dried up. Its exposed bed preserves the cracked pattern seen around the small stone.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -1482,6 +1522,7 @@
       "id": "night_mother_no_traces",
       "title": "No Readable Traces Around the Stone",
       "body": "The searchlight reveals no discernible traces around this stone. There is no record here of later visitors or offerings.",
+      "interactive_body": "The searchlight reveals no discernible traces around this stone. There is no record here of later visitors or offerings.",
       "category": "observation",
       "gravestone": "mother_tomb",
       "metadata": {
@@ -1532,6 +1573,7 @@
       "id": "night_mother_death_finding",
       "title": "The Meaning of the Dry River Border",
       "body": "The dry river border records a death from hunger and thirst. It connects the mother's fate with the loss of the underground water source.",
+      "interactive_body": "The dry river border records a death from <link=\"thirst\">hunger and thirst</link>. It connects the mother's fate with the loss of the underground water source.",
       "category": "finding",
       "gravestone": "mother_tomb",
       "metadata": {
@@ -1565,6 +1607,7 @@
       "id": "night_father_child_rubbing",
       "title": "A Figure Carrying a Child",
       "body": "The figure on the upper part of the stone carries a child on his back. The child can be compared with the infant on the altar.",
+      "interactive_body": "The figure on the upper part of the stone carries a child on his back. The child can be compared with the infant on the altar.",
       "category": "rubbing",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1598,6 +1641,7 @@
       "id": "night_father_path_rubbing",
       "title": "A Figure Ascending the Path",
       "body": "A figure climbs an upward path along the border of the stone. The route resembles the passage known as the Skyway.",
+      "interactive_body": "A figure climbs an upward path along the border of the stone. The route resembles the passage known as the Skyway.",
       "category": "rubbing",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1630,6 +1674,7 @@
       "id": "night_father_god_rubbing",
       "title": "The Crystal God Below the Father",
       "body": "The lower part of the stone bears the image of the Crystal God. It resembles the figure once installed on the infant's altar.",
+      "interactive_body": "The lower part of the stone bears the image of the Crystal God. It resembles the figure once installed on the infant's altar.",
       "category": "rubbing",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1662,6 +1707,7 @@
       "id": "night_father_moon_stone",
       "title": "A Moon-Shaped Stone Before the Father's Marker",
       "body": "A moon-shaped stone once lay before the father's marker. It resembles the stones left as offerings on the infant's altar.",
+      "interactive_body": "A moon-shaped stone once lay before the father's marker. It resembles the stones left as offerings on the infant's altar.",
       "category": "trace",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1707,6 +1753,7 @@
       "id": "natural_collapse_record",
       "title": "The Collapse That Sealed the Road",
       "body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a natural collapse sealed the road to the surface.",
+      "interactive_body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a <link=\"natural_collapse\">natural collapse</link> sealed the road to the surface.",
       "category": "manuscript",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1743,6 +1790,7 @@
       "id": "skyway_history",
       "title": "An Account of the Skyway",
       "body": "The Skyway is a path cleared upward through fallen stone. It is uneven, but not steep.\n\nSearching for food and water, the Nightfolk dug and climbed in every direction. At last, they opened a route upward through the collapsed ruins.\n\nThe Dayfolk called the day they arrived \"the Day Darkness Descended.\" Much food and many livestock were taken before the Dayfolk even knew who had done it. Eventually, they discovered the passage to Night City.\n\nThe reopened route also led the Dayfolk to the shining stones the Nightfolk had excavated while searching for food and water: crystals that would later power Day City's development.\n\nThe exchange continued with each cycle of day and night. The Dayfolk brought back crystals; the Nightfolk brought back food. Each took what they needed. This balance lasted a long time.",
+      "interactive_body": "The Skyway is a path cleared upward through fallen stone. It is uneven, but not steep.\n\nSearching for food and water, the Nightfolk dug and climbed in every direction. At last, they opened a route upward through the collapsed ruins.\n\nThe Dayfolk called the day they arrived \"the Day Darkness Descended.\" Much food and many livestock were taken before the Dayfolk even knew who had done it. Eventually, they discovered the passage to Night City.\n\nThe reopened route also led the Dayfolk to the shining stones the Nightfolk had excavated while searching for food and water: crystals that would later power Day City's development.\n\nThe exchange continued with each cycle of day and night. The Dayfolk brought back crystals; the Nightfolk brought back food. Each took what they needed. This balance lasted a long time.",
       "category": "manuscript",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1778,6 +1826,7 @@
       "id": "skyway_reference",
       "title": "The Path to the Surface",
       "body": "An uneven path rises through the fallen stone toward the surface. It is not the sheer climb its name might suggest. Its shape corresponds to the ascending route carved around the father's stone.",
+      "interactive_body": "An uneven path rises through the fallen stone toward the surface. It is not the sheer climb its name might suggest. Its shape corresponds to the ascending route carved around the father's stone.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -1814,6 +1863,7 @@
       "id": "night_father_death",
       "title": "The Father's Search Beyond His Waking Hours",
       "body": "The father left to search for the missing infant. The path itself was not a dangerous climb. He continued searching beyond the permitted waking hours and failed to return to a sleeping coffin in time.\n\nHis death can be compared with the report of the Scholar's husband disappearing at dawn.",
+      "interactive_body": "The father left to search for the missing infant. The path itself was not a dangerous climb. He continued searching <link=\"missed_sleeping_deadline\">beyond the permitted waking hours</link> and failed to return to a sleeping coffin in time.\n\nHis death can be compared with the report of the Scholar's husband disappearing at dawn.",
       "category": "finding",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1849,6 +1899,7 @@
       "id": "paired_skin_pictures",
       "title": "A Picture Across Day and Night",
       "body": "The handholding figures on the mother's stone correspond to the blue marks on the Scholar's preserved skin. Together with the records of wounds appearing upon waking, they suggest that the body itself could carry a message between day and night.",
+      "interactive_body": "The handholding figures on the mother's stone correspond to the blue marks on the Scholar's preserved skin. Together with the records of wounds appearing upon waking, they suggest that the body itself could carry a message between day and night.",
       "category": "finding",
       "gravestone": "father_tomb",
       "metadata": {
@@ -1883,6 +1934,7 @@
       "id": "girl_figure_rubbing",
       "title": "The Girl Inside the Frame",
       "body": "Another human figure appears on this marker, older than the infant represented by the small stone. A structure surrounds her body.",
+      "interactive_body": "Another human figure appears on this marker, older than the infant represented by the small stone. A structure surrounds her body.",
       "category": "rubbing",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -1915,6 +1967,7 @@
       "id": "girl_coffin_rubbing",
       "title": "The Upright Frame Around the Girl",
       "body": "The girl stands inside an upright structure with her hands joined before her chest. The surrounding frame can be compared with the illustration in the old history book.",
+      "interactive_body": "The girl stands inside an upright structure with her hands joined before her chest. The surrounding frame can be compared with the illustration in the old history book.",
       "category": "rubbing",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -1947,6 +2000,7 @@
       "id": "girl_beast_rubbing",
       "title": "The Girl's Twin-Beast Decoration",
       "body": "A twin beast decorates the marble-like marker. It resembles the creatures carved on other Day City monuments.",
+      "interactive_body": "A twin beast decorates the marble-like marker. It resembles the creatures carved on other Day City monuments.",
       "category": "rubbing",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -1979,6 +2033,7 @@
       "id": "girl_path_rubbing",
       "title": "The Unending Path Around the Girl",
       "body": "The edge of the upright frame carries the pattern of an unending path. It recalls the border on the infant's altar in Night City.",
+      "interactive_body": "The edge of the upright frame carries the pattern of an unending path. It recalls the border on the infant's altar in Night City.",
       "category": "rubbing",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2011,6 +2066,7 @@
       "id": "girl_signature_rubbing",
       "title": "The Girl-and-Coffin Motif",
       "body": "The girl, her joined hands, and the upright coffin form a single composition. This complete motif can be compared with the covers of the diary and the investigation notebook.",
+      "interactive_body": "The girl, her joined hands, and the upright coffin form a single composition. This complete motif can be compared with the covers of the diary and the investigation notebook.",
       "category": "rubbing",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2044,6 +2100,7 @@
       "id": "family_statuette",
       "title": "A Statuette of Four",
       "body": "A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.",
+      "interactive_body": "A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.",
       "category": "trace",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2089,6 +2146,7 @@
       "id": "day_city_history",
       "title": "A History of Day City",
       "body": "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
+      "interactive_body": "This history was a <link=\"banned_book\">banned book</link> until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their <link=\"sleeping_coffin\">sleeping coffins</link> at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the <link=\"sun_moon_people\">People of Sun and Moon</link>. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the <link=\"population_decline\">number of people on the surface decreased</link>. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
       "category": "manuscript",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2124,6 +2182,7 @@
       "id": "history_coffin_illustration",
       "title": "An Upright Sleeping Coffin",
       "body": "An illustration in the old history book shows a sleeping coffin standing upright. Its outline resembles the structure surrounding the girl on the solitary marker.",
+      "interactive_body": "An illustration in the old history book shows a sleeping coffin standing upright. Its outline resembles the structure surrounding the girl on the solitary marker.",
       "category": "rubbing",
       "gravestone": "",
       "metadata": {
@@ -2159,6 +2218,7 @@
       "id": "girl_diary",
       "title": "A Diary Page, Author Unknown",
       "body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe wants to bring her mother. But if she brings her mother, we will have to bring mine. With my mother's influence in Day City, everyone will find out. We will go through it all again.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
+      "interactive_body": "If the truth of death itself is being covered up, then <link=\"diary_complicity\">am I not an accomplice when I carve monuments to that lie</link>?\n\nI can no longer bear this <link=\"diary_hypocrisy\">hypocritical world</link>. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe wants to bring her mother. But <link=\"diary_mothers\">if she brings her mother, we will have to bring mine</link>. With my mother's influence in Day City, everyone will find out. We will go through it all again.\n\nI have to persuade her. We can only <link=\"diary_escape\">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.",
       "category": "manuscript",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2195,6 +2255,7 @@
       "id": "diary_cover",
       "title": "The Motif on the Diary Cover",
       "body": "The diary remains intact, as if new. It seems that it's not part of the remains collected by previous archaeologists. Its cover bears the image of a girl standing inside an upright coffin, hands joined before her chest.",
+      "interactive_body": "The diary remains intact, as if new. It seems that it's not part of the remains collected by previous archaeologists. Its cover bears the image of a girl standing inside an upright coffin, hands joined before her chest.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -2229,6 +2290,7 @@
       "id": "notebook_cover",
       "title": "The Cover of Your Investigation Notebook",
       "body": "Aurora gave you this black-and-white notebook. On its cover, a girl stands inside an upright coffin, hands joined before her chest.\n\nYou have been carrying the image throughout your investigation, holding it like the girl in the monument.",
+      "interactive_body": "Aurora gave you this black-and-white notebook. On its cover, a girl stands inside an upright coffin, hands joined before her chest.\n\nYou have been carrying the image throughout your investigation, holding it like the girl in the monument.",
       "category": "observation",
       "gravestone": "",
       "metadata": {
@@ -2263,6 +2325,7 @@
       "id": "four_person_family_finding",
       "title": "Four People Remembered, Three Graves Together",
       "body": "The four figures in the statuette correspond to the family in the photograph. The shared base holds only three markers. The solitary girl's marker stands apart from that family plot.",
+      "interactive_body": "The four figures in the statuette correspond to the family in the photograph. The shared base holds only three markers. The solitary girl's marker stands apart from that family plot.",
       "category": "finding",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2296,6 +2359,7 @@
       "id": "girl_cover_correspondence",
       "title": "The Same Girl on Stone and Paper",
       "body": "The complete girl-and-coffin composition on the solitary marker corresponds to the image on the diary or the investigation notebook. The person who made the monument, the writer, and the person who supplied the notebook may be connected.",
+      "interactive_body": "The complete girl-and-coffin composition on the solitary marker corresponds to the image on the diary or the investigation notebook. The person who made the monument, the writer, and the person who supplied the notebook may be connected.",
       "category": "finding",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2329,6 +2393,7 @@
       "id": "scholar_no_traces",
       "title": "No Later Visitors at the Crystal Monument",
       "body": "Across the checked period after the burial, the searchlight reveals no readable traces of later visits to the crystal monument. This absence alone does not establish why nobody returned.",
+      "interactive_body": "Across the checked period after the burial, the searchlight reveals no readable traces of later visits to the crystal monument. This absence alone does not establish why nobody returned.",
       "category": "observation",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -2378,6 +2443,7 @@
       "id": "sky_sun_rubbing",
       "title": "The Sun in the Sky",
       "body": "The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.",
+      "interactive_body": "The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.",
       "category": "rubbing",
       "gravestone": "",
       "metadata": {
@@ -2619,6 +2685,10 @@
       "source_knot": "test_answer_baby_8",
       "lines": [
         {
+          "speaker": "Aurora",
+          "content": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
+        },
+        {
           "speaker": "",
           "content": "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
         },
@@ -2638,7 +2708,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
+          "content": "Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This infant was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person."
         }
       ]
     },

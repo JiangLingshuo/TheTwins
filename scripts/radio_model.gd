@@ -118,7 +118,7 @@ func questions_for(tomb_id: String, slot_group: String = "") -> Array[Dictionary
 	_context = {"active_tomb": tomb_id.trim_suffix("_tomb"), "supported": false}
 	var result: Array[Dictionary] = []
 	for question in data["questions"]:
-		if question["tomb"] != tomb_id:
+		if not city_allows(tomb_id) or question["tomb"] != tomb_id:
 			continue
 		var available := condition(question["condition"])
 		if question["hidden"] and not available:
@@ -138,6 +138,7 @@ func candidates(question: Dictionary, slot_group: String = "") -> Array:
 	return choices
 
 func send(question: Dictionary, slot_group: String) -> Dictionary:
+	if not city_allows(question["tomb"]): return {"error": "Contact Aurora about this stone in its own city."}
 	submitted_id = group_member(slot_group)
 	if not slot_group.is_empty() and submitted_id.is_empty():
 		return {"error": "That record has not been unlocked."}
@@ -232,3 +233,13 @@ func _nodes(nodes: Array, result: Dictionary, source: String) -> bool:
 						result["choices"].append(choice)
 				return true
 	return false
+
+func city_allows(id: String) -> bool:
+	return (id in ["baby_tomb", "scholar_tomb", "sun_tomb", "girl_tomb"]) == GameState.current_city_day
+
+func group_title(id: String) -> String:
+	for candidate in data.get("groups", {}).get(id, {}).get("members", []):
+		if candidate in GameState.rubbings and GameState.is_rubbing_deciphered(candidate): return GameState.rubbing_display(candidate)
+	var member := group_member(id)
+	if member in GameState.rubbings: return GameState.rubbing_display(member)
+	return data.get("groups", {}).get(id, {}).get("title", "No record selected")

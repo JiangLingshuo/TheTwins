@@ -29,14 +29,23 @@ func _run() -> void:
 	state.record_rubbing("infant_moon_rubbing", "baby_tomb")
 	var moon_q := question("test_answer_baby_8", "baby_tomb")
 	var result: Dictionary = model.send(moon_q, "")
-	check("ordinary reply without evidence", joined(result).contains("natural death") and not state.evidence_ids.has("infant_death_doubt"))
+	check("ordinary reply without evidence", not joined(result).contains("natural death") and not state.evidence_ids.has("infant_death_doubt"))
+	check("ordinary moon reply does not claim evidence connection", result.get("feedback") == "unmatched")
+	result = model.send(moon_q, group("designer_manuscript"))
+	check("unrelated manuscript does not claim moon evidence connection", result.has("error") or result.get("feedback") == "unmatched")
+	var human_q := question("test_answer_baby_17", "baby_tomb")
+	check("human question initially needs rubbing", not model.questions_for("baby_tomb").filter(func(q: Dictionary) -> bool: return q["target"] == "test_answer_baby_17")[0]["available"])
+	state.record_rubbing("infant_figure_rubbing", "baby_tomb")
+	check("human rubbing unlocks question without prior deciphering", model.questions_for("baby_tomb").filter(func(q: Dictionary) -> bool: return q["target"] == "test_answer_baby_17")[0]["available"])
+	result = model.send(human_q, group("designer_manuscript"))
+	check("designer manuscript supports human explanation", not result.has("error") and joined(result).contains("without an identifiable occupation") and result.get("feedback") == "linked")
 	check("locked record cannot be submitted", model.send(moon_q, group("infant_graffiti")).has("error"))
 	state.record_evidence("infant_graffiti")
 	var hidden_before: Array = model.questions_for("baby_tomb", "")
 	check("owned evidence alone does not reveal hidden question", not hidden_before.any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_baby_21"))
 	var hidden_after: Array = model.questions_for("baby_tomb", group("infant_graffiti"))
 	check("slot evidence reveals hidden question", hidden_after.any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_baby_21"))
-	var primary: String = moon_q["candidates"][0]
+	var primary: String = group("designer_journal")
 	for id in model.data["groups"][primary]["members"]: state.record_evidence(id)
 	result = model.send(moon_q, primary)
 	check("supported reply appends hidden answer and grants finding", joined(result).contains("unexplained circumstances") and state.evidence_ids.has("infant_death_doubt"))
@@ -59,6 +68,7 @@ func _run() -> void:
 	check("second submitted evidence opens deeper followups", model.progress.get("hypothesis_death", false) and result.get("choices", []).size() == 3)
 	result = model.choose(result["choices"][0])
 	check("followup explains shared body", joined(result).contains("share one living body"))
+	state.current_city_day = false
 	state.record_gravestone("altar_tomb")
 	state.record_gravestone("mother_tomb")
 	state.record_gravestone("father_tomb")
@@ -76,6 +86,7 @@ func _run() -> void:
 	state.record_evidence("dry_underground_river")
 	model.send(river_q, group("dry_underground_river"))
 	check("field evidence awards correct death conclusion", state.evidence_ids.has("night_mother_death_finding"))
+	state.investigation_tutorial_completed = true
 	var main = load("res://scenes/main.tscn").instantiate()
 	root.add_child(main)
 	await process_frame
@@ -93,6 +104,14 @@ func _run() -> void:
 	check("actual radio reply enters notebook history", state.radio_logs.any(func(log: Dictionary) -> bool: return str(log["id"]).begins_with("radio:baby_tomb:")))
 	radio._collect_term("natural")
 	check("clickable cause recorded in global pool", "natural" in radio.model.progress.get("causes", []))
+	await create_timer(0.4).timeout
+	for i in 20:
+		if not radio._reply_box.is_playing(): break
+		if radio._reply_box._accept_input:
+			radio._reply_box._finish_line()
+			radio._reply_box._advance()
+		await create_timer(0.05).timeout
+	await create_timer(0.4).timeout
 	radio.close()
 	check("closing radio releases notebook input", not state.radio_modal_open)
 	main.queue_free()

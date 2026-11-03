@@ -79,9 +79,15 @@ func _run() -> void:
 	await wait(2.0)
 	drag._drop(point)
 	check("moon dropped on sun switches to night", not main.is_day and state.cycle_tutorial_completed)
-	check("navigation does not decode natural death", not state.is_rubbing_deciphered("infant_moon_rubbing"))
+	check("navigation does not decode natural death", state.get_rubbing_meaning("infant_moon_rubbing") == "Moon")
 	await wait(0.9)
 	await shot("05_night_city")
+	for line_index in 12:
+		if not tutorial._dialogue.is_playing(): break
+		tutorial._dialogue._finish_line()
+		tutorial._dialogue._advance()
+		await wait(0.05)
+	await wait(0.5)
 	drag.begin_cycle("sky_sun_rubbing", Vector2(700, 300))
 	drag._left_book = true
 	drag._drop(main.get_node("NightCemetery/Moon").get_global_rect().get_center())

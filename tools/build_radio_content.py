@@ -130,6 +130,7 @@ for name,value in re.findall(r'^VAR (\w+) = ([^\n]+)',source,re.M):
     elif value=='()':defaults[name]=[]
     elif value.startswith('"'):defaults[name]=json.loads(value)
     elif value.isdigit():defaults[name]=int(value)
+programs=dict(sorted(programs.items()))
 out={'source_sha256':hashlib.sha256(source.encode()).hexdigest(),'questions':questions,'programs':programs,'groups':groups,'evidence_groups':eid_to_group,'defaults':defaults}
 (D/'radio_content.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('Radio export:',len(questions),'questions,',len(programs),'programs,',len(groups),'submission groups.')

@@ -1,0 +1,170 @@
+{
+  "investigation_year": 2050,
+  "records": [
+    {
+      "node": "InfantSketch",
+      "evidence_id": "infant_graffiti",
+      "city": "day",
+      "position": [
+        930,
+        700
+      ],
+      "caption": "Infant sketch behind small marker",
+      "target_id": "infant_graffiti",
+      "meaning": "Infant's actual appearance",
+      "years_ago": 50.0,
+      "date_status": "timeline_suggestion",
+      "texture": "history_infant.svg"
+    },
+    {
+      "node": "SkinPicture",
+      "evidence_id": "skin_picture",
+      "city": "day",
+      "position": [
+        200,
+        250
+      ],
+      "caption": "Skin picture: Dayfolk and Nightfolk holding hands",
+      "target_id": "skin_picture",
+      "meaning": "Skin picture: Dayfolk and Nightfolk holding hands",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion"
+    },
+    {
+      "node": "WishPoolCoin",
+      "evidence_id": "day_city_coin",
+      "city": "day",
+      "position": [
+        360,
+        820
+      ],
+      "caption": "Wishing-pool coin",
+      "target_id": "day_city_coin",
+      "meaning": "Wishing-pool coin",
+      "years_ago": 60.0,
+      "date_status": "timeline_suggestion",
+      "texture": "history_coin.svg"
+    },
+    {
+      "node": "TwinBeastTrace",
+      "evidence_id": "twin_beast_trace",
+      "city": "day",
+      "position": [
+        1300,
+        250
+      ],
+      "caption": "Twin beast above giant footprint",
+      "target_id": "twin_beast_trace",
+      "meaning": "Twin beast above giant footprint",
+      "years_ago": 250.0,
+      "date_status": "provisional_ancient_date"
+    },
+    {
+      "node": "FamilyPhoto",
+      "evidence_id": "family_photo",
+      "city": "day",
+      "position": [
+        1220,
+        860
+      ],
+      "caption": "Four-person photograph before sun marker",
+      "target_id": "family_photo",
+      "meaning": "Four-person photograph before sun marker",
+      "years_ago": 50.0,
+      "date_status": "timeline_suggestion"
+    },
+    {
+      "node": "CrystalGod",
+      "evidence_id": "removed_crystal_god",
+      "city": "night",
+      "position": [
+        240,
+        290
+      ],
+      "caption": "Altar recess: intact crystal god",
+      "target_id": "removed_crystal_god",
+      "meaning": "Altar recess: intact crystal god",
+      "years_ago": 50.0,
+      "date_status": "timeline_suggestion"
+    },
+    {
+      "node": "AltarMoonStone",
+      "evidence_id": "altar_moon_stone",
+      "city": "night",
+      "position": [
+        750,
+        480
+      ],
+      "caption": "Altar offering: moon-shaped stone",
+      "target_id": "altar_moon_stone",
+      "meaning": "Altar offering: moon-shaped stone",
+      "years_ago": 50.0,
+      "date_status": "timeline_suggestion"
+    },
+    {
+      "node": "MotherNoTraces",
+      "evidence_id": "night_mother_no_traces",
+      "city": "night",
+      "position": [
+        620,
+        820
+      ],
+      "caption": "Mother marker: no later visitor traces",
+      "target_id": "night_mother_no_traces",
+      "meaning": "Mother marker: no later visitor traces",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "scan_years": [
+        0.0,
+        45.0
+      ]
+    },
+    {
+      "node": "FatherMoonStone",
+      "evidence_id": "night_father_moon_stone",
+      "city": "night",
+      "position": [
+        1330,
+        650
+      ],
+      "caption": "Father marker: moon-shaped offering",
+      "target_id": "night_father_moon_stone",
+      "meaning": "Father marker: moon-shaped offering",
+      "years_ago": 50.0,
+      "date_status": "timeline_suggestion"
+    },
+    {
+      "node": "FamilyStatuette",
+      "evidence_id": "family_statuette",
+      "city": "day",
+      "position": [
+        1410,
+        550
+      ],
+      "caption": "Girl marker: four-person statuette",
+      "target_id": "family_statuette",
+      "meaning": "Girl marker: four-person statuette",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "girl_tomb"
+    },
+    {
+      "node": "ScholarNoTraces",
+      "evidence_id": "scholar_no_traces",
+      "city": "day",
+      "position": [
+        680,
+        240
+      ],
+      "caption": "Crystal monument: no later visitor traces",
+      "target_id": "scholar_no_traces",
+      "meaning": "Crystal monument: no later visitor traces",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "scan_years": [
+        0.0,
+        45.0
+      ]
+    }
+  ]
+}
