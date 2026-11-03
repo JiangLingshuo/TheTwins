@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://noy1xm8mddn4"
-path="res://.godot/imported/羊灵祭坛.png-cd36b3cd59887c99e45fd68cecaa55cc.ctex"
+path="res://.godot/imported/羊灵祭坛.png-d46f00c90b050bc5335de2e627f6d8d9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/羊灵祭坛.png"
-dest_files=["res://.godot/imported/羊灵祭坛.png-cd36b3cd59887c99e45fd68cecaa55cc.ctex"]
+source_file="res://assets/Art/day/草稿/羊灵祭坛.png"
+dest_files=["res://.godot/imported/羊灵祭坛.png-d46f00c90b050bc5335de2e627f6d8d9.ctex"]
 
 [params]
 

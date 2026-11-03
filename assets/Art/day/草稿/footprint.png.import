@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://do5p8mv3knw7v"
-path="res://.godot/imported/footprint.png-4e458c869e259dfbcab045bba4036295.ctex"
+path="res://.godot/imported/footprint.png-457d6d05761a851012841d03cde06219.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/footprint.png"
-dest_files=["res://.godot/imported/footprint.png-4e458c869e259dfbcab045bba4036295.ctex"]
+source_file="res://assets/Art/day/草稿/footprint.png"
+dest_files=["res://.godot/imported/footprint.png-457d6d05761a851012841d03cde06219.ctex"]
 
 [params]
 

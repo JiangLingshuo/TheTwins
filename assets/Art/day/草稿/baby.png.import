@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://crl7jfwrfcrw7"
-path="res://.godot/imported/baby.png-794a5113ee0890620809dbdcc2e51bde.ctex"
+path="res://.godot/imported/baby.png-cd50b2b0bee278f54904100d5d6b6ec0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/baby.png"
-dest_files=["res://.godot/imported/baby.png-794a5113ee0890620809dbdcc2e51bde.ctex"]
+source_file="res://assets/Art/day/草稿/baby.png"
+dest_files=["res://.godot/imported/baby.png-cd50b2b0bee278f54904100d5d6b6ec0.ctex"]
 
 [params]
 
