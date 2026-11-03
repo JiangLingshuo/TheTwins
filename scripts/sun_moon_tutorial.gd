@@ -1,6 +1,6 @@
 extends Node
 ## A small ordered tutorial; all progression survives scene recreation in GameState.
-enum Step { TOOL, SUN, MOON, AURORA, BOOK, TAB, DRAG, DONE }
+enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, DONE }
 var step := Step.TOOL
 var _speaking := false
 var _skipping := false
@@ -12,7 +12,6 @@ var _dialogue: Control
 var _main: Control
 var _notebook: Control
 var _rubbing: Control
-var _sun: Control
 var _moon: RubbingSymbol
 var _human: RubbingSymbol
 
@@ -21,7 +20,6 @@ func _ready() -> void:
 	_main = get_parent()
 	_notebook = _main.get_node("NotebookTool")
 	_rubbing = _main.get_node("RubbingTool")
-	_sun = _main.get_node("DayCemetery/Sun")
 	_moon = _main.get_node("DayCemetery/BabyTomb/MoonSymbol")
 	_human = _main.get_node("DayCemetery/BabyTomb/HumanSymbol")
 	_build_guide()
@@ -47,27 +45,27 @@ func _process(_delta: float) -> void:
 func refresh() -> void:
 	if _skipping or _speaking:
 		return
-	var has_sun := GameState.rubbings.has("sky_sun_rubbing")
 	var has_moon := GameState.rubbings.has("infant_moon_rubbing")
-	_moon.collection_enabled = has_sun or GameState.cycle_tutorial_completed
+	_moon.collection_enabled = true
+	# Navigation aid supplied when the first Rise & Set instruction begins.
+	if has_moon and GameState.cycle_hint_heard and not GameState.rubbings.has("sky_sun_rubbing"):
+		GameState.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
 	_human.collection_enabled = GameState.cycle_tutorial_completed
 	if GameState.cycle_tutorial_completed:
 		_guide_investigation()
-	elif not has_sun:
-		if _rubbing.active:
-			_set_step(Step.SUN, "1 / 5  Hold and brush over the sun in the sky to make a rubbing.", _sun)
-		else:
-			_set_step(Step.TOOL, "1 / 5  Pick up the rubbing tool. We will start with the sun.", _rubbing.get_node("RubbingButton"))
 	elif not has_moon:
-		_set_step(Step.MOON, "2 / 5  There seems to be a crescent shape on the base. Make a rubbing of it.", _moon if _rubbing.active else _rubbing.get_node("RubbingButton"))
+		if _rubbing.active:
+			_set_step(Step.MOON, "1 / 4  There seems to be a crescent shape on the base. Make a rubbing of it.", _moon)
+		else:
+			_set_step(Step.TOOL, "1 / 4  Pick up the rubbing tool to record the crescent on the small marker.", _rubbing.get_node("RubbingButton"))
 	elif not GameState.cycle_hint_heard:
 		_speak.call_deferred()
 	elif not _notebook.is_open():
-		_set_step(Step.BOOK, "3 / 5  Open your notebook (Tab or N). Your two icons have their own spread.", _notebook.get_node("NotebookButton"))
+		_set_step(Step.BOOK, "2 / 4  Open your notebook (Tab or N). A sun icon is provided in Rise & Set.", _notebook.get_node("NotebookButton"))
 	elif _notebook.book.get_section() != 5:
-		_set_step(Step.TAB, "4 / 5  Choose the Rise & Set tab.", _notebook.book.tabs._tabs[5])
+		_set_step(Step.TAB, "3 / 4  Choose the Rise & Set tab.", _notebook.book.tabs._tabs[5])
 	else:
-		_set_step(Step.DRAG, "5 / 5  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
+		_set_step(Step.DRAG, "4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
 
 func _set_step(value: Step, text: String, target: Control) -> void:
 	var box := _main.get_node_or_null("Toolbox")

@@ -114,19 +114,6 @@ expand_mode = 1
 script = ExtResource("14_target")
 target_id = "sky_sun"
 
-[node name="SunSymbol" type="TextureRect" parent="DayCemetery/Sun"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = ExtResource("15_sun")
-script = ExtResource("8_symbol")
-rubbing_id = "sky_sun_rubbing"
-reveal_inverted = false
-revealed_color = Color(1, 0.95, 0.7, 1)
-
 [node name="NightCemetery" type="Control" parent="."]
 visible = false
 layout_mode = 3

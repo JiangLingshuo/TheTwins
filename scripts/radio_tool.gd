@@ -317,18 +317,22 @@ func _set_filter(index: int) -> void:
 	_queue_render()
 
 func _send() -> void:
-	if _reply_playing: return
-	if _question.is_empty(): return
-	var result: Dictionary = model.send(_question, _slot)
+	if _reply_playing or _question.is_empty(): return
+	# A submission owns one immutable question/evidence pair. Neither menu
+	# refreshes nor later selections may turn an ordinary reply into another one.
+	var sent_question: Dictionary = _question.duplicate(true)
+	var sent_slot := _slot
+	var result: Dictionary = model.send(sent_question, sent_slot)
 	if result.has("error"):
 		_status = result["error"]
 		_queue_render()
 		return
-	GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": _question["label"]})
-	if not _slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": "Submitted record: " + str(model.data["groups"][_slot]["title"])})
-	_last_lines = []
-	_show_result(result)
+	GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": sent_question["label"]})
+	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": "Submitted record: " + str(model.data["groups"][sent_slot]["title"])})
 	_question = {}
+	_slot = ""
+	_last_lines = []
+	_show_result(result.duplicate(true))
 
 func _follow(choice: Dictionary) -> void:
 	if _reply_playing: return
@@ -337,6 +341,7 @@ func _follow(choice: Dictionary) -> void:
 	_show_result(result)
 
 func _show_result(result: Dictionary) -> void:
+	if _reply_playing: return # Never splice another result into an active reply.
 	if result.has("error"):
 		_status = result["error"]
 	else:
@@ -354,7 +359,9 @@ func _play_reply(lines: Array[Dictionary], log_session: String) -> void:
 	_reply_playing = true
 	_overlay.visible = false
 	_reply_box.set_feedback(_feedback)
-	_reply_box.play(lines, log_session)
+	var playback: Array[Dictionary] = []
+	for line in lines: playback.append(line.duplicate(true))
+	_reply_box.play(playback, log_session)
 	await _reply_box.finished
 	_reply_playing = false
 	_overlay.visible = true

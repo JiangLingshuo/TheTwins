@@ -88,6 +88,23 @@ func _run() -> void:
 	await shot("03_hidden_gold_reply")
 	await finish_reply()
 	check("hidden feedback persists on return", radio._feedback == "hidden" and radio._status.contains("hidden connection"))
+	state.record_evidence("designer_manuscript")
+	state.record_rubbing("infant_figure_rubbing", "baby_tomb")
+	var human_q: Dictionary = {}
+	for q in radio.model.data["questions"]:
+		if q["target"] == "test_answer_baby_17": human_q = q
+	radio._select_question(human_q)
+	radio._clear_slot()
+	radio._send()
+	await wait(0.4)
+	box._finish_line()
+	check("ordinary human answer starts alone", box.content_label.get_parsed_text().contains("Did you find the designer"))
+	check("submission clears next question and proof", radio._question.is_empty() and radio._slot.is_empty())
+	# Simulate a late UI callback arriving while the ordinary reply is visible.
+	radio._show_result({"lines": [{"speaker": "Aurora", "content": "UNEXPECTED SPECIAL ANSWER"}], "choices": [], "feedback": "hidden"})
+	check("late result cannot replace active ordinary reply", not box.content_label.get_parsed_text().contains("UNEXPECTED"))
+	await finish_reply()
+	check("ordinary reply ends at menu without evidence answer", not radio._reply_playing and radio._overlay.visible and radio._followups.is_empty() and radio._last_lines.size() == 1 and radio._last_lines[0]["content"].contains("Did you find the designer"))
 	radio.close()
 	check("call closes and releases modal lock", not state.radio_modal_open and not radio.is_open())
 	# XML opening remains supported by the same rich-text dialogue scene.

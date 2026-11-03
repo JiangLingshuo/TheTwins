@@ -191,18 +191,16 @@ Now your investigation begins: a search for how these lives ended—or a journey
 
 === chat_guide_prompts ===
 # runtime_script:sun_moon_tutorial.gd
-// line_id:chat_guide_prompts:001
-1 / 5  Hold and brush over the sun in the sky to make a rubbing. #narrator
 // line_id:chat_guide_prompts:002
-1 / 5  Pick up the rubbing tool. We will start with the sun. #narrator
+1 / 4  Pick up the rubbing tool to record the crescent on the small marker. #narrator
 // line_id:chat_guide_prompts:003
-2 / 5  There seems to be a crescent shape on the base. Make a rubbing of it. #narrator
+1 / 4  There seems to be a crescent shape on the base. Make a rubbing of it. #narrator
 // line_id:chat_guide_prompts:004
-3 / 5  Open your notebook (Tab or N). Your two icons have their own spread. #narrator
+2 / 4  Open your notebook (Tab or N). A sun icon is provided in Rise & Set. #narrator
 // line_id:chat_guide_prompts:005
-4 / 5  Choose the Rise & Set tab. #narrator
+3 / 4  Choose the Rise & Set tab. #narrator
 // line_id:chat_guide_prompts:006
-5 / 5  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out. #narrator
+4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out. #narrator
 // line_id:chat_guide_prompts:007
 Aurora is on the line… #narrator
 // line_id:chat_guide_prompts:008
