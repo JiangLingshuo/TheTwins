@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=19 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_Day.jpg" id="2_day"]
@@ -14,6 +14,11 @@
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/moon.png" id="13_night_moon"]
 [ext_resource type="Script" path="res://scripts/decipher_target.gd" id="14_target"]
+
+[ext_resource type="Texture2D" path="res://assets/Art/symbols/sky_sun.svg" id="15_sun"]
+[ext_resource type="Script" path="res://scripts/sun_moon_tutorial.gd" id="16_tutorial"]
+
+[ext_resource type="Script" path="res://scripts/radio_tool.gd" id="17_radio"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
 atlas = ExtResource("13_night_moon")
@@ -93,6 +98,32 @@ script = ExtResource("8_symbol")
 rubbing_id = "infant_moon_rubbing"
 matching_target_id = "moon"
 
+[node name="Sun" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_left = 1340.0
+offset_top = 90.0
+offset_right = 1484.0
+offset_bottom = 234.0
+mouse_filter = 2
+texture = ExtResource("15_sun")
+self_modulate = Color(0.6, 0.34, 0.1, 1)
+expand_mode = 1
+script = ExtResource("14_target")
+target_id = "sky_sun"
+
+[node name="SunSymbol" type="TextureRect" parent="DayCemetery/Sun"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("15_sun")
+script = ExtResource("8_symbol")
+rubbing_id = "sky_sun_rubbing"
+reveal_inverted = false
+revealed_color = Color(1, 0.95, 0.7, 1)
+
 [node name="NightCemetery" type="Control" parent="."]
 visible = false
 layout_mode = 3
@@ -126,3 +157,16 @@ layout_mode = 1
 
 [node name="Toast" parent="." instance=ExtResource("12_toast")]
 layout_mode = 1
+
+[node name="SunMoonTutorial" type="Node" parent="."]
+script = ExtResource("16_tutorial")
+
+[node name="RadioTool" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("17_radio")

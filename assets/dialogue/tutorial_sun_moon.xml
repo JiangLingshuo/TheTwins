@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialogue>
+  <line speaker="Aurora">There seems to be a crescent shape on the base.</line>
+  <line speaker="#PLAYER#">Kinda similar to the shape of the moon on Earth.</line>
+  <line speaker="Aurora">Try it.</line>
+</dialogue>

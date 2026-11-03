@@ -39,6 +39,8 @@ const MASK_CELL := 3.0
 
 ## True once the symbol has been fully rubbed.
 var is_rubbed := false
+## Ordered tutorial can temporarily defer this symbol without altering collection.
+var collection_enabled := true
 
 var _mask: Image
 var _mask_texture: ImageTexture
@@ -66,7 +68,7 @@ func _ready() -> void:
 
 ## Brush from `from_global` to `to_global` (screen positions).
 func brush(from_global: Vector2, to_global: Vector2) -> void:
-	if is_rubbed or _mask == null:
+	if not collection_enabled or is_rubbed or _mask == null:
 		return
 	var to_local := get_global_transform().affine_inverse()
 	var a := _to_mask(to_local * from_global)

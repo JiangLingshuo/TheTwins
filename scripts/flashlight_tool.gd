@@ -30,7 +30,7 @@ func _ready() -> void:
 	_scale.value_changed.connect(flashlight.set_target_focus)
 	_button.pressed.connect(_on_button_pressed)
 	_catcher.gui_input.connect(_on_catcher_input)
-	_button.tooltip_text = "Select a spot, then scroll to adjust years. Click another spot to re-aim. Esc: put away."
+	_button.tooltip_text = "Select a spot, then scroll to adjust years. Click another spot to re-aim. Shift + scroll: 10 years. Esc: put away."
 	_scale.tooltip_text = "Years ago — scroll up for earlier years, down for later. The beam stays fixed."
 	_set_state(State.OFF)
 
@@ -71,7 +71,7 @@ func _on_catcher_input(event: InputEvent) -> void:
 			_catcher.accept_event()
 			if state == State.ON:
 				var direction := 1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1.0
-				_scale.value += direction * _scale.wheel_step * maxf(event.factor, 1.0)
+				_scale.value += direction * _scale.wheel_step * (10.0 if event.shift_pressed else 1.0) * maxf(event.factor, 1.0)
 
 
 func _set_state(new_state: int) -> void:

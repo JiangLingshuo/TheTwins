@@ -1,0 +1,52 @@
+{
+  "baby:test_answer_baby_8": [
+    "infant_moon_rubbing",
+    "designer_journal",
+    "infant_figure_rubbing"
+  ],
+  "baby:test_answer_baby_17": [
+    "designer_manuscript",
+    "infant_graffiti",
+    "moon_reference"
+  ],
+  "scholar:test_answer_scholar_8": [
+    "profession_record",
+    "skin_picture",
+    "one_way_passage_order"
+  ],
+  "scholar:test_answer_scholar_25": [
+    "skin_picture",
+    "infant_graffiti",
+    "profession_record"
+  ],
+  "sun:test_answer_sun_8": [
+    "day_city_coin",
+    "sun_reference",
+    "profession_record"
+  ],
+  "altar:test_answer_altar_16": [
+    "altar_moon_stone",
+    "day_city_coin",
+    "removed_crystal_god"
+  ],
+  "mother:test_answer_mother_12": [
+    "dry_underground_river",
+    "night_mother_river_rubbing",
+    "night_mother_no_traces"
+  ],
+  "father:test_answer_father_12": [
+    "skyway_reference",
+    "natural_collapse_record",
+    "night_father_path_rubbing"
+  ],
+  "father:test_answer_father_16": [
+    "night_father_death",
+    "disappearance_inquiry",
+    "skyway_history"
+  ],
+  "girl:test_answer_girl_8": [
+    "history_coffin_illustration",
+    "girl_coffin_rubbing",
+    "family_statuette"
+  ]
+}

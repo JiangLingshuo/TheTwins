@@ -44,6 +44,8 @@ func _ready() -> void:
 
 ## Create one tab per section title.
 func setup(titles: PackedStringArray) -> void:
+	if titles.size() > 1:
+		tab_spacing = minf(tab_spacing, (size.y - first_tab_y - tab_size.y - 16) / (titles.size() - 1))
 	for i in titles.size():
 		var tab := Tab.new()
 		tab.title = titles[i]

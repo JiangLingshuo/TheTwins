@@ -1,4 +1,4 @@
-﻿// TWINS - STANDALONE LINKAGE TEST
+// TWINS - STANDALONE LINKAGE TEST
 // Source: 墓碑表.xlsx; newer author instructions and current evidence tags override stale cells.
 // English dialogue is a test draft, not final production copy.
 // Author-edited spreadsheet dialogue, reactions and explicit hidden mechanisms synchronized on 2026-11-01.
@@ -2174,9 +2174,14 @@ Across the checked period after the burial, the searchlight reveals no readable 
 
 === test_answer_baby_8 ===
 # question_id:baby_8
+{has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_appearance_mismatch)):
 Yes, it does look like a moon. I suppose sleep is the closest rehearsal the living have for death. When night falls, the Dayfolk slip into slumber. On this marker, the moon stands for <link="natural">natural death</link>. #aurora
 ~ read_answers += AnswerId.baby_8_normal_9
 ~ feedback_kind = "linked"
+- else:
+The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk. #aurora
+~ feedback_kind = "unmatched"
+}
 {has_tag(EvidenceTag.infant_appearance_mismatch):
 # feedback:gold
 (The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.) #narrator
@@ -2198,8 +2203,9 @@ The moon offers a peaceful ending, but that is the story the family chose to put
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_identity):
 (Her pace slows around the word “child”. You find yourself listening to the space she leaves after it.) #narrator
-Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This child was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
+Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link="infant">infant</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
 ~ read_answers += AnswerId.baby_17_supported_19
+# event:decipher_human
 ~ supported = true
 ~ feedback_kind = "linked"
 -> test_baby_personhood
@@ -2234,7 +2240,7 @@ She was learning to make memorials then. Perhaps she learned too soon how much a
 -> test_menu_feedback ->
 What would you like to ask?
 + {(links ? Relation.moon)} [How do we interpret the icon on the tombstone?] -> test_answer_baby_8
-+ {(links ? Relation.human)} [Why is the tombstone shaped like a person?] -> test_answer_baby_17
++ {(owned_evidence ? EvidenceId.infant_figure_rubbing)} [Why is the tombstone shaped like a person?] -> test_answer_baby_17
 + {(1 == 1) && (has_tag(EvidenceTag.infant_actual_appearance) || has_tag(EvidenceTag.family_requested_depiction))} [Who drew the child's real appearance?] -> test_answer_baby_21
 + [Collect a word from this call] -> test_radio_terms_baby
 + [End this call] -> test_end_call

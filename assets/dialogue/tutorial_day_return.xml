@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialogue>
+  <line speaker="#PLAYER#">I'm back in the daylight.</line>
+  <line speaker="Aurora">Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook.</line>
+</dialogue>

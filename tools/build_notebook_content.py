@@ -22,7 +22,7 @@ for m in knots((D/'tombstone_master.ink').read_text(encoding='utf-8-sig')):
     stones[ALIASES[tid]]={'id':ALIASES[tid],'source_id':tid,'title':meta['title'][0],'location':meta['location'][0],'description':plain(body),'sketch':'res://assets/Art/'+SKETCH[tid]}
 evidence={};owner='baby'
 starts={'crystal_marker_rubbing':'scholar','sun_reference':'sun','altar_infant_rubbing':'altar','night_mother_child_rubbing':'mother','night_father_child_rubbing':'father','girl_figure_rubbing':'girl'}
-environment={'dayfolk_appearance','moon_reference','night_city_crystal','sun_reference','ram_spirit_emblem','giant_footprint','twin_beast_trace','repeated_beast_motifs','dry_underground_river','skyway_reference','diary_cover','notebook_cover','history_coffin_illustration','day_city_coin'}
+environment={'sky_sun_rubbing','dayfolk_appearance','moon_reference','night_city_crystal','sun_reference','ram_spirit_emblem','giant_footprint','twin_beast_trace','repeated_beast_motifs','dry_underground_river','skyway_reference','diary_cover','notebook_cover','history_coffin_illustration','day_city_coin'}
 for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     if not m[1].startswith('ev_'):continue
     meta=metadata(m[2]);eid=meta['id'][0];owner=starts.get(eid,owner)
@@ -30,7 +30,7 @@ for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     cat=meta['category'][0];tomb='' if eid in environment else ALIASES[owner]
     if eid=='scholar_no_traces':tomb=ALIASES['scholar']
     owners={'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
-    evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
+    evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'interactive_body':body,'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
 radio={}
 for m in knots((D/'telecomm_master.ink').read_text(encoding='utf-8-sig')):
     if not m[1].startswith(('test_answer_','query_night_','opening','test_bonus','test_confrontation','test_open_ending','test_scholar_mausoleum','test_disappearance_','test_baby_personhood')):continue
