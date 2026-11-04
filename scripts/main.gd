@@ -58,8 +58,7 @@ func _ready() -> void:
 	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.
 	_night_background.modulate.a = 0.0 if is_day else 1.0
-	modulate.a = 0.0
-	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
+	_fade_in_from_black()
 	_day_cemetery.visible = is_day
 	_night_cemetery.visible = not is_day
 	time_changed.connect(func(day: bool) -> void:
@@ -94,6 +93,24 @@ func _ready() -> void:
 		gravestone.recorded.connect(func(id: String) -> void:
 			_notebook_tool.show_gravestone_next(id)
 			_toast.show_message(gravestone_recorded_message))
+
+
+## Fade in from black, all but the notebook button: it shows the book the start
+## screen just put away in that same spot, so it stays in view throughout.
+func _fade_in_from_black() -> void:
+	var black := ColorRect.new()
+	black.color = Color.BLACK
+	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	black.z_index = 90
+	add_child(black)
+	black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var button: Control = _notebook_tool.get_node("NotebookButton")
+	button.z_index = 91
+	var t := create_tween()
+	t.tween_property(black, "color:a", 0.0, fade_in_time)
+	t.tween_callback(func() -> void:
+		button.z_index = 0
+		black.queue_free())
 
 
 func _on_evidence_recorded(id: String) -> void:

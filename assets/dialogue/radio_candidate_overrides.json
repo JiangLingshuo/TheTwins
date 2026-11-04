@@ -54,11 +54,6 @@
     "profession_record",
     "skin_picture"
   ],
-  "sun:test_answer_sun_8": [
-    "day_city_coin",
-    "sun_reference",
-    "ram_spirit_emblem"
-  ],
   "sun:test_answer_sun_13": [
     "twin_beast_account",
     "repeated_beast_motifs",
@@ -128,11 +123,6 @@
     "night_mother_no_traces",
     "dry_underground_river",
     "one_way_passage_order"
-  ],
-  "mother:test_answer_mother_25": [
-    "night_mother_hands_rubbing",
-    "family_photo",
-    "girl_diary"
   ],
   "father:test_answer_father_8": [
     "night_father_child_rubbing",

@@ -28,6 +28,20 @@ var gravestone_reports: Dictionary = {}
 ## Placeholders in dialogue / page text that become the player's name.
 const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}", "{player_name}"]
 
+## Emitted when F2 shows or hides the development overlay.
+signal debug_overlay_changed(shown: bool)
+## Development overlay: the tutorial hint box (with its skip button) and the
+## searchlight placeholder cards. Hidden by default; F2 toggles it.
+var debug_overlay := false
+
+
+func _input(event: InputEvent) -> void:
+	# Read before the GUI; the tutorial's input gate lets F2 through.
+	if event is InputEventKey and event.is_pressed() and not event.is_echo() and event.keycode == KEY_F2:
+		debug_overlay = not debug_overlay
+		debug_overlay_changed.emit(debug_overlay)
+		get_viewport().set_input_as_handled()
+
 
 ## Record a rubbing the first time its symbol is revealed. Returns false if it
 ## was already recorded (nothing changes then).

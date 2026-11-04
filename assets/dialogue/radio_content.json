@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "92962774b24ec490ed12381276f6ab382d5b3ed88d5b48ef95a2ba9bb120727e",
+  "source_sha256": "3fa5dd67afa6dc3697aeff0855a43bb797e31a075e26c13c95cdc622dc13a548",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -180,19 +180,6 @@
         "disappearance_inquiry",
         "scholar_beast_rubbing",
         "twin_beast_account"
-      ]
-    },
-    {
-      "id": "sun:test_answer_sun_8",
-      "tomb": "sun_tomb",
-      "label": "Is this simply a monument to the sun?",
-      "condition": "(links ? Relation.sun)",
-      "target": "test_answer_sun_8",
-      "hidden": false,
-      "candidates": [
-        "day_city_coin",
-        "sun_reference",
-        "ram_spirit_emblem"
       ]
     },
     {
@@ -414,19 +401,6 @@
         "night_mother_no_traces",
         "dry_underground_river",
         "one_way_passage_order"
-      ]
-    },
-    {
-      "id": "mother:test_answer_mother_25",
-      "tomb": "mother_tomb",
-      "label": "Was the message meant for her daughter as well?",
-      "condition": "(1 == 1) && (has_tag(EvidenceTag.day_night_handholding) || has_tag(EvidenceTag.shared_body_reference))",
-      "target": "test_answer_mother_25",
-      "hidden": true,
-      "candidates": [
-        "night_mother_hands_rubbing",
-        "family_photo",
-        "girl_diary"
       ]
     },
     {
@@ -1178,27 +1152,6 @@
       },
       {
         "op": "if",
-        "condition": "know(EvidenceTag.funerary_artist_reference)",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(A softer breath follows, almost an afterthought.)"
-          },
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "She was learning to make memorials then. Perhaps she learned too soon how much a stone could be made to hide."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.baby_21_follow"
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "if",
         "condition": "not (seen_subtexts ? Subtext.baby_21)",
         "then": [
           {
@@ -1749,7 +1702,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "Four faces in the photograph. Three stones together. And this one, a little way apart. Her mother left the sculpture here. Even after the girl went away, those small carved hands still held a place for her."
+            "text": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
           },
           {
             "op": "set",
@@ -1817,7 +1770,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "The diary describes a decision to leave. Those left behind had a word for the empty place: disappearance. But the person who left may have called it something else. A beginning, perhaps. We should leave room for that."
+            "text": "The diary gives the two girls different reasons to leave. One could no longer bear what her mother defended. The other had spent years waiting to be noticed, first beside her brother, then beside the space he left. Their departure was deliberate. A memorial can mark an absence without proving a death."
           },
           {
             "op": "set",
@@ -2111,7 +2064,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "No sign of anyone returning. She may have been the last. I left her alone. I left her alone..."
+            "text": "No sign of anyone returning. She may have been the last. I used to think she would only notice me if I went missing too. I left. I never found out whether she did."
           },
           {
             "op": "set",
@@ -2152,53 +2105,6 @@
           }
         ],
         "else": []
-      },
-      {
-        "op": "goto",
-        "target": "test_radio_mother"
-      }
-    ],
-    "test_answer_mother_25": [
-      {
-        "op": "tag",
-        "value": "question_id:mother_25"
-      },
-      {
-        "op": "tag",
-        "value": "feedback:gold"
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(There is a small pause before “daughter”. She gives you the rest without trying to soften it.)"
-      },
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "Possibly. She may have understood too late to tell her daughter. The picture could have been her last attempt to explain."
-      },
-      {
-        "op": "set",
-        "code": "read_answers += AnswerId.mother_25_hidden_27"
-      },
-      {
-        "op": "if",
-        "condition": "not (seen_subtexts ? Subtext.mother_25)",
-        "then": [
-          {
-            "op": "set",
-            "code": "seen_subtexts += Subtext.mother_25"
-          },
-          {
-            "op": "set",
-            "code": "subtext_count += 1"
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "set",
-        "code": "feedback_kind = \"hidden\""
       },
       {
         "op": "goto",
@@ -3015,87 +2921,6 @@
         "target": "test_radio_sun"
       }
     ],
-    "test_answer_sun_8": [
-      {
-        "op": "tag",
-        "value": "question_id:sun_8"
-      },
-      {
-        "op": "set",
-        "code": "temp supported = false"
-      },
-      {
-        "op": "if",
-        "condition": "has_tag(EvidenceTag.day_city_currency)",
-        "then": [
-          {
-            "op": "if",
-            "condition": "know(EvidenceTag.tycoon_identity)",
-            "then": [
-              {
-                "op": "line",
-                "speaker": "",
-                "text": "(The name arrives more carefully than the rest of the sentence, as though she has set it down rather than spoken it.)"
-              },
-              {
-                "op": "line",
-                "speaker": "Aurora",
-                "text": "The same rays circle the coins. And the occupational record names the man who funded the Scholar: the <link=\"tycoon\">Tycoon</link>. His stone has kept the shape of what built his fortune, but it fails to recognize the very intuition that led him to make a successful investment."
-              },
-              {
-                "op": "set",
-                "code": "read_answers += AnswerId.sun_8_supported_10"
-              }
-            ],
-            "else": [
-              {
-                "op": "line",
-                "speaker": "",
-                "text": "(Her agreement is thoughtful, but she leaves the name unspoken.)"
-              },
-              {
-                "op": "line",
-                "speaker": "Aurora",
-                "text": "The outline matches the coins. Keep that connection. We still need the occupational record before naming the owner."
-              }
-            ]
-          },
-          {
-            "op": "set",
-            "code": "supported = true"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"linked\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "if",
-        "condition": "not supported",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "I can see why you thought of the sun. Those rays do catch the eye. Still, as you know, the shape represents an occupation. We can't have Apollo the Sun God or Hou Yi the sun shooter buried here. Let's find more evidence of how the sun is linked to an identity."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.sun_8_normal_9"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "goto",
-        "target": "test_radio_sun"
-      }
-    ],
     "test_confrontation": [
       {
         "op": "tag",
@@ -3140,50 +2965,6 @@
         "value": "event:aurora_confronted"
       },
       {
-        "op": "if",
-        "condition": "know(EvidenceTag.mother_remembers_daughter)",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "#PLAYER#",
-            "text": "She left the family sculpture here, after you were gone."
-          },
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(The line catches a sound too small to name. She waits before trusting herself with the next words.)"
-          },
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "I did not know. I could not bring myself to come back and find out."
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "if",
-        "condition": "know(EvidenceTag.day_night_handholding)",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "#PLAYER#",
-            "text": "The handholding picture was still there, in both cities."
-          },
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(She takes in air slowly, as if she has only just noticed she needs it.)"
-          },
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "She understood something in the end. I wish I had been there to hear it."
-          }
-        ],
-        "else": []
-      },
-      {
         "op": "line",
         "speaker": "",
         "text": "(The first word fails her once. When she starts again, she makes herself continue.)"
@@ -3191,7 +2972,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "I hated the ways she called harm protection. When it was time to leave, I would not take her with us. I was afraid she would bring that world after us. I was angry enough to let that be the whole answer."
+        "text": "I hated the way my mother called harm protection. The other girl had a different reason. She told me that when her brother was born, her parents stopped looking at her. When he disappeared, they could not look away from his absence. She wanted a life in which she did not have to wait for them to notice her. We agreed to leave without our mothers."
       },
       {
         "op": "line",
@@ -3206,7 +2987,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "Now I keep returning to the moment we left. Everything I hated was still there. So was my mother. I sent you because I could not bear to stand where you are standing."
+        "text": "Now I keep returning to the moment we left. I still remember why I refused to take my mother. The other girl still remembers how it felt to be overlooked. Neither memory tells us what our mothers felt after we were gone. I sent you because I could not bear to stand where you are standing."
       },
       {
         "op": "line",
@@ -3216,7 +2997,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "You have found what she left. I do not know what she would have said to me."
+        "text": "You have found what remains. I do not know what either of our mothers would have said to us."
       },
       {
         "op": "choices",
@@ -3913,7 +3694,7 @@
       "members": [
         "family_statuette"
       ],
-      "signature": "tags:family_image_reference,four_person_family,mother_remembers_daughter"
+      "signature": "tags:family_image_reference,four_person_family"
     },
     "day_city_history": {
       "id": "day_city_history",
@@ -3961,7 +3742,7 @@
       "members": [
         "four_person_family_finding"
       ],
-      "signature": "tags:four_person_family,missing_family_member_reference,mother_remembers_daughter"
+      "signature": "tags:four_person_family,missing_family_member_reference"
     },
     "girl_cover_correspondence": {
       "id": "girl_cover_correspondence",

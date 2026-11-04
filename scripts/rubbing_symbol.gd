@@ -46,6 +46,7 @@ var _mask: Image
 var _mask_texture: ImageTexture
 var _material: ShaderMaterial
 var _symbol_cells: PackedInt32Array = []  # mask cells covered by the symbol
+var _blink_tween: Tween
 
 
 func _ready() -> void:
@@ -115,6 +116,21 @@ func get_touched() -> float:
 func set_rubbed() -> void:
 	is_rubbed = true
 	_material.set_shader_parameter("complete", 1.0)
+
+
+## Pulse the symbol on the stone (e.g. right after it was rubbed) until stop_blinking().
+func start_blinking(period: float = 0.8) -> void:
+	stop_blinking()
+	_blink_tween = create_tween().set_loops()
+	_blink_tween.tween_property(self, "modulate:a", 0.2, period * 0.5).set_trans(Tween.TRANS_SINE)
+	_blink_tween.tween_property(self, "modulate:a", 1.0, period * 0.5).set_trans(Tween.TRANS_SINE)
+
+
+func stop_blinking() -> void:
+	if _blink_tween:
+		_blink_tween.kill()
+		_blink_tween = null
+	modulate.a = 1.0
 
 
 ## If this symbol sits on a TextureRect (the tombstone art), keep the charcoal on
