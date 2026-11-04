@@ -193,6 +193,7 @@ func _render() -> void:
 	_layout.add_child(status)
 	_tutorial_hint = _label("", 18)
 	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
+	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
 	_layout.add_child(_tutorial_hint)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL

@@ -29,6 +29,9 @@ func _ready() -> void:
 	frame.set_content_margin_all(8)
 	marker.add_theme_stylebox_override("panel", frame)
 	get_parent().add_child.call_deferred(marker)
+	# The cards are a development overlay (F2).
+	marker.visible = GameState.debug_overlay
+	GameState.debug_overlay_changed.connect(func(shown: bool) -> void: marker.visible = shown)
 	label = Label.new()
 	label.custom_minimum_size.x = 294
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART

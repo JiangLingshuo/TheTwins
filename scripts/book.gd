@@ -62,7 +62,9 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Seconds for the closed book to shrink into the corner icon.
 @export var stow_time: float = 0.8
 ## Size of the corner icon, relative to the full book.
-@export var icon_scale: float = 0.12
+@export var icon_scale: float = 0.17
+## Tilt of the corner icon, in degrees.
+@export var icon_rotation: float = -8.0
 ## Distance of the icon's centre from the bottom-right corner of the screen.
 @export var icon_margin: Vector2 = Vector2(70, 70)
 ## Writing speed of write(), in characters per second.
@@ -155,16 +157,23 @@ func _ready() -> void:
 	_write_player.finished.connect(_on_write_sound_finished)
 
 
-## Fly the closed book in from the bottom-right corner.
-func wake() -> void:
+## Fly the closed book in from the bottom-right corner, or (`from_icon`) grow it
+## out of the corner icon spot.
+func wake(from_icon: bool = false) -> void:
 	await get_tree().process_frame  # make sure the layout is ready
 	_home_position = position
 	var screen := get_viewport_rect().size
 
-	position = Vector2(screen.x - 120.0, screen.y - 80.0) - pivot_offset
-	scale = Vector2.ONE * 0.12
-	rotation_degrees = 28.0
-	modulate.a = 0.0
+	if from_icon:
+		position = _icon_position()
+		scale = Vector2.ONE * icon_scale
+		rotation_degrees = icon_rotation
+		modulate.a = 1.0
+	else:
+		position = Vector2(screen.x - 120.0, screen.y - 80.0) - pivot_offset
+		scale = Vector2.ONE * 0.12
+		rotation_degrees = 28.0
+		modulate.a = 0.0
 	visible = true
 
 	var t := create_tween().set_parallel(true)
@@ -382,17 +391,13 @@ func close_to_icon() -> void:
 	await t.finished
 	right_page.visible = false
 
-	# Shrink into the corner. The closed book is the right half, so offset by
-	# its distance from the pivot to centre it on the icon spot.
-	var screen := get_viewport_rect().size
-	var cover_offset := Vector2(cover.size.x / 2.0, 0) * icon_scale
-	var icon_position := screen - icon_margin - pivot_offset - cover_offset
+	# Shrink into the corner.
 	var s := create_tween().set_parallel(true)
-	s.tween_property(self, "position", icon_position, stow_time) \
+	s.tween_property(self, "position", _icon_position(), stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	s.tween_property(self, "scale", Vector2.ONE * icon_scale, stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	s.tween_property(self, "rotation_degrees", -8.0, stow_time) \
+	s.tween_property(self, "rotation_degrees", icon_rotation, stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	await s.finished
 	_stowed = true
@@ -411,7 +416,7 @@ func open_saved(saved_pages: PackedStringArray, spread: int) -> void:
 	name_input.editable = false
 	name_input.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint_label.visible = false
-	await wake()
+	await wake(true)
 	name_input.release_focus()
 	await _open_cover()
 	opened.emit(GameState.player_name)
@@ -464,6 +469,37 @@ func open_from_icon() -> void:
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	await t.finished
 	await _open_cover()
+
+
+## Where the stowed book sits: the closed book is the right half, so offset by
+## its distance from the pivot to centre it on the icon spot.
+func _icon_position() -> Vector2:
+	var cover_offset := Vector2(cover.size.x / 2.0, 0) * icon_scale
+	return get_viewport_rect().size - icon_margin - pivot_offset - cover_offset
+
+
+## A still copy of the stowed book (the closed cover, scaled and tilted as in the
+## icon spot), centred on (0, 0). A button showing it matches the book put away.
+func make_icon() -> Control:
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.position = -Vector2(cover.size.x / 2.0, 0) * icon_scale
+	holder.rotation_degrees = icon_rotation
+	holder.scale = Vector2.ONE * icon_scale
+	var copy: Panel = cover.duplicate(0)  # no signals or scripts
+	copy.position = cover.position - pivot_offset
+	copy.scale = Vector2.ONE
+	copy.modulate = Color.WHITE
+	copy.visible = true
+	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var copy_name: LineEdit = copy.get_node("NameInput")
+	copy_name.text = GameState.player_name
+	copy_name.editable = false
+	copy_name.focus_mode = Control.FOCUS_NONE
+	copy_name.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	copy.get_node("Hint").visible = false
+	holder.add_child(copy)
+	return holder
 
 
 ## Where the book sits so the closed cover is in the centre of the screen.
@@ -605,6 +641,7 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	_fill_rubbings(text_label.get_parent().get_node("Rubbings"), page_index)
 	_apply_page_theme(text_label, number_label, page_index)
 	_fill_records(text_label, page_index)
+	_fill_corner_icon(text_label, page_index)
 
 
 ## The collected rubbings that fall on a page of the Rubbings section, in
@@ -948,4 +985,29 @@ func _fill_cycle_icon(text_label: Label, page_index: int, section: int) -> void:
 		page.add_child(icon)
 	icon.visible = section == 5
 	if icon.visible:
-		icon.setup("sky_sun_rubbing" if page_index % 2 == 0 else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet)
+		var on_left := page_index % 2 == 0
+		icon.setup("sky_sun_rubbing" if on_left else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet, not on_left)
+
+
+## Once the sun and moon are both in the notebook, every other page carries a
+## small one in its top corner: the sun top-left on the Day (left) page, the moon
+## top-right on the Night (right) page. Dragging one onto the sky switches day and night.
+func _fill_corner_icon(text_label: Label, page_index: int) -> void:
+	var page := text_label.get_parent()
+	var icon: Control = page.get_node_or_null("CornerIcon")
+	if icon == null:
+		icon = Control.new()
+		icon.set_script(preload("res://scripts/cycle_icon.gd"))
+		icon.name = "CornerIcon"
+		icon.trim = true
+		icon.size = Vector2(54, 54)
+		page.add_child(icon)
+	var on_left := page_index % 2 == 0
+	icon.position = Vector2(12, 10) if on_left else Vector2(PAGE_SIZE.x - 12 - icon.size.x, 10)
+	var spread := page_index / 2
+	icon.visible = use_sections and spread < _spread_count() and _section_of(spread) != RISE_AND_SET \
+		and GameState.cycle_hint_heard and GameState.rubbings.has("sky_sun_rubbing") \
+		and GameState.rubbings.has("infant_moon_rubbing")
+	if icon.visible:
+		var dark := not on_left and day_night_sections.has(_section_of(spread))
+		icon.setup("sky_sun_rubbing" if on_left else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet, dark)

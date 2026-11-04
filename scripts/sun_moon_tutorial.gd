@@ -6,10 +6,18 @@ enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
 ## Steps where only the highlighted control may be used; anything else shakes the hint.
 const GATED := [Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
 ## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
-@export var step1_notebook_message := "Notebook updated: the moon and sun are recorded in Rise & Set."
+@export var step1_notebook_message := "Notebook updated: the moon is recorded in Rise & Set."
 const SKY_SUN_TEXTURE := "res://assets/Art/symbols/sky_sun.svg"
+## Least time the rubbed crescent blinks on the marker before the notebook opens.
+@export var moon_blink_time: float = 2.5
+## Seconds for the crescent to drop from the marker onto the notebook, then to grow.
+@export var moon_drop_time: float = 0.9
+@export var moon_grow_time: float = 0.45
 var step := Step.TOOL
 var _speaking := false
+## True while the crescent is moving into the notebook; all input waits.
+var _delivering := false
+var _icon_blink: Tween
 var _skipping := false
 var _highlight_target: Control
 var _panel: PanelContainer
@@ -67,8 +75,8 @@ func refresh() -> void:
 		return
 	var has_moon := GameState.rubbings.has("infant_moon_rubbing")
 	_moon.collection_enabled = true
-	# Both icons are recorded with the crescent; this covers games saved before that.
-	if has_moon and GameState.cycle_hint_heard and not GameState.rubbings.has("sky_sun_rubbing"):
+	# The sun is recorded when the moon first replaces it; this covers games saved before that.
+	if has_moon and GameState.cycle_tutorial_completed and not GameState.rubbings.has("sky_sun_rubbing"):
 		_record_cycle_symbols()
 	_human.collection_enabled = GameState.cycle_tutorial_completed
 	if GameState.cycle_tutorial_completed:
@@ -103,6 +111,12 @@ func _guide_cycle(book_text: String, tab_text: String, drag_text: String, icon_o
 func _input(event: InputEvent) -> void:
 	# _ready() waits a frame before wiring nodes up; ignore input until then.
 	if _skipping or _notebook == null:
+		return
+	if event is InputEventKey and event.keycode == KEY_F2:
+		return  # the development overlay toggle (GameState) always works
+	if _delivering:
+		if not (event is InputEventMouseMotion):
+			get_viewport().set_input_as_handled()
 		return
 	# Until the crescent is rubbed, and while a tutorial dialogue plays, the notebook stays shut.
 	if step in [Step.MOON, Step.AURORA] or _speaking:
@@ -164,6 +178,8 @@ func _set_step(value: Step, text: String, target: Control) -> void:
 		if box.tray and box.tray.is_ancestor_of(target) and not box.tray.visible:
 			target = box.button
 	step = value
+	if value != Step.DRAG:
+		_stop_icon_blink()
 	# Gated steps pulse until done; other hints blink a few times.
 	_highlight.loop = value in GATED
 	_drag_hint.target = target if value == Step.DRAG else null
@@ -171,7 +187,9 @@ func _set_step(value: Step, text: String, target: Control) -> void:
 	var radio := _main.get_node_or_null("RadioTool")
 	if radio and radio.is_open():
 		_panel.visible = false
-		if is_instance_valid(radio._tutorial_hint): radio._tutorial_hint.text = text
+		if is_instance_valid(radio._tutorial_hint):
+			radio._tutorial_hint.text = text
+			radio._tutorial_hint.visible = GameState.debug_overlay
 	else:
 		_panel.visible = true
 	if _highlight_target != target:
@@ -185,34 +203,154 @@ func _speak() -> void:
 		return
 	_speaking = true
 	# Step 1 feedback, in order: the crescent was rubbed (rubbing_collected) ->
-	# record both icons -> Aurora's line -> "Notebook updated" -> Step 2.
-	_record_cycle_symbols()
+	# it blinks on the marker during Aurora's line -> the notebook opens on
+	# Rise & Set and the crescent drops onto it -> drag step. The sun follows
+	# once the moon has replaced it in the sky (_on_sky_replaced).
+	_record_cycle_symbols(false)
 	_set_step(Step.AURORA, "Aurora is on the line…", null)
-	# Put the brush down while she talks (it hides the cursor), pick it up after.
+	# Put the brush down while she talks (it hides the cursor).
 	_rubbing.turn_off()
 	_main.get_node("FlashlightTool").turn_off()
+	_moon.start_blinking()
+	var started := Time.get_ticks_msec()
 	_dialogue.play_file("res://assets/dialogue/tutorial_sun_moon.xml")
 	await _dialogue.finished
+	var left := moon_blink_time - (Time.get_ticks_msec() - started) / 1000.0
+	if left > 0.0:
+		await get_tree().create_timer(left).timeout
+	_moon.stop_blinking()
+	var invert := ShaderMaterial.new()
+	invert.shader = preload("res://shaders/portrait_invert.gdshader")
+	invert.set_shader_parameter("invert", 1.0)
+	var flyer := await _drop_into_notebook(_moon.texture, _moon.get_global_rect(), false, invert, Color.WHITE, Color.WHITE)
 	GameState.cycle_hint_heard = true
-	_rubbing.set_active(true)
+	GameState.notebook_changed.emit()
+	await get_tree().process_frame  # the page redraws with the moon
+	flyer.queue_free()
+	var icon: Control = _notebook.book.right_page.get_node_or_null("CycleIcon")
+	if icon:
+		_icon_blink = icon.create_tween().set_loops()
+		_icon_blink.tween_property(icon, "modulate:a", 0.3, 0.4).set_trans(Tween.TRANS_SINE)
+		_icon_blink.tween_property(icon, "modulate:a", 1.0, 0.4).set_trans(Tween.TRANS_SINE)
+	_delivering = false
 	_main.get_node("Toast").show_message(step1_notebook_message)
 	_speaking = false
 	refresh()
 
-## Record the crescent's and the sky sun's icons (both appear in Rise & Set and
-## Rubbings), deciphered with their icon file names as temporary meanings.
-## Safe to call again: recording and deciphering only change things once.
-func _record_cycle_symbols() -> void:
-	GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
+## A copy of `texture` lifts off `from` (screen rect) and hovers while the
+## notebook opens quickly on Rise & Set; once the book is fully open it drops
+## onto the left or right page's icon spot and grows into place. Returns the
+## copy, still showing, so the caller can swap in the real icon; input waits
+## (_delivering) until the caller clears it.
+func _drop_into_notebook(texture: Texture2D, from: Rect2, on_left: bool, look: Material, tint: Color, landed_tint: Color) -> TextureRect:
+	_delivering = true
+	_panel.hide()
+	_highlight.dismiss(false)
+	_highlight_target = null
+	var flyer := TextureRect.new()
+	flyer.texture = texture
+	flyer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	flyer.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	flyer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flyer.z_index = 58
+	flyer.material = look
+	flyer.modulate = tint
+	_main.add_child(flyer)
+	flyer.global_position = from.position
+	flyer.size = from.size
+	# It rises while the notebook comes out beneath it, quicker than usual.
+	var hover_size := from.size * clampf(120.0 / maxf(from.size.y, 1.0), 1.0, 2.0)
+	var hover := Rect2(from.get_center() - hover_size / 2.0 - Vector2(0, 120), hover_size)
+	if from.get_center().y < 260.0:
+		hover.position.y = from.get_center().y - hover_size.y / 2.0  # already high in the sky
+	var t := create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", hover.position, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t.tween_property(flyer, "size", hover.size, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await _open_notebook_quickly()
+	if t.is_running():
+		await t.finished
+	var page: Control = _notebook.book.left_page if on_left else _notebook.book.right_page
+	var icon: Control = page.get_node_or_null("CycleIcon")
+	var landing: Rect2 = icon.get_global_rect() if icon else page.get_global_rect()
+	# Drop onto the page at a little under its size...
+	var small := Rect2(landing.get_center() - landing.size * 0.3, landing.size * 0.6)
+	t = create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", small.position, moon_drop_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.tween_property(flyer, "size", small.size, moon_drop_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.tween_property(flyer, "modulate", landed_tint, moon_drop_time)
+	await t.finished
+	# ...then grow into the icon's place.
+	t = create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", landing.position, moon_grow_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(flyer, "size", landing.size, moon_grow_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t.finished
+	return flyer
+
+## Bring the notebook out on Rise & Set at twice the usual pace and wait until
+## it is fully open there (if it was still folding away, let that finish first).
+func _open_notebook_quickly() -> void:
+	var book: Control = _notebook.book
+	while book._busy and _notebook.is_open():
+		await get_tree().process_frame
+	if _notebook.is_open():
+		if book.get_section() != book.RISE_AND_SET:
+			book.jump_to_section(book.RISE_AND_SET)
+	else:
+		var saved: Array = [book.wake_time, book.stow_time, book.flip_time]
+		book.wake_time *= 0.5
+		book.stow_time *= 0.5
+		book.flip_time *= 0.6
+		await _notebook.open()  # it opens on Rise & Set
+		book.wake_time = saved[0]
+		book.stow_time = saved[1]
+		book.flip_time = saved[2]
+	while not _notebook.is_open() or book._busy:
+		await get_tree().process_frame
+
+func _stop_icon_blink() -> void:
+	if _icon_blink and _icon_blink.is_valid():
+		_icon_blink.kill()
+		var icon: Control = _notebook.book.right_page.get_node_or_null("CycleIcon")
+		if icon:
+			icon.modulate.a = 1.0
+	_icon_blink = null
+
+## Record the crescent's and (`with_sun`) the sky sun's icons (both appear in
+## Rise & Set and Rubbings), deciphered with their icon file names as temporary
+## meanings. Safe to call again: recording and deciphering only change things once.
+func _record_cycle_symbols(with_sun: bool = true) -> void:
+	if with_sun:
+		GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
 	for id in ["infant_moon_rubbing", "sky_sun_rubbing"]:
 		if GameState.rubbings.has(id) and not GameState.is_rubbing_deciphered(id):
 			GameState.confirm_rubbing_meaning(id, GameState.get_rubbing_texture(id).get_file().get_basename())
 
-func _on_sky_replaced(id: String, _target: Control) -> void:
+## The moon has taken the sun's place for the first time: the sky sun drops into
+## the notebook's Day page the way the crescent did, then the notebook closes.
+func _deliver_sun(sky_sun: Control) -> void:
+	_speaking = true
+	var from := sky_sun.get_global_rect()
+	sky_sun.modulate.a = 0.0  # the copy takes its place on the way down
+	var flyer := await _drop_into_notebook(load(SKY_SUN_TEXTURE), from, true, null, Color(1.0, 0.95, 0.78), _notebook.book.day_ink)
+	_record_cycle_symbols()
+	GameState.notebook_changed.emit()
+	await get_tree().process_frame  # the page redraws with the sun
+	flyer.queue_free()
+	sky_sun.modulate.a = 1.0
+	await get_tree().create_timer(0.8).timeout
+	_notebook.close()
+	while _notebook.is_open():
+		await get_tree().process_frame
+	_delivering = false
+	_speaking = false
+
+func _on_sky_replaced(id: String, target: Control) -> void:
 	if id == "infant_moon_rubbing":
 		GameState.cycle_tutorial_completed = true
 		GameState.confirm_rubbing_meaning("infant_moon_rubbing", "Moon")
 		_main.set_night()
+		if not GameState.rubbings.has("sky_sun_rubbing"):
+			await _deliver_sun(target)
 		_main.get_node("Toast").show_message("Night City — the moon has taken the sun's place.")
 		# Started now (not deferred) so Step 3 only begins once Aurora's line ends.
 		if not GameState.tutorial_night_heard: _night_arrival()
@@ -260,7 +398,17 @@ func _build_guide() -> void:
 	_skip_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_skip_button.pressed.connect(skip)
 	stack.add_child(_skip_button)
-	_main.add_child(_panel)
+	# The hint box is part of the development overlay (F2); the steps still run.
+	var overlay := Control.new()
+	overlay.name = "TutorialOverlay"
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.visible = GameState.debug_overlay
+	overlay.add_child(_panel)
+	_main.add_child(overlay)
+	GameState.debug_overlay_changed.connect(func(shown: bool) -> void:
+		overlay.visible = shown
+		var radio := _main.get_node_or_null("RadioTool")
+		if radio and is_instance_valid(radio._tutorial_hint): radio._tutorial_hint.visible = shown)
 	_highlight = HighlightFrame.new()
 	_highlight.z_index = 59
 	_highlight.blinks = 8

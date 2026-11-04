@@ -22,6 +22,14 @@ signal notebook_closed
 @onready var _button: TextureButton = $NotebookButton
 
 var _taken_out := false
+## The button's picture: a copy of the stowed notebook (see Book.make_icon).
+var _icon: Control
+
+
+## Centre of NotebookButton on a `screen`-sized viewport (its anchors and offsets
+## in notebook_tool.tscn). The start screen stows its book here to match.
+static func button_center(screen: Vector2) -> Vector2:
+	return Vector2(screen.x - 92.0, screen.y * 0.5 + 130.0)
 
 
 func _ready() -> void:
@@ -30,6 +38,13 @@ func _ready() -> void:
 	_button.pressed.connect(toggle)
 	_dim.gui_input.connect(_on_dim_input)
 	book.closed.connect(_on_book_closed)
+	# The button shows the put-away notebook itself, so stowing ends right on it.
+	# Built straight away: the start screen's book is still showing in this spot.
+	_icon = book.make_icon()
+	_button.add_child(_icon)
+	var offset := _icon.position  # make_icon() centres the copy on (0, 0)
+	_button.resized.connect(func() -> void: _icon.position = offset + _button.size / 2.0)
+	_icon.position = offset + _button.size / 2.0
 	# The book shrinks into the button when it is put away.
 	await get_tree().process_frame
 	var screen := get_viewport_rect().size
@@ -68,6 +83,8 @@ func open() -> void:
 	if is_open():
 		return
 	_set_dim(true)
+	if _icon:
+		_icon.visible = false  # the notebook itself comes out of the button
 	notebook_opened.emit()
 	# Open on Rise & Set, unless a page was asked for (see show_gravestone_next).
 	var spread: int = GameState.notebook_section_spread
@@ -100,6 +117,8 @@ func close() -> void:
 
 func _on_book_closed() -> void:
 	book.visible = false
+	if _icon:
+		_icon.visible = true
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
 	_set_dim(false)
