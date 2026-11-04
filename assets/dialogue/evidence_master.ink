@@ -917,11 +917,10 @@ The girl, her joined hands, and the upright coffin form a single composition. Th
 # searchlight_date_status:timeline_suggestion
 # evidence_tag:four_person_family
 # evidence_tag:family_image_reference
-# evidence_tag:mother_remembers_daughter
 // Suggested snapshot: 2005 (45 years before investigation), summer, after the girl leaves and before the mother dies.
 // Timing rationale: The mother leaves the girl's earlier sculpture at her solitary marker after her departure.
 // Source: 04_小女孩终局碑!B10,B15. No additional inscription is specified.
-A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.
+A small sculpture of four family members once stood before the marker. It was carved by the girl. Its figures can be compared with the photograph at the sun-shaped monument.
 -> DONE
 
 === ev_day_city_history ===
@@ -983,7 +982,9 @@ How many more times must we hurt our own people in the name of protecting them?
 
 She left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.
 
-She wants to bring her mother. But <link="diary_mothers">if she brings her mother, we will have to bring mine</link>. With my mother's influence in Day City, everyone will find out. We will go through it all again.
+She told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.
+
+I wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. <link="diary_mothers">Neither of us would bring our mother</link>. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.
 
 I have to persuade her. We can only <link="diary_escape">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.
 -> DONE
@@ -1025,7 +1026,6 @@ You have been carrying the image throughout your investigation, holding it like 
 # location:notebook
 # evidence_tag:four_person_family
 # evidence_tag:missing_family_member_reference
-# evidence_tag:mother_remembers_daughter
 // Source: 03!B10,B15; 04_小女孩终局碑!B10,B15. Award after the photo/statuette comparison.
 The four figures in the statuette correspond to the family in the photograph. The shared base holds only three markers. The solitary girl's marker stands apart from that family plot.
 -> DONE

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "7313602e32d1db8136b60869cde39b0965e240cbad4fe51ed545431ea8a11e48",
+    "evidence_master.ink": "3e1f27c8d1dda28433b16c043da7e46990e4f159f612979938a0c057b7561dd4",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "581a574f6244b9d2c1f86f7d57f52ff18bb6f3b0ca83b6d2e98572fa57cb0bce"
+    "telecomm_master.ink": "d40dca673dd7591ef8ed2d378dbd178189496f231681029b622198bc1e1b73db"
   },
   "gravestones": {
     "baby_tomb": {
@@ -2099,8 +2099,8 @@
       ],
       "id": "family_statuette",
       "title": "A Statuette of Four",
-      "body": "A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.",
-      "interactive_body": "A small sculpture of four family members once stood before the marker. It was carved by the girl and left here by her mother. Its figures can be compared with the photograph at the sun-shaped monument.",
+      "body": "A small sculpture of four family members once stood before the marker. It was carved by the girl. Its figures can be compared with the photograph at the sun-shaped monument.",
+      "interactive_body": "A small sculpture of four family members once stood before the marker. It was carved by the girl. Its figures can be compared with the photograph at the sun-shaped monument.",
       "category": "trace",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2133,8 +2133,7 @@
         ],
         "evidence_tag": [
           "four_person_family",
-          "family_image_reference",
-          "mother_remembers_daughter"
+          "family_image_reference"
         ]
       },
       "source_knot": "ev_family_statuette"
@@ -2217,8 +2216,8 @@
       ],
       "id": "girl_diary",
       "title": "A Diary Page, Author Unknown",
-      "body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe wants to bring her mother. But if she brings her mother, we will have to bring mine. With my mother's influence in Day City, everyone will find out. We will go through it all again.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
-      "interactive_body": "If the truth of death itself is being covered up, then <link=\"diary_complicity\">am I not an accomplice when I carve monuments to that lie</link>?\n\nI can no longer bear this <link=\"diary_hypocrisy\">hypocritical world</link>. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe wants to bring her mother. But <link=\"diary_mothers\">if she brings her mother, we will have to bring mine</link>. With my mother's influence in Day City, everyone will find out. We will go through it all again.\n\nI have to persuade her. We can only <link=\"diary_escape\">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.",
+      "body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.\n\nI wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. Neither of us would bring our mother. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
+      "interactive_body": "If the truth of death itself is being covered up, then <link=\"diary_complicity\">am I not an accomplice when I carve monuments to that lie</link>?\n\nI can no longer bear this <link=\"diary_hypocrisy\">hypocritical world</link>. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.\n\nI wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. <link=\"diary_mothers\">Neither of us would bring our mother</link>. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.\n\nI have to persuade her. We can only <link=\"diary_escape\">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.",
       "category": "manuscript",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2346,8 +2345,7 @@
         ],
         "evidence_tag": [
           "four_person_family",
-          "missing_family_member_reference",
-          "mother_remembers_daughter"
+          "missing_family_member_reference"
         ]
       },
       "source_knot": "ev_four_person_family_finding"
@@ -2630,27 +2628,11 @@
         },
         {
           "speaker": "",
-          "content": "(The line catches a sound too small to name. She waits before trusting herself with the next words.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "I did not know. I could not bring myself to come back and find out."
-        },
-        {
-          "speaker": "",
-          "content": "(She takes in air slowly, as if she has only just noticed she needs it.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "She understood something in the end. I wish I had been there to hear it."
-        },
-        {
-          "speaker": "",
           "content": "(The first word fails her once. When she starts again, she makes herself continue.)"
         },
         {
           "speaker": "Aurora",
-          "content": "I hated the ways she called harm protection. When it was time to leave, I would not take her with us. I was afraid she would bring that world after us. I was angry enough to let that be the whole answer."
+          "content": "I hated the way my mother called harm protection. The other girl had a different reason. She told me that when her brother was born, her parents stopped looking at her. When he disappeared, they could not look away from his absence. She wanted a life in which she did not have to wait for them to notice her. We agreed to leave without our mothers."
         },
         {
           "speaker": "",
@@ -2658,7 +2640,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "Now I keep returning to the moment we left. Everything I hated was still there. So was my mother. I sent you because I could not bear to stand where you are standing."
+          "content": "Now I keep returning to the moment we left. I still remember why I refused to take my mother. The other girl still remembers how it felt to be overlooked. Neither memory tells us what our mothers felt after we were gone. I sent you because I could not bear to stand where you are standing."
         },
         {
           "speaker": "",
@@ -2666,7 +2648,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "You have found what she left. I do not know what she would have said to me."
+          "content": "You have found what remains. I do not know what either of our mothers would have said to us."
         }
       ]
     },
@@ -2733,20 +2715,6 @@
         {
           "speaker": "",
           "content": "(She seems to have personal feelings about this topic.)"
-        }
-      ]
-    },
-    "baby_21_follow": {
-      "id": "baby_21_follow",
-      "source_knot": "test_answer_baby_21",
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(A softer breath follows, almost an afterthought.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "She was learning to make memorials then. Perhaps she learned too soon how much a stone could be made to hide."
         }
       ]
     },
@@ -2925,38 +2893,6 @@
         {
           "speaker": "Aurora",
           "content": "I imagine anyone would be moved, #PLAYER#. To make your own skin carry a message—well. We need not have known her to feel that. Shall we return to the investigation?"
-        }
-      ]
-    },
-    "sun_8_supported_10": {
-      "id": "sun_8_supported_10",
-      "source_knot": "test_answer_sun_8",
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(The name arrives more carefully than the rest of the sentence, as though she has set it down rather than spoken it.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "The same rays circle the coins. And the occupational record names the man who funded the Scholar: the Tycoon. His stone has kept the shape of what built his fortune, but it fails to recognize the very intuition that led him to make a successful investment."
-        }
-      ]
-    },
-    "sun_8_normal_9": {
-      "id": "sun_8_normal_9",
-      "source_knot": "test_answer_sun_8",
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(Her agreement is thoughtful, but she leaves the name unspoken.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "The outline matches the coins. Keep that connection. We still need the occupational record before naming the owner."
-        },
-        {
-          "speaker": "Aurora",
-          "content": "I can see why you thought of the sun. Those rays do catch the eye. Still, as you know, the shape represents an occupation. We can't have Apollo the Sun God or Hou Yi the sun shooter buried here. Let's find more evidence of how the sun is linked to an identity."
         }
       ]
     },
@@ -3272,7 +3208,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "No sign of anyone returning. She may have been the last. I left her alone. I left her alone..."
+          "content": "No sign of anyone returning. She may have been the last. I used to think she would only notice me if I went missing too. I left. I never found out whether she did."
         }
       ]
     },
@@ -3287,20 +3223,6 @@
         {
           "speaker": "Aurora",
           "content": "One empty scan is not enough. Check the period after her burial."
-        }
-      ]
-    },
-    "mother_25_hidden_27": {
-      "id": "mother_25_hidden_27",
-      "source_knot": "test_answer_mother_25",
-      "lines": [
-        {
-          "speaker": "",
-          "content": "(There is a small pause before “daughter”. She gives you the rest without trying to soften it.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "Possibly. She may have understood too late to tell her daughter. The picture could have been her last attempt to explain."
         }
       ]
     },
@@ -3496,7 +3418,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "Four faces in the photograph. Three stones together. And this one, a little way apart. Her mother left the sculpture here. Even after the girl went away, those small carved hands still held a place for her."
+          "content": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
         }
       ]
     },
@@ -3524,7 +3446,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "The diary describes a decision to leave. Those left behind had a word for the empty place: disappearance. But the person who left may have called it something else. A beginning, perhaps. We should leave room for that."
+          "content": "The diary gives the two girls different reasons to leave. One could no longer bear what her mother defended. The other had spent years waiting to be noticed, first beside her brother, then beside the space he left. Their departure was deliberate. A memorial can mark an absence without proving a death."
         }
       ]
     },
