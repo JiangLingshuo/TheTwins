@@ -25,6 +25,10 @@ signal time_changed(is_day: bool)
 @export var rubbing_deciphered_message: String = "Symbol deciphered! Notebook updated."
 ## Message shown when a rubbing is dropped on the wrong thing.
 @export var rubbing_mismatch_message: String = "This symbol doesn't seem connected to that."
+## Message shown when a decipher or clue reveal is repeated.
+@export var already_noted_message: String = "We have already taken note of this."
+## Message shown whenever a clue is recorded; %s is the clue's title.
+@export var clue_recorded_message: String = "New clue: %s has been added to the notebook."
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -81,11 +85,20 @@ func _ready() -> void:
 		_toast.show_message(rubbing_deciphered_message))
 	_notebook_tool.rubbing_drag.mismatched.connect(func(_id: String, _target: Control) -> void:
 		_toast.show_message(rubbing_mismatch_message))
+	_notebook_tool.rubbing_drag.already_noted.connect(func(_id: String, _target: Control) -> void:
+		_toast.show_message(already_noted_message))
+	# Every new clue is announced (a revealed one too), queued after other messages.
+	GameState.evidence_recorded.connect(_on_evidence_recorded)
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
 		gravestone.recorded.connect(func(id: String) -> void:
 			_notebook_tool.show_gravestone_next(id)
 			_toast.show_message(gravestone_recorded_message))
+
+
+func _on_evidence_recorded(id: String) -> void:
+	if GameState.is_clue(id) and not GameState.notebook_preview:
+		_toast.show_message(clue_recorded_message % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:

@@ -1,0 +1,12 @@
+{
+  "reveals": [
+    {
+      "rubbing": "infant_figure_rubbing",
+      "target": "dayfolk_appearance",
+      "clue": "dayfolk_appearance",
+      "title": "Appearance of the Dayfolk",
+      "object_texture": "res://assets/Art/day/Appearance_of_the_Dayfolk.png",
+      "text": ""
+    }
+  ]
+}

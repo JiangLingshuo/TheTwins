@@ -1,5 +1,6 @@
 extends Control
 ## The Rise & Set spread intentionally contains only one icon on each page.
+const INVERT_SHADER: Shader = preload("res://shaders/portrait_invert.gdshader")
 var rubbing_id := ""
 var interactive := true
 var ink := Color.WHITE
@@ -12,6 +13,15 @@ func setup(id: String, color: Color, can_interact: bool) -> void:
 	tooltip_text = GameState.rubbing_display(id) if GameState.rubbings.has(id) else "Not yet recorded"
 	ink = color
 	interactive = can_interact
+	# The moon is drawn with its colours reversed (the sun keeps its own).
+	if id == "infant_moon_rubbing":
+		if material == null:
+			var invert := ShaderMaterial.new()
+			invert.shader = INVERT_SHADER
+			invert.set_shader_parameter("invert", 1.0)
+			material = invert
+	else:
+		material = null
 	mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
 	mouse_default_cursor_shape = Control.CURSOR_DRAG if GameState.rubbings.has(id) else Control.CURSOR_ARROW
 	queue_redraw()

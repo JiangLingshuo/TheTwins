@@ -40,11 +40,10 @@ func _run() -> void:
 	book.visible = true
 	book._fill(book.left_text, book.left_number, book._section_start(0) * 2)
 	check("notebook description uses catalog", book.left_page.get_node("Gravestone").description.text == state.get_gravestone_info("baby_tomb")["description"])
-	for section in [2, 4]:
-		var page_index: int = book._section_start(section) * 2
-		book._fill(book.left_text, book.left_number, page_index)
-		var reader = book.left_page.get_node("SpreadReader")
-		check("section %d shows full text reader" % section, reader.visible and not reader.body.text.is_empty())
+	book._fill(book.left_text, book.left_number, book._section_start(4) * 2)
+	check("radio logs show full text reader", book.left_page.get_node("SpreadReader").visible and not book.left_page.get_node("SpreadReader").body.text.is_empty())
+	book._fill(book.left_text, book.left_number, book._section_start(2) * 2)
+	check("clues show folded cards, not a reader", book.left_page.get_node("ManuscriptItems").visible and not book.left_page.get_node("SpreadReader").visible)
 	book._spread = book._section_start(3)
 	book._fill(book.left_text, book.left_number, book._section_start(3) * 2)
 	var items = book.left_page.get_node("ManuscriptItems")

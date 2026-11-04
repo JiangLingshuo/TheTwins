@@ -67,10 +67,11 @@ func _run() -> void:
 	check("long radio log paginates", book._reading_count > 2)
 	var before: int = book._spread
 	book.flip_forward()
-	await wait(0.1)
+	await wait(0.8)  # the text turns with a page-turn animation
 	check("corner advances text while keeping log selected", book._spread == before and book._reading_offsets[book._reading_key] == 2)
 	await shot("02_radio_log_spread")
 	book.flip_backward()
+	await wait(0.8)
 	check("back returns to earlier text", book._reading_offsets[book._reading_key] == 0)
 	print("SPREAD READING: " + ("ALL PASSED" if failures == 0 else str(failures) + " FAILED"))
 	quit(0 if failures == 0 else 1)

@@ -26,6 +26,7 @@
 [ext_resource type="Texture2D" path="res://assets/Art/day/fountain.png" id="21_fountain"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/footprint.png" id="22_footprint"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/energy.png" id="23_energy"]
+[ext_resource type="Texture2D" uid="uid://ckos50jatjcp2" path="res://assets/Art/day/Appearance_of_the_Dayfolk.png" id="24_dayfolk"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sun"]
 atlas = ExtResource("20_sun_art")
@@ -76,6 +77,16 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 scale = Vector2(0.666667, 0.666667)
 mouse_filter = 2
+
+[node name="AppearanceOfTheDayfolk" type="TextureRect" parent="DayCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("24_dayfolk")
+script = ExtResource("14_target")
+target_id = "dayfolk_appearance"
+hit_by_alpha = true
 
 [node name="EnergyLamp" type="TextureRect" parent="DayCemetery"]
 layout_mode = 0

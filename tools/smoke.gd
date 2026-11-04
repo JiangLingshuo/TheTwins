@@ -453,7 +453,7 @@ func _check_rubbing_drag(main: Node) -> void:
 	_expect("hovering an undeciphered rubbing shows the drag hint", drag._hint.visible)
 	_move_mouse(row.call(1))
 	await _wait(0.1)
-	_expect("a deciphered rubbing shows no hint", not drag._hint.visible)
+	_expect("a deciphered rubbing can still be dragged (it may reveal a clue)", drag._hint.visible)
 
 	# Released inside the book: cancelled.
 	_press(row.call(0), true)
