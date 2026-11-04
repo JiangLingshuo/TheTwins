@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://vvah4i68yw8r"
-path="res://.godot/imported/alter.png-f5f887e1efd528ce6d9fcd6006e8b070.ctex"
+path="res://.godot/imported/alter.png-1ef9cdcb7061e948314e5ebfa70289fb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/alter.png"
-dest_files=["res://.godot/imported/alter.png-f5f887e1efd528ce6d9fcd6006e8b070.ctex"]
+source_file="res://assets/Art/night/草稿/alter.png"
+dest_files=["res://.godot/imported/alter.png-1ef9cdcb7061e948314e5ebfa70289fb.ctex"]
 
 [params]
 

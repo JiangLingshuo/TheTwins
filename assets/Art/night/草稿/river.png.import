@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dfwso8m5ku224"
-path="res://.godot/imported/river.png-46e2bf0db86426ffd96d0b4afdec9f46.ctex"
+path="res://.godot/imported/river.png-559d30abe9d90ceb88ac92948044c5ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/river.png"
-dest_files=["res://.godot/imported/river.png-46e2bf0db86426ffd96d0b4afdec9f46.ctex"]
+source_file="res://assets/Art/night/草稿/river.png"
+dest_files=["res://.godot/imported/river.png-559d30abe9d90ceb88ac92948044c5ff.ctex"]
 
 [params]
 

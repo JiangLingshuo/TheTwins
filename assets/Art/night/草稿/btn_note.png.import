@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bled72t2v4y26"
-path="res://.godot/imported/btn_note.png-6959e31d962dbfe938464656887ce38a.ctex"
+path="res://.godot/imported/btn_note.png-131756d68d768564ec8d542983743629.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/btn_note.png"
-dest_files=["res://.godot/imported/btn_note.png-6959e31d962dbfe938464656887ce38a.ctex"]
+source_file="res://assets/Art/night/草稿/btn_note.png"
+dest_files=["res://.godot/imported/btn_note.png-131756d68d768564ec8d542983743629.ctex"]
 
 [params]
 

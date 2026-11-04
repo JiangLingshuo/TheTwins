@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
-[ext_resource type="Texture2D" path="res://assets/Art/night/BG_night.jpg" id="3_night"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/BG_night.png" id="3_night"]
 [ext_resource type="PackedScene" path="res://scenes/flashlight_tool.tscn" id="4_tool"]
 [ext_resource type="PackedScene" path="res://scenes/notebook_tool.tscn" id="5_notebook"]
 [ext_resource type="PackedScene" path="res://scenes/rubbing_tool.tscn" id="6_rubbing"]
@@ -34,7 +34,7 @@ region = Rect2(1423, 78, 144, 161)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_moon"]
 atlas = ExtResource("13_night_moon")
-region = Rect2(484, 92, 95, 89)
+region = Rect2(1022, 29, 109, 108)
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -165,10 +165,10 @@ mouse_filter = 2
 
 [node name="Moon" type="TextureRect" parent="NightCemetery"]
 layout_mode = 0
-offset_left = 1105.0
-offset_top = 241.0
-offset_right = 1295.0
-offset_bottom = 419.0
+offset_left = 1022.0
+offset_top = 29.0
+offset_right = 1131.0
+offset_bottom = 137.0
 mouse_filter = 2
 texture = SubResource("AtlasTexture_moon")
 expand_mode = 1
