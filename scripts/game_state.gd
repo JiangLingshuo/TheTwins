@@ -10,9 +10,9 @@ var player_name: String = ""
 var notebook_pages: PackedStringArray = []
 ## Spread the notebook was left open on.
 var notebook_spread: int = 0
-## Spread the in-game (sectioned) notebook opens on: where it was last left, or
-## the page of the latest recorded gravestone. 0 = first page of Gravestones.
-var notebook_section_spread: int = 0
+## A page the in-game notebook was asked to open on next (e.g. a newly recorded
+## gravestone), or -1 for the default: the first spread of Rise & Set.
+var notebook_section_spread: int = -1
 ## Ids of the symbols the player has rubbed, in the order they were collected.
 var rubbings: Array[String] = []
 ## Rubbing id -> {"gravestone": source gravestone id, "texture": symbol texture
@@ -115,16 +115,87 @@ func content_catalog() -> Dictionary:
 	return _content
 
 
+## A clue revealed by a rubbing gets its title and text from the reveal, plus
+## a "reveal" key ({rubbing, object_texture}) the notebook draws as a figure.
 func get_evidence(id: String) -> Dictionary:
-	return content_catalog().get("evidence", {}).get(id, {})
+	var entry: Dictionary = content_catalog().get("evidence", {}).get(id, {})
+	var reveal := get_clue_reveal(id)
+	if reveal.is_empty():
+		return entry
+	entry = entry.duplicate(true)
+	entry["id"] = id
+	entry["category"] = entry.get("category", "observation")
+	if reveal.has("title"):
+		entry["title"] = reveal["title"]
+	var text: String = reveal.get("text", "")
+	entry["body"] = text
+	entry["interactive_body"] = text
+	entry["reveal"] = reveal
+	return entry
 
+
+## Emitted once when a piece of evidence (clue, rubbing or manuscript) is recorded.
+signal evidence_recorded(id: String)
 
 func record_evidence(id: String) -> bool:
 	if evidence_ids.has(id) or get_evidence(id).is_empty():
 		return false
 	evidence_ids.append(id)
+	if is_clue(id):
+		clue_states[id] = "unread"
+	evidence_recorded.emit(id)
 	notebook_changed.emit()
 	return true
+
+
+# --- Clues --------------------------------------------------------------------
+
+## Clue id -> "unread" (just recorded, shows NEW in the notebook) or "finished"
+## (opened and closed again).
+var clue_states: Dictionary = {}
+## Clue open in the notebook ("" = none); finished when the reader leaves it.
+var active_clue := ""
+
+## True for evidence shown in the Clues section (not rubbings or manuscripts).
+func is_clue(id: String) -> bool:
+	return get_evidence(id).get("category", "") not in ["manuscript", "rubbing", ""]
+
+func is_clue_unread(id: String) -> bool:
+	return clue_states.get(id, "") == "unread"
+
+func open_clue(id: String) -> void:
+	finish_current_manuscript()
+	active_clue = id
+
+
+# --- Rubbing reveals: a rubbing dropped on a matching scene object reveals a clue ---
+
+var _reveals: Array = []
+var _reveals_loaded := false
+
+## All reveals from rubbing_reveals.json: {rubbing, target, clue, title?,
+## object_texture, text?}.
+func rubbing_reveals() -> Array:
+	if not _reveals_loaded:
+		_reveals_loaded = true
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/rubbing_reveals.json"))
+		if parsed is Dictionary:
+			_reveals = parsed.get("reveals", [])
+	return _reveals
+
+## The reveal for dropping `rubbing_id` on the object with `target_id`, or {}.
+func find_rubbing_reveal(rubbing_id: String, target_id: String) -> Dictionary:
+	for reveal in rubbing_reveals():
+		if reveal.get("rubbing", "") == rubbing_id and reveal.get("target", "") == target_id:
+			return reveal
+	return {}
+
+## The reveal that records clue `clue_id`, or {}.
+func get_clue_reveal(clue_id: String) -> Dictionary:
+	for reveal in rubbing_reveals():
+		if reveal.get("clue", "") == clue_id:
+			return reveal
+	return {}
 
 
 func record_gravestone(id: String) -> bool:
@@ -312,7 +383,13 @@ func deliver_day_manuscripts() -> void:
 		if "day_cemetery" in places or entry.get("gravestone", "") in ["baby_tomb", "scholar_tomb", "sun_tomb", "girl_tomb"]: record_evidence(id)
 
 
+## Called whenever the notebook reader leaves a document (back button, page
+## turn, notebook closed). Also finishes an open clue, removing its NEW sign.
 func finish_current_manuscript() -> void:
+	if not active_clue.is_empty():
+		clue_states[active_clue] = "finished"
+		active_clue = ""
+		notebook_changed.emit()
 	var id: String = radio_progress.get("active_manuscript", "")
 	if id.is_empty(): return
 	var finished: Array = radio_progress.get("finished_manuscripts", [])

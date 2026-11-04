@@ -1,9 +1,13 @@
 extends Control
-## One physical page of a two-page document. Text flows left -> right, then next spread.
+## One physical page of a two-page document. Text flows left -> right, then on to
+## the next spread, turned with the book's page corners (Book._turn_reading()).
+## The title (and the back button of a folded entry) sits on the left page only.
 signal back_requested
 signal step_requested(delta: int)
 signal keyword_selected(id: String)
 var body: RichTextLabel
+## Height of the text under a clue's reveal figure (Book paginates with it).
+const REVEAL_TEXT_HEIGHT := 140
 
 static func plain(text: String) -> String:
 	return RegEx.create_from_string('<link="[^\"]+">([^<]+)</link>').sub(text, '$1', true)
@@ -47,20 +51,32 @@ func _button(text: String, at: Vector2, width: float, action: Callable, font: Fo
 	button.pressed.connect(action, CONNECT_DEFERRED)
 	add_child(button)
 
-func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, offset: int, count: int, manuscript: bool, interactive: bool) -> void:
+## back_text: label of the button that returns to the entry list ("" = none).
+## reveal: a rubbing reveal ({rubbing, object_texture}) drawn as a figure above the
+## text on the first page; its text then has REVEAL_TEXT_HEIGHT on every page.
+func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, offset: int, count: int, manuscript: bool, interactive: bool, back_text: String = "", reveal: Dictionary = {}) -> void:
 	for child in get_children():
 		remove_child(child)
 		child.queue_free()
 	mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
-	if manuscript and left:
-		_button("← Manuscripts", Vector2.ZERO, 190, func() -> void: back_requested.emit(), font, ink)
-	else:
-		_label("Continued" if not left and offset + 1 < count else "", font, ink, Vector2.ZERO, Vector2(320, 30), 19)
-	_label(title, font, ink, Vector2(0, 30), Vector2(320, 52), 22)
+	if left:
+		if not back_text.is_empty():
+			_button(back_text, Vector2.ZERO, 190, func() -> void: back_requested.emit(), font, ink)
+		_label(title, font, ink, Vector2(0, 30), Vector2(320, 52), 22)
 	body = RichTextLabel.new()
 	body.name = "DocumentBody"
 	body.position = Vector2(0, 108)
 	body.size = Vector2(320, 300)
+	if not reveal.is_empty() and left and offset == 0:
+		var figure := Control.new()
+		figure.set_script(preload("res://scripts/reveal_figure.gd"))
+		figure.name = "RevealFigure"
+		figure.position = Vector2(0, 96)
+		figure.size = Vector2(320, 160)
+		add_child(figure)
+		figure.setup(GameState.get_rubbing_texture(str(reveal.get("rubbing", ""))), str(reveal.get("object_texture", "")), ink)
+		body.position = Vector2(0, 268)
+		body.size = Vector2(320, REVEAL_TEXT_HEIGHT)
 	body.bbcode_enabled = true
 	body.scroll_active = false
 	body.fit_content = false
@@ -85,8 +101,7 @@ func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, off
 	body.mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
 	body.meta_clicked.connect(func(meta: Variant) -> void: keyword_selected.emit(str(meta)), CONNECT_DEFERRED)
 	add_child(body)
-	if left and offset > 0: _button("← Previous", Vector2(0, 414), 125, func() -> void: step_requested.emit(-2), font, ink)
-	if not left and offset + 2 < count: _button("Continue →", Vector2(180, 414), 140, func() -> void: step_requested.emit(2), font, ink)
-	_label(str(offset + (1 if left else 2)) + " / " + str(count) if left or offset + 1 < count else "", font, ink, Vector2(133, 420), Vector2(65, 28), 17)
+	if count > 1:
+		_label(str(offset + (1 if left else 2)) + " / " + str(count) if left or offset + 1 < count else "", font, ink, Vector2(133, 420), Vector2(65, 28), 17)
 	if manuscript and chunk.contains('<link='):
 		body.tooltip_text = "Click underlined words to take notes."

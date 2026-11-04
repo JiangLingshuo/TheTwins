@@ -18,7 +18,9 @@ extends Control
 signal opened(player_name: String)
 signal page_changed(spread: int)
 signal closed
+## The folded entry (clue or manuscript) open for reading, and its section (2 or 3).
 var _reading_document := ""
+var _reading_section := -1
 var _reading_offsets: Dictionary = {}
 var _reading_cache: Dictionary = {}
 var _reading_count := 0
@@ -32,7 +34,12 @@ const PAPER_SHADER: Shader = preload("res://shaders/notebook_paper.gdshader")
 const PAGE_SIZE := Vector2(420, 584)
 const FOLDED_TINT := Color(0.55, 0.55, 0.55)
 ## Notebook sections, in order (only used when use_sections is on).
+## A section's index in this list is its id everywhere (get_section(), tabs, etc.).
 const SECTION_TITLES: PackedStringArray = ["Gravestones", "Rubbings", "Clues", "Manuscripts", "Radio Logs", "Rise & Set"]
+## The order the sections appear in the book, as ids: Rise & Set comes first.
+const SECTION_ORDER: PackedInt32Array = [5, 0, 1, 2, 3, 4]
+## Section the notebook opens on unless asked for a particular page.
+const RISE_AND_SET := 5
 ## Fixed single-page slots in the Gravestones section (two per spread).
 const GRAVESTONE_SLOTS := 8
 ## Gravestone id on each Gravestones slot, in page order: even slots are the
@@ -132,7 +139,7 @@ func _ready() -> void:
 	if use_sections:
 		for page in [left_page, right_page]:
 			page.get_node("Gravestone").rubbing_pressed.connect(show_rubbing)
-		tabs.setup(SECTION_TITLES)
+		tabs.setup(SECTION_TITLES, SECTION_ORDER)
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
@@ -173,10 +180,11 @@ func wake() -> void:
 
 
 func flip_forward() -> void:
-	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) + 2 < _reading_count:
-		_step_reading(2)
-		return
 	if _busy or _locked:
+		return
+	# A long text in the reader turns its own pages before the book moves on.
+	if _is_reading() and int(_reading_offsets.get(_reading_key, 0)) + 2 < _reading_count:
+		_turn_reading(2)
 		return
 	if not _can_flip_forward():
 		close_to_icon()
@@ -185,10 +193,10 @@ func flip_forward() -> void:
 
 
 func flip_backward() -> void:
-	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) > 0:
-		_step_reading(-2)
-		return
 	if _busy or _locked:
+		return
+	if _is_reading() and int(_reading_offsets.get(_reading_key, 0)) > 0:
+		_turn_reading(-2)
 		return
 	if not _can_flip_backward():
 		# The sectioned notebook closes from its first spread too.
@@ -200,7 +208,7 @@ func flip_backward() -> void:
 
 ## Turn straight to the first spread of a section, in a single page turn.
 func jump_to_section(section: int) -> void:
-	if section != 3 and not _reading_document.is_empty():
+	if section != _reading_section and not _reading_document.is_empty():
 		GameState.finish_current_manuscript()
 		_reading_document = ""
 	if _busy or _locked or _stowed or not _opened or not use_sections:
@@ -218,7 +226,7 @@ func show_rubbing(rubbing_id: String) -> void:
 	if rubbing_id in ["sky_sun_rubbing", "infant_moon_rubbing"]:
 		jump_to_section(5)
 		return
-	var index := GameState.regular_rubbings().find(rubbing_id)
+	var index := GameState.rubbings.find(rubbing_id)
 	if index < 0 or _busy or _locked or _stowed or not _opened or not use_sections:
 		return
 	var target := _section_start(1) + index / (rubbings_per_page * 2)
@@ -316,6 +324,7 @@ func _turn_forward(to: int = -1) -> void:
 	var next := _spread + 1 if to < 0 else to
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
+	_leave_reading_document()
 	_fill(right_text, right_number, next * 2 + 1)
 	await _fold_sheet(true)
 	# ...and lands on the left, showing its back.
@@ -333,6 +342,7 @@ func _turn_backward(to: int = -1) -> void:
 	_flip_player.play()
 	var prev := _spread - 1 if to < 0 else to
 	_prepare_sheet(true, _spread * 2)
+	_leave_reading_document()
 	_fill(left_text, left_number, prev * 2)
 	await _fold_sheet(true)
 	_prepare_sheet(false, prev * 2 + 1)
@@ -549,6 +559,10 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	flip_sheet.get_node("Art").position = (left_page if on_left else right_page).get_node("Art").position
 	flip_sheet.get_node("Rubbings").position = (left_page if on_left else right_page).get_node("Rubbings").position
 	flip_sheet.get_node("Gravestone").position = (left_page if on_left else right_page).get_node("Gravestone").position
+	for child in ["SpreadReader", "ManuscriptItems", "CycleIcon"]:
+		var source: Control = (left_page if on_left else right_page).get_node_or_null(child)
+		if source and flip_sheet.has_node(child):
+			flip_sheet.get_node(child).position = source.position
 	_fill(flip_text, flip_number, page_index)
 
 
@@ -564,7 +578,7 @@ func _fold_sheet(folding: bool) -> void:
 
 
 func _finish_flip(spread: int) -> void:
-	if use_sections and _section_of(spread) != 3 and not _reading_document.is_empty():
+	if use_sections and _section_of(spread) != _reading_section and not _reading_document.is_empty():
 		GameState.finish_current_manuscript()
 		_reading_document = ""
 	flip_sheet.visible = false
@@ -601,7 +615,7 @@ func _fill_rubbings(rubbing_list: Control, page_index: int) -> void:
 		rubbing_list.clear()
 		return
 	var first := (page_index - _section_start(1) * 2) * rubbings_per_page
-	rubbing_list.show_entries(GameState.regular_rubbings().slice(first, first + rubbings_per_page))
+	rubbing_list.show_entries(GameState.rubbings.slice(first, first + rubbings_per_page))
 
 
 ## Size the Rubbings section to its entries (at least one spread). The spread on
@@ -610,9 +624,10 @@ func _update_rubbing_spreads() -> void:
 	var section := _section_of(_spread)
 	var local_spread := _spread - _section_start(section)
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
-	section_spreads[1] = maxi(1, ceili(float(GameState.regular_rubbings().size()) / (rubbings_per_page * 2)))
+	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
-		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 1.0)))
+		# Clues and manuscripts are folded cards, eight per spread; radio logs one per spread.
+		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (1.0 if index == 4 else 8.0)))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
 
 
@@ -711,7 +726,7 @@ func _fill_art(art: Control, page_index: int) -> void:
 		return
 	var section := _section_of(spread)
 	var first_page := _section_start(section) * 2
-	if section == 0 or section >= 2 or (section == 1 and not GameState.regular_rubbings().is_empty()):
+	if section == 0 or section >= 2 or (section == 1 and not GameState.rubbings.is_empty()):
 		art.clear()  # gravestone pages / rubbing entries are shown instead
 	elif page_index == first_page:
 		art.show_title(SECTION_TITLES[section])
@@ -731,10 +746,17 @@ func _spread_count() -> int:
 	return (pages.size() + 1) / 2
 
 
-## First spread of a section.
+## First spread of the section the notebook opens on by default (Rise & Set).
+func get_opening_spread() -> int:
+	return _section_start(RISE_AND_SET)
+
+
+## First spread of a section (sections are laid out in SECTION_ORDER).
 func _section_start(section: int) -> int:
 	var start := 0
-	for i in section:
+	for i in SECTION_ORDER:
+		if i == section:
+			break
 		start += section_spreads[i]
 	return start
 
@@ -742,11 +764,11 @@ func _section_start(section: int) -> int:
 ## Section a spread belongs to.
 func _section_of(spread: int) -> int:
 	var end := 0
-	for i in section_spreads.size():
+	for i in SECTION_ORDER:
 		end += section_spreads[i]
 		if spread < end:
 			return i
-	return section_spreads.size() - 1
+	return SECTION_ORDER[SECTION_ORDER.size() - 1]
 
 
 func _can_flip_forward() -> bool:
@@ -793,10 +815,10 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		reader.back_requested.connect(_close_reading_document, CONNECT_DEFERRED)
 		reader.step_requested.connect(_step_reading, CONNECT_DEFERRED)
 		reader.keyword_selected.connect(_reading_keyword, CONNECT_DEFERRED)
-	reader.visible = section in [2, 4] or (section == 3 and not _reading_document.is_empty())
+	reader.visible = section == 4 or (section in [2, 3] and section == _reading_section and not _reading_document.is_empty())
 	if not reader.visible: return
 	var entry: Dictionary = {}
-	if section == 3:
+	if section in [2, 3]:
 		entry = GameState.get_evidence(_reading_document)
 	else:
 		var entries := GameState.notebook_entries(section)
@@ -808,7 +830,9 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 	var key := str(section) + ":" + str(entry.get("id", "empty"))
 	var cache_key := key + ":" + str(raw.hash())
 	if not _reading_cache.has(cache_key):
-		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, 300)
+		# A revealed clue's text sits under its figure, so it gets shorter pages.
+		var height: int = 300 if entry.get("reveal", {}).is_empty() else preload("res://scripts/spread_reader.gd").REVEAL_TEXT_HEIGHT
+		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, height)
 	var chunks: Array = _reading_cache[cache_key]
 	var offset: int = mini(_reading_offsets.get(key, 0), maxi(0, (chunks.size() - 1) / 2 * 2))
 	var side := page_index % 2
@@ -816,7 +840,8 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 	if page != flip_sheet:
 		_reading_key = key
 		_reading_count = chunks.size()
-	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet)
+	var back_text: String = {2: "← Clues", 3: "← Manuscripts"}.get(section, "")
+	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet, back_text, entry.get("reveal", {}))
 
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
@@ -830,16 +855,28 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		page.add_child(items)
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
-	items.visible = section == 3 and _reading_document.is_empty()
-	if section != 3: return
-	var entries := GameState.notebook_entries(3)
-	var first := (page_index - _section_start(3) * 2) * 4
-	if _reading_document.is_empty(): items._selected = ""
-	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet)
+	items.visible = section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)
+	if not items.visible: return
+	var entries := GameState.notebook_entries(section)
+	var first := (page_index - _section_start(section) * 2) * 4
+	items._selected = ""
+	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
+	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
 func _open_reading_document(id: String) -> void:
 	_reading_document = id
+	_reading_section = get_section()
+	_reading_offsets.erase(str(_reading_section) + ":" + id)  # start at its first page
+	if _reading_section == 2:
+		GameState.open_clue(id)  # finished (NEW sign removed) when the reader leaves it
 	_refresh_reading()
+
+## Turning to another spread folds an open entry back into its card.
+func _leave_reading_document() -> void:
+	if _reading_document.is_empty():
+		return
+	GameState.finish_current_manuscript()
+	_reading_document = ""
 
 func _close_reading_document() -> void:
 	GameState.finish_current_manuscript()
@@ -857,6 +894,40 @@ func _reading_keyword(id: String) -> void:
 		if not notes.has(id): notes.append(id)
 		GameState.radio_progress["manuscript_keywords"] = notes
 	GameState.collect_term(id)
+
+## True while the spread shows a text in the reader (a radio log or an opened entry).
+func _is_reading() -> bool:
+	if not use_sections:
+		return false
+	var section := get_section()
+	return section == 4 or (section == _reading_section and not _reading_document.is_empty())
+
+## Turn the reader's text by `delta` pages (±2) with a normal page-turn animation;
+## the spread itself stays the same.
+func _turn_reading(delta: int) -> void:
+	_busy = true
+	_release_page_focus()
+	_set_corners_visible(false)
+	_flip_player.play()
+	var key := _reading_key
+	var target := clampi(int(_reading_offsets.get(key, 0)) + delta, 0, maxi(0, (_reading_count - 1) / 2 * 2))
+	if delta > 0:
+		_prepare_sheet(false, _spread * 2 + 1)  # the old right page lifts...
+		_reading_offsets[key] = target
+		_fill(right_text, right_number, _spread * 2 + 1)
+		await _fold_sheet(true)
+		_prepare_sheet(true, _spread * 2)  # ...and lands as the new left page
+		await _fold_sheet(false)
+		_fill(left_text, left_number, _spread * 2)
+	else:
+		_prepare_sheet(true, _spread * 2)
+		_reading_offsets[key] = target
+		_fill(left_text, left_number, _spread * 2)
+		await _fold_sheet(true)
+		_prepare_sheet(false, _spread * 2 + 1)
+		await _fold_sheet(false)
+		_fill(right_text, right_number, _spread * 2 + 1)
+	_finish_flip(_spread)
 
 func _refresh_reading() -> void:
 	if _busy:

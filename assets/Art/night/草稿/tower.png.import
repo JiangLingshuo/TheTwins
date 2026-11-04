@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://143ci111p7qg"
-path="res://.godot/imported/father.png-4c5806c0eda6a407c32b43d635977a92.ctex"
+uid="uid://b1esklv3ekygm"
+path="res://.godot/imported/tower.png-9ff8b1beef2a505b8606fcb920bee4e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/father.png"
-dest_files=["res://.godot/imported/father.png-4c5806c0eda6a407c32b43d635977a92.ctex"]
+source_file="res://assets/Art/night/草稿/tower.png"
+dest_files=["res://.godot/imported/tower.png-9ff8b1beef2a505b8606fcb920bee4e9.ctex"]
 
 [params]
 

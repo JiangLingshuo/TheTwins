@@ -29,6 +29,14 @@ signal term_selected(term_id: String)
 @export var frame_color: Color = Color(0.92, 0.89, 0.82, 0.0)
 ## Frame shown when a reply is marked "hidden" (radio feedback).
 @export var hidden_frame_color: Color = Color(1.0, 0.8, 0.35, 0.7)
+## Speaker whose lines bring in the Portrait (compared ignoring case).
+@export var portrait_speaker: String = "Aurora"
+## Seconds for the portrait to fade in / out.
+@export var portrait_fade_time: float = 0.35
+## Invert the portrait's colours when the screen behind it is dark.
+@export var portrait_auto_invert: bool = true
+## Below this brightness (0–1, measured without the Dim layer) the background counts as dark.
+@export_range(0.0, 1.0, 0.05) var dark_background_threshold: float = 0.35
 
 const PAUSE_CHARS := ".,!?;:…—"
 
@@ -37,6 +45,7 @@ const PAUSE_CHARS := ".,!?;:…—"
 @onready var speaker_label: Label = $Panel/Margin/VBox/SpeakerLabel
 @onready var content_label: RichTextLabel = $Panel/Margin/VBox/ContentLabel
 @onready var continue_indicator: Label = $Panel/Margin/ContinueIndicator
+@onready var portrait: TextureRect = $Portrait
 
 var _lines: Array[Dictionary] = []
 var _log_session: String = ""
@@ -50,6 +59,7 @@ var _hovered_meta := ""
 var _feedback_kind := ""
 var _term_notice: Label
 var _term_notice_tween: Tween
+var _portrait_tween: Tween
 
 
 func _ready() -> void:
@@ -157,6 +167,7 @@ func _next_line() -> void:
 	GameState.append_radio_line(_log_session, log_line)
 	speaker_label.text = GameState.fill_placeholders(speaker)
 	speaker_label.visible = not speaker.is_empty()
+	_show_portrait(speaker.strip_edges().to_lower() == portrait_speaker.to_lower())
 	_hovered_meta = ""
 	content_label.text = _rich_content(GameState.fill_placeholders(content))
 	content_label.visible_characters = 0
@@ -175,6 +186,7 @@ func _finish_line() -> void:
 func _close() -> void:
 	_accept_input = false
 	_stop_indicator()
+	_show_portrait(false)
 	var t := create_tween()
 	t.tween_property(self, "modulate:a", 0.0, fade_time)
 	await t.finished
@@ -182,6 +194,44 @@ func _close() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_active = false
 	finished.emit()
+
+
+## Fade the portrait in while its speaker talks and out for everyone else.
+func _show_portrait(shown: bool) -> void:
+	# Pick the colours as it appears, while the portrait isn't on screen yet.
+	if shown and portrait.modulate.a < 0.01 and portrait.material is ShaderMaterial:
+		var dark := portrait_auto_invert and _background_brightness() < dark_background_threshold
+		(portrait.material as ShaderMaterial).set_shader_parameter("invert", 1.0 if dark else 0.0)
+	if _portrait_tween:
+		_portrait_tween.kill()
+	_portrait_tween = create_tween()
+	_portrait_tween.tween_property(portrait, "modulate:a", 1.0 if shown else 0.0, portrait_fade_time) \
+		.set_trans(Tween.TRANS_SINE)
+
+
+## Average brightness (0–1) of the last rendered frame behind the portrait,
+## above the text panel and with the Dim layer taken out. 1.0 if it can't be read.
+func _background_brightness() -> float:
+	if DisplayServer.get_name() == "headless":
+		return 1.0  # nothing is rendered, so there is no frame to read
+	var frame := get_viewport().get_texture().get_image()
+	if frame == null or frame.is_empty():
+		return 1.0
+	var area := portrait.get_global_rect()
+	area.end.y = minf(area.end.y, panel.get_global_rect().position.y)
+	var to_pixels := Vector2(frame.get_size()) / get_viewport_rect().size
+	var region := Rect2i(Rect2(area.position * to_pixels, area.size * to_pixels)) \
+		.intersection(Rect2i(Vector2i.ZERO, frame.get_size()))
+	if region.size.x <= 0 or region.size.y <= 0:
+		return 1.0
+	var sample := frame.get_region(region)
+	sample.resize(16, 16, Image.INTERPOLATE_BILINEAR)
+	var total := 0.0
+	for y in 16:
+		for x in 16:
+			total += sample.get_pixel(x, y).get_luminance()
+	var undimmed := 1.0 - (dim.color.a if dim.visible else 0.0)
+	return total / 256.0 / maxf(undimmed, 0.05)
 
 
 func _start_indicator() -> void:
@@ -239,6 +289,7 @@ func show_menu() -> void:
 	speaker_label.hide()
 	content_label.hide()
 	_stop_indicator()
+	_show_portrait(false)
 	dim.color = Color(0, 0, 0, dim_alpha)
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	modulate.a = 1.0

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b1esklv3ekygm"
-path="res://.godot/imported/tower.png-41e6adffd197e30c9209d63064a2d4c6.ctex"
+uid="uid://dfwso8m5ku224"
+path="res://.godot/imported/river.png-559d30abe9d90ceb88ac92948044c5ff.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/tower.png"
-dest_files=["res://.godot/imported/tower.png-41e6adffd197e30c9209d63064a2d4c6.ctex"]
+source_file="res://assets/Art/night/草稿/river.png"
+dest_files=["res://.godot/imported/river.png-559d30abe9d90ceb88ac92948044c5ff.ctex"]
 
 [params]
 

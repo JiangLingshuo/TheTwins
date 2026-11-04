@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://yntpxd7qmxjw"
-path="res://.godot/imported/btn_set.png-3ef92b8f3f87b13f7bfc31f1f822229d.ctex"
+uid="uid://cma67weyhwbj8"
+path="res://.godot/imported/mother.png-7cc0fb6a42b9dbfeff92204b6ec57be1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/btn_set.png"
-dest_files=["res://.godot/imported/btn_set.png-3ef92b8f3f87b13f7bfc31f1f822229d.ctex"]
+source_file="res://assets/Art/night/草稿/mother.png"
+dest_files=["res://.godot/imported/mother.png-7cc0fb6a42b9dbfeff92204b6ec57be1.ctex"]
 
 [params]
 

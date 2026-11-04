@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://7maugjgaty02"
-path="res://.godot/imported/BG_night.jpg-c15086d39901266044e4d04c4ba8fb0e.ctex"
+uid="uid://4k6blneqywf6"
+path="res://.godot/imported/moon.png-e4145cf8034c362e9174e93f8cfc542d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/night/BG_night.jpg"
-dest_files=["res://.godot/imported/BG_night.jpg-c15086d39901266044e4d04c4ba8fb0e.ctex"]
+source_file="res://assets/Art/night/草稿/moon.png"
+dest_files=["res://.godot/imported/moon.png-e4145cf8034c362e9174e93f8cfc542d.ctex"]
 
 [params]
 

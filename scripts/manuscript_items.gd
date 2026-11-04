@@ -1,7 +1,8 @@
 extends Control
 signal document_requested(id: String)
 signal list_requested
-## A notebook page of manuscript cards. Clicking a card opens its full text.
+## A notebook page of folded entries (manuscripts or clues), one card per entry
+## showing its title. Clicking a card opens its full text.
 
 var _entries: Array[Dictionary] = []
 var _selected := ""
@@ -10,8 +11,15 @@ var _font: Font
 var _ink := Color(0.17, 0.14, 0.12)
 var _interactive := true
 var _stack: VBoxContainer
+## Ink of the NEW sign on unread clues (the notebook's keyword red).
+const NEW_COLOR := Color("843c42")
+## Manuscripts track which documents were read (Aurora's tutorial uses it); clues do not.
+var _manuscript := true
+var _empty_text := "No documents received yet."
 
-func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool) -> void:
+func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool, manuscript: bool = true, empty_text: String = "No documents received yet.") -> void:
+	_manuscript = manuscript
+	_empty_text = empty_text
 	if _page_key != page_key:
 		_selected = ""
 	_page_key = page_key
@@ -40,9 +48,8 @@ func _rebuild() -> void:
 	_stack.add_theme_constant_override("separation", 12)
 	add_child(_stack)
 	_stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_stack.add_child(_label("Manuscripts", 26))
-	if _entries.is_empty():
-		_stack.add_child(_label("No documents received yet.", 21))
+	if _entries.is_empty() and not _empty_text.is_empty():
+		_stack.add_child(_label(_empty_text, 21))
 	for entry in _entries:
 		var button := Button.new()
 		button.name = entry["id"]
@@ -65,16 +72,32 @@ func _rebuild() -> void:
 		button.add_child(title)
 		title.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		title.offset_left = 12
-		title.offset_right = -12
 		title.offset_top = 8
 		title.offset_bottom = -8
 		title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		# An unread clue shows NEW in its top-right corner until it has been read.
+		var unread := not _manuscript and GameState.is_clue_unread(str(entry["id"]))
+		title.offset_right = -58 if unread else -12
+		if unread:
+			var badge := _label("NEW", 15)
+			badge.name = "NewBadge"
+			badge.add_theme_color_override("font_color", NEW_COLOR)
+			badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+			button.add_child(badge)
+			badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+			badge.offset_left = -60
+			badge.offset_right = -8
+			badge.offset_top = 4
+			badge.offset_bottom = 24
 		button.pressed.connect(show_document.bind(entry["id"]))
 
 func show_document(id: String) -> void:
 	if not _interactive or not _entries.any(func(entry: Dictionary) -> bool: return entry["id"] == id):
 		return
 	_selected = id
+	if not _manuscript:
+		document_requested.emit(id)
+		return
 	GameState.radio_progress["active_manuscript"] = id
 	var read: Array = GameState.radio_progress.get("read_manuscripts", [])
 	if not read.has(id): read.append(id)

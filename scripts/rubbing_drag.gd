@@ -1,10 +1,17 @@
 extends Control
-## Drags a collected, undeciphered rubbing from the notebook onto the scene.
+## Drags a collected rubbing (deciphered or not) from the notebook onto the scene.
 ## The notebook's Rubbings pages start it with begin(); the symbol then follows
-## the mouse. Leaving the book closes the notebook (the drag goes on); releasing
-## over a DecipherTarget whose target_id matches the rubbing confirms its
-## meaning (GameState.confirm_rubbing_meaning). It also shows the hover hint
-## for the Rubbings entries. One drag at a time; it lives in the notebook tool.
+## the mouse. Leaving the book closes the notebook (the drag goes on). Releasing
+## over a DecipherTarget has one of three results:
+##   1. the target is the rubbing's own object: its meaning is confirmed
+##      (GameState.confirm_rubbing_meaning) -> `deciphered`;
+##   2. the pair is listed in rubbing_reveals.json: its clue is recorded -> `clue_revealed`;
+##   3. anything else -> `mismatched`.
+## Results 1 and 2 happen once; repeating them emits `already_noted` instead.
+## Rubbings can also be deciphered by asking Aurora over the radio.
+## The sun and moon icons drag as on the Rise & Set page (begin_cycle()).
+## It also shows the hover hint for the Rubbings entries. One drag at a time;
+## it lives in the notebook tool.
 ##
 ## Input is read in _input, so it keeps working while the book's pages are
 ## hidden and the dark overlay is still fading.
@@ -13,13 +20,17 @@ extends Control
 signal deciphered(rubbing_id: String, target: Control)
 ## Sky substitution changes location/time, not the symbol’s funerary meaning.
 signal sky_replaced(rubbing_id: String, target: Control)
+## Emitted when a dropped rubbing revealed a clue (already recorded in GameState).
+signal clue_revealed(rubbing_id: String, target: Control, clue_id: String)
+## Emitted when a decipher or reveal that already happened is repeated.
+signal already_noted(rubbing_id: String, target: Control)
 ## Emitted when a rubbing was dropped on the scene but not on its object
 ## (`target` is the object under it, or null).
 signal mismatched(rubbing_id: String, target: Control)
 
 const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 
-@export var hint_text: String = "Drag this symbol onto an object in the scene to uncover its meaning."
+@export var hint_text: String = "Drag this symbol onto an object in the scene to uncover its meaning or a new clue. You can also ask Aurora about it over the radio."
 ## Largest size of the dragged symbol, in screen pixels.
 @export var symbol_size: Vector2 = Vector2(64, 64)
 @export var symbol_color: Color = Color(0.98, 0.96, 0.9)
@@ -52,10 +63,12 @@ func is_dragging() -> bool:
 	return not rubbing_id.is_empty()
 
 
-## Start dragging a rubbing from screen position `pointer`. Only collected,
-## undeciphered rubbings can be dragged. Returns false if no drag started.
+## Start dragging a collected rubbing from screen position `pointer`.
+## Returns false if no drag started.
 func begin(id: String, pointer: Vector2) -> bool:
-	if is_dragging() or not GameState.rubbings.has(id) or GameState.is_rubbing_deciphered(id):
+	if id in ["sky_sun_rubbing", "infant_moon_rubbing"]:
+		return begin_cycle(id, pointer)
+	if is_dragging() or not GameState.rubbings.has(id):
 		return false
 	rubbing_id = id
 	var path := GameState.get_rubbing_texture(id)
@@ -146,12 +159,28 @@ func _drop(pointer: Vector2) -> void:
 		else:
 			mismatched.emit(id, target)
 		return
+	if target == null:
+		mismatched.emit(id, null)
+		return
+	# 2. A match that reveals a clue.
+	var reveal := GameState.find_rubbing_reveal(id, target.target_id)
+	if not reveal.is_empty():
+		var clue: String = reveal.get("clue", "")
+		if GameState.evidence_ids.has(clue):
+			already_noted.emit(id, target)
+		elif GameState.record_evidence(clue):
+			clue_revealed.emit(id, target, clue)
+		return
+	# 1. A match that deciphers the rubbing (it may already be deciphered, e.g. by Aurora).
 	var wanted := GameState.get_rubbing_target(id)
-	if target and not wanted.is_empty() and target.target_id == wanted \
-			and GameState.confirm_rubbing_meaning(id, target.get_meaning()):
-		deciphered.emit(id, target)
-	else:
-		mismatched.emit(id, target)
+	if not wanted.is_empty() and target.target_id == wanted:
+		if GameState.is_rubbing_deciphered(id):
+			already_noted.emit(id, target)
+		elif GameState.confirm_rubbing_meaning(id, target.get_meaning()):
+			deciphered.emit(id, target)
+		return
+	# 3. No match.
+	mismatched.emit(id, target)
 
 
 ## The topmost DecipherTarget showing at a screen position, or null.

@@ -55,12 +55,14 @@ func _run() -> void:
 	check("after dialogue asks for notebook", tutorial.step == tutorial.Step.BOOK and state.cycle_hint_heard)
 	await notebook.open()
 	await wait(0.2)
-	check("opening notebook asks for dedicated tab", tutorial.step == tutorial.Step.TAB)
+	# The notebook opens on Rise & Set (its first section), so no tab step is needed.
+	check("opening notebook lands on Rise & Set", notebook.book.get_section() == 5 and tutorial.step == tutorial.Step.DRAG)
 	notebook.book.jump_to_section(5)
 	await wait(0.9)
 	check("dedicated spread prompts moon drag", tutorial.step == tutorial.Step.DRAG)
 	await shot("04_rise_set")
-	check("icons do not duplicate in Rubbings", state.regular_rubbings().is_empty())
+	check("both icons listed once in Rubbings, deciphered", state.rubbings.count("sky_sun_rubbing") == 1 and state.rubbings.count("infant_moon_rubbing") == 1 \
+		and state.is_rubbing_deciphered("sky_sun_rubbing") and state.is_rubbing_deciphered("infant_moon_rubbing"))
 	check("sun on left and moon on right", notebook.book.left_page.get_node("CycleIcon").rubbing_id == "sky_sun_rubbing" and notebook.book.right_page.get_node("CycleIcon").rubbing_id == "infant_moon_rubbing")
 	check("dedicated spread uses day-night papers", notebook.book.day_night_sections.has(5))
 	var drag = notebook.rubbing_drag

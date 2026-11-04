@@ -1,8 +1,18 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_script"]
 [ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_content"]
 [ext_resource type="Shader" path="res://shaders/radio_static.gdshader" id="4_static"]
+[ext_resource type="Texture2D" path="res://assets/Art/figure/aurora.png" id="5_aurora"]
+[ext_resource type="Shader" path="res://shaders/portrait_invert.gdshader" id="6_invert"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_portrait"]
+resource_local_to_scene = true
+shader = ExtResource("6_invert")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aurora"]
+atlas = ExtResource("5_aurora")
+region = Rect2(147, 343, 1458, 2363)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_box"]
 bg_color = Color(0, 0, 0, 0)
@@ -36,6 +46,22 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 color = Color(0, 0, 0, 0)
+
+[node name="Portrait" type="TextureRect" parent="."]
+modulate = Color(1, 1, 1, 0)
+material = SubResource("ShaderMaterial_portrait")
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 40.0
+offset_top = -560.0
+offset_right = 386.0
+grow_vertical = 0
+mouse_filter = 2
+texture = SubResource("AtlasTexture_aurora")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Panel" type="PanelContainer" parent="."]
 layout_mode = 1
