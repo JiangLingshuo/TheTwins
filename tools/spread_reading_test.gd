@@ -61,9 +61,14 @@ func _run() -> void:
 			check("page fits: " + entry["id"], font.get_multiline_string_size(reader_script.plain(page), HORIZONTAL_ALIGNMENT_LEFT, 320, 22).y <= 300)
 	# Long log spans several spreads; book corner advances local text rather than leaving it.
 	book._close_reading_document()
-	state.append_radio_line("long-test", {"speaker": "Aurora", "content": "A remembered detail in this civilization. ".repeat(120)})
+	state.begin_radio_exchange("radio:long-test", {"gravestone_id": "baby_tomb", "question_id": "baby:long", "question_text": "A long question?", "evidence_id": "", "follow_up": ""})
+	state.append_radio_line("radio:long-test", {"speaker": "Aurora", "content": "A remembered detail in this civilization. ".repeat(120)})
+	state.end_radio_exchange("radio:long-test")
 	book.jump_to_section(4)
 	await wait(0.8)
+	book._open_radio_entry("baby_tomb")
+	book._open_radio_entry("baby:long")
+	await wait(0.2)
 	check("long radio log paginates", book._reading_count > 2)
 	var before: int = book._spread
 	book.flip_forward()

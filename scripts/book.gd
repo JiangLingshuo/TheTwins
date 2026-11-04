@@ -25,6 +25,11 @@ var _reading_offsets: Dictionary = {}
 var _reading_cache: Dictionary = {}
 var _reading_count := 0
 var _reading_key := ""
+## Radio Logs navigation (UI state only; the history lives in GameState):
+## the selected gravestone (or RadioLogPages.OTHER) and question, "" = none.
+var _radio_stone := ""
+var _radio_question := ""
+const RadioLogPages := preload("res://scripts/radio_log_pages.gd")
 ## Emitted when write() has finished writing on a page.
 signal written(page_index: int)
 
@@ -144,6 +149,7 @@ func _ready() -> void:
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
 		GameState.notebook_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
+		GameState.radio_history_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -626,8 +632,9 @@ func _update_rubbing_spreads() -> void:
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
 	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
-		# Clues and manuscripts are folded cards, eight per spread; radio logs one per spread.
-		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (1.0 if index == 4 else 8.0)))
+		# Clues and manuscripts are folded cards, eight per spread. Radio Logs is one
+		# spread: its lists and dialogue turn their own pages (_turn_reading).
+		section_spreads[index] = 1 if index == 4 else maxi(1, ceili(float(GameState.notebook_entries(index).size()) / 8.0))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
 
 
@@ -815,15 +822,13 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		reader.back_requested.connect(_close_reading_document, CONNECT_DEFERRED)
 		reader.step_requested.connect(_step_reading, CONNECT_DEFERRED)
 		reader.keyword_selected.connect(_reading_keyword, CONNECT_DEFERRED)
-	reader.visible = section == 4 or (section in [2, 3] and section == _reading_section and not _reading_document.is_empty())
+	reader.visible = (section == 4 and _radio_reading()) or (section in [2, 3] and section == _reading_section and not _reading_document.is_empty())
 	if not reader.visible: return
 	var entry: Dictionary = {}
 	if section in [2, 3]:
 		entry = GameState.get_evidence(_reading_document)
 	else:
-		var entries := GameState.notebook_entries(section)
-		var index := page_index / 2 - _section_start(section)
-		if index < entries.size(): entry = entries[index]
+		entry = RadioLogPages.reader_entry(_radio_stone, _radio_question)
 	var title: String = entry.get("title", SECTION_TITLES[section])
 	var raw: String = entry.get("interactive_body", entry.get("body", "No entries yet."))
 	raw = GameState.fill_placeholders(raw)
@@ -841,7 +846,9 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		_reading_key = key
 		_reading_count = chunks.size()
 	var back_text: String = {2: "← Clues", 3: "← Manuscripts"}.get(section, "")
-	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet, back_text, entry.get("reveal", {}))
+	if section == 4:
+		back_text = "← Questions" if not _radio_question.is_empty() else "← Radio Logs"
+	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet, back_text, entry.get("reveal", {}), section == 4)
 
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
@@ -855,15 +862,80 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		page.add_child(items)
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
-	items.visible = section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)
+	items.visible = (section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)) \
+		or (section == 4 and not _radio_reading())
 	if not items.visible: return
+	items._selected = ""
+	if section == 4:
+		_fill_radio_list(items, page_index, page != flip_sheet)
+		return
 	var entries := GameState.notebook_entries(section)
 	var first := (page_index - _section_start(section) * 2) * 4
-	items._selected = ""
 	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
+	items.set_list_header()
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
+
+# --- Radio Logs: gravestones -> questions -> dialogue records -----------------
+
+## True when Radio Logs shows dialogue (a question, or Other Transmissions)
+## rather than a list of cards.
+func _radio_reading() -> bool:
+	return _radio_stone == RadioLogPages.OTHER or not _radio_question.is_empty()
+
+
+## A page of Radio Logs cards: the gravestones (plus Other Transmissions), or the
+## questions of the selected gravestone under its name and a back button. Long
+## lists continue on the next pages, turned with the corners like a long text.
+func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> void:
+	var questions := not _radio_stone.is_empty()
+	var entries: Array[Dictionary] = RadioLogPages.question_entries(_radio_stone) if questions else RadioLogPages.gravestone_entries()
+	# The heading and back button take the place of one card on the left page.
+	var left_cards := 3 if questions else 4
+	var per_spread := left_cards + 4
+	var key := "4:stone:" + _radio_stone if questions else "4:list"
+	var count := maxi(1, ceili(entries.size() / float(per_spread))) * 2
+	var offset: int = mini(_reading_offsets.get(key, 0), count - 2)
+	var side := page_index % 2
+	var first := offset / 2 * per_spread + (0 if side == 0 else left_cards)
+	if interactive:
+		_reading_key = key
+		_reading_count = count
+	if questions and side == 0:
+		items.set_list_header(RadioLogPages.gravestone_title(_radio_stone), "← Radio Logs", 19)
+	else:
+		items.set_list_header("", "", 19 if questions else 23)
+	var empty_text := "No radio transmissions recorded yet." if side == 0 and offset == 0 else ""
+	items.setup(entries.slice(first, first + (left_cards if side == 0 else 4)), page_index, left_text.label_settings.font,
+		left_text.label_settings.font_color, interactive, false, empty_text)
+
+
+## A Radio Logs card was clicked: open the gravestone's questions (Other
+## Transmissions opens its dialogue directly), or the question's dialogue.
+func _open_radio_entry(id: String) -> void:
+	if _radio_stone.is_empty():
+		_radio_stone = id
+		_reading_offsets.erase("4:stone:" + id)
+	else:
+		_radio_question = id
+	if _radio_reading():
+		_reading_offsets.erase("4:" + RadioLogPages.reader_entry(_radio_stone, _radio_question)["id"])
+	_refresh_reading()
+
+
+## Back one level: dialogue -> questions -> gravestones.
+func _radio_back() -> void:
+	if not _radio_question.is_empty():
+		_radio_question = ""
+	else:
+		_radio_stone = ""
+	_refresh_reading()
+
+
 func _open_reading_document(id: String) -> void:
+	if get_section() == 4:
+		_open_radio_entry(id)
+		return
 	_reading_document = id
 	_reading_section = get_section()
 	_reading_offsets.erase(str(_reading_section) + ":" + id)  # start at its first page
@@ -879,6 +951,9 @@ func _leave_reading_document() -> void:
 	_reading_document = ""
 
 func _close_reading_document() -> void:
+	if get_section() == 4:
+		_radio_back()
+		return
 	GameState.finish_current_manuscript()
 	_reading_document = ""
 	_refresh_reading()
