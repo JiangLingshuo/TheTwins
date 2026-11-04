@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=25 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
@@ -27,6 +27,10 @@
 [ext_resource type="Texture2D" path="res://assets/Art/day/footprint.png" id="22_footprint"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/energy.png" id="23_energy"]
 [ext_resource type="Texture2D" uid="uid://ckos50jatjcp2" path="res://assets/Art/day/Appearance_of_the_Dayfolk.png" id="24_dayfolk"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/ladder.png" id="25_ladder"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/river.png" id="26_river"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/road.png" id="27_road"]
+[ext_resource type="Texture2D" path="res://assets/Art/night/spar.png" id="28_spar"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_sun"]
 atlas = ExtResource("20_sun_art")
@@ -162,6 +166,34 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 scale = Vector2(0.666667, 0.666667)
 mouse_filter = 2
+
+[node name="Ladder" type="TextureRect" parent="NightCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("25_ladder")
+
+[node name="River" type="TextureRect" parent="NightCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("26_river")
+
+[node name="Road" type="TextureRect" parent="NightCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("27_road")
+
+[node name="Spar" type="TextureRect" parent="NightCemetery"]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
+texture = ExtResource("28_spar")
 
 [node name="Moon" type="TextureRect" parent="NightCemetery"]
 layout_mode = 0
