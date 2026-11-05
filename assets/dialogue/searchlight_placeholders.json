@@ -28,7 +28,13 @@
       "target_id": "skin_picture",
       "meaning": "Skin picture: Dayfolk and Nightfolk holding hands",
       "years_ago": 45.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "texture": "res://assets/Art/figure/hand_holding.png",
+      "crop": true,
+      "size": [
+        360,
+        280
+      ]
     },
     {
       "node": "WishPoolCoin",
@@ -50,14 +56,20 @@
       "evidence_id": "twin_beast_trace",
       "city": "day",
       "position": [
-        1250,
-        740
+        1244,
+        871
       ],
-      "caption": "Twin beast above giant footprint",
+      "caption": "Twin-beast footprint (oldest trace)",
       "target_id": "twin_beast_trace",
-      "meaning": "Twin beast above giant footprint",
+      "meaning": "Twin-beast footprint",
       "years_ago": 250.0,
-      "date_status": "provisional_ancient_date"
+      "date_status": "provisional_ancient_date",
+      "size": [
+        285,
+        189
+      ],
+      "texture": "res://assets/Art/day/footprint.png",
+      "crop": true
     },
     {
       "node": "FamilyPhoto",

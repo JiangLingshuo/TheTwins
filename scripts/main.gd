@@ -155,6 +155,17 @@ func _fade_backgrounds() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
+## The part of `texture` that is not transparent, so drawn art fills its target box.
+func _crop_to_used(texture: Texture2D) -> Texture2D:
+	var image := texture.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var atlas := AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2(image.get_used_rect())
+	return atlas
+
+
 func _add_investigation_targets() -> void:
 	# Source dates come from evidence metadata; positions are editable layout placeholders.
 	var target_script = load("res://scripts/historical_target.gd")
@@ -171,7 +182,16 @@ func _add_investigation_targets() -> void:
 		target.position = Vector2(spec["position"][0], spec["position"][1])
 		target.size = Vector2(310, 110)
 		target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		if spec.has("texture"): target.texture = load("res://assets/Art/symbols/" + spec["texture"])
+		if spec.has("texture"):
+			# A bare file name is a placeholder in assets/Art/symbols; finished art gives a res:// path.
+			var texture_path: String = spec["texture"]
+			if not texture_path.begins_with("res://"):
+				texture_path = "res://assets/Art/symbols/" + texture_path
+			target.texture = load(texture_path)
+			if spec.get("crop", false):
+				target.texture = _crop_to_used(target.texture)
+		if spec.has("size"):
+			target.size = Vector2(spec["size"][0], spec["size"][1])
 		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(760, 480, 220, 300)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
