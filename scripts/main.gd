@@ -8,8 +8,6 @@ extends Control
 
 ## Emitted after the time of day changes.
 signal time_changed(is_day: bool)
-## Emitted when the view zooms in on a gravestone (`gravestone`) or back out (null).
-signal zoom_changed(gravestone: Control)
 
 ## Time of day when the scene starts.
 @export_enum("Day", "Night") var start_time: int = 0
@@ -31,10 +29,6 @@ signal zoom_changed(gravestone: Control)
 @export var already_noted_message: String = "We have already taken note of this."
 ## Message shown whenever a clue is recorded; %s is the clue's title.
 @export var clue_recorded_message: String = "New clue: %s has been added to the notebook."
-## Seconds for zooming in on a gravestone or back out.
-@export var zoom_time: float = 0.6
-## Largest zoom allowed on a gravestone.
-@export var max_zoom: float = 4.0
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -56,12 +50,6 @@ var is_day: bool = true:
 		time_changed.emit(is_day)
 
 var _fade: Tween
-## The scene layers that zoom together, with their unzoomed position and scale.
-var _world_base: Array[Dictionary] = []
-var _zoom := 1.0  # current view: screen = base * _zoom + _zoom_offset
-var _zoom_offset := Vector2.ZERO
-var _zoom_tween: Tween
-var _zoomed_stone: Control
 
 
 func _ready() -> void:
@@ -75,10 +63,7 @@ func _ready() -> void:
 	_night_cemetery.visible = not is_day
 	time_changed.connect(func(day: bool) -> void:
 		_day_cemetery.visible = day
-		_night_cemetery.visible = not day
-		# The zoomed stone belongs to one city; switching the time shows the whole scene.
-		if is_zoomed():
-			zoom_out())
+		_night_cemetery.visible = not day)
 	# One tool at a time: picking one up puts the other away; reading the
 	# notebook puts both away.
 	_notebook_tool.notebook_opened.connect(_flashlight_tool.turn_off)
@@ -108,69 +93,6 @@ func _ready() -> void:
 		gravestone.recorded.connect(func(id: String) -> void:
 			_notebook_tool.show_gravestone_next(id)
 			_toast.show_message(gravestone_recorded_message))
-		gravestone.zoom_requested.connect(func(stone: Control) -> void:
-			if stone == _zoomed_stone:
-				zoom_out()
-			else:
-				zoom_to(stone))
-	for layer in [_day_background, _night_background, _day_cemetery, _night_cemetery]:
-		_world_base.append({"node": layer, "position": layer.position, "scale": layer.scale})
-
-
-## Zoom the view in so `gravestone` is centred and fills its zoom_height_ratio
-## of the screen height (the view never leaves the background).
-func zoom_to(gravestone: Control) -> void:
-	var screen := get_viewport_rect().size
-	var now: Rect2 = gravestone.get_stone_global_rect()
-	var base := Rect2((now.position - _zoom_offset) / _zoom, now.size / _zoom)
-	var target := clampf(screen.y * gravestone.zoom_height_ratio / base.size.y, 1.0, max_zoom)
-	var offset := screen / 2.0 - base.get_center() * target
-	offset = offset.clamp(screen - screen * target, Vector2.ZERO)
-	if _zoomed_stone and _zoomed_stone != gravestone:
-		_zoomed_stone.zoomed = false
-	_zoomed_stone = gravestone
-	gravestone.zoomed = true
-	_tween_zoom(target, offset)
-	zoom_changed.emit(gravestone)
-
-
-## Zoom back out to the whole scene.
-func zoom_out() -> void:
-	if _zoomed_stone:
-		_zoomed_stone.zoomed = false
-	_zoomed_stone = null
-	_tween_zoom(1.0, Vector2.ZERO)
-	zoom_changed.emit(null)
-
-
-func is_zoomed() -> bool:
-	return _zoomed_stone != null
-
-
-func _tween_zoom(target: float, offset: Vector2) -> void:
-	if _zoom_tween:
-		_zoom_tween.kill()
-	var from_zoom := _zoom
-	var from_offset := _zoom_offset
-	_zoom_tween = create_tween()
-	_zoom_tween.tween_method(func(t: float) -> void:
-		_apply_zoom(lerpf(from_zoom, target, t), from_offset.lerp(offset, t)),
-		0.0, 1.0, zoom_time).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
-
-
-func _apply_zoom(zoom: float, offset: Vector2) -> void:
-	_zoom = zoom
-	_zoom_offset = offset
-	for base in _world_base:
-		base["node"].scale = base["scale"] * zoom
-		base["node"].position = base["position"] * zoom + offset
-
-
-func _unhandled_input(event: InputEvent) -> void:
-	if is_zoomed() and event is InputEventMouseButton and event.pressed \
-			and event.button_index == MOUSE_BUTTON_RIGHT:
-		zoom_out()
-		get_viewport().set_input_as_handled()
 
 
 ## Fade in from black, all but the notebook button: it shows the book the start
@@ -202,10 +124,6 @@ func _unhandled_key_input(event: InputEvent) -> void:
 	if OS.is_debug_build() and event.is_pressed() and not event.is_echo() and event is InputEventKey and event.keycode == KEY_F8:
 		GameState.preview_notebook_content()
 		_toast.show_message("DEV: all notebook text unlocked for this session")
-		get_viewport().set_input_as_handled()
-		return
-	if is_zoomed() and event.is_pressed() and (event as InputEventKey).keycode == KEY_ESCAPE:
-		zoom_out()
 		get_viewport().set_input_as_handled()
 		return
 	if toggle_key != KEY_NONE and event.is_pressed() and not event.is_echo() \

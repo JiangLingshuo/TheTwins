@@ -1,8 +1,9 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://scripts/tombstone.gd" id="1_tombstone"]
+[ext_resource type="Script" uid="uid://b7ggb6xjqwvox" path="res://scripts/tombstone.gd" id="1_tombstone"]
 
-[node name="Tombstone" type="Control"]
-layout_mode = 3
-anchors_preset = 0
+[node name="Tombstone" type="TextureRect"]
+offset_right = 1920.0
+offset_bottom = 1080.0
+mouse_filter = 2
 script = ExtResource("1_tombstone")
