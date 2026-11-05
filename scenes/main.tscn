@@ -113,6 +113,7 @@ mouse_filter = 2
 texture = ExtResource("7_baby")
 script = ExtResource("11_gravestone")
 gravestone_id = "baby_tomb"
+zoom_rect = Rect2(690, 390, 320, 375)
 
 [node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
