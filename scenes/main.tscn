@@ -10,7 +10,8 @@
 [ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="8_symbol"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/day.png" id="9_human"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/moon.png" id="10_moon"]
-[ext_resource type="Script" path="res://scripts/gravestone.gd" id="11_gravestone"]
+[ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="11_tombstone"]
+[ext_resource type="Script" path="res://scripts/scene_zoom.gd" id="29_zoom"]
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/moon.png" id="13_night_moon"]
 [ext_resource type="Script" path="res://scripts/decipher_target.gd" id="14_target"]
@@ -24,7 +25,6 @@
 [ext_resource type="Script" path="res://scripts/toolbox.gd" id="19_box"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/sun.png" id="20_sun_art"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/fountain.png" id="21_fountain"]
-[ext_resource type="Texture2D" path="res://assets/Art/day/footprint.png" id="22_footprint"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/energy.png" id="23_energy"]
 [ext_resource type="Texture2D" uid="uid://ckos50jatjcp2" path="res://assets/Art/day/Appearance_of_the_Dayfolk.png" id="24_dayfolk"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/ladder.png" id="25_ladder"]
@@ -106,21 +106,11 @@ offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("21_fountain")
 
-[node name="Footprint" type="TextureRect" parent="DayCemetery"]
+[node name="BabyTomb" parent="DayCemetery" instance=ExtResource("11_tombstone")]
 layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-mouse_filter = 2
-texture = ExtResource("22_footprint")
-
-[node name="BabyTomb" type="TextureRect" parent="DayCemetery"]
-layout_mode = 0
-offset_right = 1920.0
-offset_bottom = 1080.0
-mouse_filter = 2
 texture = ExtResource("7_baby")
-script = ExtResource("11_gravestone")
 gravestone_id = "baby_tomb"
+zoom_rect = Rect2(690, 390, 320, 375)
 
 [node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
 layout_mode = 0
@@ -207,6 +197,10 @@ expand_mode = 1
 stretch_mode = 5
 script = ExtResource("14_target")
 target_id = "moon"
+
+[node name="SceneZoom" type="Node" parent="."]
+script = ExtResource("29_zoom")
+layers = Array[NodePath]([NodePath("../DayBackground"), NodePath("../NightBackground"), NodePath("../DayCemetery"), NodePath("../NightCemetery")])
 
 [node name="FlashlightTool" parent="." instance=ExtResource("4_tool")]
 layout_mode = 1

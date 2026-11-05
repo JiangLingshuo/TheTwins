@@ -1,8 +1,8 @@
 extends Control
 signal document_requested(id: String)
 signal list_requested
-## A notebook page of folded entries (manuscripts or clues), one card per entry
-## showing its title. Clicking a card opens its full text.
+## A notebook page of folded entries (manuscripts, clues or radio logs), one
+## card per entry showing its title. Clicking a card opens its full text.
 
 var _entries: Array[Dictionary] = []
 var _selected := ""
@@ -16,6 +16,17 @@ const NEW_COLOR := Color("843c42")
 ## Manuscripts track which documents were read (Aurora's tutorial uses it); clues do not.
 var _manuscript := true
 var _empty_text := "No documents received yet."
+## Optional heading and back button above the cards (set_list_header()).
+var _heading := ""
+var _back_text := ""
+var _card_font_size := 23
+
+## Heading and back button ("" = none) shown above the cards, and the cards'
+## title size. The node is shared by several sections: set it before each setup().
+func set_list_header(heading: String = "", back_text: String = "", card_font_size: int = 23) -> void:
+	_heading = heading
+	_back_text = back_text
+	_card_font_size = card_font_size
 
 func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool, manuscript: bool = true, empty_text: String = "No documents received yet.") -> void:
 	_manuscript = manuscript
@@ -48,6 +59,22 @@ func _rebuild() -> void:
 	_stack.add_theme_constant_override("separation", 12)
 	add_child(_stack)
 	_stack.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	if not _back_text.is_empty():
+		var back := Button.new()
+		back.name = "BackButton"
+		back.text = _back_text
+		back.flat = true
+		back.alignment = HORIZONTAL_ALIGNMENT_LEFT
+		back.disabled = not _interactive
+		back.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		back.add_theme_font_override("font", _font)
+		back.add_theme_font_size_override("font_size", 19)
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
+			back.add_theme_color_override(state, _ink)
+		back.pressed.connect(func() -> void: list_requested.emit())
+		_stack.add_child(back)
+	if not _heading.is_empty():
+		_stack.add_child(_label(_heading, 22))
 	if _entries.is_empty() and not _empty_text.is_empty():
 		_stack.add_child(_label(_empty_text, 21))
 	for entry in _entries:
@@ -68,7 +95,7 @@ func _rebuild() -> void:
 		button.add_theme_stylebox_override("hover", hover)
 		button.add_theme_stylebox_override("focus", hover)
 		_stack.add_child(button)
-		var title := _label(entry["title"], 23)
+		var title := _label(entry["title"], _card_font_size)
 		button.add_child(title)
 		title.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		title.offset_left = 12

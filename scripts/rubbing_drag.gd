@@ -84,7 +84,8 @@ func begin(id: String, pointer: Vector2) -> bool:
 func begin_cycle(id: String, pointer: Vector2) -> bool:
 	if is_dragging() or not GameState.cycle_hint_heard or id not in ["sky_sun_rubbing", "infant_moon_rubbing"]:
 		return false
-	if not GameState.rubbings.has("sky_sun_rubbing") or not GameState.rubbings.has("infant_moon_rubbing"):
+	# The moon is in the notebook before the sun (which it brings down from the sky).
+	if not GameState.rubbings.has(id):
 		return false
 	rubbing_id = id
 	_cycle_drag = true

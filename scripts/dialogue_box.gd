@@ -96,6 +96,11 @@ func play(lines: Array[Dictionary], log_session: String = "") -> void:
 	content_label.show()
 	if is_instance_valid(_term_notice): _term_notice.hide()
 	_log_session = log_session
+	# Logged dialogue is also kept in the radio history. Radio replies open their
+	# exchange themselves (with their question), everything else is a transmission.
+	if not log_session.is_empty() and not log_session.begins_with("radio:") \
+			and not GameState.has_radio_exchange(log_session):
+		GameState.begin_radio_exchange(log_session, {}, _transmission_title(log_session))
 	_lines = lines
 	_index = -1
 	_active = true
@@ -193,7 +198,13 @@ func _close() -> void:
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_active = false
+	GameState.end_radio_exchange(_log_session)
 	finished.emit()
+
+
+## Title of a non-question transmission, from its log session (the XML file name).
+static func _transmission_title(session: String) -> String:
+	return "Opening Call" if session == "opening" else session.capitalize()
 
 
 ## Fade the portrait in while its speaker talks and out for everyone else.

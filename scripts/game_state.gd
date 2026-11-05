@@ -28,6 +28,20 @@ var gravestone_reports: Dictionary = {}
 ## Placeholders in dialogue / page text that become the player's name.
 const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}", "{player_name}"]
 
+## Emitted when F2 shows or hides the development overlay.
+signal debug_overlay_changed(shown: bool)
+## Development overlay: the tutorial hint box (with its skip button) and the
+## searchlight placeholder cards. Hidden by default; F2 toggles it.
+var debug_overlay := false
+
+
+func _input(event: InputEvent) -> void:
+	# Read before the GUI; the tutorial's input gate lets F2 through.
+	if event is InputEventKey and event.is_pressed() and not event.is_echo() and event.keycode == KEY_F2:
+		debug_overlay = not debug_overlay
+		debug_overlay_changed.emit(debug_overlay)
+		get_viewport().set_input_as_handled()
+
 
 ## Record a rubbing the first time its symbol is revealed. Returns false if it
 ## was already recorded (nothing changes then).
@@ -257,7 +271,183 @@ func append_radio_line(session_id: String, line: Dictionary) -> void:
 	var speaker: String = line.get("speaker", "")
 	var text: String = line.get("content", "")
 	log["body"] += ("\n\n" if not log["body"].is_empty() else "") + ((speaker + ": ") if not speaker.is_empty() else "") + text
+	# The same delivered line also goes to the open exchange of the radio history.
+	if _radio_exchanges.has(session_id):
+		_radio_exchanges[session_id]["lines"].append({"speaker": speaker, "content": text})
 	notebook_changed.emit()
+
+
+# --- Radio dialogue history (data for the Notebook's Radio Logs) --------------
+#
+# What the player actually heard, grouped as
+#   gravestone id -> question id -> dialogue variants   (radio questions)
+#   other transmissions                                 (opening call, tutorial dialogue)
+# The runtime call/session id ("radio:<tomb>:<n>") is only used to route the
+# delivered lines of one exchange; it never decides grouping or identity.
+#
+# One exchange = one question asked (or one follow-up chosen) and the reply
+# that played for it, or one non-question transmission. Lines are collected
+# from append_radio_line(), which the dialogue box calls as each line is shown,
+# so only delivered lines are kept. The exchange is committed when the
+# dialogue box finishes (end_radio_exchange()).
+#
+# Question record (one dialogue variant):
+#   {"evidence_id": String ("" = no evidence), "evidence_group": String,
+#    "evidence_name": String, "follow_up": String ("" = the question itself,
+#    else the follow-up choice's label), "lines": [{"speaker", "content"}],
+#    "first_heard_at": float, "last_heard_at": float}   (seconds of play_time)
+# Identity: gravestone + question + evidence_id + follow_up + lines (speaker,
+# content, order). Hearing an identical variant again only updates last_heard_at.
+#
+# Other transmission record:
+#   {"source_id": String, "title": String, "lines": [...],
+#    "first_heard_at": float, "last_heard_at": float}
+# Identity: source_id + lines.
+
+## Emitted after a radio history record is added or heard again.
+signal radio_history_changed
+
+## Gameplay seconds since the game started. Counted in _process, so it stops
+## while the scene tree is paused, and carries on across scene changes.
+var play_time := 0.0
+## gravestone id -> {question id -> {"gravestone_id", "question_id",
+## "question_text", "records": Array of question records}}. Insertion order is
+## first-heard order.
+var radio_question_history: Dictionary = {}
+## Other transmissions, in first-heard order.
+var radio_other_history: Array[Dictionary] = []
+## Log session id -> {"context": Dictionary, "lines": Array} while its dialogue plays.
+var _radio_exchanges: Dictionary = {}
+
+
+func _process(delta: float) -> void:
+	play_time += delta
+
+
+## "HH:MM:SS" for a play_time value.
+static func format_play_time(seconds: float) -> String:
+	var total := int(seconds)
+	return "%02d:%02d:%02d" % [total / 3600, (total / 60) % 60, total % 60]
+
+
+## Start collecting the lines delivered on `session_id`. `question` describes a
+## radio question exchange ({"gravestone_id", "question_id", "question_text",
+## "evidence_id", "evidence_group", "evidence_name", "follow_up"}); leave it
+## empty for a non-question transmission (`title` names it).
+func begin_radio_exchange(session_id: String, question: Dictionary = {}, title: String = "") -> void:
+	if session_id.is_empty():
+		return
+	end_radio_exchange(session_id)  # an exchange left open on this session ends here
+	_radio_exchanges[session_id] = {"context": question.duplicate(), "title": title, "lines": []}
+
+
+func has_radio_exchange(session_id: String) -> bool:
+	return _radio_exchanges.has(session_id)
+
+
+## Commit the exchange on `session_id` (called when its dialogue has finished).
+## An exchange in which no line was delivered records nothing.
+func end_radio_exchange(session_id: String) -> void:
+	if not _radio_exchanges.has(session_id):
+		return
+	var exchange: Dictionary = _radio_exchanges[session_id]
+	_radio_exchanges.erase(session_id)
+	var lines: Array = exchange["lines"]
+	if lines.is_empty():
+		return
+	if exchange["context"].is_empty():
+		_record_other_transmission(session_id, exchange["title"], lines)
+	else:
+		_record_question_dialogue(exchange["context"], lines)
+	radio_history_changed.emit()
+
+
+func _record_question_dialogue(context: Dictionary, lines: Array) -> void:
+	var stone: String = context.get("gravestone_id", "")
+	var question_id: String = context.get("question_id", "")
+	if not radio_question_history.has(stone):
+		radio_question_history[stone] = {}
+	var questions: Dictionary = radio_question_history[stone]
+	if not questions.has(question_id):
+		questions[question_id] = {"gravestone_id": stone, "question_id": question_id,
+			"question_text": context.get("question_text", ""), "records": []}
+	var records: Array = questions[question_id]["records"]
+	var evidence_id: String = context.get("evidence_id", "")
+	var follow_up: String = context.get("follow_up", "")
+	var key := JSON.stringify(lines)
+	for record in records:
+		if record["evidence_id"] == evidence_id and record["follow_up"] == follow_up \
+				and JSON.stringify(record["lines"]) == key:
+			record["last_heard_at"] = play_time
+			return
+	records.append({"evidence_id": evidence_id, "evidence_group": context.get("evidence_group", ""),
+		"evidence_name": context.get("evidence_name", ""), "follow_up": follow_up,
+		"lines": lines.duplicate(true), "first_heard_at": play_time, "last_heard_at": play_time})
+
+
+func _record_other_transmission(source_id: String, title: String, lines: Array) -> void:
+	var key := JSON.stringify(lines)
+	for record in radio_other_history:
+		if record["source_id"] == source_id and JSON.stringify(record["lines"]) == key:
+			record["last_heard_at"] = play_time
+			return
+	radio_other_history.append({"source_id": source_id, "title": title, "lines": lines.duplicate(true),
+		"first_heard_at": play_time, "last_heard_at": play_time})
+
+
+## Read API for the Notebook's Radio Logs. All return copies, with name
+## placeholders ("#PLAYER#", "{name}") resolved as the player saw them; the
+## stored lines keep the raw text so record identity does not depend on the name.
+
+## Gravestone ids that have recorded radio questions, in first-heard order.
+func radio_history_gravestones() -> Array[String]:
+	var ids: Array[String] = []
+	for stone in radio_question_history:
+		ids.append(stone)
+	return ids
+
+
+## Recorded questions of a gravestone, in first-heard order: each
+## {"gravestone_id", "question_id", "question_text", "records"}.
+func radio_history_questions(gravestone_id: String) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for question in radio_question_history.get(gravestone_id, {}).values():
+		var copy: Dictionary = question.duplicate(true)
+		copy["question_text"] = fill_placeholders(copy["question_text"])
+		var records: Array = []
+		for record in copy["records"]:
+			records.append(_player_facing(record))
+		copy["records"] = records
+		result.append(copy)
+	return result
+
+
+## Dialogue variants heard for one question, in first-heard order (see the
+## question record above).
+func radio_history_records(gravestone_id: String, question_id: String) -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for record in radio_question_history.get(gravestone_id, {}).get(question_id, {}).get("records", []):
+		result.append(_player_facing(record))
+	return result
+
+
+## Non-question transmissions (opening call, tutorial dialogue), in first-heard order.
+func radio_other_transmissions() -> Array[Dictionary]:
+	var result: Array[Dictionary] = []
+	for record in radio_other_history:
+		result.append(_player_facing(record))
+	return result
+
+
+## A copy of a history record with its speakers, lines and follow-up label as displayed.
+func _player_facing(record: Dictionary) -> Dictionary:
+	var copy: Dictionary = record.duplicate(true)
+	for line in copy["lines"]:
+		line["speaker"] = fill_placeholders(line["speaker"])
+		line["content"] = fill_placeholders(line["content"])
+	if copy.has("follow_up"):
+		copy["follow_up"] = fill_placeholders(copy["follow_up"])
+	return copy
 
 
 # The radio controller must select the successful Ink branch before calling this.

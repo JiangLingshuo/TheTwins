@@ -41,7 +41,7 @@ func _run() -> void:
 	book._fill(book.left_text, book.left_number, book._section_start(0) * 2)
 	check("notebook description uses catalog", book.left_page.get_node("Gravestone").description.text == state.get_gravestone_info("baby_tomb")["description"])
 	book._fill(book.left_text, book.left_number, book._section_start(4) * 2)
-	check("radio logs show full text reader", book.left_page.get_node("SpreadReader").visible and not book.left_page.get_node("SpreadReader").body.text.is_empty())
+	check("radio logs open on their list (no history yet)", book.left_page.get_node("ManuscriptItems").visible and not book.left_page.get_node("SpreadReader").visible)
 	book._fill(book.left_text, book.left_number, book._section_start(2) * 2)
 	check("clues show folded cards, not a reader", book.left_page.get_node("ManuscriptItems").visible and not book.left_page.get_node("SpreadReader").visible)
 	book._spread = book._section_start(3)
