@@ -37,10 +37,10 @@ func _ready() -> void:
 	_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(_button)
 	_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	_button.offset_left = -148
-	_button.offset_right = -36
-	_button.offset_top = 224
-	_button.offset_bottom = 336
+	_button.offset_left = -140
+	_button.offset_right = -44
+	_button.offset_top = 72
+	_button.offset_bottom = 168
 	_button.pressed.connect(open)
 	_overlay = preload("res://scenes/dialogue_box.tscn").instantiate()
 	_overlay.name = "RadioSelectionBox"
@@ -61,7 +61,7 @@ func _exit_tree() -> void:
 
 func _reposition_button() -> void:
 	if _button:
-		_button.position = Vector2(size.x - 148, size.y / 2 + 224)
+		_button.position = Vector2(size.x - 140, size.y / 2 + 72)
 
 func _process(_delta: float) -> void:
 	_button.disabled = not _can_open()

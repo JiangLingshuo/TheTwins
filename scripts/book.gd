@@ -67,7 +67,7 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Seconds for the closed book to shrink into the corner icon.
 @export var stow_time: float = 0.8
 ## Size of the corner icon, relative to the full book.
-@export var icon_scale: float = 0.17
+@export var icon_scale: float = 0.09
 ## Tilt of the corner icon, in degrees.
 @export var icon_rotation: float = -8.0
 ## Distance of the icon's centre from the bottom-right corner of the screen.

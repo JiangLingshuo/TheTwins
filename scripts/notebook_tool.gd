@@ -29,7 +29,7 @@ var _icon: Control
 ## Centre of NotebookButton on a `screen`-sized viewport (its anchors and offsets
 ## in notebook_tool.tscn). The start screen stows its book here to match.
 static func button_center(screen: Vector2) -> Vector2:
-	return Vector2(screen.x - 92.0, screen.y * 0.5 + 130.0)
+	return Vector2(screen.x - 92.0, screen.y * 0.5)
 
 
 func _ready() -> void:
