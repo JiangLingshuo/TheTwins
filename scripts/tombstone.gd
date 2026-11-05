@@ -8,8 +8,8 @@ extends TextureRect
 ## which fills its fixed page in the notebook's Gravestones section.
 ##
 ## Hovering also shows a magnifier button beside the stone; clicking it asks the
-## scene's SceneZoom to zoom in on the stone (the same button, or Esc / right
-## click, zooms back out). Carved symbols are RubbingSymbol children.
+## scene's SceneZoom to zoom in on the stone (SceneZoom's own zoom-out button
+## brings the whole scene back). Carved symbols are RubbingSymbol children.
 ##
 ## Input is read in _unhandled_input, so the rubbing tool, the flashlight and
 ## any UI on top keep the clicks they use.
@@ -39,12 +39,7 @@ const SHADER: Shader = preload("res://shaders/tomb_highlight.gdshader")
 @export var zoom_button_linger: float = 0.4
 
 ## True while the view is zoomed in on this stone (set by SceneZoom).
-var zoomed := false:
-	set(value):
-		zoomed = value
-		if _zoom_button:
-			_zoom_button.tooltip_text = "Zoom out" if zoomed else "Zoom in"
-			_zoom_button.queue_redraw()
+var zoomed := false
 
 var _image: Image
 var _material: ShaderMaterial
@@ -106,7 +101,9 @@ func _input(event: InputEvent) -> void:
 
 func _process(_delta: float) -> void:
 	var lingering := _hovered or Time.get_ticks_msec() - _last_hover_msec < zoom_button_linger * 1000.0
-	_zoom_button.visible = is_visible_in_tree() and _interaction_allowed() and (zoomed or lingering)
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	var scene_zoomed: bool = scene_zoom != null and scene_zoom.is_zoomed()
+	_zoom_button.visible = is_visible_in_tree() and _interaction_allowed() and lingering and not scene_zoomed
 	if _zoom_button.visible:
 		_place_zoom_button()
 
@@ -192,20 +189,19 @@ func _build_zoom_button() -> void:
 		_zoom_button.add_theme_stylebox_override(state, style)
 	_zoom_button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	_zoom_button.draw.connect(_draw_magnifier)
-	_zoom_button.pressed.connect(func() -> void: get_tree().call_group("scene_zoom", "toggle", self))
+	_zoom_button.pressed.connect(func() -> void: get_tree().call_group("scene_zoom", "zoom_to", self))
 	_zoom_button.visible = false
 	add_child(_zoom_button)
 
 
-## A magnifying glass with + (zoom in) or − (zoom out).
+## A magnifying glass with +.
 func _draw_magnifier() -> void:
 	var ink := Color(0.98, 0.94, 0.84)
 	var lens := Vector2(19, 19)
 	_zoom_button.draw_arc(lens, 9.5, 0, TAU, 32, ink, 2.5, true)
 	_zoom_button.draw_line(lens + Vector2(7, 7), Vector2(33, 33), ink, 4.0, true)
 	_zoom_button.draw_line(lens - Vector2(4.5, 0), lens + Vector2(4.5, 0), ink, 2.0, true)
-	if not zoomed:
-		_zoom_button.draw_line(lens - Vector2(0, 4.5), lens + Vector2(0, 4.5), ink, 2.0, true)
+	_zoom_button.draw_line(lens - Vector2(0, 4.5), lens + Vector2(0, 4.5), ink, 2.0, true)
 
 
 ## To the right of the stone's head, kept on screen.
