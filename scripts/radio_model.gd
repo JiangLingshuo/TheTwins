@@ -219,6 +219,8 @@ func _nodes(nodes: Array, result: Dictionary, source: String) -> bool:
 				var tag: String = instruction["value"]
 				if tag == "feedback:gold": _context["feedback_kind"] = "hidden"
 				if tag.begins_with("event:"): GameState.apply_notebook_event(tag)
+				if tag == "city:night": result["city"] = "night"
+				if tag == "radio:hang_up": result["hang_up"] = true
 			"if":
 				var branch: Array = instruction["then"] if condition(instruction["condition"]) else instruction["else"]
 				if _nodes(branch, result, source): return true

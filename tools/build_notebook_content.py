@@ -29,7 +29,7 @@ for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     body='\n'.join(l for l in m[2].splitlines() if not l.startswith(('#','//','->'))).strip()
     cat=meta['category'][0];tomb='' if eid in environment else ALIASES[owner]
     if eid=='scholar_no_traces':tomb=ALIASES['scholar']
-    owners={'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
+    owners={'girl_teddy_bear':['girl_tomb'], 'night_mother_flower':['mother_tomb'], 'mother_daughter_flower_meaning':['mother_tomb'], 'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
     evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'interactive_body':body,'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
 radio={}
 for m in knots((D/'telecomm_master.ink').read_text(encoding='utf-8-sig')):

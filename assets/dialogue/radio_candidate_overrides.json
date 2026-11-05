@@ -64,11 +64,6 @@
     "family_photo",
     "profession_record"
   ],
-  "sun:test_answer_sun_21": [
-    "family_photo",
-    "profession_record",
-    "infant_figure_rubbing"
-  ],
   "sun:test_answer_sun_25": [
     "family_photo",
     "profession_record",
@@ -213,5 +208,15 @@
     "night_father_god_rubbing",
     "night_father_path_rubbing",
     "night_father_moon_stone"
+  ],
+  "mother:test_answer_mother_flower": [
+    "night_mother_flower",
+    "night_mother_hands_rubbing",
+    "night_mother_child_rubbing"
+  ],
+  "sun:test_answer_sun_photo": [
+    "family_photo",
+    "shared_family_base",
+    "profession_record"
   ]
 }

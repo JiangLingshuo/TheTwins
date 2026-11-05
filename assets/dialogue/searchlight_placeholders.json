@@ -165,6 +165,36 @@
         0.0,
         45.0
       ]
+    },
+    {
+      "node": "GirlTeddyBear",
+      "evidence_id": "girl_teddy_bear",
+      "city": "day",
+      "position": [
+        1480,
+        900
+      ],
+      "caption": "Mother leaving a teddy bear at the girl marker",
+      "target_id": "girl_teddy_bear",
+      "meaning": "Teddy bear and visitor: compare with family photograph",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "girl_tomb"
+    },
+    {
+      "node": "MotherPaintedFlower",
+      "evidence_id": "night_mother_flower",
+      "city": "night",
+      "position": [
+        850,
+        820
+      ],
+      "caption": "Faded paint on mother marker: a large flower",
+      "target_id": "night_mother_flower",
+      "meaning": "A painted flower: ask Aurora about its private meaning",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "mother_tomb"
     }
   ]
 }

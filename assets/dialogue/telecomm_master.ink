@@ -8,9 +8,9 @@
 INCLUDE evidence_master.ink
 INCLUDE tombstone_master.ink
 
-LIST EvidenceId = dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces
+LIST EvidenceId = girl_teddy_bear, night_mother_flower, mother_daughter_flower_meaning, dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces
 
-LIST EvidenceTag = absence_of_readable_traces, ancient_creature_trace, ancient_disappearance, ascending_path_motif, aurora_identity_reference, aurora_provided_object, aurora_translation_knowledge, author_identity_reference, contradictory_death_accounts, contrasting_halves, crystal_extraction_reference, crystal_god_motif, crystal_research_reference, crystal_shape, dawn_disappearances, day_city_belief, day_city_bias, day_city_currency, day_night_handholding, dayfolk_appearance, death_by_hunger_and_thirst, deliberate_departure, different_exchange_customs, disappearance_symbol_reference, dry_river_motif, endless_path_motif, family_image_reference, family_mausoleum_custom, family_requested_depiction, four_person_family, funerary_artist_reference, girl_coffin_motif, girl_memorial, human_figure_reference, husband_disappearance, infant_actual_appearance, infant_appearance_mismatch, infant_death_unresolved, infant_identity, infant_memorial, intercity_resource_exchange, last_survivor_question, missed_sleeping_deadline, missing_family_member_reference, moon_motif, moon_reference, moon_stone_offering, natural_collapse, night_blessing_glyph, night_blessing_reference, night_city_belief, night_city_mineral_origin, night_city_supply_blockade, night_departure_reference, night_father_final_journey, night_father_past, night_infant_reference, night_mother_death_reference, night_mother_future, night_mother_past, night_symbol_translation, occupation_marker_custom, one_way_passage, original_separation, paired_day_night_death, paired_day_night_memorials, parent_child_image, population_decline, ram_spirit_motif, removed_crystal_offering, repeated_local_symbol, resentment_toward_mother, scholar_identity, scholar_no_visitors, scholar_tycoon_marriage, shared_body_reference, shared_day_night_history, shared_family_plot, skin_as_message_medium, skyway_not_steep, sleep_coffin_required, smooth_skinned_child, sun_motif, sun_shape, three_family_markers, twin_beast_motif, twin_beast_reference, two_mothers_dilemma, tycoon_identity, unexplained_waking_wounds, upright_coffin_motif, water_source_lost, well_preserved_diary
+LIST EvidenceTag = girl_teddy_bear_trace, night_mother_flower_trace, mother_daughter_flower_meaning, absence_of_readable_traces, ancient_creature_trace, ancient_disappearance, ascending_path_motif, aurora_identity_reference, aurora_provided_object, aurora_translation_knowledge, author_identity_reference, contradictory_death_accounts, contrasting_halves, crystal_extraction_reference, crystal_god_motif, crystal_research_reference, crystal_shape, dawn_disappearances, day_city_belief, day_city_bias, day_city_currency, day_night_handholding, dayfolk_appearance, death_by_hunger_and_thirst, deliberate_departure, different_exchange_customs, disappearance_symbol_reference, dry_river_motif, endless_path_motif, family_image_reference, family_mausoleum_custom, family_requested_depiction, four_person_family, funerary_artist_reference, girl_coffin_motif, girl_memorial, human_figure_reference, husband_disappearance, infant_actual_appearance, infant_appearance_mismatch, infant_death_unresolved, infant_identity, infant_memorial, intercity_resource_exchange, last_survivor_question, missed_sleeping_deadline, missing_family_member_reference, moon_motif, moon_reference, moon_stone_offering, natural_collapse, night_blessing_glyph, night_blessing_reference, night_city_belief, night_city_mineral_origin, night_city_supply_blockade, night_departure_reference, night_father_final_journey, night_father_past, night_infant_reference, night_mother_death_reference, night_mother_future, night_mother_past, night_symbol_translation, occupation_marker_custom, one_way_passage, original_separation, paired_day_night_death, paired_day_night_memorials, parent_child_image, population_decline, ram_spirit_motif, removed_crystal_offering, repeated_local_symbol, resentment_toward_mother, scholar_identity, scholar_no_visitors, scholar_tycoon_marriage, shared_body_reference, shared_day_night_history, shared_family_plot, skin_as_message_medium, skyway_not_steep, sleep_coffin_required, smooth_skinned_child, sun_motif, sun_shape, three_family_markers, twin_beast_motif, twin_beast_reference, two_mothers_dilemma, tycoon_identity, unexplained_waking_wounds, upright_coffin_motif, water_source_lost, well_preserved_diary
 
 LIST TombId = baby, scholar, sun, altar, mother, father, girl
 
@@ -40,6 +40,14 @@ VAR subtext_count = 0
 VAR reports_submitted = false
 VAR girl_revealed = false
 VAR final_confronted = false
+VAR ending_flower = false
+VAR ending_night_story = false
+VAR ending_bear = false
+VAR ending_day_story = false
+VAR ending_wrong = false
+VAR ending_diary = false
+VAR ending_voice = false
+VAR sun_photo_asked = false
 VAR searchlight_year = 2050
 VAR scan_2005 = false
 VAR scan_2050 = false
@@ -54,7 +62,7 @@ VAR natural_reply_seen = false
 VAR player_name = "Investigator"
 VAR feedback_kind = ""
 VAR pending_relation_feedback = false
-LIST AnswerId = baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, scholar_12_supported_14, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_21_supported_23, sun_21_normal_22, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
+LIST AnswerId = mother_flower_supported, mother_flower_normal, baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, scholar_12_supported_14, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
 VAR read_answers = ()
 LIST NightGlyph = blessing, unending_path, dry_river, ascending_path, crystal_god
 VAR queried_night_glyphs = ()
@@ -77,7 +85,7 @@ Choose a source evidence, then contact Aurora. One evidence is frozen for the wh
 
 === test_hub ===
 // Trigger once after two distinct accepted reports in EACH city, in any order.
-{not bonus_done && LIST_COUNT((completed_reports ^ (TombId.baby, TombId.scholar, TombId.sun))) >= 2 && LIST_COUNT((completed_reports ^ (TombId.altar, TombId.mother, TombId.father))) >= 2:
+{not bonus_done && LIST_COUNT(completed_reports) >= 4:
     ~ bonus_remaining = 2
     -> test_bonus
 }
@@ -1757,11 +1765,11 @@ What would you like to ask?
 What would you like to ask?
 + {((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))} [Why is the same beast on other markers?] -> test_answer_sun_13
 + {(owned_evidence ? EvidenceId.shared_family_base)} [Do these three markers belong together?] -> test_answer_sun_17
-+ {1 == 1} [Why are four people remembered by only three markers?] -> test_answer_sun_21
 + {(1 == 1) && (has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference))} [Which family member has no place on the base?] -> test_answer_sun_25
 + {((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))} [Do you think the cause of disappearance aligns with what the Scholar has investigated?]
     ~ hypothesis_return = "sun"
     -> test_disappearance_hypothesis
++ {submitted_id == "family_photo"} [Who left the photo on the grave?] -> test_answer_sun_photo
 + [Collect a word from this call] -> test_radio_terms_sun
 + [End this call] -> test_end_call
 
@@ -1795,6 +1803,7 @@ What would you like to ask?
 + {owned_evidence ? EvidenceId.night_mother_river_rubbing} [What does the geometric border on this stone mean?]
     ~ glyph_return = "mother"
     -> query_night_dry_river
++ {owned_evidence ? EvidenceId.night_mother_flower} [What does the painted flower mean?] -> test_answer_mother_flower
 + [Collect a word from this call] -> test_radio_terms_mother
 + [End this call] -> test_end_call
 
@@ -1804,7 +1813,7 @@ What would you like to ask?
 What would you like to ask?
 + {(links ? Relation.father_child)} [Who is carrying the child?] -> test_answer_father_8
 + {((links ? Relation.father_path) || (queried_night_glyphs ? NightGlyph.ascending_path))} [Did he die because the Skyway was dangerous?] -> test_answer_father_12
-+ {1 == 1} [Could his death be linked to the Scholar's husband?] -> test_answer_father_16
++ {has_tag(EvidenceTag.paired_day_night_death) || has_tag(EvidenceTag.husband_disappearance)} [Could his death be linked to the Scholar's husband?] -> test_answer_father_16
 + {1 == 1} [What does the moon-shaped offering mean?] -> test_answer_father_20
 + {(1 == 1) && (has_tag(EvidenceTag.natural_collapse) || has_tag(EvidenceTag.shared_day_night_history))} [Was the original separation really a natural disaster?] -> test_answer_father_24
 + {owned_evidence ? EvidenceId.night_father_path_rubbing} [What does the rising pattern along the border mean?]
@@ -2064,7 +2073,7 @@ This test report is not yet supported. Check the identity, fate, and relevant ev
 === test_bonus ===
 // Dialogue source: 05_婴儿夜城祭坛!B13. Unlock after two accepted Day City reports AND two accepted Night City reports. Two bonus QUESTIONS, not an overall radio call limit.
 (Her breathing steadies. She sounds ready to answer something larger than a single grave.) #narrator
-You have followed their traces through both cities. What would you most like to ask now? #aurora
+You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask two questions of the most curiosity. #aurora
 DEV: bonus questions remaining {bonus_remaining}.
 * {bonus_remaining > 0} [What are the Dayfolk and Nightfolk?]
     (She pauses once, then sets the explanation down plainly.) #narrator
@@ -2073,7 +2082,8 @@ DEV: bonus questions remaining {bonus_remaining}.
     -> test_bonus_check
 * {bonus_remaining > 0} [Why do you know so much?]
     (A small silence falls across the name. She answers without decorating it.) #narrator
-    Aurora is a name. It does not tell you how many people are speaking, or how many points of view they have. I know things that are not in your records. #aurora
+    (A small silence falls across the name. She answers without decorating it.) #narrator
+    Aurora is a name. It does not tell you how many people are speaking, or how many points of view they have. It's never in your record. #aurora
     ~ bonus_remaining = bonus_remaining - 1
     -> test_bonus_check
 * {bonus_remaining > 0} [What does disappearance mean?]
@@ -2083,7 +2093,7 @@ DEV: bonus questions remaining {bonus_remaining}.
     -> test_bonus_check
 * {bonus_remaining > 0} [Were the two cities always enemies?]
     (Her answer begins firmly. A quieter note enters when she mentions the shared cemetery.) #narrator
-    No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate. #aurora
+    No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residence. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation -- cemeteries are the diorama of cities. #aurora
     ~ bonus_remaining = bonus_remaining - 1
     -> test_bonus_check
 + [Continue the investigation]
@@ -2094,7 +2104,7 @@ DEV: bonus questions remaining {bonus_remaining}.
 {bonus_remaining <= 0:
     ~ bonus_done = true
     (She lets out a quiet breath and brings the discussion back to the task.) #narrator
-    That is enough for now. Follow what the stones can still tell you.#aurora
+    I have to drop. See ya. #aurora
     -> test_hub
 }
 -> test_bonus
@@ -2109,52 +2119,112 @@ The six investigation reports are ready. Submit them now?
 + [Keep investigating] -> test_hub
 
 === test_walk ===
-// User ending brief: cover contemplation, walking, a familiar solitary marker.
 # ui:notebook_cover
-You close the investigation pages. For a while, you look at the black-and-white cover.
+You close the investigation pages and plan your journey back. For a while, you look at the black-and-white cover.
 All this time, the girl has been standing quietly inside her frame.
-You carry the book with you as you walk. The same pale paths pass beneath your feet.
-Then, beyond the ordered rows, a single stone catches your eye.
-You look down at the cover. You look back at the stone.
+You carry the book with you as you walk. You witnessed the stones and the people they recorded, but you would never know how they truly lived.
+Nothing can be changed. But something can be remembered.
+That way feels longer than the way you come. You came with nothing, but now you are leaving with a civilization's weight.
+The path extends to a single stone. Cold and lonely. Like one standing beside the street for a delayed bus to come.
+It's a standing monument that  belong to neither the Day nor the Night.
 ~ girl_revealed = true
 # event:reveal_girl_marker
 -> test_desc_girl
 
 === test_confrontation ===
-// Test completion of 04!B15 and the author's open-ending brief; no verdict choice.
 # feedback:gold
-The girl, the coffin, the hands. This is not just a similar decoration.#player
-(The channel remains open. A breath goes in, trembles, comes out. When she finally speaks, the familiar softness has nowhere to hide.) #narrator
-I made it. I wrote those pages. And I left. #aurora
-~ final_confronted = true
-{not (seen_subtexts ? Subtext.final):
-        ~ seen_subtexts += Subtext.final
-        ~ subtext_count += 1
-    }
+The girl, the coffin, the hands. This is not just a similar decoration. #player
+I carved it. I wrote the diary, too. #aurora
+-> test_ending_identity
+
+=== test_ending_identity ===
++ {not ending_voice} [Why do you sound different after dark?] -> test_ending_voice
++ {not ending_diary} [Who is the girl you write to in your diary?] -> test_ending_diary
++ {ending_voice && ending_diary} [Are you two people who take turns waking in one body?] -> test_ending_confirm
++ {ending_voice && ending_diary && not ending_wrong} [Could it be one person with two ways of speaking?] -> test_ending_wrong
+
+=== test_ending_voice ===
+At night you hear someone who remembers the city from below. In daylight you hear me. There are things she remembers that I only know because she told me. #aurora
+~ ending_voice = true
+-> test_ending_identity
+
+=== test_ending_diary ===
+The girl who left notes on my windowsill. I could read what she wrote after I woke. I couldn't remember writing it. #aurora
+~ ending_diary = true
+-> test_ending_identity
+
+=== test_ending_wrong ===
+A voice can change. But a change of voice would not explain why I needed her to tell me what happened while she was awake. #aurora
+~ ending_wrong = true
+-> test_ending_identity
+
+=== test_ending_confirm ===
+Yes. One body, two lives. We both answer to Aurora. You are speaking to the one who woke in Day City. #aurora
+~ identities += Identity.aurora
+# event:collect_term:aurora
 # event:aurora_confronted
-(The first word fails her once. When she starts again, she makes herself continue.) #narrator
-I hated the way my mother called harm protection. The other girl had a different reason. She told me that when her brother was born, her parents stopped looking at her. When he disappeared, they could not look away from his absence. She wanted a life in which she did not have to wait for them to notice her. We agreed to leave without our mothers. #aurora
-And now?#player
-(The effort of holding her voice steady is audible now. She no longer quite succeeds.) #narrator
-Now I keep returning to the moment we left. I still remember why I refused to take my mother. The other girl still remembers how it felt to be overlooked. Neither memory tells us what our mothers felt after we were gone. I sent you because I could not bear to stand where you are standing. #aurora
-(A final pause. This time she does not try to make it sound thoughtful.) #narrator
-You have found what remains. I do not know what either of our mothers would have said to us. #aurora
-+ [Record Aurora as the girl's identity]
-    ~ identities += Identity.aurora
-    # event:collect_term:aurora
-    -> test_radio_girl
-+ [Record her departure; leave the conversation open]
-    ~ causes += Cause.escape
-    # event:collect_term:escape
-    -> test_open_ending
+{not (seen_subtexts ? Subtext.final):
+    ~ seen_subtexts += Subtext.final
+    ~ subtext_count += 1
+}
+-> test_ending_day
+
+=== test_ending_day ===
++ {not ending_day_story} [Why did you leave your mother behind?] -> test_ending_day_story
++ {not ending_bear && know(EvidenceTag.girl_teddy_bear_trace) && (owned_evidence ? EvidenceId.family_photo)} [Show her the bear and the family photograph.] -> test_ending_day_bear
++ {ending_day_story} [Wait for night and call the other Aurora.] -> test_ending_night_start
+
+=== test_ending_day_story ===
+I watched my mother call cruelty protection. By the time we planned to leave, I could hear her making that argument before she even opened her mouth. I was afraid she would bring the whole city with her. #aurora
+~ ending_day_story = true
+-> test_ending_day
+
+=== test_ending_day_bear ===
+The bear she puts down at your marker is the one you're holding in this photograph. Your mother came looking. She found the stone. #player
+(For a moment you can hear her breathe, but she makes no sound.) #narrator
+She brought the bear? I used to leave it on her desk when I wanted her to come home. #aurora
+I don't know what I would have said if I'd been there. I wish I'd had to find out. #aurora
+~ ending_bear = true
+-> test_ending_day
+
+=== test_ending_night_start ===
+# city:night
+You wait for the moon to rise before you open the channel again. The voice that answers sounds familiar. The way she says your name does not. #narrator
+I'm here. What did you want to ask? #aurora
+-> test_ending_night
+
+=== test_ending_night ===
++ {not ending_night_story} [What made you want to leave Night City?] -> test_ending_night_story
++ {not ending_flower && know(EvidenceTag.mother_daughter_flower_meaning)} [Ask who the flower on her mother's stone was for.] -> test_ending_night_flower
++ {ending_night_story} [Record both departures and leave the channel open.] -> test_ending_finish
+
+=== test_ending_night_story ===
+After my brother was born, there was never time for me. After he disappeared, I thought they might see me again. They were grieving. I was still there. I got tired of waiting for that to matter. #aurora
+~ ending_night_story = true
+-> test_ending_night
+
+=== test_ending_night_flower ===
+You said two people had a flower that meant “I love you.” Who were they? #player
+My mother and me. I used to draw mine too big. She always found a way to fit hers beside it. #aurora
+(The radio picks up a small swallow.) #narrator
+I thought she had forgotten it. I don't know what to do with the fact that it was still there. #aurora
+~ ending_flower = true
+-> test_ending_night
+
+=== test_ending_finish ===
+~ final_confronted = true
+~ causes += Cause.escape
+# event:collect_term:escape
+-> test_open_ending
 
 === test_open_ending ===
 The radio stays open.
 You can record who left, and who stayed. Across the receiver, someone is still breathing. The next line does not come.
 You leave a space beneath the last line.
 # event:open_ending
-+ [Return to the test hub] -> test_hub
-+ [End] -> END
++ [End the call.]
+    # radio:hang_up
+    -> END
 
 
 === test_preview_scholar_no_traces ===
@@ -2377,7 +2447,7 @@ So many stones have borrowed the same creature. Its vanishing in the old account
 }
 {not supported:
 The creature keeps returning, doesn't it? Let us give it a name before we give it a meaning. What does the old account say? #aurora
-(You feel dumb. But that clue must have lodged itself somewhere deep in your consciousness. Perhaps use your tools to observe those markers again.) #narrator
+(Perhaps use your tools to observe those markers again.) #narrator
 ~ read_answers += AnswerId.sun_13_normal_14
 ~ feedback_kind = "unmatched"
 }
@@ -2401,21 +2471,15 @@ Look beneath their feet. A family resemblance may be written in the stone they s
 }
 -> test_radio_sun
 
-=== test_answer_sun_21 ===
-# question_id:sun_21
-~ temp supported = false
-{has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference):
-(The line is still open, but she lets it carry nothing for a moment. When her voice returns, it is closer and lower.) #narrator
-A photograph can keep a place for someone who has no stone beside the others. Count the four faces, then the three markers. The empty place matters too. #aurora
-~ read_answers += AnswerId.sun_21_supported_23
-~ supported = true
-~ feedback_kind = "linked"
-}
-{not supported:
-(She pauses before counting. The silence gives each missing number an uncomfortable weight.) #narrator
-Before we count who is missing, let us be sure who belongs in the picture. Compare the family image with the shared base. #aurora
-~ read_answers += AnswerId.sun_21_normal_22
-~ feedback_kind = "unmatched"
+=== test_answer_sun_photo ===
+{sun_photo_asked:
+...I have nothing to tell. #aurora
+- else:
+She left it. #aurora
+(The answer comes before the question has quite left the channel. Then there is a silence just long enough for you to hear what slipped through.) #narrator
+I have to go. Goodbye. #aurora
+# radio:hang_up
+~ sun_photo_asked = true
 }
 -> test_radio_sun
 
@@ -2556,7 +2620,7 @@ Compare the child with the altar infant. That will tell us who she was holding. 
 # question_id:mother_12
 ~ temp supported = false
 {submitted_id == "dry_underground_river" || has_tag(EvidenceTag.water_source_lost):
-(The first word sounds dry in her mouth. She takes another breath and continues.) #narrator
+(The first word sounds choked up. She takes another breath and continues.) #narrator
 The border matches the dry riverbed. It records <link="thirst">hunger and thirst</link> as her cause of death. #aurora
 ~ read_answers += AnswerId.mother_12_supported_14
 ~ supported = true
@@ -2577,15 +2641,13 @@ The symbol means a dry river. Check the actual riverbed or the records of lost w
 # question_id:mother_17
 ~ temp supported = false
 {has_tag(EvidenceTag.shared_body_reference):
-(Her voice is low and exact. Each sentence is given enough space to stand by itself.) #narrator
 The wounds carried over when the other person woke. A mark on the shared body could carry a message between them. #aurora
 ~ read_answers += AnswerId.mother_17_supported_19
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(She goes quiet long enough for you to notice your own hand tightening around the radio.) #narrator
-The pictures match. Now check the record of wounds appearing after sleep. #aurora
+The pictures match. But the media is unknown. #aurora
 ~ read_answers += AnswerId.mother_17_normal_18
 ~ feedback_kind = "unmatched"
 }
@@ -2602,9 +2664,26 @@ No sign of anyone returning. She may have been the last. I used to think she wou
 ~ feedback_kind = "linked"
 }
 {not supported:
-(You hear her catch an answer before it becomes a certainty. She begins again.) #narrator
 One empty scan is not enough. Check the period after her burial. #aurora
 ~ read_answers += AnswerId.mother_21_normal_22
+~ feedback_kind = "unmatched"
+}
+-> test_radio_mother
+
+=== test_answer_mother_flower ===
+# question_id:mother_flower
+{has_tag(EvidenceTag.night_mother_flower_trace):
+(She is quiet long enough for the static to return. When she speaks, she leaves no space between the short sentences.) #narrator
+A flower. A mother and daughter drew it for each other when the girl was small. It meant "I love you." Just between them. #aurora
+It is not a blessing used throughout Night City. This one belonged to those two people. #aurora
+~ owned_evidence += EvidenceId.mother_daughter_flower_meaning
+~ known_tags += EvidenceTag.mother_daughter_flower_meaning
+# event:grant_evidence:mother_daughter_flower_meaning
+~ read_answers += AnswerId.mother_flower_supported
+~ feedback_kind = "linked"
+- else:
+Show me the flower the searchlight recovered. We should not assume that every painted mark is a funerary symbol. #aurora
+~ read_answers += AnswerId.mother_flower_normal
 ~ feedback_kind = "unmatched"
 }
 -> test_radio_mother
@@ -2620,7 +2699,6 @@ The same child. Look at the way he is held. The man carrying him is his <link="n
 ~ feedback_kind = "linked"
 }
 {not supported:
-(A brief sound of acknowledgement. She moves straight to the point.) #narrator
 Match the child with the altar figure before you name the parent. #aurora
 ~ read_answers += AnswerId.father_8_normal_9
 ~ feedback_kind = "unmatched"
@@ -2631,7 +2709,6 @@ Match the child with the altar figure before you name the parent. #aurora
 # question_id:father_12
 ~ temp supported = false
 {has_tag(EvidenceTag.skyway_not_steep) || has_tag(EvidenceTag.missed_sleeping_deadline):
-(A sharp breath brushes the microphone. She waits for it to pass before giving you the facts.) #narrator
 The path was uneven, but it was not a dangerous climb. He kept searching <link="missed_sleeping_deadline">beyond the permitted waking hours</link> and failed to reach a sleeping coffin in time. #aurora
 ~ read_answers += AnswerId.father_12_supported_14
 ~ supported = true
@@ -2641,7 +2718,6 @@ The path was uneven, but it was not a dangerous climb. He kept searching <link="
 # event:grant_evidence:night_father_death
 }
 {not supported:
-(She waits for the interference to pass, then speaks with deliberate precision.) #narrator
 Check the actual path or its history. An upward line does not show how steep it was. #aurora
 ~ read_answers += AnswerId.father_12_normal_13
 ~ feedback_kind = "unmatched"
@@ -2652,14 +2728,12 @@ Check the actual path or its history. An upward line does not show how steep it 
 # question_id:father_16
 ~ temp supported = false
 {has_tag(EvidenceTag.paired_day_night_death):
-(Two short taps reach you through the receiver. Then nothing. When she speaks, each event gets its own sentence.) #narrator
-One dies during the night. The other disappears at dawn. Put the times beside each other. You may be looking at two records of one life. #aurora
+One dies. The other disappears at dawn. Check whether these are two records of one life. #aurora
 ~ read_answers += AnswerId.father_16_supported_18
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(Her words come firmly now, the dates and times given more weight than the names.) #narrator
 Bring the Scholar's <link="disappearance">disappearance</link> report. We need the time her husband vanished. #aurora
 ~ read_answers += AnswerId.father_16_normal_17
 ~ feedback_kind = "unmatched"
@@ -2670,8 +2744,7 @@ Bring the Scholar's <link="disappearance">disappearance</link> report. We need t
 # question_id:father_20
 ~ temp supported = false
 {has_tag(EvidenceTag.moon_stone_offering) || has_tag(EvidenceTag.night_blessing_reference):
-(The word comes more softly than the explanation. You almost miss it beneath the static.) #narrator
-A blessing for the person who left. Someone wanted him to travel well. The stone was an offering, not payment for the path. #aurora
+It is a blessing for the person who left. Nobody was paying for the path. #aurora
 ~ read_answers += AnswerId.father_20_supported_22
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2680,7 +2753,6 @@ A blessing for the person who left. Someone wanted him to travel well. The stone
 # event:grant_evidence:moon_stone_blessing
 }
 {not supported:
-(A quiet breath, then an instruction. The familiar directness is back.) #narrator
 Record the stone. Compare it with the altar offerings. #aurora
 ~ read_answers += AnswerId.father_20_normal_21
 ~ feedback_kind = "unmatched"
@@ -2711,7 +2783,6 @@ An upright sleeping coffin, like the one in the old illustration. A place to wai
 ~ feedback_kind = "linked"
 }
 {not supported:
-(The first sound she makes is too small to be a word. She clears it away before answering.) #narrator
 That frame has an older history than the girl inside it. Let us look for its shape in the book. #aurora
 ~ read_answers += AnswerId.girl_8_normal_9
 ~ feedback_kind = "unmatched"
@@ -2774,7 +2845,9 @@ Read what she meant to do. A stone can remember an absence without knowing where
 
 === test_answer_girl_24 ===
 # question_id:girl_24
--> test_confrontation
+You are about to ask Aurora about the girl on the cover. Are you ready to begin the final conversation? #narrator
++ [Begin the final conversation.] -> test_confrontation
++ [Keep investigating.] -> test_radio_girl
 
 === test_radio_terms_baby ===
 DEV: collect only words from answers you have already read.
@@ -2796,19 +2869,15 @@ DEV: collect only words from answers you have already read.
 # feedback_mode:unmatched
 {active_tomb == "altar" || active_tomb == "mother" || active_tomb == "father":
 {pick == 0:
-(A brief pause, then a level voice.) #narrator
 Not yet. Check the scene for a closer match. #aurora
 }
 {pick == 1:
-(You hear her breathe out once.) #narrator
 We do not have enough to connect those. Try another piece of evidence. #aurora
 }
 {pick == 2:
-(A quiet sound of acknowledgement comes through.) #narrator
 Check the shape again. We need a match we can point to. #aurora
 }
 {pick == 3:
-(Her next words arrive without hesitation.) #narrator
 Keep looking. We can return to the question when you find something. #aurora
 }
 - else:
@@ -2825,19 +2894,15 @@ For now, let the stones have the next word. They may tell you what I cannot yet.
 }
 - else:
 {pick == 0:
-(A soft breath brushes the line.) #narrator
 Perhaps another look at the scene will give us the missing piece. #aurora
 }
 {pick == 1:
-(Her voice returns with a little of its warmth restored.) #narrator
 I wonder whether those two shapes are telling the same story. Let us look a little closer. #aurora
 }
 {pick == 2:
-(You hear a quiet, thoughtful hum.) #narrator
 We can leave that question open, {player_name}. Something nearby may give it a firmer footing. #aurora
 }
 {pick == 3:
-(She leaves a small, unhurried pause.) #narrator
 There is still a little space between what we see and what we know. Have another look. #aurora
 }
 }
@@ -2847,36 +2912,28 @@ There is still a little space between what we see and what we know. Have another
 # feedback_mode:linked
 {active_tomb == "altar" || active_tomb == "mother" || active_tomb == "father":
 {pick == 0:
-(A brief pause, then a level voice.) #narrator
 Yes. Those match. Record the connection. #aurora
 }
 {pick == 1:
-(You hear her breathe out once.) #narrator
 Good. That link is supported. #aurora
 }
 {pick == 2:
-(A quiet sound of acknowledgement comes through.) #narrator
 That fits what you found. Keep going. #aurora
 }
 {pick == 3:
-(Her next words arrive without hesitation.) #narrator
 You have the connection. Put it in the notebook. #aurora
 }
 - else:
 {pick == 0:
-(A soft breath brushes the line.) #narrator
 Yes, that fits. One piece has found its place. #aurora
 }
 {pick == 1:
-(Her voice returns with a little of its warmth restored.) #narrator
 That is a careful connection, {player_name}. Keep it in your notes. #aurora
 }
 {pick == 2:
-(You hear a quiet, thoughtful hum.) #narrator
 We have a little more of the picture now. You saw that well. #aurora
 }
 {pick == 3:
-(She leaves a small, unhurried pause.) #narrator
 The pattern is clearer now. Let us hold on to that connection. #aurora
 }
 }
@@ -2886,36 +2943,28 @@ The pattern is clearer now. Let us hold on to that connection. #aurora
 # feedback:gold
 {active_tomb == "altar" || active_tomb == "mother" || active_tomb == "father":
 {pick == 0:
-(A brief pause, then a level voice.) #narrator
 That was the right question. Keep the answer. #aurora
 }
 {pick == 1:
-(You hear her breathe out once.) #narrator
 You had a reason to ask. Now we know more. #aurora
 }
 {pick == 2:
-(A quiet sound of acknowledgement comes through.) #narrator
 Good. That tells us something the inscription did not. #aurora
 }
 {pick == 3:
-(Her next words arrive without hesitation.) #narrator
 That answer matters. Make a note of it. #aurora
 }
 - else:
 {pick == 0:
-(A soft breath brushes the line.) #narrator
 You were right to ask. There is more here than the inscription can hold. #aurora
 }
 {pick == 1:
-(Her voice returns with a little of its warmth restored.) #narrator
 That was worth following, {player_name}. Let us keep the answer. #aurora
 }
 {pick == 2:
-(You hear a quiet, thoughtful hum.) #narrator
 A good question. We have reached something the stone left unsaid. #aurora
 }
 {pick == 3:
-(She leaves a small, unhurried pause.) #narrator
 I'm glad you followed that thread. We can leave it open a little longer. #aurora
 }
 }
@@ -2927,36 +2976,28 @@ I'm glad you followed that thread. We can leave it open a little longer. #aurora
 ~ temp pick = RANDOM(0,3)
 {active_tomb == "altar" || active_tomb == "mother" || active_tomb == "father":
 {pick == 0:
-(A brief pause, then a level voice.) #narrator
 All right. Call when you have more. #aurora
 }
 {pick == 1:
-(You hear her breathe out once.) #narrator
 Go on. I'll keep the channel open. #aurora
 }
 {pick == 2:
-(A quiet sound of acknowledgement comes through.) #narrator
 We can stop here. Talk to you later. #aurora
 }
 {pick == 3:
-(Her next words arrive without hesitation.) #narrator
 Understood. Keep your notes. We'll continue later. #aurora
 }
 - else:
 {pick == 0:
-(A soft breath brushes the line.) #narrator
 I'll leave you with the stones for a while. Call when you are ready. #aurora
 }
 {pick == 1:
-(Her voice returns with a little of its warmth restored.) #narrator
 Go on, {player_name}. There may be another piece waiting nearby. #aurora
 }
 {pick == 2:
-(You hear a quiet, thoughtful hum.) #narrator
 Let us leave the page open. We can return to it. #aurora
 }
 {pick == 3:
-(She leaves a small, unhurried pause.) #narrator
 Until later. I'll be here when you have something to share. #aurora
 }
 }

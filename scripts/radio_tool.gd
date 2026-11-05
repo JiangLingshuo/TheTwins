@@ -345,6 +345,7 @@ func _show_result(result: Dictionary) -> void:
 	if result.has("error"):
 		_status = result["error"]
 	else:
+		if result.get("city", "") == "night": get_parent().set_night()
 		_followups = result.get("choices", [])
 		_feedback = result.get("feedback", "")
 		_status = "A hidden connection surfaced." if _feedback == "hidden" else ("Evidence connected." if _feedback == "linked" else ("That record does not establish a connection. Try another." if _feedback == "unmatched" else "Reply received."))
@@ -353,6 +354,9 @@ func _show_result(result: Dictionary) -> void:
 			_last_lines.append(line)
 			lines.append(line.duplicate())
 		if not lines.is_empty(): await _play_reply(lines, _session)
+		if result.get("hang_up", false):
+			close()
+			return
 	_queue_render()
 
 func _play_reply(lines: Array[Dictionary], log_session: String) -> void:

@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "3e1f27c8d1dda28433b16c043da7e46990e4f159f612979938a0c057b7561dd4",
+    "evidence_master.ink": "984f763256b27bb636ada77426a9f25b948e50b7c41ae64f8ec9ce114fe0a0e7",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "d40dca673dd7591ef8ed2d378dbd178189496f231681029b622198bc1e1b73db"
+    "telecomm_master.ink": "161155eca385d2ad8b20401b9f2b3af35f691d1ac6ad0f175777ac61070ddd6b"
   },
   "gravestones": {
     "baby_tomb": {
@@ -2138,6 +2138,126 @@
       },
       "source_knot": "ev_family_statuette"
     },
+    "girl_teddy_bear": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_teddy_bear",
+      "title": "A Teddy Bear at the Solitary Marker",
+      "body": "In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.",
+      "interactive_body": "In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.",
+      "category": "trace",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_teddy_bear"
+        ],
+        "title": [
+          "A Teddy Bear at the Solitary Marker"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2005"
+        ],
+        "searchlight_years_ago": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "girl_teddy_bear_trace"
+        ]
+      },
+      "source_knot": "ev_girl_teddy_bear"
+    },
+    "night_mother_flower": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_flower",
+      "title": "A Flower Beneath the Faded Paint",
+      "body": "Only faint patches of pigment remain on the stone. In the searchlight, they join into one large, brightly painted flower. Its meaning cannot be established from its shape alone.",
+      "interactive_body": "Only faint patches of pigment remain on the stone. In the searchlight, they join into one large, brightly painted flower. Its meaning cannot be established from its shape alone.",
+      "category": "trace",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_flower"
+        ],
+        "title": [
+          "A Flower Beneath the Faded Paint"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2005"
+        ],
+        "searchlight_years_ago": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "night_mother_flower_trace"
+        ]
+      },
+      "source_knot": "ev_night_mother_flower"
+    },
+    "mother_daughter_flower_meaning": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "mother_daughter_flower_meaning",
+      "title": "Our Flower",
+      "body": "Aurora identifies the flower as a private sign shared by a mother and daughter when the daughter was small. Drawing it for one another meant: \"I love you.\" It was theirs alone, not a general Night City funerary symbol.",
+      "interactive_body": "Aurora identifies the flower as a private sign shared by a mother and daughter when the daughter was small. Drawing it for one another meant: \"I love you.\" It was theirs alone, not a general Night City funerary symbol.",
+      "category": "finding",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "mother_daughter_flower_meaning"
+        ],
+        "title": [
+          "Our Flower"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "mother_daughter_flower_meaning"
+        ]
+      },
+      "source_knot": "ev_mother_daughter_flower_meaning"
+    },
     "day_city_history": {
       "gravestones": [
         "girl_tomb"
@@ -2566,7 +2686,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "You have followed their traces through both cities. What would you most like to ask now?"
+          "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask two questions of the most curiosity."
         },
         {
           "speaker": "",
@@ -2581,8 +2701,12 @@
           "content": "(A small silence falls across the name. She answers without decorating it.)"
         },
         {
+          "speaker": "",
+          "content": "(A small silence falls across the name. She answers without decorating it.)"
+        },
+        {
           "speaker": "Aurora",
-          "content": "Aurora is a name. It does not tell you how many people are speaking, or how many points of view they have. I know things that are not in your records."
+          "content": "Aurora is a name. It does not tell you how many people are speaking, or how many points of view they have. It's never in your record."
         },
         {
           "speaker": "",
@@ -2598,7 +2722,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate."
+          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residence. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation -- cemeteries are the diorama of cities."
         }
       ]
     },
@@ -2610,45 +2734,25 @@
         {
           "speaker": "",
           "content": "(She lets out a quiet breath and brings the discussion back to the task.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I have to drop. See ya."
         }
       ]
     },
     "test_confrontation_tail": {
       "id": "test_confrontation_tail",
       "source_knot": "test_confrontation",
-      "preview_only": true,
+      "preview_only": false,
       "lines": [
         {
-          "speaker": "",
-          "content": "(The channel remains open. A breath goes in, trembles, comes out. When she finally speaks, the familiar softness has nowhere to hide.)"
+          "speaker": "#PLAYER#",
+          "content": "The girl, the coffin, the hands. This is not just a similar decoration."
         },
         {
           "speaker": "Aurora",
-          "content": "I made it. I wrote those pages. And I left."
-        },
-        {
-          "speaker": "",
-          "content": "(The first word fails her once. When she starts again, she makes herself continue.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "I hated the way my mother called harm protection. The other girl had a different reason. She told me that when her brother was born, her parents stopped looking at her. When he disappeared, they could not look away from his absence. She wanted a life in which she did not have to wait for them to notice her. We agreed to leave without our mothers."
-        },
-        {
-          "speaker": "",
-          "content": "(The effort of holding her voice steady is audible now. She no longer quite succeeds.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "Now I keep returning to the moment we left. I still remember why I refused to take my mother. The other girl still remembers how it felt to be overlooked. Neither memory tells us what our mothers felt after we were gone. I sent you because I could not bear to stand where you are standing."
-        },
-        {
-          "speaker": "",
-          "content": "(A final pause. This time she does not try to make it sound thoughtful.)"
-        },
-        {
-          "speaker": "Aurora",
-          "content": "You have found what remains. I do not know what either of our mothers would have said to us."
+          "content": "I carved it. I wrote the diary, too."
         }
       ]
     },
@@ -2916,7 +3020,7 @@
         },
         {
           "speaker": "",
-          "content": "(You feel dumb. But that clue must have lodged itself somewhere deep in your consciousness. Perhaps use your tools to observe those markers again.)"
+          "content": "(Perhaps use your tools to observe those markers again.)"
         }
       ]
     },
@@ -2948,31 +3052,26 @@
         }
       ]
     },
-    "sun_21_supported_23": {
-      "id": "sun_21_supported_23",
-      "source_knot": "test_answer_sun_21",
+    "test_answer_sun_photo_tail": {
+      "id": "test_answer_sun_photo_tail",
+      "source_knot": "test_answer_sun_photo",
+      "preview_only": true,
       "lines": [
         {
-          "speaker": "",
-          "content": "(The line is still open, but she lets it carry nothing for a moment. When her voice returns, it is closer and lower.)"
+          "speaker": "Aurora",
+          "content": "...I have nothing to tell."
         },
         {
           "speaker": "Aurora",
-          "content": "A photograph can keep a place for someone who has no stone beside the others. Count the four faces, then the three markers. The empty place matters too."
-        }
-      ]
-    },
-    "sun_21_normal_22": {
-      "id": "sun_21_normal_22",
-      "source_knot": "test_answer_sun_21",
-      "lines": [
+          "content": "She left it."
+        },
         {
           "speaker": "",
-          "content": "(She pauses before counting. The silence gives each missing number an uncomfortable weight.)"
+          "content": "(The answer comes before the question has quite left the channel. Then there is a silence just long enough for you to hear what slipped through.)"
         },
         {
           "speaker": "Aurora",
-          "content": "Before we count who is missing, let us be sure who belongs in the picture. Compare the family image with the shared base."
+          "content": "I have to go. Goodbye."
         }
       ]
     },
@@ -3148,7 +3247,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(The first word sounds dry in her mouth. She takes another breath and continues.)"
+          "content": "(The first word sounds choked up. She takes another breath and continues.)"
         },
         {
           "speaker": "Aurora",
@@ -3175,10 +3274,6 @@
       "source_knot": "test_answer_mother_17",
       "lines": [
         {
-          "speaker": "",
-          "content": "(Her voice is low and exact. Each sentence is given enough space to stand by itself.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The wounds carried over when the other person woke. A mark on the shared body could carry a message between them."
         }
@@ -3189,12 +3284,8 @@
       "source_knot": "test_answer_mother_17",
       "lines": [
         {
-          "speaker": "",
-          "content": "(She goes quiet long enough for you to notice your own hand tightening around the radio.)"
-        },
-        {
           "speaker": "Aurora",
-          "content": "The pictures match. Now check the record of wounds appearing after sleep."
+          "content": "The pictures match. But the media is unknown."
         }
       ]
     },
@@ -3217,12 +3308,36 @@
       "source_knot": "test_answer_mother_21",
       "lines": [
         {
+          "speaker": "Aurora",
+          "content": "One empty scan is not enough. Check the period after her burial."
+        }
+      ]
+    },
+    "mother_flower_supported": {
+      "id": "mother_flower_supported",
+      "source_knot": "test_answer_mother_flower",
+      "lines": [
+        {
           "speaker": "",
-          "content": "(You hear her catch an answer before it becomes a certainty. She begins again.)"
+          "content": "(She is quiet long enough for the static to return. When she speaks, she leaves no space between the short sentences.)"
         },
         {
           "speaker": "Aurora",
-          "content": "One empty scan is not enough. Check the period after her burial."
+          "content": "A flower. A mother and daughter drew it for each other when the girl was small. It meant \"I love you.\" Just between them."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "It is not a blessing used throughout Night City. This one belonged to those two people."
+        }
+      ]
+    },
+    "mother_flower_normal": {
+      "id": "mother_flower_normal",
+      "source_knot": "test_answer_mother_flower",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Show me the flower the searchlight recovered. We should not assume that every painted mark is a funerary symbol."
         }
       ]
     },
@@ -3245,10 +3360,6 @@
       "source_knot": "test_answer_father_8",
       "lines": [
         {
-          "speaker": "",
-          "content": "(A brief sound of acknowledgement. She moves straight to the point.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "Match the child with the altar figure before you name the parent."
         }
@@ -3258,10 +3369,6 @@
       "id": "father_12_supported_14",
       "source_knot": "test_answer_father_12",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(A sharp breath brushes the microphone. She waits for it to pass before giving you the facts.)"
-        },
         {
           "speaker": "Aurora",
           "content": "The path was uneven, but it was not a dangerous climb. He kept searching beyond the permitted waking hours and failed to reach a sleeping coffin in time."
@@ -3273,10 +3380,6 @@
       "source_knot": "test_answer_father_12",
       "lines": [
         {
-          "speaker": "",
-          "content": "(She waits for the interference to pass, then speaks with deliberate precision.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "Check the actual path or its history. An upward line does not show how steep it was."
         }
@@ -3287,12 +3390,8 @@
       "source_knot": "test_answer_father_16",
       "lines": [
         {
-          "speaker": "",
-          "content": "(Two short taps reach you through the receiver. Then nothing. When she speaks, each event gets its own sentence.)"
-        },
-        {
           "speaker": "Aurora",
-          "content": "One dies during the night. The other disappears at dawn. Put the times beside each other. You may be looking at two records of one life."
+          "content": "One dies. The other disappears at dawn. Check whether these are two records of one life."
         }
       ]
     },
@@ -3300,10 +3399,6 @@
       "id": "father_16_normal_17",
       "source_knot": "test_answer_father_16",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(Her words come firmly now, the dates and times given more weight than the names.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Bring the Scholar's disappearance report. We need the time her husband vanished."
@@ -3315,12 +3410,8 @@
       "source_knot": "test_answer_father_20",
       "lines": [
         {
-          "speaker": "",
-          "content": "(The word comes more softly than the explanation. You almost miss it beneath the static.)"
-        },
-        {
           "speaker": "Aurora",
-          "content": "A blessing for the person who left. Someone wanted him to travel well. The stone was an offering, not payment for the path."
+          "content": "It is a blessing for the person who left. Nobody was paying for the path."
         }
       ]
     },
@@ -3328,10 +3419,6 @@
       "id": "father_20_normal_21",
       "source_knot": "test_answer_father_20",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(A quiet breath, then an instruction. The familiar directness is back.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Record the stone. Compare it with the altar offerings."
@@ -3370,10 +3457,6 @@
       "id": "girl_8_normal_9",
       "source_knot": "test_answer_girl_8",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(The first sound she makes is too small to be a word. She clears it away before answering.)"
-        },
         {
           "speaker": "Aurora",
           "content": "That frame has an older history than the girl inside it. Let us look for its shape in the book."
@@ -3461,6 +3544,17 @@
         {
           "speaker": "Aurora",
           "content": "Read what she meant to do. A stone can remember an absence without knowing where the person went."
+        }
+      ]
+    },
+    "test_answer_girl_24_tail": {
+      "id": "test_answer_girl_24_tail",
+      "source_knot": "test_answer_girl_24",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "You are about to ask Aurora about the girl on the cover. Are you ready to begin the final conversation?"
         }
       ]
     },

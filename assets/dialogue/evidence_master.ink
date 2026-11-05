@@ -923,6 +923,48 @@ The girl, her joined hands, and the upright coffin form a single composition. Th
 A small sculpture of four family members once stood before the marker. It was carved by the girl. Its figures can be compared with the photograph at the sun-shaped monument.
 -> DONE
 
+=== ev_girl_teddy_bear ===
+# type:evidence
+# id:girl_teddy_bear
+# title:A Teddy Bear at the Solitary Marker
+# category:trace
+# location:day_cemetery
+# tool:searchlight
+# searchlight_year:2005
+# searchlight_years_ago:45
+# searchlight_date_status:timeline_suggestion
+# evidence_tag:girl_teddy_bear_trace
+// Callback draft: date is provisional; after the girl's departure and before the Day mother dies.
+// Art: show the mother setting down the bear, with a recognisable face; bear must match the family photo.
+In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.
+-> DONE
+
+=== ev_night_mother_flower ===
+# type:evidence
+# id:night_mother_flower
+# title:A Flower Beneath the Faded Paint
+# category:trace
+# location:night_cemetery
+# tool:searchlight
+# searchlight_year:2005
+# searchlight_years_ago:45
+# searchlight_date_status:timeline_suggestion
+# evidence_tag:night_mother_flower_trace
+// Placement assumption: Night mother's marker. This is a painted personal image, not a geometric funerary glyph.
+Only faint patches of pigment remain on the stone. In the searchlight, they join into one large, brightly painted flower. Its meaning cannot be established from its shape alone.
+-> DONE
+
+=== ev_mother_daughter_flower_meaning ===
+# type:evidence
+# id:mother_daughter_flower_meaning
+# title:Our Flower
+# category:finding
+# location:notebook
+# evidence_tag:mother_daughter_flower_meaning
+// Award through the Night City radio question, after submitting the recovered painted flower.
+Aurora identifies the flower as a private sign shared by a mother and daughter when the daughter was small. Drawing it for one another meant: "I love you." It was theirs alone, not a general Night City funerary symbol.
+-> DONE
+
 === ev_day_city_history ===
 # type:evidence
 # id:day_city_history
