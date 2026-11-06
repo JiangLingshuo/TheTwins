@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://xh7tnkgrlspp"
-path="res://.godot/imported/BG_day.png-22e4748ddfced8eb3a0cc71bda0d5a0e.ctex"
+uid="uid://b35cf0im1pi7g"
+path="res://.godot/imported/ladder.png-d8e19a8dd981047dacfa0cdffa571208.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/day/BG_day.png"
-dest_files=["res://.godot/imported/BG_day.png-22e4748ddfced8eb3a0cc71bda0d5a0e.ctex"]
+source_file="res://assets/Art/night/ladder.png"
+dest_files=["res://.godot/imported/ladder.png-d8e19a8dd981047dacfa0cdffa571208.ctex"]
 
 [params]
 
