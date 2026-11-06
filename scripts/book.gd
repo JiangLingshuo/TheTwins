@@ -18,11 +18,18 @@ extends Control
 signal opened(player_name: String)
 signal page_changed(spread: int)
 signal closed
+## The folded entry (clue or manuscript) open for reading, and its section (2 or 3).
 var _reading_document := ""
+var _reading_section := -1
 var _reading_offsets: Dictionary = {}
 var _reading_cache: Dictionary = {}
 var _reading_count := 0
 var _reading_key := ""
+## Radio Logs navigation (UI state only; the history lives in GameState):
+## the selected gravestone (or RadioLogPages.OTHER) and question, "" = none.
+var _radio_stone := ""
+var _radio_question := ""
+const RadioLogPages := preload("res://scripts/radio_log_pages.gd")
 ## Emitted when write() has finished writing on a page.
 signal written(page_index: int)
 
@@ -60,7 +67,9 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Seconds for the closed book to shrink into the corner icon.
 @export var stow_time: float = 0.8
 ## Size of the corner icon, relative to the full book.
-@export var icon_scale: float = 0.12
+@export var icon_scale: float = 0.09
+## Tilt of the corner icon, in degrees.
+@export var icon_rotation: float = -8.0
 ## Distance of the icon's centre from the bottom-right corner of the screen.
 @export var icon_margin: Vector2 = Vector2(70, 70)
 ## Writing speed of write(), in characters per second.
@@ -142,6 +151,7 @@ func _ready() -> void:
 		_update_rubbing_spreads()
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
 		GameState.notebook_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
+		GameState.radio_history_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -153,16 +163,23 @@ func _ready() -> void:
 	_write_player.finished.connect(_on_write_sound_finished)
 
 
-## Fly the closed book in from the bottom-right corner.
-func wake() -> void:
+## Fly the closed book in from the bottom-right corner, or (`from_icon`) grow it
+## out of the corner icon spot.
+func wake(from_icon: bool = false) -> void:
 	await get_tree().process_frame  # make sure the layout is ready
 	_home_position = position
 	var screen := get_viewport_rect().size
 
-	position = Vector2(screen.x - 120.0, screen.y - 80.0) - pivot_offset
-	scale = Vector2.ONE * 0.12
-	rotation_degrees = 28.0
-	modulate.a = 0.0
+	if from_icon:
+		position = _icon_position()
+		scale = Vector2.ONE * icon_scale
+		rotation_degrees = icon_rotation
+		modulate.a = 1.0
+	else:
+		position = Vector2(screen.x - 120.0, screen.y - 80.0) - pivot_offset
+		scale = Vector2.ONE * 0.12
+		rotation_degrees = 28.0
+		modulate.a = 0.0
 	visible = true
 
 	var t := create_tween().set_parallel(true)
@@ -178,10 +195,11 @@ func wake() -> void:
 
 
 func flip_forward() -> void:
-	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) + 2 < _reading_count:
-		_step_reading(2)
-		return
 	if _busy or _locked:
+		return
+	# A long text in the reader turns its own pages before the book moves on.
+	if _is_reading() and int(_reading_offsets.get(_reading_key, 0)) + 2 < _reading_count:
+		_turn_reading(2)
 		return
 	if not _can_flip_forward():
 		close_to_icon()
@@ -190,10 +208,10 @@ func flip_forward() -> void:
 
 
 func flip_backward() -> void:
-	if not _busy and use_sections and get_section() in [2, 3, 4] and (get_section() != 3 or not _reading_document.is_empty()) and int(_reading_offsets.get(_reading_key, 0)) > 0:
-		_step_reading(-2)
-		return
 	if _busy or _locked:
+		return
+	if _is_reading() and int(_reading_offsets.get(_reading_key, 0)) > 0:
+		_turn_reading(-2)
 		return
 	if not _can_flip_backward():
 		# The sectioned notebook closes from its first spread too.
@@ -205,7 +223,7 @@ func flip_backward() -> void:
 
 ## Turn straight to the first spread of a section, in a single page turn.
 func jump_to_section(section: int) -> void:
-	if section != 3 and not _reading_document.is_empty():
+	if section != _reading_section and not _reading_document.is_empty():
 		GameState.finish_current_manuscript()
 		_reading_document = ""
 	if _busy or _locked or _stowed or not _opened or not use_sections:
@@ -321,6 +339,7 @@ func _turn_forward(to: int = -1) -> void:
 	var next := _spread + 1 if to < 0 else to
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
+	_leave_reading_document()
 	_fill(right_text, right_number, next * 2 + 1)
 	await _fold_sheet(true)
 	# ...and lands on the left, showing its back.
@@ -338,6 +357,7 @@ func _turn_backward(to: int = -1) -> void:
 	_flip_player.play()
 	var prev := _spread - 1 if to < 0 else to
 	_prepare_sheet(true, _spread * 2)
+	_leave_reading_document()
 	_fill(left_text, left_number, prev * 2)
 	await _fold_sheet(true)
 	_prepare_sheet(false, prev * 2 + 1)
@@ -377,17 +397,13 @@ func close_to_icon() -> void:
 	await t.finished
 	right_page.visible = false
 
-	# Shrink into the corner. The closed book is the right half, so offset by
-	# its distance from the pivot to centre it on the icon spot.
-	var screen := get_viewport_rect().size
-	var cover_offset := Vector2(cover.size.x / 2.0, 0) * icon_scale
-	var icon_position := screen - icon_margin - pivot_offset - cover_offset
+	# Shrink into the corner.
 	var s := create_tween().set_parallel(true)
-	s.tween_property(self, "position", icon_position, stow_time) \
+	s.tween_property(self, "position", _icon_position(), stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	s.tween_property(self, "scale", Vector2.ONE * icon_scale, stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
-	s.tween_property(self, "rotation_degrees", -8.0, stow_time) \
+	s.tween_property(self, "rotation_degrees", icon_rotation, stow_time) \
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_IN_OUT)
 	await s.finished
 	_stowed = true
@@ -406,7 +422,7 @@ func open_saved(saved_pages: PackedStringArray, spread: int) -> void:
 	name_input.editable = false
 	name_input.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hint_label.visible = false
-	await wake()
+	await wake(true)
 	name_input.release_focus()
 	await _open_cover()
 	opened.emit(GameState.player_name)
@@ -459,6 +475,37 @@ func open_from_icon() -> void:
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	await t.finished
 	await _open_cover()
+
+
+## Where the stowed book sits: the closed book is the right half, so offset by
+## its distance from the pivot to centre it on the icon spot.
+func _icon_position() -> Vector2:
+	var cover_offset := Vector2(cover.size.x / 2.0, 0) * icon_scale
+	return get_viewport_rect().size - icon_margin - pivot_offset - cover_offset
+
+
+## A still copy of the stowed book (the closed cover, scaled and tilted as in the
+## icon spot), centred on (0, 0). A button showing it matches the book put away.
+func make_icon() -> Control:
+	var holder := Control.new()
+	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	holder.position = -Vector2(cover.size.x / 2.0, 0) * icon_scale
+	holder.rotation_degrees = icon_rotation
+	holder.scale = Vector2.ONE * icon_scale
+	var copy: Panel = cover.duplicate(0)  # no signals or scripts
+	copy.position = cover.position - pivot_offset
+	copy.scale = Vector2.ONE
+	copy.modulate = Color.WHITE
+	copy.visible = true
+	copy.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var copy_name: LineEdit = copy.get_node("NameInput")
+	copy_name.text = GameState.player_name
+	copy_name.editable = false
+	copy_name.focus_mode = Control.FOCUS_NONE
+	copy_name.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	copy.get_node("Hint").visible = false
+	holder.add_child(copy)
+	return holder
 
 
 ## Where the book sits so the closed cover is in the centre of the screen.
@@ -554,6 +601,10 @@ func _prepare_sheet(on_left: bool, page_index: int) -> void:
 	flip_sheet.get_node("Art").position = (left_page if on_left else right_page).get_node("Art").position
 	flip_sheet.get_node("Rubbings").position = (left_page if on_left else right_page).get_node("Rubbings").position
 	flip_sheet.get_node("Gravestone").position = (left_page if on_left else right_page).get_node("Gravestone").position
+	for child in ["SpreadReader", "ManuscriptItems", "CycleIcon"]:
+		var source: Control = (left_page if on_left else right_page).get_node_or_null(child)
+		if source and flip_sheet.has_node(child):
+			flip_sheet.get_node(child).position = source.position
 	_fill(flip_text, flip_number, page_index)
 
 
@@ -569,7 +620,7 @@ func _fold_sheet(folding: bool) -> void:
 
 
 func _finish_flip(spread: int) -> void:
-	if use_sections and _section_of(spread) != 3 and not _reading_document.is_empty():
+	if use_sections and _section_of(spread) != _reading_section and not _reading_document.is_empty():
 		GameState.finish_current_manuscript()
 		_reading_document = ""
 	flip_sheet.visible = false
@@ -596,6 +647,7 @@ func _fill(text_label: Label, number_label: Label, page_index: int) -> void:
 	_fill_rubbings(text_label.get_parent().get_node("Rubbings"), page_index)
 	_apply_page_theme(text_label, number_label, page_index)
 	_fill_records(text_label, page_index)
+	_fill_corner_icon(text_label, page_index)
 
 
 ## The collected rubbings that fall on a page of the Rubbings section, in
@@ -617,7 +669,9 @@ func _update_rubbing_spreads() -> void:
 	section_spreads[0] = 4 if GameState.gravestones.has("girl_tomb") else 3
 	section_spreads[1] = maxi(1, ceili(float(GameState.rubbings.size()) / (rubbings_per_page * 2)))
 	for index in [2, 3, 4]:
-		section_spreads[index] = maxi(1, ceili(float(GameState.notebook_entries(index).size()) / (8.0 if index == 3 else 1.0)))
+		# Clues and manuscripts are folded cards, eight per spread. Radio Logs is one
+		# spread: its lists and dialogue turn their own pages (_turn_reading).
+		section_spreads[index] = 1 if index == 4 else maxi(1, ceili(float(GameState.notebook_entries(index).size()) / 8.0))
 	_spread = _section_start(section) + mini(local_spread, section_spreads[section] - 1)
 
 
@@ -805,22 +859,22 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		reader.back_requested.connect(_close_reading_document, CONNECT_DEFERRED)
 		reader.step_requested.connect(_step_reading, CONNECT_DEFERRED)
 		reader.keyword_selected.connect(_reading_keyword, CONNECT_DEFERRED)
-	reader.visible = section in [2, 4] or (section == 3 and not _reading_document.is_empty())
+	reader.visible = (section == 4 and _radio_reading()) or (section in [2, 3] and section == _reading_section and not _reading_document.is_empty())
 	if not reader.visible: return
 	var entry: Dictionary = {}
-	if section == 3:
+	if section in [2, 3]:
 		entry = GameState.get_evidence(_reading_document)
 	else:
-		var entries := GameState.notebook_entries(section)
-		var index := page_index / 2 - _section_start(section)
-		if index < entries.size(): entry = entries[index]
+		entry = RadioLogPages.reader_entry(_radio_stone, _radio_question)
 	var title: String = entry.get("title", SECTION_TITLES[section])
 	var raw: String = entry.get("interactive_body", entry.get("body", "No entries yet."))
 	raw = GameState.fill_placeholders(raw)
 	var key := str(section) + ":" + str(entry.get("id", "empty"))
 	var cache_key := key + ":" + str(raw.hash())
 	if not _reading_cache.has(cache_key):
-		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, 300)
+		# A revealed clue's text sits under its figure, so it gets shorter pages.
+		var height: int = 300 if entry.get("reveal", {}).is_empty() else preload("res://scripts/spread_reader.gd").REVEAL_TEXT_HEIGHT
+		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, height)
 	var chunks: Array = _reading_cache[cache_key]
 	var offset: int = mini(_reading_offsets.get(key, 0), maxi(0, (chunks.size() - 1) / 2 * 2))
 	var side := page_index % 2
@@ -828,7 +882,10 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 	if page != flip_sheet:
 		_reading_key = key
 		_reading_count = chunks.size()
-	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet)
+	var back_text: String = {2: "← Clues", 3: "← Manuscripts"}.get(section, "")
+	if section == 4:
+		back_text = "← Questions" if not _radio_question.is_empty() else "← Radio Logs"
+	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet, back_text, entry.get("reveal", {}), section == 4)
 
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
@@ -842,18 +899,98 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		page.add_child(items)
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
-	items.visible = section == 3 and _reading_document.is_empty()
-	if section != 3: return
-	var entries := GameState.notebook_entries(3)
-	var first := (page_index - _section_start(3) * 2) * 4
-	if _reading_document.is_empty(): items._selected = ""
-	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet)
+	items.visible = (section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)) \
+		or (section == 4 and not _radio_reading())
+	if not items.visible: return
+	items._selected = ""
+	if section == 4:
+		_fill_radio_list(items, page_index, page != flip_sheet)
+		return
+	var entries := GameState.notebook_entries(section)
+	var first := (page_index - _section_start(section) * 2) * 4
+	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
+	items.set_list_header()
+	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
-func _open_reading_document(id: String) -> void:
-	_reading_document = id
+
+# --- Radio Logs: gravestones -> questions -> dialogue records -----------------
+
+## True when Radio Logs shows dialogue (a question, or Other Transmissions)
+## rather than a list of cards.
+func _radio_reading() -> bool:
+	return _radio_stone == RadioLogPages.OTHER or not _radio_question.is_empty()
+
+
+## A page of Radio Logs cards: the gravestones (plus Other Transmissions), or the
+## questions of the selected gravestone under its name and a back button. Long
+## lists continue on the next pages, turned with the corners like a long text.
+func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> void:
+	var questions := not _radio_stone.is_empty()
+	var entries: Array[Dictionary] = RadioLogPages.question_entries(_radio_stone) if questions else RadioLogPages.gravestone_entries()
+	# The heading and back button take the place of one card on the left page.
+	var left_cards := 3 if questions else 4
+	var per_spread := left_cards + 4
+	var key := "4:stone:" + _radio_stone if questions else "4:list"
+	var count := maxi(1, ceili(entries.size() / float(per_spread))) * 2
+	var offset: int = mini(_reading_offsets.get(key, 0), count - 2)
+	var side := page_index % 2
+	var first := offset / 2 * per_spread + (0 if side == 0 else left_cards)
+	if interactive:
+		_reading_key = key
+		_reading_count = count
+	if questions and side == 0:
+		items.set_list_header(RadioLogPages.gravestone_title(_radio_stone), "← Radio Logs", 19)
+	else:
+		items.set_list_header("", "", 19 if questions else 23)
+	var empty_text := "No radio transmissions recorded yet." if side == 0 and offset == 0 else ""
+	items.setup(entries.slice(first, first + (left_cards if side == 0 else 4)), page_index, left_text.label_settings.font,
+		left_text.label_settings.font_color, interactive, false, empty_text)
+
+
+## A Radio Logs card was clicked: open the gravestone's questions (Other
+## Transmissions opens its dialogue directly), or the question's dialogue.
+func _open_radio_entry(id: String) -> void:
+	if _radio_stone.is_empty():
+		_radio_stone = id
+		_reading_offsets.erase("4:stone:" + id)
+	else:
+		_radio_question = id
+	if _radio_reading():
+		_reading_offsets.erase("4:" + RadioLogPages.reader_entry(_radio_stone, _radio_question)["id"])
 	_refresh_reading()
 
+
+## Back one level: dialogue -> questions -> gravestones.
+func _radio_back() -> void:
+	if not _radio_question.is_empty():
+		_radio_question = ""
+	else:
+		_radio_stone = ""
+	_refresh_reading()
+
+
+func _open_reading_document(id: String) -> void:
+	if get_section() == 4:
+		_open_radio_entry(id)
+		return
+	_reading_document = id
+	_reading_section = get_section()
+	_reading_offsets.erase(str(_reading_section) + ":" + id)  # start at its first page
+	if _reading_section == 2:
+		GameState.open_clue(id)  # finished (NEW sign removed) when the reader leaves it
+	_refresh_reading()
+
+## Turning to another spread folds an open entry back into its card.
+func _leave_reading_document() -> void:
+	if _reading_document.is_empty():
+		return
+	GameState.finish_current_manuscript()
+	_reading_document = ""
+
 func _close_reading_document() -> void:
+	if get_section() == 4:
+		_radio_back()
+		return
 	GameState.finish_current_manuscript()
 	_reading_document = ""
 	_refresh_reading()
@@ -869,6 +1006,40 @@ func _reading_keyword(id: String) -> void:
 		if not notes.has(id): notes.append(id)
 		GameState.radio_progress["manuscript_keywords"] = notes
 	GameState.collect_term(id)
+
+## True while the spread shows a text in the reader (a radio log or an opened entry).
+func _is_reading() -> bool:
+	if not use_sections:
+		return false
+	var section := get_section()
+	return section == 4 or (section == _reading_section and not _reading_document.is_empty())
+
+## Turn the reader's text by `delta` pages (±2) with a normal page-turn animation;
+## the spread itself stays the same.
+func _turn_reading(delta: int) -> void:
+	_busy = true
+	_release_page_focus()
+	_set_corners_visible(false)
+	_flip_player.play()
+	var key := _reading_key
+	var target := clampi(int(_reading_offsets.get(key, 0)) + delta, 0, maxi(0, (_reading_count - 1) / 2 * 2))
+	if delta > 0:
+		_prepare_sheet(false, _spread * 2 + 1)  # the old right page lifts...
+		_reading_offsets[key] = target
+		_fill(right_text, right_number, _spread * 2 + 1)
+		await _fold_sheet(true)
+		_prepare_sheet(true, _spread * 2)  # ...and lands as the new left page
+		await _fold_sheet(false)
+		_fill(left_text, left_number, _spread * 2)
+	else:
+		_prepare_sheet(true, _spread * 2)
+		_reading_offsets[key] = target
+		_fill(left_text, left_number, _spread * 2)
+		await _fold_sheet(true)
+		_prepare_sheet(false, _spread * 2 + 1)
+		await _fold_sheet(false)
+		_fill(right_text, right_number, _spread * 2 + 1)
+	_finish_flip(_spread)
 
 func _refresh_reading() -> void:
 	if _busy:
@@ -889,4 +1060,29 @@ func _fill_cycle_icon(text_label: Label, page_index: int, section: int) -> void:
 		page.add_child(icon)
 	icon.visible = section == 5
 	if icon.visible:
-		icon.setup("sky_sun_rubbing" if page_index % 2 == 0 else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet)
+		var on_left := page_index % 2 == 0
+		icon.setup("sky_sun_rubbing" if on_left else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet, not on_left)
+
+
+## Once the sun and moon are both in the notebook, every other page carries a
+## small one in its top corner: the sun top-left on the Day (left) page, the moon
+## top-right on the Night (right) page. Dragging one onto the sky switches day and night.
+func _fill_corner_icon(text_label: Label, page_index: int) -> void:
+	var page := text_label.get_parent()
+	var icon: Control = page.get_node_or_null("CornerIcon")
+	if icon == null:
+		icon = Control.new()
+		icon.set_script(preload("res://scripts/cycle_icon.gd"))
+		icon.name = "CornerIcon"
+		icon.trim = true
+		icon.size = Vector2(54, 54)
+		page.add_child(icon)
+	var on_left := page_index % 2 == 0
+	icon.position = Vector2(12, 10) if on_left else Vector2(PAGE_SIZE.x - 12 - icon.size.x, 10)
+	var spread := page_index / 2
+	icon.visible = use_sections and spread < _spread_count() and _section_of(spread) != RISE_AND_SET \
+		and GameState.cycle_hint_heard and GameState.rubbings.has("sky_sun_rubbing") \
+		and GameState.rubbings.has("infant_moon_rubbing")
+	if icon.visible:
+		var dark := not on_left and day_night_sections.has(_section_of(spread))
+		icon.setup("sky_sun_rubbing" if on_left else "infant_moon_rubbing", text_label.label_settings.font_color, page != flip_sheet, dark)

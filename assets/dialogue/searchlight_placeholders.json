@@ -21,14 +21,17 @@
       "evidence_id": "skin_picture",
       "city": "day",
       "position": [
-        200,
-        250
+        471,
+        512
       ],
       "caption": "Skin picture: Dayfolk and Nightfolk holding hands",
       "target_id": "skin_picture",
       "meaning": "Skin picture: Dayfolk and Nightfolk holding hands",
       "years_ago": 45.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "texture": "res://assets/Art/figure/hand_holding.png",
+      "crop": true,
+      "size": [130, 101]
     },
     {
       "node": "WishPoolCoin",
@@ -50,14 +53,20 @@
       "evidence_id": "twin_beast_trace",
       "city": "day",
       "position": [
-        1250,
-        740
+        1244,
+        871
       ],
-      "caption": "Twin beast above giant footprint",
+      "caption": "Twin-beast footprint (oldest trace)",
       "target_id": "twin_beast_trace",
-      "meaning": "Twin beast above giant footprint",
+      "meaning": "Twin-beast footprint",
       "years_ago": 250.0,
-      "date_status": "provisional_ancient_date"
+      "date_status": "provisional_ancient_date",
+      "size": [
+        285,
+        189
+      ],
+      "texture": "res://assets/Art/day/footprint.png",
+      "crop": true
     },
     {
       "node": "FamilyPhoto",
@@ -165,6 +174,36 @@
         0.0,
         45.0
       ]
+    },
+    {
+      "node": "GirlTeddyBear",
+      "evidence_id": "girl_teddy_bear",
+      "city": "day",
+      "position": [
+        1480,
+        900
+      ],
+      "caption": "Mother leaving a teddy bear at the girl marker",
+      "target_id": "girl_teddy_bear",
+      "meaning": "Teddy bear and visitor: compare with family photograph",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "girl_tomb"
+    },
+    {
+      "node": "MotherPaintedFlower",
+      "evidence_id": "night_mother_flower",
+      "city": "night",
+      "position": [
+        850,
+        820
+      ],
+      "caption": "Faded paint on mother marker: a large flower",
+      "target_id": "night_mother_flower",
+      "meaning": "A painted flower: ask Aurora about its private meaning",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "mother_tomb"
     }
   ]
 }

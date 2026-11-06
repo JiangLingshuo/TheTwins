@@ -25,6 +25,10 @@ signal time_changed(is_day: bool)
 @export var rubbing_deciphered_message: String = "Symbol deciphered! Notebook updated."
 ## Message shown when a rubbing is dropped on the wrong thing.
 @export var rubbing_mismatch_message: String = "This symbol doesn't seem connected to that."
+## Message shown when a decipher or clue reveal is repeated.
+@export var already_noted_message: String = "We have already taken note of this."
+## Message shown whenever a clue is recorded; %s is the clue's title.
+@export var clue_recorded_message: String = "New clue: %s has been added to the notebook."
 
 @onready var _day_background: TextureRect = $DayBackground
 @onready var _night_background: TextureRect = $NightBackground
@@ -54,8 +58,7 @@ func _ready() -> void:
 	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.
 	_night_background.modulate.a = 0.0 if is_day else 1.0
-	modulate.a = 0.0
-	create_tween().tween_property(self, "modulate:a", 1.0, fade_in_time)
+	_fade_in_from_black()
 	_day_cemetery.visible = is_day
 	_night_cemetery.visible = not is_day
 	time_changed.connect(func(day: bool) -> void:
@@ -81,11 +84,38 @@ func _ready() -> void:
 		_toast.show_message(rubbing_deciphered_message))
 	_notebook_tool.rubbing_drag.mismatched.connect(func(_id: String, _target: Control) -> void:
 		_toast.show_message(rubbing_mismatch_message))
+	_notebook_tool.rubbing_drag.already_noted.connect(func(_id: String, _target: Control) -> void:
+		_toast.show_message(already_noted_message))
+	# Every new clue is announced (a revealed one too), queued after other messages.
+	GameState.evidence_recorded.connect(_on_evidence_recorded)
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
 		gravestone.recorded.connect(func(id: String) -> void:
 			_notebook_tool.show_gravestone_next(id)
 			_toast.show_message(gravestone_recorded_message))
+
+
+## Fade in from black, all but the notebook button: it shows the book the start
+## screen just put away in that same spot, so it stays in view throughout.
+func _fade_in_from_black() -> void:
+	var black := ColorRect.new()
+	black.color = Color.BLACK
+	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	black.z_index = 90
+	add_child(black)
+	black.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var button: Control = _notebook_tool.get_node("NotebookButton")
+	button.z_index = 91
+	var t := create_tween()
+	t.tween_property(black, "color:a", 0.0, fade_in_time)
+	t.tween_callback(func() -> void:
+		button.z_index = 0
+		black.queue_free())
+
+
+func _on_evidence_recorded(id: String) -> void:
+	if GameState.is_clue(id) and not GameState.notebook_preview:
+		_toast.show_message(clue_recorded_message % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -125,6 +155,17 @@ func _fade_backgrounds() -> void:
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
 
 
+## The part of `texture` that is not transparent, so drawn art fills its target box.
+func _crop_to_used(texture: Texture2D) -> Texture2D:
+	var image := texture.get_image()
+	if image.is_compressed():
+		image.decompress()
+	var atlas := AtlasTexture.new()
+	atlas.atlas = texture
+	atlas.region = Rect2(image.get_used_rect())
+	return atlas
+
+
 func _add_investigation_targets() -> void:
 	# Source dates come from evidence metadata; positions are editable layout placeholders.
 	var target_script = load("res://scripts/historical_target.gd")
@@ -141,7 +182,16 @@ func _add_investigation_targets() -> void:
 		target.position = Vector2(spec["position"][0], spec["position"][1])
 		target.size = Vector2(310, 110)
 		target.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		if spec.has("texture"): target.texture = load("res://assets/Art/symbols/" + spec["texture"])
+		if spec.has("texture"):
+			# A bare file name is a placeholder in assets/Art/symbols; finished art gives a res:// path.
+			var texture_path: String = spec["texture"]
+			if not texture_path.begins_with("res://"):
+				texture_path = "res://assets/Art/symbols/" + texture_path
+			target.texture = load(texture_path)
+			if spec.get("crop", false):
+				target.texture = _crop_to_used(target.texture)
+		if spec.has("size"):
+			target.size = Vector2(spec["size"][0], spec["size"][1])
 		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(760, 480, 220, 300)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]

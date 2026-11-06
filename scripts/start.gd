@@ -35,6 +35,9 @@ func _ready() -> void:
 	_fade_in.finished.connect(_start_pulse)
 	book.page_changed.connect(_on_page_changed)
 	book.closed.connect(_on_book_closed)
+	# Stow the book where the game's notebook button is, so the next scene picks up from it.
+	var screen := get_viewport_rect().size
+	book.icon_margin = screen - preload("res://scripts/notebook_tool.gd").button_center(screen)
 
 
 func _start_pulse() -> void:
@@ -84,8 +87,12 @@ func _go_to_next_scene() -> void:
 	# The notebook continues in the next scene with the same pages.
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
-	var fade := create_tween()
-	fade.tween_property(self, "modulate:a", 0.0, scene_fade_time)
+	# Everything fades except the stowed book: the next scene's notebook button
+	# sits in the same spot and looks the same, so it carries straight over.
+	var fade := create_tween().set_parallel(true)
+	for child in get_children():
+		if child != book and child is CanvasItem:
+			fade.tween_property(child, "modulate:a", 0.0, scene_fade_time)
 	await fade.finished
 	get_tree().change_scene_to_file(scene_after_close)
 

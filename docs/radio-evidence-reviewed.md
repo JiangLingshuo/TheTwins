@@ -1,6 +1,6 @@
 # 无线电三选一维护清单
 
-文案源：`assets/dialogue/telecomm_master.ink`。候选源：`radio_candidate_overrides.json`（45题全部人工指定）；渐进提交源：`radio_stage_candidates.json`。修改后运行 `python tools/build_radio_content.py`。
+文案源：`assets/dialogue/telecomm_master.ink`。候选源：`radio_candidate_overrides.json`（44题全部人工指定）；渐进提交源：`radio_stage_candidates.json`。修改后运行 `python tools/build_radio_content.py`。
 
 一般证据问题第一项为有效证据，后两项在当前问题上不能得出该结论；相关性来自同一人物、物件形状、习俗或同一事件。只允许提交已获取记录；隐藏问题仍须槽内证据满足条件。
 
@@ -21,10 +21,9 @@
 |scholar:test_answer_scholar_39<br>You seem to have some personal feelings towards the Scholar.|A Photograph of Four (`family_photo`)|The Scholar, Her Work, and Her Patron (`profession_record`)|The Picture Preserved on Skin (`skin_picture`)|
 |scholar:test_scholar_mausoleum<br>Why did the Scholar never apply for the family mausoleum?|The Scholar, Her Work, and Her Patron (`profession_record`)|One Base, Three Tombs (`shared_family_base`)|No Later Visitors at the Crystal Monument (`scholar_no_traces`)|
 |scholar:test_disappearance_hypothesis<br>Do you think the cause of disappearance aligns with what the Scholar has investigated?|The Scholar's Notes on Disappearances (`disappearance_inquiry`)|The Crystal Monument's Twin Beast (`scholar_beast_rubbing`)|An Account of the Twin-Bodied Creature (`twin_beast_account`)|
-|sun:test_answer_sun_8<br>Is this simply a monument to the sun?|A Coin from the Wishing Pool (`day_city_coin`)|The Sun Above Day City (`sun_reference`)|The Ram-Spirit Emblem (`ram_spirit_emblem`)|
 |sun:test_answer_sun_13<br>Why is the same beast on other markers?|An Account of the Twin-Bodied Creature (`twin_beast_account`)|The Same Beast on Other Graves (`repeated_beast_motifs`)|A Giant Footprint in the Ruins (`giant_footprint`)|
 |sun:test_answer_sun_17<br>Do these three markers belong together?|One Base, Three Tombs (`shared_family_base`)|A Photograph of Four (`family_photo`)|The Scholar, Her Work, and Her Patron (`profession_record`)|
-|sun:test_answer_sun_21<br>Why are four people remembered by only three markers?|A Photograph of Four (`family_photo`)|The Scholar, Her Work, and Her Patron (`profession_record`)|The Small Human-Shaped Marker (`infant_figure_rubbing`)|
+|sun:test_answer_sun_photo<br>Who left the photo on the grave?|A Photograph of Four (`family_photo`)|One Base, Three Markers (`shared_family_base`)|The Scholar, Her Work, and Her Patron (`profession_record`)|
 |sun:test_answer_sun_25<br>Which family member has no place on the base?|A Photograph of Four (`family_photo`)|The Scholar, Her Work, and Her Patron (`profession_record`)|A Page of the Designer's Journal (`designer_journal`)|
 |sun:test_disappearance_hypothesis<br>Do you think the cause of disappearance aligns with what the Scholar has investigated?|The Scholar's Notes on Disappearances (`disappearance_inquiry`)|The Crystal Monument's Twin Beast (`scholar_beast_rubbing`)|An Account of the Twin-Bodied Creature (`twin_beast_account`)|
 |altar:test_answer_altar_8<br>There is a symbol on the platform. What does it mean?|An Unfamiliar Glyph on the Altar (`altar_blessing_glyph`)|The Altar's Unending Path (`altar_path_rubbing`)|The Crystal God's Outline (`crystal_god_rubbing`)|
@@ -39,7 +38,7 @@
 |mother:test_answer_mother_12<br>What does the dry river border tell us about her death?|The Underground Riverbed (`dry_underground_river`)|The Dry River Around the Stone (`night_mother_river_rubbing`)|No Readable Traces Around the Stone (`night_mother_no_traces`)|
 |mother:test_answer_mother_17<br>Why does the handholding picture resemble the Scholar's?|The Picture Preserved on Skin (`skin_picture`)|A Figure Holding a Child (`night_mother_child_rubbing`)|A Sketch of the Infant (`infant_graffiti`)|
 |mother:test_answer_mother_21<br>Does the lack of offerings mean she was the last survivor?|No Readable Traces Around the Stone (`night_mother_no_traces`)|The Underground Riverbed (`dry_underground_river`)|An Order for a One-Way Passage (`one_way_passage_order`)|
-|mother:test_answer_mother_25<br>Was the message meant for her daughter as well?|Two Figures Holding Hands (`night_mother_hands_rubbing`)|A Photograph of Four (`family_photo`)|A Diary Page, Author Unknown (`girl_diary`)|
+|mother:test_answer_mother_flower<br>What does the painted flower mean?|A Flower Beneath the Faded Paint (`night_mother_flower`)|Two Figures Holding Hands (`night_mother_hands_rubbing`)|A Figure Holding a Child (`night_mother_child_rubbing`)|
 |mother:query_night_dry_river<br>What does the geometric border on this stone mean?|The Dry River Around the Stone (`night_mother_river_rubbing`)|Two Figures Holding Hands (`night_mother_hands_rubbing`)|A Figure Holding a Child (`night_mother_child_rubbing`)|
 |father:test_answer_father_8<br>Who is carrying the child?|A Figure Carrying a Child (`night_father_child_rubbing`)|The Infant on the White Altar (`altar_infant_rubbing`)|A Photograph of Four (`family_photo`)|
 |father:test_answer_father_12<br>Did he die because the Skyway was dangerous?|The Path to the Surface (`skyway_reference`)|The Collapse That Sealed the Road (`natural_collapse_record`)|A Figure Ascending the Path (`night_father_path_rubbing`)|
@@ -63,4 +62,6 @@
 |skin|skin_picture|designer_journal|night_mother_child_rubbing|
 |death|night_father_death|twin_beast_account|skyway_reference|
 
-夜母及之前的作者文案保持原样；本轮改写夜父、女孩及对质/开放结尾，保留原有条件、词条、奖励和剧情事实。
+已移除旧版“母亲向女儿传达情感”的隐藏问答与终局回扣；皮肤画、四人雕像及家族对应保留为解谜事实。
+
+太阳／钱币无线电问答已移除：大亨身份由职业文献提供，钱币意义通过场景图形对应建立，不要求无线电重复确认。

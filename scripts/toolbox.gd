@@ -29,8 +29,10 @@ func _ready() -> void:
 	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(button)
 	button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	button.offset_left = -148; button.offset_right = -36
-	button.offset_top = -184; button.offset_bottom = -72
+	# The three right-edge buttons (toolbox, notebook, radio) are 96 px circles
+	# centred 92 px from the right edge, 120 px apart around the middle.
+	button.offset_left = -140; button.offset_right = -44
+	button.offset_top = -168; button.offset_bottom = -72
 	button.tooltip_text = "Tools — rubbing, searchlight, camera"
 	button.pressed.connect(toggle)
 	button.draw.connect(func() -> void:
@@ -39,12 +41,15 @@ func _ready() -> void:
 	tray.name = "ToolsTray"
 	add_child(tray)
 	tray.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	tray.offset_left = -258; tray.offset_right = -160
-	tray.offset_top = -190; tray.offset_bottom = 74
+	tray.offset_left = -250; tray.offset_right = -152
+	tray.offset_top = -174; tray.offset_bottom = 90
+	# A soft rounded strip behind the light tool circles.
 	var frame := StyleBoxFlat.new()
-	frame.bg_color = Color(0.03, 0.04, 0.045, 0.94)
-	frame.border_color = Color(0.7, 0.66, 0.49)
+	frame.bg_color = Color(0.16, 0.13, 0.1, 0.32)
+	frame.border_color = Color(0.66, 0.54, 0.32, 0.6)
 	frame.set_border_width_all(1)
+	frame.set_corner_radius_all(48)
+	frame.set_content_margin_all(6)
 	tray.add_theme_stylebox_override("panel", frame)
 	var column := VBoxContainer.new()
 	column.add_theme_constant_override("separation", 6)

@@ -46,23 +46,24 @@ func _run() -> void:
 	tutorial._dialogue._finish_line()
 	await shot("03_aurora")
 	check("tutorial line appears in radio history", state.radio_logs.any(func(log: Dictionary) -> bool: return log["id"] == "tutorial_sun_moon"))
+	check("rubbed crescent blinks on the marker", moon._blink_tween != null)
 	for line_index in 3:
 		tutorial._dialogue._finish_line()
 		tutorial._dialogue._advance()
 		await wait(0.05)
 	await wait(0.5)
-	check("sun automatically given with Rise and Set instruction", state.rubbings.has("sky_sun_rubbing"))
-	check("after dialogue asks for notebook", tutorial.step == tutorial.Step.BOOK and state.cycle_hint_heard)
-	await notebook.open()
-	await wait(0.2)
-	# The notebook opens on Rise & Set (its first section), so no tab step is needed.
-	check("opening notebook lands on Rise & Set", notebook.book.get_section() == 5 and tutorial.step == tutorial.Step.DRAG)
+	check("sun not in the notebook before the moon replaces it", not state.rubbings.has("sky_sun_rubbing"))
+	check("notebook icons wait for the crescent to land", not state.cycle_hint_heard)
+	for i in 100:
+		if not tutorial._speaking: break
+		await wait(0.1)
+	check("notebook opened by itself on Rise & Set", notebook.is_open() and notebook.book.get_section() == 5)
+	check("crescent landed: icons shown, drag step", state.cycle_hint_heard and tutorial.step == tutorial.Step.DRAG)
+	check("marker stops blinking, notebook moon keeps blinking", moon._blink_tween == null and tutorial._icon_blink != null and tutorial._icon_blink.is_running())
 	notebook.book.jump_to_section(5)
 	await wait(0.9)
 	check("dedicated spread prompts moon drag", tutorial.step == tutorial.Step.DRAG)
 	await shot("04_rise_set")
-	check("both icons listed once in Rubbings, deciphered", state.rubbings.count("sky_sun_rubbing") == 1 and state.rubbings.count("infant_moon_rubbing") == 1 \
-		and state.is_rubbing_deciphered("sky_sun_rubbing") and state.is_rubbing_deciphered("infant_moon_rubbing"))
 	check("sun on left and moon on right", notebook.book.left_page.get_node("CycleIcon").rubbing_id == "sky_sun_rubbing" and notebook.book.right_page.get_node("CycleIcon").rubbing_id == "infant_moon_rubbing")
 	check("dedicated spread uses day-night papers", notebook.book.day_night_sections.has(5))
 	var drag = notebook.rubbing_drag
@@ -79,7 +80,15 @@ func _run() -> void:
 	drag._drop(point)
 	check("moon dropped on sun switches to night", not main.is_day and state.cycle_tutorial_completed)
 	check("navigation does not decode natural death", state.get_rubbing_meaning("infant_moon_rubbing") == "Moon")
-	await wait(0.9)
+	await wait(0.4)
+	check("sky sun drops into the notebook", tutorial._delivering and not state.rubbings.has("sky_sun_rubbing"))
+	for i in 100:
+		if tutorial._dialogue.is_playing(): break
+		await wait(0.1)
+	check("sun recorded, notebook closed before Aurora's night line", state.rubbings.has("sky_sun_rubbing") and not notebook.is_open() and tutorial._dialogue.is_playing())
+	check("both icons listed once in Rubbings, deciphered", state.rubbings.count("sky_sun_rubbing") == 1 and state.rubbings.count("infant_moon_rubbing") == 1 \
+		and state.is_rubbing_deciphered("sky_sun_rubbing") and state.is_rubbing_deciphered("infant_moon_rubbing"))
+	await wait(0.9)  # the box fades in before it takes input
 	await shot("05_night_city")
 	for line_index in 12:
 		if not tutorial._dialogue.is_playing(): break
@@ -96,6 +105,21 @@ func _run() -> void:
 	state.cycle_hint_heard = false
 	tutorial.skip()
 	check("developer skip unlocks navigation and reaches night", state.cycle_tutorial_completed and state.cycle_hint_heard and not main.is_day)
+	# Corner sun / moon on every other page, draggable onto the sky.
+	await notebook.open()
+	await wait(0.3)
+	notebook.book.jump_to_section(2)
+	await wait(1.2)
+	var corner_sun: Control = notebook.book.left_page.get_node_or_null("CornerIcon")
+	var corner_moon: Control = notebook.book.right_page.get_node_or_null("CornerIcon")
+	check("corner sun top-left, moon top-right", corner_sun and corner_moon and corner_sun.visible and corner_moon.visible \
+		and corner_sun.rubbing_id == "sky_sun_rubbing" and corner_moon.rubbing_id == "infant_moon_rubbing" \
+		and corner_sun.position.x < 100 and corner_moon.position.x > 300)
+	await shot("06_corner_icons")
+	check("corner sun drags onto the moon", drag.begin_cycle(corner_sun.rubbing_id, Vector2(300, 300)))
+	drag._left_book = true
+	drag._drop(main.get_node("NightCemetery/Moon").get_global_rect().get_center())
+	check("corner sun switches to day", main.is_day)
 	main.queue_free()
 	await process_frame
 	print("SUN MOON TUTORIAL: " + ("ALL PASSED" if failures == 0 else "%d FAILED" % failures))

@@ -54,11 +54,6 @@
     "profession_record",
     "skin_picture"
   ],
-  "sun:test_answer_sun_8": [
-    "day_city_coin",
-    "sun_reference",
-    "ram_spirit_emblem"
-  ],
   "sun:test_answer_sun_13": [
     "twin_beast_account",
     "repeated_beast_motifs",
@@ -68,11 +63,6 @@
     "shared_family_base",
     "family_photo",
     "profession_record"
-  ],
-  "sun:test_answer_sun_21": [
-    "family_photo",
-    "profession_record",
-    "infant_figure_rubbing"
   ],
   "sun:test_answer_sun_25": [
     "family_photo",
@@ -128,11 +118,6 @@
     "night_mother_no_traces",
     "dry_underground_river",
     "one_way_passage_order"
-  ],
-  "mother:test_answer_mother_25": [
-    "night_mother_hands_rubbing",
-    "family_photo",
-    "girl_diary"
   ],
   "father:test_answer_father_8": [
     "night_father_child_rubbing",
@@ -223,5 +208,15 @@
     "night_father_god_rubbing",
     "night_father_path_rubbing",
     "night_father_moon_stone"
+  ],
+  "mother:test_answer_mother_flower": [
+    "night_mother_flower",
+    "night_mother_hands_rubbing",
+    "night_mother_child_rubbing"
+  ],
+  "sun:test_answer_sun_photo": [
+    "family_photo",
+    "shared_family_base",
+    "profession_record"
   ]
 }

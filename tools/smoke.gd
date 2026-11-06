@@ -163,7 +163,7 @@ func _check_main_after_close() -> void:
 	notebook_tool.open()
 	await _wait(3.0)
 	_expect("notebook button opens the notebook", notebook.is_open())
-	_expect("first opening shows Gravestones 1/3, not the start book's last page", notebook.get_spread() == 0 and notebook.get_section() == 0)
+	_expect("first opening shows Rise & Set, not the start book's last page", notebook.get_spread() == 0 and notebook.get_section() == notebook.RISE_AND_SET)
 	_expect("notebook keeps the pages from the start screen", notebook.pages.size() > 3 and notebook.pages[3] == "carried over")
 	_expect("opening the notebook turns the flashlight off", flashlight_tool.state == flashlight_tool.State.OFF)
 	notebook_tool.close()
@@ -171,10 +171,11 @@ func _check_main_after_close() -> void:
 	_expect("notebook closes back into its button", not notebook.visible and not notebook_tool.is_open())
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("notebook reopens on the same page", notebook.is_open() and notebook.get_spread() == _autoload("GameState").notebook_spread)
+	_expect("notebook reopens on Rise & Set", notebook.is_open() and notebook.get_spread() == notebook.get_opening_spread())
 	notebook_tool.close()
 	await _wait(2.5)
 	await _check_notebook_sections(notebook_tool)
+	await _finish_tutorials(main)
 	await _check_gravestone_record(main, notebook_tool)
 	await _check_rubbing(main)
 	await _check_rubbing_notebook(main)
@@ -185,48 +186,54 @@ func _check_notebook_sections(notebook_tool: Node) -> void:
 	var notebook = notebook_tool.book
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("notebook has 7 spreads in 5 sections", notebook._spread_count() == 7 and notebook.tabs.get_child_count() == 5)
+	_expect("notebook has 8 spreads in 6 sections", notebook._spread_count() == 8 and notebook.tabs.get_child_count() == 6)
+	_expect("it opens on Rise & Set, the first spread", notebook.get_spread() == 0 and notebook.get_section() == notebook.RISE_AND_SET)
 	notebook.jump_to_section(2)
 	notebook.jump_to_section(3)  # ignored: a page is already turning
 	await _wait(1.0)
 	_expect("tab jump ignores a second click while turning", notebook.get_section() == 2)
 	notebook.jump_to_section(0)
 	await _wait(1.0)
-	_expect("tab jumps to the first spread of its section", notebook.get_spread() == 0 and notebook.get_section() == 0)
+	_expect("tab jumps to the first spread of its section", notebook.get_spread() == 1 and notebook.get_section() == 0)
 	_expect("all six gravestone slots start uncollected", range(6).all(func(i): return not notebook.is_gravestone_collected(i)))
 	_expect("gravestone pages show a blank page with a \"?\" sketch", notebook.left_page.get_node("Gravestone").visible \
 		and notebook.left_page.get_node("Gravestone")._unknown and notebook.left_page.get_node("Art")._kind == 0)
 	_expect("Gravestones: Day page on the left, Night page on the right", notebook.left_page.material == notebook._day_material and notebook.right_page.material == notebook._night_material)
 	_expect("Night page has light ink", notebook.right_text.label_settings.font_color == notebook.night_ink and notebook.left_text.label_settings.font_color == notebook.day_ink)
-	_expect("only the current section's tab is on the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, false, false, false, false])
+	# Tabs are listed by section id (Gravestones, Rubbings, Clues, Manuscripts, Radio Logs, Rise & Set);
+	# Rise & Set is the top tab, so it is on the left whenever a later section is open.
+	_expect("only the current section's tab and the ones above it are on the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, false, false, false, false, true])
 	for i in 2:
 		notebook.flip_forward()
 		await _wait(0.8)
 	_expect("Gravestones has three spreads", notebook.get_section() == 0 and notebook.get_section_spread() == 2)
 	notebook.flip_forward()
 	await _wait(0.8)
-	_expect("next from Gravestones 3/3 opens Rubbings", notebook.get_spread() == 3 and notebook.get_section() == 1)
+	_expect("next from Gravestones 3/3 opens Rubbings", notebook.get_spread() == 4 and notebook.get_section() == 1)
 	_expect("Rubbings pages use the normal paper", notebook.left_page.material == null and notebook.right_page.material == null and notebook.right_text.label_settings.font_color == notebook._normal_ink)
-	_expect("visited tabs move to the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, true, false, false, false])
+	_expect("visited tabs move to the left", notebook.tabs._tabs.map(func(t): return t.on_left) == [true, true, false, false, false, true])
 	notebook.flip_backward()
 	await _wait(0.8)
-	_expect("back from Rubbings returns to Gravestones 3/3", notebook.get_spread() == 2)
+	_expect("back from Rubbings returns to Gravestones 3/3", notebook.get_spread() == 3)
 	_expect("back in Gravestones the Day/Night pages return", notebook.left_page.material == notebook._day_material and notebook.right_page.material == notebook._night_material)
 	notebook.jump_to_section(4)
 	await _wait(0.8)
-	_expect("Radio Logs tab jumps in one turn", notebook.get_spread() == 6 and notebook.get_section() == 4)
+	_expect("Radio Logs tab jumps in one turn", notebook.get_spread() == 7 and notebook.get_section() == 4)
 	notebook.flip_forward()
 	await _wait(2.5)
 	_expect("next from Radio Logs closes the notebook", not notebook_tool.is_open() and not notebook.visible)
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("reopens on Radio Logs", notebook.get_spread() == 6 and notebook.tabs.visible)
+	_expect("reopens on Rise & Set, not where it was closed", notebook.get_spread() == 0 and notebook.get_section() == notebook.RISE_AND_SET and notebook.tabs.visible)
 	notebook.jump_to_section(0)
 	await _wait(0.8)
 	_expect("left corner shows on the first spread", notebook.left_corner.visible)
 	notebook.flip_backward()
+	await _wait(0.8)
+	_expect("previous from Gravestones 1/3 goes back to Rise & Set", notebook_tool.is_open() and notebook.get_spread() == 0 and notebook.get_section() == notebook.RISE_AND_SET)
+	notebook.flip_backward()
 	await _wait(2.5)
-	_expect("previous from Gravestones 1/3 closes the notebook", not notebook_tool.is_open())
+	_expect("previous from Rise & Set closes the notebook", not notebook_tool.is_open())
 
 
 func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
@@ -235,10 +242,10 @@ func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
 	var rubbing_tool = main.get_node("RubbingTool")
 	var image: Image = tomb._image
 	var used := image.get_used_rect()
-	var stone_pixel := Vector2(used.get_center())
+	var stone_pixel := Vector2(_opaque_pixel_near(image, used.get_center()))
 	var on_stone: Vector2 = tomb.get_global_transform() * (stone_pixel / Vector2(image.get_size()) * tomb.size)
 	var off_stone: Vector2 = tomb.get_global_transform() * Vector2(5, 5)
-	_expect("the stone's centre is part of the stone", image.get_pixelv(Vector2i(stone_pixel)).a > 0.5)
+	_expect("a pixel near the stone's centre is part of the stone", image.get_pixelv(Vector2i(stone_pixel)).a > 0.5)
 
 	_move_mouse(on_stone)
 	await _wait(0.4)
@@ -284,40 +291,84 @@ func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
 	var notebook = notebook_tool.book
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("the notebook opens on the newly recorded gravestone's page", notebook.get_spread() == 0)
+	_expect("the notebook opens on the newly recorded gravestone's page", notebook.get_spread() == notebook.get_gravestone_spread("baby_tomb"))
 	var left_entry = notebook.left_page.get_node("Gravestone")
-	_expect("baby tomb page is on the left page of Gravestones 1/3", notebook.get_spread() == 0 and left_entry.visible and left_entry.gravestone_id == "baby_tomb")
+	_expect("baby tomb page is on the left page of Gravestones 1/3", notebook.get_section() == 0 and notebook.get_section_spread() == 0 \
+		and left_entry.visible and left_entry.gravestone_id == "baby_tomb")
 	_expect("its unknown placeholder is gone", notebook.left_page.get_node("Art")._kind == 0)
 	var right_entry = notebook.right_page.get_node("Gravestone")
 	_expect("the right page shows a blank unknown gravestone page", right_entry.visible and right_entry._unknown \
 		and right_entry.sketch.texture == null and right_entry.description.text.is_empty() \
-		and not right_entry.identity_input.editable)
-	_expect("the recorded page is no longer unknown", not left_entry._unknown and left_entry.identity_input.editable)
+		and right_entry.identity_input.disabled)
+	_expect("the recorded page is no longer unknown", not left_entry._unknown and not left_entry.identity_input.disabled)
 	_expect("only the baby tomb is recorded", range(6).filter(func(i): return notebook.is_gravestone_collected(i)) == [0])
 	_expect("the baby tomb page uses the Day ink", left_entry.description.get_theme_color("font_color") == notebook.day_ink)
-	_expect("the sketch is cropped to the stone", left_entry.sketch.texture != null and left_entry.sketch.texture.get_size() == Vector2(used.size))
+	var sketch = left_entry.sketch.texture
+	_expect("the sketch is cropped to the stone", sketch is AtlasTexture \
+		and sketch.region == Rect2(sketch.atlas.get_image().get_used_rect()))
 
-	left_entry.identity_input.text = "a child"
-	left_entry.identity_input.text_changed.emit("a child")
-	left_entry.death_input.text = "unknown"
-	left_entry.death_input.text_changed.emit("unknown")
+	# The report form offers the identities and causes collected so far.
+	game_state.collect_term("infant")
+	game_state.collect_term("natural")
+	await _wait(0.1)
+	_select_option(left_entry.identity_input, "infant")
+	_select_option(left_entry.death_input, "natural")
 	notebook.flip_forward()
 	await _wait(0.9)
 	notebook.flip_backward()
 	await _wait(0.9)
-	_expect("answers survive a page turn", left_entry.identity_input.text == "a child" and left_entry.death_input.text == "unknown")
+	_expect("answers survive a page turn", _selected(left_entry.identity_input) == "infant" and _selected(left_entry.death_input) == "natural")
 	notebook_tool.close()
 	await _wait(0.15)
 	# Closing folds the left page (the baby tomb's) over on the turning sheet.
 	var sheet_entry = notebook.flip_sheet.get_node("Gravestone")
-	_expect("the turning sheet carries the filled-in page", sheet_entry.visible and sheet_entry.identity_input.text == "a child" and not sheet_entry.identity_input.editable)
+	_expect("the turning sheet carries the filled-in page", sheet_entry.visible and _selected(sheet_entry.identity_input) == "infant")
 	await _wait(2.4)
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("answers survive closing the notebook", left_entry.visible and left_entry.identity_input.text == "a child" and left_entry.death_input.text == "unknown")
-	_expect("answers are kept in GameState", game_state.gravestone_reports.get("baby_tomb", {}) == {"identity": "a child", "death": "unknown"})
+	notebook.jump_to_section(0)  # it reopens on Rise & Set
+	await _wait(1.0)
+	_expect("answers survive closing the notebook", left_entry.visible and _selected(left_entry.identity_input) == "infant" and _selected(left_entry.death_input) == "natural")
+	_expect("answers are kept in GameState", game_state.gravestone_reports.get("baby_tomb", {}) == {"identity": "infant", "death": "natural"})
 	notebook_tool.close()
 	await _wait(2.5)
+
+
+## The tutorials gate input and record symbols by themselves; their own tests
+## cover them. Mark them done and take the guide out for the free-play checks.
+func _finish_tutorials(main: Node) -> void:
+	var game_state := _autoload("GameState")
+	for flag in ["cycle_hint_heard", "cycle_tutorial_completed", "investigation_tutorial_completed",
+			"tutorial_night_heard", "tutorial_record_intro_heard"]:
+		game_state.set(flag, true)
+	var guide := main.get_node_or_null("SunMoonTutorial")
+	if guide:
+		guide.queue_free()
+	await _wait(0.1)
+	for symbol in main.find_children("*", "RubbingSymbol", true, false):
+		symbol.collection_enabled = true
+
+
+## The opaque pixel closest to `centre` (the stone art may be hollow in the middle).
+func _opaque_pixel_near(image: Image, centre: Vector2i) -> Vector2i:
+	for radius in range(0, 200, 2):
+		for y in range(centre.y - radius, centre.y + radius + 1, 2):
+			for x in range(centre.x - radius, centre.x + radius + 1, 2):
+				if Rect2i(Vector2i.ZERO, image.get_size()).has_point(Vector2i(x, y)) and image.get_pixel(x, y).a > 0.9:
+					return Vector2i(x, y)
+	return centre
+
+
+func _select_option(input: OptionButton, value: String) -> void:
+	for i in input.item_count:
+		if str(input.get_item_metadata(i)) == value:
+			input.select(i)
+			input.item_selected.emit(i)
+			return
+
+
+func _selected(input: OptionButton) -> String:
+	return str(input.get_item_metadata(input.selected)) if input.selected >= 0 else ""
 
 
 func _move_mouse(position: Vector2) -> void:
@@ -366,7 +417,8 @@ func _check_rubbing_notebook(main: Node) -> void:
 	var human: RubbingSymbol = main.get_node("DayCemetery/BabyTomb/HumanSymbol")
 	_expect("the moon rubbing comes from the baby tomb, with its texture", game_state.rubbing_records.get("infant_moon_rubbing", {}).get("gravestone") == "baby_tomb" \
 		and game_state.get_rubbing_texture("infant_moon_rubbing") == moon.texture.resource_path)
-	_expect("a rubbing shows its toast", toast.visible and label.text == "New rubbing recorded in the Notebook.")
+	# The crescent is announced by the tutorial, so it gets no general toast.
+	_expect("the crescent gets no general rubbing toast", not (toast.visible and label.text == "New rubbing recorded in the Notebook."))
 	_expect("collecting does not decipher", not game_state.is_rubbing_deciphered("infant_moon_rubbing") and game_state.get_rubbing_meaning("infant_moon_rubbing") == "")
 	_expect("collecting does not open the notebook", not notebook_tool.is_open())
 	await _wait(3.0)
@@ -377,6 +429,8 @@ func _check_rubbing_notebook(main: Node) -> void:
 	rubbing_tool.set_active(true)
 	_scribble(human, human.get_global_rect())
 	rubbing_tool.set_active(false)
+	await _wait(0.1)
+	_expect("other rubbings show the toast", toast.visible and label.text == "New rubbing recorded in the Notebook.")
 	_expect("rubbings keep their collection order", game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
 	_expect("the gravestone lists its rubbings in collection order", game_state.get_gravestone_rubbings("baby_tomb") == ["infant_moon_rubbing", "infant_figure_rubbing"])
 
@@ -413,7 +467,7 @@ func _check_rubbing_notebook(main: Node) -> void:
 	notebook.jump_to_section(0)
 	await _wait(1.0)
 	var entry = notebook.left_page.get_node("Gravestone")
-	_expect("the baby tomb page still has its answers", entry.identity_input.text == "a child")
+	_expect("the baby tomb page still has its answers", _selected(entry.identity_input) == "infant")
 	notebook_tool.close()
 	await _wait(2.5)
 	notebook_tool.open()
@@ -453,7 +507,7 @@ func _check_rubbing_drag(main: Node) -> void:
 	_expect("hovering an undeciphered rubbing shows the drag hint", drag._hint.visible)
 	_move_mouse(row.call(1))
 	await _wait(0.1)
-	_expect("a deciphered rubbing shows no hint", not drag._hint.visible)
+	_expect("a deciphered rubbing can still be dragged (it may reveal a clue)", drag._hint.visible)
 
 	# Released inside the book: cancelled.
 	_press(row.call(0), true)
@@ -492,7 +546,9 @@ func _check_rubbing_drag(main: Node) -> void:
 	await _wait(1.0)
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("the notebook reopens on the Rubbings tab", notebook.get_section() == 1)
+	_expect("the notebook reopens on Rise & Set", notebook.get_section() == notebook.RISE_AND_SET)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
 	_press(row.call(2), true)
 	_drag_mouse(row.call(2) + Vector2(20, 10))
 	_drag_mouse(moon_centre)
@@ -503,30 +559,31 @@ func _check_rubbing_drag(main: Node) -> void:
 		and not game_state.is_rubbing_deciphered(list._ids[2]) and not game_state.is_rubbing_deciphered("infant_moon_rubbing"))
 	await _wait(3.0)
 
-	# Night: the moon rubbing dropped on the Moon.
+	# Night: the crescent in the notebook is the sky icon. Its meaning comes from
+	# the tutorial / Aurora; dragged onto the Moon it switches nothing and
+	# deciphers nothing (only moon-onto-sun replaces the sky).
 	notebook_tool.open()
 	await _wait(3.0)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
 	_press(row.call(0), true)
 	_drag_mouse(row.call(0) + Vector2(20, 10))
+	_expect("the crescent drags as the sky icon", drag.is_dragging() and drag._cycle_drag and drag.rubbing_id == "infant_moon_rubbing")
 	_drag_mouse(moon_centre)
 	await _wait(2.5)
 	_press(moon_centre, false)
 	await _wait(0.1)
-	_expect("the moon rubbing dropped on the Moon is deciphered as \"moon\"", game_state.get_rubbing_meaning("infant_moon_rubbing") == "moon" \
-		and label.text == "Symbol deciphered! Notebook updated." and toast.visible)
-	_expect("the notebook stays closed after deciphering", not notebook_tool.is_open() and not drag.is_dragging())
-	_expect("deciphering adds no entries", game_state.rubbings.count("infant_moon_rubbing") == 1 and game_state.rubbings[0] == "infant_moon_rubbing")
+	_expect("the crescent dropped on the Moon does not decipher it", game_state.get_rubbing_meaning("infant_moon_rubbing") == "" \
+		and label.text == "This symbol doesn't seem connected to that." and toast.visible)
+	_expect("the notebook stays closed after the drop", not notebook_tool.is_open() and not drag.is_dragging())
+	_expect("the drop adds no entries", game_state.rubbings.count("infant_moon_rubbing") == 1 and game_state.rubbings[0] == "infant_moon_rubbing")
+	await _wait(3.0)
 
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("the Rubbings tab shows the moon entry again", list._ids[0] == "infant_moon_rubbing")
-	_move_mouse(row.call(0))
-	await _wait(0.1)
-	_expect("the deciphered moon shows no drag hint", not drag._hint.visible)
-	_press(row.call(0), true)
-	_drag_mouse(row.call(0) + Vector2(20, 10))
-	_expect("a deciphered rubbing cannot be dragged", not drag.is_dragging())
-	_press(row.call(0) + Vector2(20, 10), false)
+	notebook.jump_to_section(1)
+	await _wait(1.0)
+	_expect("the Rubbings tab still lists the crescent first", list._ids[0] == "infant_moon_rubbing")
 
 	# Gravestone page -> its rubbing's entry.
 	notebook.jump_to_section(0)

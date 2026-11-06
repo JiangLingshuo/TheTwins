@@ -6,8 +6,9 @@ extends Control
 ##
 ## The book fills it with show_entries(); the data comes from GameState.
 ##
-## Undeciphered entries can be dragged out onto the scene: hovering one shows a
-## hint and pressing + moving starts the drag. Both are handled by the notebook
+## Every entry can be dragged out onto the scene (deciphered ones too, as they
+## may still reveal clues): hovering one shows a hint and pressing + moving
+## starts the drag. The sun and moon drag as on the Rise & Set page. Both are handled by the notebook
 ## tool's RubbingDrag (group "rubbing_drag"), shared by all entries.
 
 const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
@@ -95,11 +96,13 @@ func _row_at(local: Vector2) -> int:
 
 
 func _is_draggable(row: int) -> bool:
-	return row >= 0 and row < _ids.size() and GameState.rubbings.has(str(_ids[row])) \
-		and not GameState.is_rubbing_deciphered(str(_ids[row]))
+	if row < 0 or row >= _ids.size() or not GameState.rubbings.has(str(_ids[row])):
+		return false
+	# The sun and moon follow the Rise & Set rules (usable once Aurora explained them).
+	return str(_ids[row]) not in ["sky_sun_rubbing", "infant_moon_rubbing"] or GameState.cycle_hint_heard
 
 
-## Hint over undeciphered entries only.
+## Hint over draggable entries.
 func _set_hovered(row: int) -> void:
 	_hovered = row if _is_draggable(row) else -1
 	mouse_default_cursor_shape = Control.CURSOR_DRAG if _hovered >= 0 else Control.CURSOR_ARROW

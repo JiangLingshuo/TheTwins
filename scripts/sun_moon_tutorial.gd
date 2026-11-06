@@ -1,11 +1,23 @@
 extends Node
 ## A small ordered tutorial; all progression survives scene recreation in GameState.
-enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, DONE }
+## BOOK / TAB / DRAG are used by both Step 2 (moon onto sun, by day) and Step 3
+## (sun onto moon, at night). AWAIT_STEP_4: Step 3 is done; Step 4 comes next.
+enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
+## Steps where only the highlighted control may be used; anything else shakes the hint.
+const GATED := [Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
 ## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
-@export var step1_notebook_message := "Notebook updated: the moon and sun are recorded in Rise & Set."
+@export var step1_notebook_message := "Notebook updated: the moon is recorded in Rise & Set."
 const SKY_SUN_TEXTURE := "res://assets/Art/symbols/sky_sun.svg"
+## Least time the rubbed crescent blinks on the marker before the notebook opens.
+@export var moon_blink_time: float = 2.5
+## Seconds for the crescent to drop from the marker onto the notebook, then to grow.
+@export var moon_drop_time: float = 0.9
+@export var moon_grow_time: float = 0.45
 var step := Step.TOOL
 var _speaking := false
+## True while the crescent is moving into the notebook; all input waits.
+var _delivering := false
+var _icon_blink: Tween
 var _skipping := false
 var _highlight_target: Control
 var _panel: PanelContainer
@@ -20,6 +32,7 @@ var _human: RubbingSymbol
 var _box: Control
 var _skip_button: Button
 var _shake_tween: Tween
+var _drag_hint: DragHint
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -41,11 +54,15 @@ func _ready() -> void:
 	_notebook.rubbing_drag.sky_replaced.connect(_on_sky_replaced)
 	_notebook.rubbing_drag.mismatched.connect(func(id: String, _target: Control) -> void:
 		if id in ["sky_sun_rubbing", "infant_moon_rubbing"] and not GameState.cycle_tutorial_completed:
-			_main.get_node("Toast").show_message("Drop the notebook's moon onto the sun in the sky.")
+			_main.get_node("Toast").show_message("Drop the notebook's moon onto the sun in the sky.", true)
+		elif id == "sky_sun_rubbing" and not _main.is_day and not GameState.investigation_tutorial_completed:
+			_main.get_node("Toast").show_message("Drop the notebook's sun onto the moon in the sky.", true)
 	)
 	refresh()
 
 func _process(_delta: float) -> void:
+	if _notebook == null: # _ready() is still waiting a frame
+		return
 	# Page-opening animations finish after notebook_opened; keep the hint in sync.
 	if not _speaking and not _skipping and step >= Step.BOOK:
 		refresh()
@@ -53,10 +70,13 @@ func _process(_delta: float) -> void:
 func refresh() -> void:
 	if _skipping or _speaking:
 		return
+	# Mid-drag the notebook has folded away; keep the drag hint until the drop.
+	if _notebook.rubbing_drag.is_dragging():
+		return
 	var has_moon := GameState.rubbings.has("infant_moon_rubbing")
 	_moon.collection_enabled = true
-	# Both icons are recorded with the crescent; this covers games saved before that.
-	if has_moon and GameState.cycle_hint_heard and not GameState.rubbings.has("sky_sun_rubbing"):
+	# The sun is recorded when the moon first replaces it; this covers games saved before that.
+	if has_moon and GameState.cycle_tutorial_completed and not GameState.rubbings.has("sky_sun_rubbing"):
 		_record_cycle_symbols()
 	_human.collection_enabled = GameState.cycle_tutorial_completed
 	if GameState.cycle_tutorial_completed:
@@ -71,32 +91,60 @@ func refresh() -> void:
 			_set_step(Step.TOOL, "1 / 4  Pick up the rubbing tool to record the crescent on the small marker.", _rubbing.get_node("RubbingButton"))
 	elif not GameState.cycle_hint_heard:
 		_speak.call_deferred()
-	elif not _notebook.is_open():
-		_set_step(Step.BOOK, "2 / 4  Open your notebook (Tab or N). A sun icon is provided in Rise & Set.", _notebook.get_node("NotebookButton"))
-	elif _notebook.book.get_section() != 5:
-		_set_step(Step.TAB, "3 / 4  Choose the Rise & Set tab.", _notebook.book.tabs._tabs[5])
 	else:
-		_set_step(Step.DRAG, "4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.", _notebook.book.right_page.get_node_or_null("CycleIcon"))
+		# Step 2: moon onto sun (the moon is on the right, dark page).
+		_guide_cycle("2 / 4  Open your notebook (Tab or N). A sun icon is provided in Rise & Set.",
+			"3 / 4  Choose the Rise & Set tab.",
+			"4 / 4  Drag the moon from the black page onto the sun in the scene. The notebook folds away as you drag out.",
+			false)
+
+## Steps 2 and 3: open the notebook, (be on Rise & Set), drag one icon out.
+func _guide_cycle(book_text: String, tab_text: String, drag_text: String, icon_on_left: bool) -> void:
+	if not _notebook.is_open():
+		_set_step(Step.BOOK, book_text, _notebook.get_node("NotebookButton"))
+	elif _notebook.book.get_section() != 5:
+		_set_step(Step.TAB, tab_text, _notebook.book.tabs._tabs[5])
+	else:
+		var page: Control = _notebook.book.left_page if icon_on_left else _notebook.book.right_page
+		_set_step(Step.DRAG, drag_text, page.get_node_or_null("CycleIcon"))
 
 func _input(event: InputEvent) -> void:
-	if _skipping:
+	# _ready() waits a frame before wiring nodes up; ignore input until then.
+	if _skipping or _notebook == null:
 		return
-	# Until the crescent is rubbed (and while Aurora explains it), the notebook stays shut.
-	if step in [Step.MOON, Step.AURORA]:
+	if event is InputEventKey and event.keycode == KEY_F2:
+		return  # the development overlay toggle (GameState) always works
+	if _delivering:
+		if not (event is InputEventMouseMotion):
+			get_viewport().set_input_as_handled()
+		return
+	# Until the crescent is rubbed, and while a tutorial dialogue plays, the notebook stays shut.
+	if step in [Step.MOON, Step.AURORA] or _speaking:
 		_block_notebook(event)
 		return
-	# Onboarding (open Toolbox -> pick Rubbing Tool): only a left click on the
-	# highlighted control gets through. Anything else is blocked and the hint shakes.
-	if step != Step.TOOL or _speaking or not is_instance_valid(_highlight_target):
+	# Gated steps: only a left click on the highlighted control gets through
+	# (plus Tab / N to open the notebook, and the required drag itself).
+	# Anything else is blocked and the hint shakes.
+	if step not in GATED:
+		return
+	var dragging: bool = _notebook.rubbing_drag.is_dragging()
+	# Never lock input when the highlighted control can't be used.
+	if not dragging and (not is_instance_valid(_highlight_target) or not _highlight_target.is_visible_in_tree()):
 		return
 	if event is InputEventMouseMotion or not event.is_pressed() or event.is_echo():
 		return
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	if dragging:
+		# The drag owns the mouse until the drop; Esc may cancel it.
+		if event is InputEventMouseButton or (event is InputEventKey and event.keycode == KEY_ESCAPE):
+			return
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		var point: Vector2 = event.position
 		if _highlight_target.get_global_rect().has_point(point):
 			return
 		if _skip_button.is_visible_in_tree() and _skip_button.get_global_rect().has_point(point):
 			return
+	elif step == Step.BOOK and event is InputEventKey and event.keycode in [_notebook.toggle_key, _notebook.alt_toggle_key]:
+		return
 	get_viewport().set_input_as_handled()
 	if event is InputEventKey and event.keycode in [KEY_SHIFT, KEY_CTRL, KEY_ALT, KEY_META]:
 		return
@@ -130,13 +178,18 @@ func _set_step(value: Step, text: String, target: Control) -> void:
 		if box.tray and box.tray.is_ancestor_of(target) and not box.tray.visible:
 			target = box.button
 	step = value
-	# Gated onboarding steps pulse until done; other hints blink a few times.
-	_highlight.loop = value == Step.TOOL
+	if value != Step.DRAG:
+		_stop_icon_blink()
+	# Gated steps pulse until done; other hints blink a few times.
+	_highlight.loop = value in GATED
+	_drag_hint.target = target if value == Step.DRAG else null
 	_text.text = text
 	var radio := _main.get_node_or_null("RadioTool")
 	if radio and radio.is_open():
 		_panel.visible = false
-		if is_instance_valid(radio._tutorial_hint): radio._tutorial_hint.text = text
+		if is_instance_valid(radio._tutorial_hint):
+			radio._tutorial_hint.text = text
+			radio._tutorial_hint.visible = GameState.debug_overlay
 	else:
 		_panel.visible = true
 	if _highlight_target != target:
@@ -150,36 +203,157 @@ func _speak() -> void:
 		return
 	_speaking = true
 	# Step 1 feedback, in order: the crescent was rubbed (rubbing_collected) ->
-	# record both icons -> Aurora's line -> "Notebook updated" -> Step 2.
-	_record_cycle_symbols()
+	# it blinks on the marker during Aurora's line -> the notebook opens on
+	# Rise & Set and the crescent drops onto it -> drag step. The sun follows
+	# once the moon has replaced it in the sky (_on_sky_replaced).
+	_record_cycle_symbols(false)
 	_set_step(Step.AURORA, "Aurora is on the line…", null)
-	# Put the brush down while she talks (it hides the cursor), pick it up after.
+	# Put the brush down while she talks (it hides the cursor).
 	_rubbing.turn_off()
 	_main.get_node("FlashlightTool").turn_off()
+	_moon.start_blinking()
+	var started := Time.get_ticks_msec()
 	_dialogue.play_file("res://assets/dialogue/tutorial_sun_moon.xml")
 	await _dialogue.finished
+	var left := moon_blink_time - (Time.get_ticks_msec() - started) / 1000.0
+	if left > 0.0:
+		await get_tree().create_timer(left).timeout
+	_moon.stop_blinking()
+	var invert := ShaderMaterial.new()
+	invert.shader = preload("res://shaders/portrait_invert.gdshader")
+	invert.set_shader_parameter("invert", 1.0)
+	var flyer := await _drop_into_notebook(_moon.texture, _moon.get_global_rect(), false, invert, Color.WHITE, Color.WHITE)
 	GameState.cycle_hint_heard = true
-	_rubbing.set_active(true)
+	GameState.notebook_changed.emit()
+	await get_tree().process_frame  # the page redraws with the moon
+	flyer.queue_free()
+	var icon: Control = _notebook.book.right_page.get_node_or_null("CycleIcon")
+	if icon:
+		_icon_blink = icon.create_tween().set_loops()
+		_icon_blink.tween_property(icon, "modulate:a", 0.3, 0.4).set_trans(Tween.TRANS_SINE)
+		_icon_blink.tween_property(icon, "modulate:a", 1.0, 0.4).set_trans(Tween.TRANS_SINE)
+	_delivering = false
 	_main.get_node("Toast").show_message(step1_notebook_message)
 	_speaking = false
 	refresh()
 
-## Record the crescent's and the sky sun's icons (both appear in Rise & Set and
-## Rubbings), deciphered with their icon file names as temporary meanings.
-## Safe to call again: recording and deciphering only change things once.
-func _record_cycle_symbols() -> void:
-	GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
+## A copy of `texture` lifts off `from` (screen rect) and hovers while the
+## notebook opens quickly on Rise & Set; once the book is fully open it drops
+## onto the left or right page's icon spot and grows into place. Returns the
+## copy, still showing, so the caller can swap in the real icon; input waits
+## (_delivering) until the caller clears it.
+func _drop_into_notebook(texture: Texture2D, from: Rect2, on_left: bool, look: Material, tint: Color, landed_tint: Color) -> TextureRect:
+	_delivering = true
+	_panel.hide()
+	_highlight.dismiss(false)
+	_highlight_target = null
+	var flyer := TextureRect.new()
+	flyer.texture = texture
+	flyer.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	flyer.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	flyer.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flyer.z_index = 58
+	flyer.material = look
+	flyer.modulate = tint
+	_main.add_child(flyer)
+	flyer.global_position = from.position
+	flyer.size = from.size
+	# It rises while the notebook comes out beneath it, quicker than usual.
+	var hover_size := from.size * clampf(120.0 / maxf(from.size.y, 1.0), 1.0, 2.0)
+	var hover := Rect2(from.get_center() - hover_size / 2.0 - Vector2(0, 120), hover_size)
+	if from.get_center().y < 260.0:
+		hover.position.y = from.get_center().y - hover_size.y / 2.0  # already high in the sky
+	var t := create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", hover.position, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	t.tween_property(flyer, "size", hover.size, 0.6).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await _open_notebook_quickly()
+	if t.is_running():
+		await t.finished
+	var page: Control = _notebook.book.left_page if on_left else _notebook.book.right_page
+	var icon: Control = page.get_node_or_null("CycleIcon")
+	var landing: Rect2 = icon.get_global_rect() if icon else page.get_global_rect()
+	# Drop onto the page at a little under its size...
+	var small := Rect2(landing.get_center() - landing.size * 0.3, landing.size * 0.6)
+	t = create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", small.position, moon_drop_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.tween_property(flyer, "size", small.size, moon_drop_time).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.tween_property(flyer, "modulate", landed_tint, moon_drop_time)
+	await t.finished
+	# ...then grow into the icon's place.
+	t = create_tween().set_parallel(true)
+	t.tween_property(flyer, "global_position", landing.position, moon_grow_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	t.tween_property(flyer, "size", landing.size, moon_grow_time).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	await t.finished
+	return flyer
+
+## Bring the notebook out on Rise & Set at twice the usual pace and wait until
+## it is fully open there (if it was still folding away, let that finish first).
+func _open_notebook_quickly() -> void:
+	var book: Control = _notebook.book
+	while book._busy and _notebook.is_open():
+		await get_tree().process_frame
+	if _notebook.is_open():
+		if book.get_section() != book.RISE_AND_SET:
+			book.jump_to_section(book.RISE_AND_SET)
+	else:
+		var saved: Array = [book.wake_time, book.stow_time, book.flip_time]
+		book.wake_time *= 0.5
+		book.stow_time *= 0.5
+		book.flip_time *= 0.6
+		await _notebook.open()  # it opens on Rise & Set
+		book.wake_time = saved[0]
+		book.stow_time = saved[1]
+		book.flip_time = saved[2]
+	while not _notebook.is_open() or book._busy:
+		await get_tree().process_frame
+
+func _stop_icon_blink() -> void:
+	if _icon_blink and _icon_blink.is_valid():
+		_icon_blink.kill()
+		var icon: Control = _notebook.book.right_page.get_node_or_null("CycleIcon")
+		if icon:
+			icon.modulate.a = 1.0
+	_icon_blink = null
+
+## Record the crescent's and (`with_sun`) the sky sun's icons (both appear in
+## Rise & Set and Rubbings), deciphered with their icon file names as temporary
+## meanings. Safe to call again: recording and deciphering only change things once.
+func _record_cycle_symbols(with_sun: bool = true) -> void:
+	if with_sun:
+		GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
 	for id in ["infant_moon_rubbing", "sky_sun_rubbing"]:
 		if GameState.rubbings.has(id) and not GameState.is_rubbing_deciphered(id):
 			GameState.confirm_rubbing_meaning(id, GameState.get_rubbing_texture(id).get_file().get_basename())
 
-func _on_sky_replaced(id: String, _target: Control) -> void:
+## The moon has taken the sun's place for the first time: the sky sun drops into
+## the notebook's Day page the way the crescent did, then the notebook closes.
+func _deliver_sun(sky_sun: Control) -> void:
+	_speaking = true
+	var from := sky_sun.get_global_rect()
+	sky_sun.modulate.a = 0.0  # the copy takes its place on the way down
+	var flyer := await _drop_into_notebook(load(SKY_SUN_TEXTURE), from, true, null, Color(1.0, 0.95, 0.78), _notebook.book.day_ink)
+	_record_cycle_symbols()
+	GameState.notebook_changed.emit()
+	await get_tree().process_frame  # the page redraws with the sun
+	flyer.queue_free()
+	sky_sun.modulate.a = 1.0
+	await get_tree().create_timer(0.8).timeout
+	_notebook.close()
+	while _notebook.is_open():
+		await get_tree().process_frame
+	_delivering = false
+	_speaking = false
+
+func _on_sky_replaced(id: String, target: Control) -> void:
 	if id == "infant_moon_rubbing":
 		GameState.cycle_tutorial_completed = true
 		GameState.confirm_rubbing_meaning("infant_moon_rubbing", "Moon")
 		_main.set_night()
-		if not GameState.tutorial_night_heard: _night_arrival.call_deferred()
+		if not GameState.rubbings.has("sky_sun_rubbing"):
+			await _deliver_sun(target)
 		_main.get_node("Toast").show_message("Night City — the moon has taken the sun's place.")
+		# Started now (not deferred) so Step 3 only begins once Aurora's line ends.
+		if not GameState.tutorial_night_heard: _night_arrival()
 	else:
 		_main.set_day()
 		_main.get_node("Toast").show_message("Day City — the sun has taken the moon's place.")
@@ -224,12 +398,25 @@ func _build_guide() -> void:
 	_skip_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_skip_button.pressed.connect(skip)
 	stack.add_child(_skip_button)
-	_main.add_child(_panel)
+	# The hint box is part of the development overlay (F2); the steps still run.
+	var overlay := Control.new()
+	overlay.name = "TutorialOverlay"
+	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	overlay.visible = GameState.debug_overlay
+	overlay.add_child(_panel)
+	_main.add_child(overlay)
+	GameState.debug_overlay_changed.connect(func(shown: bool) -> void:
+		overlay.visible = shown
+		var radio := _main.get_node_or_null("RadioTool")
+		if radio and is_instance_valid(radio._tutorial_hint): radio._tutorial_hint.visible = shown)
 	_highlight = HighlightFrame.new()
 	_highlight.z_index = 59
 	_highlight.blinks = 8
 	_highlight.padding = 14
 	_main.add_child(_highlight)
+	_drag_hint = DragHint.new()
+	_drag_hint.color = _highlight.color
+	_main.add_child(_drag_hint)
 	_dialogue = preload("res://scenes/dialogue_box.tscn").instantiate()
 	_dialogue.z_index = 100
 	_main.add_child(_dialogue)
@@ -238,6 +425,7 @@ func _build_guide() -> void:
 func _night_arrival() -> void:
 	if _speaking or GameState.tutorial_night_heard: return
 	_speaking = true
+	_set_step(Step.AURORA, "Aurora is on the line…", null)
 	_notebook.close()
 	_rubbing.turn_off()
 	_dialogue.play_file("res://assets/dialogue/tutorial_night_arrival.xml")
@@ -258,12 +446,21 @@ func _guide_investigation() -> void:
 	_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var progress := GameState.radio_progress
 	var read: Array = progress.get("read_answers", [])
-	if not _main.is_day:
+	if not _main.is_day and not GameState.tutorial_night_heard:
+		_night_arrival.call_deferred() # e.g. the scene reloaded before Aurora's night line
+	elif not _main.is_day and not GameState.tutorial_day_return_heard:
+		# Step 3: sun onto moon (the sun is on the left, light page).
+		_guide_cycle("Bring back daylight: open your notebook (Tab or N).",
+			"Choose the Rise & Set tab.",
+			"Drag the sun from the light page onto the moon in the sky. The notebook folds away as you drag out.",
+			true)
+	elif not _main.is_day:
 		_set_step(Step.DONE, "Bring back daylight: open Rise & Set and drag the sun onto the moon. Day City questions are available in daylight.", _notebook.get_node("NotebookButton") if not _notebook.is_open() else null)
 	elif not GameState.tutorial_day_return_heard:
 		_play_milestone.call_deferred("tutorial_day_return", "tutorial_day_return_heard")
 	elif not GameState.rubbings.has("infant_figure_rubbing"):
-		_set_step(Step.DONE, "Make a rubbing of the small marker's person-shaped figure. Completing it will record the whole marker.", _human if _rubbing.active else _rubbing.get_node("RubbingButton"))
+		# Step 3 is done. Step 4 is not gated yet: just the existing hint, no input lock.
+		_set_step(Step.AWAIT_STEP_4, "Make a rubbing of the small marker's person-shaped figure. Completing it will record the whole marker.", _human if _rubbing.active else _rubbing.get_node("RubbingButton"))
 	elif not GameState.tutorial_record_intro_heard:
 		_record_first_marker.call_deferred()
 	elif "designer_manuscript" not in progress.get("read_manuscripts", []):
@@ -392,3 +589,36 @@ func _guide_searchlight() -> void:
 		_set_step(Step.DONE, "Scroll the mouse wheel to 50 years ago (2000). Shift + scroll moves 10 years at a time.", tool.get_node("FocusScale"))
 	else:
 		_set_step(Step.DONE, "Keep the light on the small marker for a moment. If nothing appears, click its figure or base to re-aim.", _human)
+
+
+## A subtle "drag upward" gesture above an icon: a dot rises from the icon with a
+## short trail and a chevron, fades out, and repeats. Draws nothing without a target.
+class DragHint extends Control:
+	var target: Control
+	var color := Color(0.86, 0.72, 0.45)
+	## Seconds for one rise, and how far it rises (pixels).
+	var period := 1.6
+	var rise := 70.0
+	var _time := 0.0
+
+	func _init() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		z_index = 61
+
+	func _process(delta: float) -> void:
+		visible = is_instance_valid(target) and target.is_visible_in_tree()
+		if not visible:
+			_time = 0.0
+			return
+		_time = fmod(_time + delta, period)
+		var rect := target.get_global_rect()
+		global_position = Vector2(rect.get_center().x, rect.position.y)
+		queue_redraw()
+
+	func _draw() -> void:
+		var t := clampf(_time / (period * 0.8), 0.0, 1.0)
+		var y := -6.0 - rise * (1.0 - pow(1.0 - t, 2.0))
+		var faded := Color(color, 0.8 * sin(t * PI))
+		draw_line(Vector2(0, y + 6), Vector2(0, y + 26), Color(faded, faded.a * 0.45), 2.0, true)
+		draw_circle(Vector2(0, y), 5.0, faded)
+		draw_polyline(PackedVector2Array([Vector2(-7, y - 9), Vector2(0, y - 16), Vector2(7, y - 9)]), faded, 2.0, true)

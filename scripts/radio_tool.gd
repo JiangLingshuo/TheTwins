@@ -22,6 +22,9 @@ var _tutorial_hint: Label
 var _reply_box: Control
 var _reply_playing := false
 var _previous_layout: VBoxContainer
+## Radio history context of the last question sent; follow-ups chosen from its
+## reply are recorded under the same question and evidence.
+var _exchange_context: Dictionary = {}
 
 func _ready() -> void:
 	z_index = 80
@@ -34,10 +37,10 @@ func _ready() -> void:
 	_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	add_child(_button)
 	_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
-	_button.offset_left = -148
-	_button.offset_right = -36
-	_button.offset_top = 224
-	_button.offset_bottom = 336
+	_button.offset_left = -140
+	_button.offset_right = -44
+	_button.offset_top = 72
+	_button.offset_bottom = 168
 	_button.pressed.connect(open)
 	_overlay = preload("res://scenes/dialogue_box.tscn").instantiate()
 	_overlay.name = "RadioSelectionBox"
@@ -58,7 +61,7 @@ func _exit_tree() -> void:
 
 func _reposition_button() -> void:
 	if _button:
-		_button.position = Vector2(size.x - 148, size.y / 2 + 224)
+		_button.position = Vector2(size.x - 140, size.y / 2 + 72)
 
 func _process(_delta: float) -> void:
 	_button.disabled = not _can_open()
@@ -193,6 +196,7 @@ func _render() -> void:
 	_layout.add_child(status)
 	_tutorial_hint = _label("", 18)
 	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
+	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
 	_layout.add_child(_tutorial_hint)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -276,6 +280,7 @@ func _start_call(id: String) -> void:
 	_session_number = int(model.progress.get("call_count", 0)) + 1
 	model.progress["call_count"] = _session_number
 	_session = "radio:" + id + ":" + str(_session_number)
+	_exchange_context = {}
 	_queue_render()
 
 func _change_tomb() -> void:
@@ -329,6 +334,12 @@ func _send() -> void:
 		return
 	GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": sent_question["label"]})
 	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": "Submitted record: " + str(model.data["groups"][sent_slot]["title"])})
+	# The reply that plays now is one exchange of the radio history. model.submitted_id
+	# is the record send() actually evaluated ("" without evidence).
+	_exchange_context = {"gravestone_id": sent_question["tomb"], "question_id": sent_question["id"],
+		"question_text": sent_question["label"], "evidence_id": model.submitted_id, "evidence_group": sent_slot,
+		"evidence_name": model.group_title(sent_slot) if not sent_slot.is_empty() else "", "follow_up": ""}
+	GameState.begin_radio_exchange(_session, _exchange_context)
 	_question = {}
 	_slot = ""
 	_last_lines = []
@@ -337,7 +348,15 @@ func _send() -> void:
 func _follow(choice: Dictionary) -> void:
 	if _reply_playing: return
 	var result: Dictionary = model.choose(choice)
-	if not result.has("error"): GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": choice["label"]})
+	if not result.has("error"):
+		GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": choice["label"]})
+		# Follow-ups only come from the reply to the last question sent in this call.
+		if _exchange_context.is_empty():
+			push_warning("Radio follow-up without a question to record it under: " + str(choice["label"]))
+		else:
+			var context := _exchange_context.duplicate()
+			context["follow_up"] = choice["label"]
+			GameState.begin_radio_exchange(_session, context)
 	_show_result(result)
 
 func _show_result(result: Dictionary) -> void:
@@ -345,6 +364,7 @@ func _show_result(result: Dictionary) -> void:
 	if result.has("error"):
 		_status = result["error"]
 	else:
+		if result.get("city", "") == "night": get_parent().set_night()
 		_followups = result.get("choices", [])
 		_feedback = result.get("feedback", "")
 		_status = "A hidden connection surfaced." if _feedback == "hidden" else ("Evidence connected." if _feedback == "linked" else ("That record does not establish a connection. Try another." if _feedback == "unmatched" else "Reply received."))
@@ -353,6 +373,10 @@ func _show_result(result: Dictionary) -> void:
 			_last_lines.append(line)
 			lines.append(line.duplicate())
 		if not lines.is_empty(): await _play_reply(lines, _session)
+		else: GameState.end_radio_exchange(_session)  # nothing was said: nothing to record
+		if result.get("hang_up", false):
+			close()
+			return
 	_queue_render()
 
 func _play_reply(lines: Array[Dictionary], log_session: String) -> void:
