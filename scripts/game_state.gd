@@ -34,7 +34,6 @@ signal debug_overlay_changed(shown: bool)
 ## searchlight placeholder cards. Hidden by default; F2 toggles it.
 var debug_overlay := false
 var _dev_menu: PanelContainer
-var _language_button: Button
 var chinese_playtest := false
 var _chinese_text: Dictionary = {}
 var _chinese_translation: Translation
@@ -86,7 +85,6 @@ func _set_debug_overlay(shown: bool) -> void:
 		if not is_instance_valid(_dev_menu):
 			_build_dev_menu()
 		_dev_menu.visible = shown
-		_language_button.text = "Playtest in English" if chinese_playtest else "Playtest in Chinese"
 	debug_overlay_changed.emit(shown)
 
 func _build_dev_menu() -> void:
@@ -110,10 +108,6 @@ func _build_dev_menu() -> void:
 		button.custom_minimum_size.y = 36
 		button.pressed.connect(item[1])
 		stack.add_child(button)
-	_language_button = Button.new()
-	_language_button.custom_minimum_size.y = 36
-	_language_button.pressed.connect(_toggle_playtest_language)
-	stack.add_child(_language_button)
 
 func _toggle_playtest_language() -> void:
 	if not OS.is_debug_build(): return
@@ -157,9 +151,13 @@ func is_dev_menu_click(event: InputEvent) -> bool:
 
 func _input(event: InputEvent) -> void:
 	# Read before the GUI; the tutorial's input gate lets F2 through.
-	if event is InputEventKey and event.is_pressed() and not event.is_echo() and event.keycode == KEY_F2:
-		_set_debug_overlay(not debug_overlay)
-		get_viewport().set_input_as_handled()
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.keycode == KEY_F2:
+			_set_debug_overlay(not debug_overlay)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F3 and OS.is_debug_build():
+			_toggle_playtest_language()
+			get_viewport().set_input_as_handled()
 
 
 ## Record a rubbing the first time its symbol is revealed. Returns false if it

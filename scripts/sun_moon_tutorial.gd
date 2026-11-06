@@ -114,7 +114,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if GameState.is_dev_menu_click(event):
 		return
-	if event is InputEventKey and event.keycode == KEY_F2:
+	if event is InputEventKey and event.keycode in [KEY_F2, KEY_F3]:
 		return  # the development overlay toggle (GameState) always works
 	if _delivering:
 		if not (event is InputEventMouseMotion):
