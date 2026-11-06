@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
@@ -6,16 +6,12 @@
 [ext_resource type="PackedScene" path="res://scenes/flashlight_tool.tscn" id="4_tool"]
 [ext_resource type="PackedScene" path="res://scenes/notebook_tool.tscn" id="5_notebook"]
 [ext_resource type="PackedScene" path="res://scenes/rubbing_tool.tscn" id="6_rubbing"]
-[ext_resource type="Texture2D" path="res://assets/Art/tombstone/infant_scene.png" id="7_baby"]
-[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="8_symbol"]
-[ext_resource type="Texture2D" path="res://assets/Art/symbol/day.png" id="9_human"]
-[ext_resource type="Texture2D" path="res://assets/Art/symbol/moon.png" id="10_moon"]
-[ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="11_tombstone"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/infant_tomb.tscn" id="7_baby"]
 [ext_resource type="Script" path="res://scripts/scene_zoom.gd" id="29_zoom"]
 [ext_resource type="Texture2D" path="res://assets/Art/tombstone/pedestal.png" id="30_pedestal"]
-[ext_resource type="Texture2D" path="res://assets/Art/tombstone/scholar_scene.png" id="31_scholar"]
-[ext_resource type="Texture2D" path="res://assets/Art/tombstone/the rich_scene.png" id="32_sun_tomb"]
-[ext_resource type="Texture2D" path="res://assets/Art/tombstone/alter_scene.png" id="33_altar"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/scholar_tomb.tscn" id="31_scholar"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/sun_tomb.tscn" id="32_sun_tomb"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/altar_tomb.tscn" id="33_altar"]
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/moon.png" id="13_night_moon"]
 [ext_resource type="Script" path="res://scripts/decipher_target.gd" id="14_target"]
@@ -117,45 +113,14 @@ offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("30_pedestal")
 
-[node name="ScholarTomb" parent="DayCemetery" instance=ExtResource("11_tombstone")]
+[node name="ScholarTomb" parent="DayCemetery" instance=ExtResource("31_scholar")]
 layout_mode = 0
-texture = ExtResource("31_scholar")
-gravestone_id = "scholar_tomb"
-zoom_rect = Rect2(470, 370, 260, 380)
 
-[node name="BabyTomb" parent="DayCemetery" instance=ExtResource("11_tombstone")]
+[node name="BabyTomb" parent="DayCemetery" instance=ExtResource("7_baby")]
 layout_mode = 0
-texture = ExtResource("7_baby")
-gravestone_id = "baby_tomb"
-zoom_rect = Rect2(718, 388, 322, 362)
 
-[node name="HumanSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
+[node name="SunTomb" parent="DayCemetery" instance=ExtResource("32_sun_tomb")]
 layout_mode = 0
-offset_left = 598.0
-offset_top = 274.0
-offset_right = 1160.0
-offset_bottom = 836.0
-texture = ExtResource("9_human")
-expand_mode = 1
-script = ExtResource("8_symbol")
-rubbing_id = "infant_figure_rubbing"
-
-[node name="MoonSymbol" type="TextureRect" parent="DayCemetery/BabyTomb"]
-layout_mode = 0
-offset_left = 828.0
-offset_top = 539.0
-offset_right = 933.0
-offset_bottom = 644.0
-texture = ExtResource("10_moon")
-expand_mode = 1
-script = ExtResource("8_symbol")
-rubbing_id = "infant_moon_rubbing"
-matching_target_id = "moon"
-
-[node name="SunTomb" parent="DayCemetery" instance=ExtResource("11_tombstone")]
-layout_mode = 0
-texture = ExtResource("32_sun_tomb")
-gravestone_id = "sun_tomb"
 
 [node name="Sun" type="TextureRect" parent="DayCemetery"]
 layout_mode = 0
@@ -207,10 +172,8 @@ offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("28_spar")
 
-[node name="AltarTomb" parent="NightCemetery" instance=ExtResource("11_tombstone")]
+[node name="AltarTomb" parent="NightCemetery" instance=ExtResource("33_altar")]
 layout_mode = 0
-texture = ExtResource("33_altar")
-gravestone_id = "altar_tomb"
 
 [node name="Moon" type="TextureRect" parent="NightCemetery"]
 layout_mode = 0

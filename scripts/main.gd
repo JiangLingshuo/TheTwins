@@ -235,20 +235,5 @@ func _add_investigation_targets() -> void:
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
 		max_year = maxf(max_year, target.years_ago)
 		(_day_cemetery if spec["city"] == "day" else _night_cemetery).add_child(target)
-	var symbol := TextureRect.new()
-	symbol.set_script(load("res://scripts/rubbing_symbol.gd"))
-	symbol.name = "SunMarkerSymbol"
-	# Carved over the whole sun-shaped monument (its parent when it is in the scene).
-	symbol.position = Vector2(918, 345)
-	symbol.size = Vector2(480, 480)
-	symbol.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	symbol.texture = load("res://assets/Art/symbol/coin&sun.png")
-	symbol.rubbing_id = "sun_shaped_marker_rubbing"
-	symbol.matching_target_id = "day_city_coin"
-	var sun_tomb := _day_cemetery.get_node_or_null("SunTomb")
-	if sun_tomb:
-		sun_tomb.add_child(symbol)
-	else:
-		_day_cemetery.add_child(symbol)
 	_flashlight_tool.flashlight.focus_max = max_year
 	_flashlight_tool.get_node("FocusScale").max_value = max_year
