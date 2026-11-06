@@ -21,8 +21,8 @@
       "evidence_id": "skin_picture",
       "city": "day",
       "position": [
-        471,
-        512
+        517,
+        437
       ],
       "caption": "Skin picture: Dayfolk and Nightfolk holding hands",
       "target_id": "skin_picture",
@@ -32,8 +32,8 @@
       "texture": "res://assets/Art/figure/hand_holding.png",
       "crop": true,
       "size": [
-        130,
-        101
+        110,
+        86
       ]
     },
     {
@@ -90,14 +90,25 @@
       "evidence_id": "removed_crystal_god",
       "city": "night",
       "position": [
-        240,
-        290
+        892,
+        360
       ],
-      "caption": "Altar recess: intact crystal god",
+      "caption": "Altar pediment: intact crystal god",
       "target_id": "removed_crystal_god",
-      "meaning": "Altar recess: intact crystal god",
+      "meaning": "Altar pediment: intact crystal god",
       "years_ago": 50.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "size": [
+        91,
+        85
+      ],
+      "texture": "res://assets/Art/tombstone/single/alter_past_single.png",
+      "region": [
+        1084,
+        300,
+        219,
+        205
+      ]
     },
     {
       "node": "AltarMoonStone",
