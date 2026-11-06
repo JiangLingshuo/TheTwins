@@ -1,6 +1,6 @@
 extends Control
 ## Title / start screen: black background with a softly pulsing prompt.
-## Any key, mouse click, or gamepad button starts the music and wakes the book.
+## The start input plays the silent epigraph before the music and book.
 ## When the book is first turned to page `dialogue_page`, `dialogue_file` plays
 ## over the book, and page turning is locked until the dialogue ends.
 
@@ -19,6 +19,7 @@ extends Control
 @export var scene_fade_time: float = 0.8
 
 @onready var prompt: Label = $PromptLabel
+@onready var epigraph: Control = $Epigraph
 @onready var book: Control = $Book
 @onready var dialogue_box: Control = $DialogueBox
 
@@ -57,15 +58,27 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _start_game() -> void:
+	if _started:
+		return
 	_started = true
-	Music.play_bgm()
-	# Stop the fade-in too, or it keeps pulling the prompt back to full opacity.
+	Music.stop_bgm(0.0)
 	_fade_in.kill()
 	if _pulse:
 		_pulse.kill()
-	var fade_out := create_tween()
-	fade_out.tween_property(prompt, "modulate:a", 0.0, 0.4)
-	fade_out.finished.connect(prompt.hide)
+	var fade_prompt := create_tween()
+	fade_prompt.tween_property(prompt, "modulate:a", 0.0, 0.4)
+	await fade_prompt.finished
+	prompt.hide()
+
+	epigraph.modulate.a = 0.0
+	epigraph.show()
+	var show_quote := create_tween().set_trans(Tween.TRANS_SINE)
+	show_quote.tween_property(epigraph, "modulate:a", 1.0, 0.7)
+	show_quote.tween_interval(6.5)
+	show_quote.tween_property(epigraph, "modulate:a", 0.0, 0.9)
+	await show_quote.finished
+	epigraph.hide()
+	Music.play_bgm()
 	book.wake()
 
 

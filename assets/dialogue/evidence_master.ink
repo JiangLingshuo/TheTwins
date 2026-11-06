@@ -57,10 +57,10 @@
 === ev_dayfolk_appearance ===
 # type:evidence
 # id:dayfolk_appearance
-# title:The Appearance of the Dayfolk
+# title:Human-Shaped Rubbing → Dayfolk Figure
 # category:observation
 # location:day_cemetery
-# tool: camera
+# tool: rubbing
 # evidence_tag:dayfolk_appearance
 # evidence_tag:human_figure_reference
 // Source: 01_婴儿小碑!B9. TODO: choose the actual environmental reference image.
@@ -132,7 +132,7 @@ The family asked us not to define the child by work he had never begun. We chose
 # related_location:day_cemetery
 # evidence_tag:infant_appearance_mismatch
 # evidence_tag:family_requested_depiction
-My <link="student">student</link> visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger. 
+My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.
 -> DONE
 
 === ev_infant_graffiti ===
@@ -152,6 +152,21 @@ My <link="student">student</link> visited me with urgency. She showed me a photo
 // Source: 01_婴儿小碑!B10,B15.
 // TODO: the artist's identifying mark is not specified in the workbook; do not invent one here.
 The searchlight reveals an old sketch of the infant. His appearance differs from the smooth figure chosen for the marker.
+-> DONE
+
+=== ev_infant_medical_record ===
+# type:evidence
+# id:infant_medical_record
+# title:Day City Medical Record: Infant Case
+# category:manuscript
+# location:aurora_transmission
+# related_location:day_cemetery
+# evidence_tag:infant_euthanasia
+Clinical examination: The infant was covered in thick hair. His eyes barely opened. The attending physicians judged that he would be unable to adapt to conditions in Day City.
+
+Authorization: Both parents signed the consent form.
+
+Outcome: <link="euthanasia">Euthanasia</link> was approved and carried out. Death was confirmed by the attending physician.
 -> DONE
 
 === ev_infant_death_doubt ===
@@ -262,7 +277,7 @@ The Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on
 
 Who has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.
 
-It is not only disappearances. Many of us, myself included, have found <link="fresh_wounds">fresh wounds</link> upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.
+It is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.
 -> DONE
 
 === ev_profession_record ===
@@ -769,7 +784,7 @@ A moon-shaped stone once lay before the father's marker. It resembles the stones
 # evidence_tag:original_separation
 # evidence_tag:natural_collapse
 // Source: 07_夜父石碑!C11. This excerpt belongs to the banned Day City history.
-...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a <link="natural_collapse">natural collapse</link> sealed the road to the surface.
+...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a natural collapse sealed the road to the surface.
 -> DONE
 
 === ev_skyway_history ===
@@ -936,7 +951,21 @@ A small sculpture of four family members once stood before the marker. It was ca
 # evidence_tag:girl_teddy_bear_trace
 // Callback draft: date is provisional; after the girl's departure and before the Day mother dies.
 // Art: show the mother setting down the bear, with a recognisable face; bear must match the family photo.
-In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.
+In the searchlight, a woman kneels before the solitary marker and sets a small toy at its base. Her face and the toy can be compared with the family photograph.
+-> DONE
+
+=== ev_girl_painted_flower ===
+# type:evidence
+# id:girl_painted_flower
+# title:A Painted Flower at the Solitary Marker
+# category:trace
+# location:day_cemetery
+# tool:searchlight
+# searchlight_year:2005
+# searchlight_years_ago:45
+# searchlight_date_status:timeline_suggestion
+# evidence_tag:girl_painted_flower_trace
+The searchlight brings out a large flower painted on the solitary marker. Its outline matches the flower on the Holy Mother's stone.
 -> DONE
 
 === ev_night_mother_flower ===
@@ -977,13 +1006,13 @@ Aurora identifies the flower as a private sign shared by a mother and daughter w
 # evidence_tag:upright_coffin_motif
 # evidence_tag:population_decline
 // Source: 04_小女孩终局碑!C11. Historical claims remain the book's account.
-This history was a <link="banned_book">banned book</link> until it was discovered.
+This history was a banned book until it was discovered.
 
-Both Dayfolk and Nightfolk must rest in their <link="sleeping_coffin">sleeping coffins</link> at the proper time if they are to awaken the following day.
+Both Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.
 
-Before their division, they were known together as the <link="sun_moon_people">People of Sun and Moon</link>. Some had the daylight; others had the moonlit night.
+Before their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.
 
-In their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the <link="population_decline">number of people on the surface decreased</link>. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.
+In their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.
 
 The Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.
 -> DONE
@@ -1014,9 +1043,9 @@ An illustration in the old history book shows a sleeping coffin standing upright
 # evidence_tag:two_mothers_dilemma
 # evidence_tag:resentment_toward_mother
 // Source: 04_小女孩终局碑!B13,C13. Preserve its anger; do not add forgiveness or a verdict.
-If the truth of death itself is being covered up, then <link="diary_complicity">am I not an accomplice when I carve monuments to that lie</link>?
+If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?
 
-I can no longer bear this <link="diary_hypocrisy">hypocritical world</link>. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.
+I can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.
 
 I once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.
 
@@ -1026,9 +1055,9 @@ She left me a message on my windowsill when she came to the Day City. She is so 
 
 She told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.
 
-I wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. <link="diary_mothers">Neither of us would bring our mother</link>. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.
+I wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. Neither of us would bring our mother. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.
 
-I have to persuade her. We can only <link="diary_escape">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.
+I have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.
 -> DONE
 
 === ev_diary_cover ===

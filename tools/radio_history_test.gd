@@ -89,9 +89,9 @@ func _run() -> void:
 	check("repeat keeps first_heard_at and updates last_heard_at", plain[0]["first_heard_at"] == 10.0 and plain[0]["last_heard_at"] == 20.0)
 
 	# 3. Different evidence gives distinguishable records (same reply text here).
-	ask(human_q, group("infant_figure_rubbing"), session)
+	ask(human_q, group("designer_manuscript"), session)
 	ask(human_q, group("infant_graffiti"), session)
-	var by_figure := records(human_q, "infant_figure_rubbing")
+	var by_figure := records(human_q, "designer_manuscript")
 	var by_graffiti := records(human_q, "infant_graffiti")
 	check("different evidence -> separate records", by_figure.size() == 1 and by_graffiti.size() == 1)
 	check("identical reply text stays separate per evidence", by_figure[0]["lines"] == by_graffiti[0]["lines"])

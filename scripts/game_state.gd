@@ -224,8 +224,13 @@ func record_gravestone(id: String) -> bool:
 		"father_tomb": ["skyway_history", "natural_collapse_record"],
 		"girl_tomb": ["girl_diary", "day_city_history"],
 	}
+	# During the tutorial, Aurora delivers these after the scene comparison.
+	if id == "baby_tomb" and tutorial_day_return_heard and not investigation_tutorial_completed and not notebook_preview and not evidence_ids.has("dayfolk_appearance"):
+		deliveries.erase(id)
 	for evidence_id in deliveries.get(id, []):
 		record_evidence(evidence_id)
+	if id in ["mother_tomb", "father_tomb"] and "mother_tomb" in gravestones and "father_tomb" in gravestones:
+		record_evidence("infant_medical_record")
 	notebook_changed.emit()
 	return true
 
@@ -513,7 +518,7 @@ var tutorial_night_heard := false
 var tutorial_hidden_heard := false
 var current_city_day := true
 const IDENTITY_LABELS := {"infant": "Infant", "scholar": "Scholar", "tycoon": "Tycoon", "divine_messenger": "Divine Messenger", "night_mother": "Holy Mother", "night_father": "Holy Father", "aurora": "Aurora", "funerary_artist": "Funerary Artist"}
-const CAUSE_LABELS := {"natural": "Natural death", "unexplained": "Unexplained circumstances", "hunger_and_thirst": "Hunger and thirst", "disappearance": "Disappearance", "missed_sleeping_deadline": "Exceeded the day/night limit", "escape": "Departure"}
+const CAUSE_LABELS := {"natural": "Natural death", "unexplained": "Unexplained circumstances", "euthanasia": "Euthanasia", "hunger_and_thirst": "Hunger and thirst", "disappearance": "Disappearance", "missed_sleeping_deadline": "Exceeded the day/night limit", "escape": "Departure"}
 
 func report_options(pool: String, tomb_id: String) -> Array[String]:
 	var result: Array[String] = []
@@ -548,12 +553,13 @@ var tutorial_day_return_heard := false
 var tutorial_record_intro_heard := false
 var tutorial_keyword_ack_heard := false
 var tutorial_radio_intro_heard := false
+var tutorial_report_intro_heard := false
 var tutorial_end_heard := false
 signal term_collected(term_id: String)
 
 func collect_term(id: String) -> void:
 	var identities := {"infant": "infant", "scholar": "scholar", "tycoon": "tycoon", "divine_messenger": "divine_messenger", "night_mother": "night_mother", "night_father": "night_father", "aurora": "aurora", "funerary_artist": "funerary_artist"}
-	var causes := {"natural": "natural", "unexplained death": "unexplained", "thirst": "hunger_and_thirst", "disappearance": "disappearance", "missed_sleeping_deadline": "missed_sleeping_deadline", "escape": "escape"}
+	var causes := {"natural": "natural", "unexplained death": "unexplained", "euthanasia": "euthanasia", "thirst": "hunger_and_thirst", "disappearance": "disappearance", "missed_sleeping_deadline": "missed_sleeping_deadline", "escape": "escape"}
 	var pool := "identities" if identities.has(id) else ("causes" if causes.has(id) else "clue_terms")
 	var value: String = identities.get(id, causes.get(id, id))
 	var stored: Variant = radio_progress.get(pool, [])
@@ -566,6 +572,7 @@ func collect_term(id: String) -> void:
 
 func deliver_day_manuscripts() -> void:
 	for id in content_catalog().get("evidence", {}):
+		if id == "infant_medical_record": continue # Delivered after both Night City parents' graves are recorded.
 		var entry := get_evidence(id)
 		if entry.get("category", "") != "manuscript": continue
 		var places: Array = entry.get("metadata", {}).get("related_location", [])

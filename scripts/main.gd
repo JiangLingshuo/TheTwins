@@ -114,7 +114,9 @@ func _fade_in_from_black() -> void:
 
 
 func _on_evidence_recorded(id: String) -> void:
-	if GameState.is_clue(id) and not GameState.notebook_preview:
+	if id == "infant_medical_record" and not GameState.notebook_preview:
+		_toast.show_message("New manuscript received from Aurora: Day City Medical Record.")
+	elif GameState.is_clue(id) and not GameState.notebook_preview:
 		_toast.show_message(clue_recorded_message % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
 
 

@@ -296,7 +296,7 @@ func _refresh_options() -> void:
 			var index := input.item_count - 1
 			input.set_item_metadata(index, value)
 			if report.get(pair[2], "") == value: input.selected = index
-		input.tooltip_text = (pair[3].get(report.get(pair[2], ""), "Select a collected term") as String) + "\nCollect underlined terms from radio replies. Identities can only be assigned once."
+		input.tooltip_text = (pair[3].get(report.get(pair[2], ""), "Select a collected term") as String) + "\nCollect underlined terms from records and radio replies. Identities can only be assigned once."
 
 
 ## The texture cut down to its visible (non-transparent) part, so a stone drawn

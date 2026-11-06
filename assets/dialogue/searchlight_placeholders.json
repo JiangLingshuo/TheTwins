@@ -31,7 +31,10 @@
       "date_status": "timeline_suggestion",
       "texture": "res://assets/Art/figure/hand_holding.png",
       "crop": true,
-      "size": [130, 101]
+      "size": [
+        130,
+        101
+      ]
     },
     {
       "node": "WishPoolCoin",
@@ -204,6 +207,21 @@
       "years_ago": 45.0,
       "date_status": "timeline_suggestion",
       "required_grave": "mother_tomb"
+    },
+    {
+      "node": "GirlPaintedFlower",
+      "evidence_id": "girl_painted_flower",
+      "city": "day",
+      "position": [
+        1580,
+        610
+      ],
+      "caption": "Solitary marker: a painted flower",
+      "target_id": "girl_painted_flower",
+      "meaning": "Compare the painted flower with the Holy Mother’s stone",
+      "years_ago": 45.0,
+      "date_status": "timeline_suggestion",
+      "required_grave": "girl_tomb"
     }
   ]
 }
