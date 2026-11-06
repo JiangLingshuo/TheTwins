@@ -94,7 +94,9 @@ func _input(event: InputEvent) -> void:
 		var hovered_control := get_viewport().gui_get_hovered_control()
 		var over_button := _zoom_button.visible and _zoom_button.get_global_rect().has_point(event.position)
 		var on_stone := _is_on_stone(event) and (hovered_control == null or hovered_control == _zoom_button)
-		_set_hovered(on_stone or over_button)
+		# Stones that are not open yet stay unlit (the first one lights up for the tutorial).
+		var can_glow := _interaction_allowed() or gravestone_id == "baby_tomb"
+		_set_hovered((on_stone or over_button) and can_glow)
 		if _hovered:
 			_last_hover_msec = Time.get_ticks_msec()
 
@@ -109,10 +111,12 @@ func _process(_delta: float) -> void:
 
 
 ## Before the guided rubbing/open-notebook sequence registers the first marker,
-## the baby tomb ignores clicks (and offers no zoom).
+## the baby tomb ignores clicks (and offers no zoom); the other stones wait
+## until the investigation tutorial is over.
 func _interaction_allowed() -> bool:
-	return not (gravestone_id == "baby_tomb" and not GameState.tutorial_record_intro_heard \
-			and not GameState.investigation_tutorial_completed)
+	if GameState.investigation_tutorial_completed:
+		return true
+	return gravestone_id == "baby_tomb" and GameState.tutorial_record_intro_heard
 
 
 func _unhandled_input(event: InputEvent) -> void:
