@@ -115,6 +115,7 @@ func _label(text: String, font_size: int = 22) -> Label:
 	return label
 
 func _action(text: String, callback: Callable, disabled: bool = false) -> Button:
+	text = GameState.zh_text(text)
 	var button := Button.new()
 	button.custom_minimum_size.x = maxf(110.0, FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
 	var wrapped := ""
@@ -126,6 +127,9 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 		else: row += (" " if not row.is_empty() else "") + word
 	wrapped += row
 	button.custom_minimum_size.y = maxf(34, wrapped.split("\n").size() * 22 + 10)
+	if GameState.chinese_playtest:
+		var rows := ceilf(FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x / 280.0)
+		button.custom_minimum_size.y = maxf(34.0, rows * 24.0 + 10.0)
 	button.size = Vector2(360, button.custom_minimum_size.y)
 	button.disabled = disabled
 	var frame := StyleBoxFlat.new()
@@ -139,7 +143,7 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("focus", hover)
 	var title := _label(wrapped, 20)
-	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if GameState.chinese_playtest else TextServer.AUTOWRAP_OFF
 	title.clip_text = true
 	button.tooltip_text = text
 	button.add_child(title)
@@ -222,11 +226,11 @@ func _render() -> void:
 	else:
 		for question in model.questions_for(_tomb, _slot):
 			if not _lesson_allows(question): continue
-			var text: String = question["label"]
+			var text := GameState.zh_text(question["label"])
 			if question["hidden"]: text = "◇ " + text
 			if _question.get("id", "") == question["id"]: text = "→ " + text
 			if not question["available"]:
-				text += "  (record the human-shaped symbol first)" if question["target"] == "test_answer_baby_17" else "  (symbol link needed)"
+				text += "  (" + GameState.zh_text("record the human-shaped symbol first" if question["target"] == "test_answer_baby_17" else "symbol link needed") + ")"
 			var question_button := _action(text, _select_question.bind(question), not question["available"])
 			questions.add_child(question_button)
 			tutorial_controls[question["target"]] = question_button
@@ -235,10 +239,10 @@ func _render() -> void:
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
 	right.add_child(_label("Evidence · one record", 20))
-	var slot_title: String = model.group_title(_slot)
+	var slot_title := GameState.zh_text(model.group_title(_slot))
 	right.add_child(_action(slot_title + ("  ×" if not _slot.is_empty() else ""), _clear_slot, not _followups.is_empty()))
 	var filter := OptionButton.new()
-	for label in ["All types", "Symbol records", "Manuscripts", "Other clues"]: filter.add_item(label)
+	for label in ["All types", "Symbol records", "Manuscripts", "Other clues"]: filter.add_item(GameState.zh_text(label))
 	filter.selected = _filter
 	filter.disabled = not _followups.is_empty()
 	filter.item_selected.connect(_set_filter)
@@ -249,13 +253,13 @@ func _render() -> void:
 	if _question.is_empty() and _lesson_question() == "test_answer_baby_21" and visible_ids.has(sketch_group):
 		visible_ids.erase(sketch_group)
 		visible_ids.push_front(sketch_group)
-	right.add_child(_label("Collected records" if _question.is_empty() else "Three choices · %d shown" % visible_ids.size(), 17))
+	right.add_child(_label("Collected records" if _question.is_empty() else GameState.zh_text("Three choices · %d shown") % visible_ids.size(), 17))
 	var records := _scroll_stack(right, 170 if not _question.is_empty() else 115)
 	for id in visible_ids:
 		var unlocked: bool = model.group_unlocked(id)
 		var group: Dictionary = model.data["groups"][id]
-		var label: String = model.group_title(id) if unlocked else "Uncollected record"
-		if unlocked and group["members"].size() > 1: label += "  (combined)"
+		var label := GameState.zh_text(model.group_title(id) if unlocked else "Uncollected record")
+		if unlocked and group["members"].size() > 1: label += "  (" + GameState.zh_text("combined") + ")"
 		if id == _slot: label = "✓ " + label
 		var record_button := _action(label, _set_slot.bind(id), not unlocked or not _followups.is_empty())
 		if unlocked: record_button.tooltip_text = GameState.get_evidence(model.group_member(id)).get("body", "")
@@ -379,7 +383,7 @@ func _send() -> void:
 		_queue_render()
 		return
 	GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": sent_question["label"]})
-	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": "Submitted record: " + str(model.data["groups"][sent_slot]["title"])})
+	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": GameState.zh_text("Submitted record: %s") % GameState.zh_text(model.data["groups"][sent_slot]["title"])})
 	# The reply that plays now is one exchange of the radio history. model.submitted_id
 	# is the record send() actually evaluated ("" without evidence).
 	_exchange_context = {"gravestone_id": sent_question["tomb"], "question_id": sent_question["id"],

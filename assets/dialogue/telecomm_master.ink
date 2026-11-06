@@ -56,7 +56,7 @@ VAR natural_reply_seen = false
 VAR player_name = "Investigator"
 VAR feedback_kind = ""
 VAR pending_relation_feedback = false
-LIST AnswerId = mother_flower_supported, mother_flower_normal, baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_comparison, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, repeated_beast_hidden, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
+LIST AnswerId = scholar_passage_gate_hidden, mother_flower_supported, mother_flower_normal, baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_comparison, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, repeated_beast_hidden, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
 VAR read_answers = ()
 LIST NightGlyph = blessing, unending_path, dry_river, ascending_path, crystal_god
 VAR queried_night_glyphs = ()
@@ -119,7 +119,7 @@ Aurora never told me why. I guess it’s an aesthetic choice. #player
 Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins. #player
 Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook? #aurora
 Yeah, I was just looking at it. Interesting color scheme. #player
-There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that's a bonus to that name. When it was first named as the Twins, it's because it has an aligned Day and Night with the Earth, despite the distance between. #aurora
+There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them. #aurora
 Should I expect to meet anyone here? #player
 No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked. #aurora
 Where? #player
@@ -775,6 +775,8 @@ A moon-shaped stone once lay among the altar's offerings. It resembles a small t
 A legend of the Crystal God:
 
 "When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more."
+
+The child foretold in the prophecy was called the <link="divine_messenger">Divine Messenger</link>.
 + [Collect a highlighted term] -> test_terms
 + [Back] -> test_hub
 
@@ -1686,7 +1688,8 @@ What would you like to ask?
 + {(links ? Relation.crystal)} [Why is the monument shaped like a crystal?] -> test_answer_scholar_8
 + {((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))} [What does the two-part creature mean?] -> test_answer_scholar_12
 + {1 == 1} [Did the cities ever cooperate?] -> test_answer_scholar_17
-+ {1 == 1} [Why is the color in black and white?] -> test_answer_scholar_20
++ {submitted_id == "one_way_passage_order"} [Why can I go between the cities? Shouldn’t the gate have closed?] -> test_answer_scholar_passage_gate
++ {1 == 1} [Why is it in black and white?] -> test_answer_scholar_20
 + {1 == 1} [How could a picture be kept inside this crystal?] -> test_answer_scholar_25
 + {(1 == 1) && (has_tag(EvidenceTag.scholar_no_visitors))} [The Scholar seems reputable in the Day City. Why is her grave never visited by anyone else?] -> test_answer_scholar_31
 + {(1 == 1) && (has_tag(EvidenceTag.unexplained_waking_wounds)) && (read_answers ? AnswerId.scholar_25_supported_27)} [Did she cut her own skin to send the message?] -> test_answer_scholar_35
@@ -1776,7 +1779,7 @@ What would you like to ask?
 + {1 == 1} [Does disappearance always mean death?] -> test_answer_girl_20
 + {(1 == 1) && (has_tag(EvidenceTag.aurora_provided_object) || has_tag(EvidenceTag.aurora_identity_reference)) && ((links ? Relation.cover) || (owned_evidence ? EvidenceId.girl_cover_correspondence))} [Aurora, why is this girl on the notebook you gave me?] -> test_answer_girl_24
 + {(owned_evidence ? EvidenceId.girl_teddy_bear) && (owned_evidence ? EvidenceId.family_photo)} [Why is the toy bear in front of the solitary marker?] -> test_answer_girl_bear_preview
-+ {(owned_evidence ? EvidenceId.girl_painted_flower) && know(EvidenceTag.mother_daughter_flower_meaning)} [What does the repeating pattern of painted flower mean?] -> test_answer_girl_flower_preview
++ {(owned_evidence ? EvidenceId.girl_painted_flower) && know(EvidenceTag.mother_daughter_flower_meaning)} [What does the repeating pattern of the painted flower mean?] -> test_answer_girl_flower_preview
 + [Collect a word from this call] -> test_radio_terms_girl
 + [End this call] -> test_end_call
 
@@ -2016,7 +2019,7 @@ This test report is not yet supported. Check the identity, fate, and relevant ev
 === test_bonus ===
 // Dialogue source: 05_婴儿夜城祭坛!B13. Unlock after two accepted Day City reports AND two accepted Night City reports. Two bonus QUESTIONS, not an overall radio call limit.
 (Her breathing steadies. She sounds ready to answer something larger than a single grave.) #narrator
-You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask two questions of the most curiosity. #aurora
+You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about. #aurora
 DEV: bonus questions remaining {bonus_remaining}.
 * {bonus_remaining > 0} [What are the Dayfolk and Nightfolk?]
     (She pauses once, then sets the explanation down plainly.) #narrator
@@ -2036,7 +2039,7 @@ DEV: bonus questions remaining {bonus_remaining}.
     -> test_bonus_check
 * {bonus_remaining > 0} [Were the two cities always enemies?]
     (Her answer begins firmly. A quieter note enters when she mentions the shared cemetery.) #narrator
-    No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residence. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation -- cemeteries are the diorama of cities. #aurora
+    No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residences. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation—cemeteries are the diorama of cities. #aurora
     ~ bonus_remaining = bonus_remaining - 1
     -> test_bonus_check
 + [Continue the investigation]
@@ -2067,9 +2070,9 @@ You close the investigation pages and plan your journey back. For a while, you l
 All this time, the girl has been standing quietly inside her frame.
 You carry the book with you as you walk. You witnessed the stones and the people they recorded, but you would never know how they truly lived.
 Nothing can be changed. But something can be remembered.
-That way feels longer than the way you come. You came with nothing, but now you are leaving with a civilization's weight.
+That way feels longer than the way you came. You came with nothing, but now you are leaving with a civilization's weight.
 The path extends to a single stone. Cold and lonely. Like one standing beside the street for a delayed bus to come.
-It's a standing monument that belong to neither the Day nor the Night.
+It's a standing monument that belongs to neither the Day nor the Night.
 ~ girl_revealed = true
 # event:reveal_girl_marker
 -> test_desc_girl
@@ -2080,13 +2083,13 @@ It's a standing monument that belong to neither the Day nor the Night.
 (You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.) #narrator
 “We feel, and all that we have felt is swept away in the bright tumult of the world.” #narrator
 (You first read Goethe's poem An Lottchen from Zweig's The World of Yesterday, where he recounts the beautiful world before the war that strips us of our humanity.) #narrator
-(It is only when you witness a collapse then you realize how fragile our established routines can be. You wonder whether… #narrator
+(It is only when you witness a collapse that you realize how fragile our established routines can be. You wonder whether…) #narrator
 + [The girl on the mark feels the same.] -> test_ending_reflect
 + [The Night girl in the diary feels the same.] -> test_ending_reflect
 + [Aurora feels the same.] -> test_ending_reflect
 
 === test_ending_reflect ===
-(And they are one. One that share the fate and memories of the civilization.) #narrator
+(And they are one. One that shares the fate and memories of the civilization.) #narrator
 (After some moments of solitude, you have to give Aurora a call. But before that, you might sort out your thoughts.) #narrator
 What is the true reason of the civilization's fall? #narrator
 + [Night City does not have the concept of exchange]
@@ -2095,13 +2098,13 @@ What is the true reason of the civilization's fall? #narrator
 + [The One-way Passage Order of the Day City]
     ~ ending_cause = 2
     -> test_ending_mothers_question
-+ [Inducing effect of ONE being perceived as TWO]
++ [The effect of ONE being perceived as TWO]
     ~ ending_cause = 3
     -> test_ending_mothers_question
 
 === test_ending_mothers_question ===
 What did the mothers do to their daughter? #narrator
-+ [They straightly love them.] -> test_ending_day_call
++ [They simply love them.] -> test_ending_day_call
 + [They hurt them.] -> test_ending_day_call
 + [Hard to conclude, it's not black or white.] -> test_ending_day_call
 
@@ -2110,12 +2113,12 @@ What did the mothers do to their daughter? #narrator
 (Nothing right or wrong. It's all about interpretations.) #narrator
 (But what each of us called right became, in all our hands, a wrong no one could undo.) #narrator
 Hi? #aurora
-(A tentative greeting. As if it's the first time she's talking to you. ) #narrator
+(A tentative greeting. As if it's the first time she's talking to you.) #narrator
 (You may have captured a subtle sense of panic in her voice, as though that figure behind the husky voice is a lost teenage girl.) #narrator
-I have completed my investigation, thoroughly. #player
+I have completed my investigation thoroughly. #player
 Good to hear. What else? #aurora
 I have to ask you a few questions… that might be personal. #player
-(A brief, unnatural pause on the other side. You are not sure whether is the person on the other side feeling unprepared for the moment, or she has prepared for too long.) #narrator
+(A brief, unnatural pause on the other side. You are not sure whether the person on the other side feels unprepared for the moment or has prepared for too long.) #narrator
 (Long enough to be accustomed to waiting. Long enough to believe that this moment will never come.) #narrator
 Let me know your thoughts. #aurora
 {ending_cause == 1:
@@ -2132,13 +2135,13 @@ That's what I thought as well. #aurora
 - else:
 Both of us know that it’s more than that. #aurora
 }
-That's too similar to us human-beings. #player
-We drew a line around ourselves and named it as civilization. #player
-We expelled those beyond the defined boundaries, and sent them downriver on a ship of fools. #player
+That's too similar to us human beings. #player
+We drew a line around ourselves and named it civilization. #player
+We expelled those beyond the defined boundaries and sent them downriver on a ship of fools. #player
 We watched it disappear, never knowing it carried our own flesh. #aurora
-(She definitely knew what you are referring to. But you sense a more intimate implication beneath "flesh" as her word of choice.) #narrator
-Disappointment to your fellow man, I understand. What about your blood relatives? #player
-(You also left them alone, with no intention of salvage. You didn't speak that out. They were teenage girls, you can't blame them for not saving the world that is now remained in yesterday) #narrator
+(She definitely knows what you are referring to. But you sense a more intimate implication beneath "flesh" as her word of choice.) #narrator
+Disappointment in your fellow man, I understand. What about your blood relatives? #player
+(You also left them alone, with no intention of salvage. You didn't speak that out. They were teenage girls. You can't blame them for not saving the world that now remains in yesterday.) #narrator
 You knew it. #aurora
 {(owned_evidence ? EvidenceId.girl_teddy_bear) && (owned_evidence ? EvidenceId.family_photo):
 -> test_ending_day_bear
@@ -2152,32 +2155,32 @@ She left your toy at the marker you made before you escaped. #player
 + [She loved you.] -> test_ending_day_bear_qualify
 
 === test_ending_day_bear_qualify ===
-+ [Despite the injustice she was playing an accomplice of.] -> test_ending_day_guilt
++ [Despite the injustice she was complicit in.] -> test_ending_day_guilt
 + [Though you don't have to forgive her.] -> test_ending_day_guilt
-+ [Though we are all regretted for something that cannot be reversed.] -> test_ending_day_guilt
++ [Though we all regret something that cannot be reversed.] -> test_ending_day_guilt
 
 === test_ending_day_guilt ===
-You sent me here to made up for your guilts, but… #player
-+ [I can recover nothing but facts that you've already known most of them.] -> test_ending_day_earth
+You sent me here to make up for your guilt, but… #player
++ [I can recover nothing but facts you mostly already know.] -> test_ending_day_earth
 + [You have to face that by yourself.] -> test_ending_day_earth
-+ [A witness have no ability to resolve the knots for someone who experienced all this.] -> test_ending_day_earth
++ [A witness has no ability to resolve the knots for someone who experienced all this.] -> test_ending_day_earth
 
 === test_ending_day_earth ===
 (If things happened 50 years ago, you should now be speaking to an old lady that used to live on this planet.) #narrator
-(A teenage girl thought that escaping will solve the entire problem. Yet when she's really light-years away from her homeland, and dozens of years from the home in her memories, time suddenly becomes counting unit that loses its tangibility.) #narrator
+(A teenage girl thought that escaping would solve the entire problem. Yet when she's really light-years away from her homeland and dozens of years from the home in her memories, time suddenly becomes a counting unit that loses its tangibility.) #narrator
 (The girl was stuck in the past that she was once determined to abandon.) #narrator
 I can't remember the day when the Earth first visited the Twins. I was found by the aliens. By then, I knew not a single word of human language, but I knew they wanted to pick us up. #aurora
-We were relying on food in the Day City and in the wild, those days was more of surviving instead of living. I pointed to the sleeping cofin, they understood, and we were both fetched to the Earth. #aurora
-Every day before my day ends, I write her a note on my thoughts, and my progress of communication with the people. We, together, learnt the language of human. #aurora
+We were relying on food in the Day City and in the wild. Those days were more about surviving than living. I pointed to the sleeping coffin. They understood, and we were both fetched to Earth. #aurora
+Every day before my day ends, I write her a note on my thoughts and my progress in communicating with the people. Together, we learnt the human language. #aurora
 So you never did anything together? #player
 We can't. We are the closest friends that never met each other. That's the limitation the Twins were born with. #aurora
 The archaeologists were friendly to us. But "friendly" is a different word to "friend". To my shame, I started to miss the people that I once deemed as stubborn, harsh and cruel, and most importantly, hypocritical, the trait that I do not want myself to fall into the most. #aurora
-We both cannot step out of the specially designed space that accustomed to our body condition. Nothing is too different from our years of straying on the Twins. #aurora
-We were sharing the same flesh -- not only the Day and the Night. Also my people and I. As they were lost, I'm lost, too. #aurora
-Have you ever given a chance to come back? #player
+Neither of us can step out of the specially designed space adapted to our physical condition. Nothing is too different from our years of straying on the Twins. #aurora
+We were sharing the same flesh—not only the Day and the Night. Also my people and I. As they were lost, I'm lost, too. #aurora
+Have you ever been given a chance to come back? #player
 (If they can travel that far to Earth and stay alive for years, they should be able to return. But they sent you as the delegate. There is a deeper reason that stopped her from looking back.) #narrator
 I always have the choice. The researchers ask us from time to time. It was me that did not want to look back. #aurora
-+ [Because your health cannot support a distance travel like this?] -> test_ending_day_return_1
++ [Because your health cannot support a journey this long?] -> test_ending_day_return_1
 + [Because you are busy?] -> test_ending_day_return_2
 + [Because of your guilt?] -> test_ending_day_return_3
 
@@ -2194,14 +2197,14 @@ Time is the thing that I possess the most to waste. #aurora
 -> test_ending_day_dream
 
 === test_ending_day_dream ===
-It took me quite a while to understand "dream" in human's language. Dayfolks viewed sleep as a rehearsal of death, because we totally lose our consciousness when we fall asleep in the sleeping coffin. That's when our night counterparts fully deploy our life for the other part of a day. #aurora
-Until one day, after a day of conversation with the researchers, I was recalling the past details so intensively, that I once again saw the familiar faces at night. #aurora
-Not only the first time I witnessed how dark a long night can be, but the first time her appearance became so clear that I recognized her at the first sight. #aurora
+It took me quite a while to understand "dream" in human language. Dayfolk viewed sleep as a rehearsal of death because we totally lose our consciousness when we fall asleep in the sleeping coffin. That's when our night counterparts fully deploy our life for the other part of a day. #aurora
+Then one day, after a day of conversation with the researchers, I was recalling the past details so intensely that I once again saw the familiar faces at night. #aurora
+It was the first time I witnessed how dark a long night can be, and the first time her appearance became so clear that I recognized her at first sight. #aurora
 She was younger than the woman I had in mind. The night was so dark that it blurred her look. But it's already the clearest out of that vast pool of memories across time. #aurora
-I said Hi. Not sure if she responded. Perhaps deep in my conscious I still had her voice, but I cannot frame it into a sound that I could match with her -- the Scholar, or say, my mother. #aurora
-She passed me the toy, smiling. She didn’t smile that much, she always looked worried. Day City is a place where everyone use something to exchange for another, like my parents' marriage, like her education to me. That time she gave me a toy. First gift ever, not again. #aurora
-I woke up next morning with tears on my cheeks. It's the first time and the last time, that I understood what it means to have a dream. #aurora
-For years I've been anticipating another dream. Yet what I got was nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to, that I felt the emptiness in that solitary silence. #aurora
+I said hi. Not sure if she responded. Perhaps deep in my consciousness I still had her voice, but I cannot frame it into a sound that I could match with her—the Scholar, or rather, my mother. #aurora
+She passed me the toy, smiling. She didn’t smile that much. She always looked worried. Day City is a place where everyone uses something to exchange for another, like my parents' marriage, like her education to me. That time she gave me a toy. First gift ever, not again. #aurora
+I woke up the next morning with tears on my cheeks. It's the first and last time that I understood what it means to have a dream. #aurora
+For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to that I felt the emptiness in that solitary silence. #aurora
 + [You missed her.] -> test_ending_day_empathy
 + [You loved her.] -> test_ending_day_empathy
 
@@ -2216,17 +2219,17 @@ For years I've been anticipating another dream. Yet what I got was nights of com
 + [That's the complexity we have to embrace.] -> test_ending_day_goodbye
 
 === test_ending_day_goodbye ===
-(You feel that tremor in your limbs again, with a fear and a little bit of anticipation for her response.) #narrator
-(For a while, she said nothing, only the buzzing sound that mixes with the blowing wind.) #narrator
-(The wind gets stronger, the night is about to come. Then you hear sobbing on the other side.) #narrator
-(She hang up without a goodbye. You kept the receiver by your ears. That beeping sound speaks for her struggles.) #narrator
-(You sit until the moon rises, randomly thinking about your decisions if you are in their situation.) #narrator
-(You suppose you know the answers. But as always, it remains as assumptions that changes nothing. You called again.) #narrator
+(You feel that tremor in your limbs again, with fear and a little bit of anticipation for her response.) #narrator
+(For a while, she says nothing. You hear only the buzzing sound mixing with the wind.) #narrator
+(The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.) #narrator
+(She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.) #narrator
+(You sit until the moon rises, randomly thinking about your decisions if you were in their situation.) #narrator
+(You suppose you know the answers. But as always, they remain assumptions that change nothing. You call again.) #narrator
 + [Call again.] -> test_ending_night_start
 
 === test_ending_night_start ===
 # city:night
-I read her note, I know what you are calling for. #aurora
+I read her note. I know what you are calling for. #aurora
 + [Perhaps I know more than you thought.] -> test_ending_night_note
 + [But I still hope you can stay for the chat.] -> test_ending_night_note
 
@@ -2239,7 +2242,7 @@ She's more sensitive than I am. Oversensitive. The guilt is torturing her all th
 === test_ending_night_escape ===
 That hard decision was made when you were girls, definitely. #player
 (She chuckled to herself.) #narrator
-Nothing hard for me. If I don't escape, I would be locked in the underworld by the one-way passage. #aurora
+Nothing hard for me. If I hadn't escaped, I would be locked in the underworld by the one-way passage. #aurora
 + [But you had the choice to take your mother.] -> test_ending_night_mother
 + [But you had an option to stay for your people.] -> test_ending_night_mother
 
@@ -2247,7 +2250,7 @@ Nothing hard for me. If I don't escape, I would be locked in the underworld by t
 We've been talking for a while. You should know I don't care for someone who cares nothing about me. #aurora
 (You spot slight reluctance towards the end of the sentence.) #narrator
 {(owned_evidence ? EvidenceId.girl_painted_flower) && know(EvidenceTag.mother_daughter_flower_meaning):
-I found a unique icon of flower on your mother's stone, which repeats on the solitary marker of you. You told me that it is a symbol of love that is one of a kind, only between the two of you. Who left it there? #player
+I found a unique icon of a flower on your mother's stone, which repeats on your solitary marker. You told me that it is a symbol of love that is one of a kind, only between the two of you. Who left it there? #player
 (Her voice is back to that sober tone, but with slight shivering hidden beneath.) #narrator
 I left it there. My mother has never come to the ground since my brother's disappearance. #aurora
 This doesn’t mean I love her. I just feel pity that no one else is going to understand its meaning after her. Let the stone remember it beyond my mother or myself. #aurora
@@ -2255,34 +2258,34 @@ She remembered that icon before her death. It was left on her tombstone. #player
 … #aurora
 (Silence. ) #narrator
 }
-（Night Aurora drained herself to learn and survive.She had to pretend to be strong, to act as though none of the sacrifices had left a mark. Only then could she tell herself it had been worth leaving.） #narrator
+(Night Aurora drained herself to learn and survive. She had to pretend to be strong, to act as though none of the sacrifices had left a mark. Only then could she tell herself it had been worth leaving.) #narrator
 + [It can still hurt. That doesn’t mean it wasn’t worth leaving.] -> test_ending_night_question
 + [Admitting love does not conflict with your need to escape.] -> test_ending_night_question
-+ [You do not have to put your mom at opposition to justify your choice.] -> test_ending_night_question
++ [You do not have to put yourself in opposition to your mom to justify your choice.] -> test_ending_night_question
 
 === test_ending_night_question ===
-(She responded with an undisturbed voice) #narrator
+(She responded with an undisturbed voice.) #narrator
 If you were me, how would you feel about my escape? #aurora
 + [Honestly, I can never feel personally the ignorance you've been through, but I know it's tough.] -> test_ending_night_empathy
 + [You were not making the wrong choice. I might make similar choices.] -> test_ending_night_empathy
-+ [It's a brave choice. We are born with attachments, which is so difficult to detach.] -> test_ending_night_empathy
++ [It's a brave choice. We are born with attachments, which are so difficult to break.] -> test_ending_night_empathy
 
 === test_ending_night_empathy ===
 + [But no matter how I choose, my feelings do not prove your feelings to be wrong.] -> test_ending_night_childhood
-+ [You don't need my answer to make yourself an individual that worth others' empathy.] -> test_ending_night_childhood
++ [You don't need my answer to make yourself an individual worthy of others' empathy.] -> test_ending_night_childhood
 
 === test_ending_night_childhood ===
 (A long sigh comes from the other side.) #narrator
-Night Folks do not have language. We have no order, no social construct, nothing else other than digging for survival. #aurora
+Nightfolk do not have a language. We have no order, no social construct, nothing other than digging for survival. #aurora
 We have icons. Some of them have a meaning that is agreed upon. Most of them remain between closely related individuals. #aurora
-We Night Folks have bad eye-sight. When I was a child, I put a flower discreetly on my mother's head. It's loosely tied on the tip of her hair. When she was back, the flower was still there. She never noticed it. #aurora
-I was laughing. She had a grin after me. The next day I put a flower again on her hair. Every day. Until one day I joined the working group, and found that there is no way she can come back with that flower everyday after that kind of rigorous labor. #aurora
+We Nightfolk have bad eyesight. When I was a child, I put a flower discreetly on my mother's head. It was loosely tied to the ends of her hair. When she was back, the flower was still there. She never noticed it. #aurora
+I was laughing. She had a grin after me. The next day I put a flower in her hair again. Every day. Until one day I joined the working group and found that there was no way she could come back with that flower every day after that kind of rigorous labor. #aurora
 We never specifically define that icon. It's never painted, delivered as a letter, or conveyed like a wish that was featured on my brother's stone. It is a meaning that was never described. #aurora
-What I felt was only anger. I felt angry when my brother rested in her arms. I felt angry when she was standing on the altar, and the group gives the sound of the same hymn. #aurora
-I lost her when she became the god mother of our people. She no longer worked, and she took off the flower everyday when she was preparing herself for the morning pray. #aurora
+What I felt was only anger. I felt angry when my brother rested in her arms. I felt angry when she was standing on the altar and the group was singing the same hymn. #aurora
+I lost her when she became the godmother of our people. She no longer worked, and she took off the flower every day when she was preparing herself for the morning prayer. #aurora
 She decided to take off that unique icon just between us. The glossy son became her only child, a divine body that carried her flesh. I am nothing related to her. #aurora
-I thought escaping without her will free me from that attachment. I learnt language from the Day City, I started to describe my feelings via the letters to the other Aurora, but I still could not describe my feelings towards my mother. #aurora
-Until I reached the human world, and encounted that word again as "love". #aurora
+I thought escaping without her would free me from that attachment. I learnt language from Day City. I started to describe my feelings via the letters to the other Aurora, but I still could not describe my feelings towards my mother. #aurora
+Until I reached the human world and encountered that word again as “love.” #aurora
 (She stopped her narration with a breath of relief.) #narrator
 If so, are you coming back one day? #player
 I may. #aurora
@@ -2305,11 +2308,9 @@ I may. #aurora
 
 === test_open_ending ===
 (You are not sure if the Day Aurora will call back when the night ends. But you look to the horizon, and see a beautiful light shine from the back of the solitary stone.) #narrator
-(No matter what -- on the Earth or these obsolete cities. Tomorrow the sun will rise.) #narrator
+(No matter what—on Earth or these obsolete cities. Tomorrow the sun will rise.) #narrator
 # event:open_ending
-+ [End the call.]
-    # radio:hang_up
-    -> END
+-> END
 
 === test_preview_scholar_no_traces ===
 # ui:open_evidence:scholar_no_traces
@@ -2347,7 +2348,7 @@ The moon offers a peaceful ending, but that is the story the family chose to put
 ~ temp supported = false
 {(read_answers ? AnswerId.baby_17_comparison) && submitted_id == "designer_manuscript":
 Before we ask why, perhaps we should ask why not. Day City remembers a life through its work. This <link="infant">child</link> was the first to die without an identifiable occupation. So the designer gave him something no title was needed for: the shape of a person. #aurora
-("A child without an occupation is a person before anything else", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?) #narrator
+("A child without an occupation is a person before anything else,” you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really separate from the social influence?) #narrator
 ~ read_answers += AnswerId.baby_17_supported_19
 ~ supported = true
 ~ feedback_kind = "linked"
@@ -2456,6 +2457,14 @@ I would be careful about asking a single stone to speak for two cities. We need 
 }
 -> test_radio_scholar
 
+=== test_answer_scholar_passage_gate ===
+# feedback:gold
+(A small pause. You hear something click on her end of the line.) #narrator
+The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions. #aurora
+~ read_answers += AnswerId.scholar_passage_gate_hidden
+~ feedback_kind = "hidden"
+-> test_radio_scholar
+
 === test_answer_scholar_20 ===
 # question_id:scholar_20
 (The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.) #narrator
@@ -2491,7 +2500,7 @@ I cannot make out the picture, but I am fairly sure that fragment is skin — fr
 # question_id:scholar_31
 # feedback:gold
 (For a long while, only the thin electrical hum reaches you. Then a breath catches, and leaves her in a long, uneven sigh. You cannot see her, but for once the distance fails to conceal how much the question has touched her.) #narrator
-… Or there is no one left to remember her. I made that decision. I made that decision... #aurora
+…or there is no one left to remember her. I made that decision. I made that decision... #aurora
 ~ read_answers += AnswerId.scholar_31_hidden_33
 {not (seen_subtexts ? Subtext.scholar_31):
     ~ seen_subtexts += Subtext.scholar_31
@@ -2614,7 +2623,7 @@ Record the symbol with your rubbing tool first. Then I can read it for you. #aur
 # question_id:altar_12
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_memorial) || has_tag(EvidenceTag.paired_day_night_memorials):
-(She speaks in an undisturbed tone) #narrator
+(She speaks in an undisturbed tone.) #narrator
 Day City records a death. Night City records a <link="disappearance">disappearance</link>. That difference does not mean there were two children. Check the figures together. #aurora
 ~ read_answers += AnswerId.altar_12_supported_14
 ~ supported = true
@@ -2681,7 +2690,7 @@ A symbol can be remembered without a written language. Someone who used it could
 # feedback:gold
 Check the division first. If it was wrong, 'born in the wrong city' may be the wrong question. Keep the two memorials together. #aurora
 (Her voice stops abruptly. The night spills around you, with barely a sound. You start to think about how the Day City looked, and your call with Aurora then.) #narrator
-(It's different, definitely. Two worlds overlap in the dimension of time.） #narrator
+(It's different, definitely. Two worlds overlap in the dimension of time.) #narrator
 (Was it "wrong"? Or is it just a glimpse through the overlap?) #narrator
 ~ read_answers += AnswerId.altar_28_hidden_30
 {not (seen_subtexts ? Subtext.altar_28):
@@ -2740,7 +2749,7 @@ The wounds carried over when the other person woke. A mark on the shared body co
 ~ feedback_kind = "linked"
 }
 {not supported:
-The pictures match. But the media is unknown. #aurora
+The pictures match. But the medium is unknown. #aurora
 ~ read_answers += AnswerId.mother_17_normal_18
 ~ feedback_kind = "unmatched"
 }
@@ -3099,9 +3108,9 @@ Until later. I'll be here when you have something to share. #aurora
 === test_scholar_mausoleum ===
 {submitted_id == "profession_record":
 I didn't know she had the privilege of doing so, yet she never did. She was someone who valued reputation and recognition; she lived her life in the prescribed mold of a successful Dayfolk. But she never mentioned the mausoleum again. Why? #aurora
-(The next line is too faint that it sounds like a whisper to self.) #narrator
-She might be feeling as guilty as ... #aurora
-(The last few words disperse in the humming sound) #narrator
+(The next line is so faint that it sounds like a whisper to herself.) #narrator
+She might be feeling as guilty as… #aurora
+(The last few words disperse in the humming sound.) #narrator
 ~ feedback_kind = "linked"
 - else:
 I'm not sure whether the Scholar is eligible… Have you found any evidence related to that? #aurora
@@ -3138,7 +3147,7 @@ The Dayfolk often get stuck in their own understanding of the world. You may wan
     They have separate minds and take turns being awake. They share one living body. If one dies, the other cannot survive. What one city records as death, the other may record as disappearance. #aurora
     -> test_disappearance_followups
 * [Who are you?]
-    (Her voice fractures, just like the world you are standing in, a world that belongs to yesterday) #narrator
+    (Her voice fractures, just like the world you are standing in, a world that belongs to yesterday.) #narrator
     I am someone who belongs to this place, yet something stops me from going back. #aurora
     -> test_disappearance_followups
 + [Return to the questions]
@@ -3189,7 +3198,7 @@ The Crystal God. It marks faith in the deity. The same figure can appear on an a
 
 === test_answer_girl_bear_preview ===
 {has_tag(EvidenceTag.girl_teddy_bear_trace) || submitted_id == "family_photo":
-(You almost asked that question, but deep down, you know the reason of it being here.) #narrator
+(You almost asked that question, but deep down, you know why it’s here.) #narrator
 (You decided not to ask this way.) #narrator
 Anything else? #aurora
 - else:
@@ -3200,10 +3209,34 @@ I'm not sure what you are talking about. #aurora
 
 === test_answer_girl_flower_preview ===
 {has_tag(EvidenceTag.girl_painted_flower_trace) || submitted_id == "mother_daughter_flower_meaning":
-(If your guess is correct, she might not know. You decided to keep this question for later) #narrator
+(If your guess is correct, she might not know. You decided to keep this question for later.) #narrator
 Anything else? #aurora
 - else:
 I'm confused. #aurora
 }
 ~ feedback_kind = ""
 -> test_radio_girl
+
+=== ending_false ===
+// Source: dialogue backfill workbook, 假结局.
+(You close the notebook. For a moment your thumb rests in the seam between the black and the white.) #narrator
+(You have the odd feeling that you have been to this city before. This is like all the cities that you've encountered before. Nothing less. Nothing more.) #narrator
+(You picked up Aurora's call.) #narrator
+I have it. Thank you. You must be tired. #aurora
+Can I ask you something before you go? Did anyone ever come back to the cemetery? #aurora
+There were traces of visitors. I couldn’t tell you who they came for. #player
+I see. And did you find anything on your way out? #aurora
+Just the way back. #player
+(She gives a little laugh. You recognize the sound. She made it the first time you told her you’d landed safely.) #narrator
+Of course. Have a safe journey home. #aurora
+(You wait for her to say she’ll speak to you again. The radio clicks. You put it away.) #narrator
+(You walk the same way you came. Your footprints are still there. You find it reassuring that there is something here you can recognize at a glance.) #narrator
+(A few steps later, you hear her question again. Did you find anything? There was a small lift in her voice on the last word. You had mistaken it for the courtesy of someone letting you finish.) #narrator
+(You recognize that sound now. Someone has spent a long time imagining the answer. You wonder what she had hoped you would say.) #narrator
+(Perhaps there were stories you passed close enough to touch. Every day people pass that close to you. They go home, turn on a light, and forget they ever saw you. You have done the same to them.) #narrator
+(There was a first morning on this planet, and there was a last one anyone woke up to see. For a little while, between those mornings, people knew who they were waiting for.) #narrator
+(At the ship, you find yourself trying to remember a stone from the planet. It is strange that you miss something that doesn't really relate to your life.) #narrator
+(Tomorrow the sun will rise. You start to think whether you left any coffee in your cup before you left. You hope there is no flies landing in it, or worse, hope it doesn’t stink.) #narrator
+(For a while the radio could still reach her. You leave it beside you and watch the Twins recede. First time you really see the planet from far, in a nicely divided black and white. You are in awe of that spectacular scene.) #narrator
+(Years from now, you may remember that you once knew someone named Aurora. You may even remember that she was waiting for something, but that's it. By then, the world she carried will have slipped as far into your memory as it now slips into the dark, wild universe.) #narrator
+-> END

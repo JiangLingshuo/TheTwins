@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "6b1d2c35a0fb47baa04d141b5b7e1ae7f433b8cedf051a23dedabf53e6e65746",
+    "evidence_master.ink": "a7fe8da943151c23df322c17e8971ccc1763568a129cde0fd096bf4ee56ae38b",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "0d28b6f26527de60887d5cfcbe60ea10c87caec53eb219a1343e8dba7e5be075"
+    "telecomm_master.ink": "f7482039d3fc854b223ba9a8c63fe34da309c2a500ca8d6092068713fe0e06a6"
   },
   "gravestones": {
     "baby_tomb": {
@@ -1314,8 +1314,8 @@
       ],
       "id": "crystal_god_prophecy",
       "title": "The Crystal God's Prophecy",
-      "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
-      "interactive_body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
+      "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"\n\nThe child foretold in the prophecy was called the Divine Messenger.",
+      "interactive_body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"\n\nThe child foretold in the prophecy was called the <link=\"divine_messenger\">Divine Messenger</link>.",
       "category": "manuscript",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -2706,7 +2706,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that's a bonus to that name. When it was first named as the Twins, it's because it has an aligned Day and Night with the Earth, despite the distance between."
+          "content": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them."
         },
         {
           "speaker": "#PLAYER#",
@@ -2765,7 +2765,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask two questions of the most curiosity."
+          "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about."
         },
         {
           "speaker": "",
@@ -2801,7 +2801,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residence. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation -- cemeteries are the diorama of cities."
+          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residences. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation—cemeteries are the diorama of cities."
         }
       ]
     },
@@ -2843,14 +2843,14 @@
         },
         {
           "speaker": "",
-          "content": "(It is only when you witness a collapse then you realize how fragile our established routines can be. You wonder whether…"
+          "content": "(It is only when you witness a collapse that you realize how fragile our established routines can be. You wonder whether…)"
         }
       ]
     },
     "test_open_ending_tail": {
       "id": "test_open_ending_tail",
       "source_knot": "test_open_ending",
-      "preview_only": true,
+      "preview_only": false,
       "lines": [
         {
           "speaker": "",
@@ -2858,7 +2858,7 @@
         },
         {
           "speaker": "",
-          "content": "(No matter what -- on the Earth or these obsolete cities. Tomorrow the sun will rise.)"
+          "content": "(No matter what—on Earth or these obsolete cities. Tomorrow the sun will rise.)"
         }
       ]
     },
@@ -2900,7 +2900,7 @@
         },
         {
           "speaker": "",
-          "content": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
+          "content": "(\"A child without an occupation is a person before anything else,” you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really separate from the social influence?)"
         }
       ]
     },
@@ -3036,6 +3036,20 @@
         }
       ]
     },
+    "scholar_passage_gate_hidden": {
+      "id": "scholar_passage_gate_hidden",
+      "source_knot": "test_answer_scholar_passage_gate",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A small pause. You hear something click on her end of the line.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions."
+        }
+      ]
+    },
     "scholar_20_normal_21": {
       "id": "scholar_20_normal_21",
       "source_knot": "test_answer_scholar_20",
@@ -3088,7 +3102,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "… Or there is no one left to remember her. I made that decision. I made that decision..."
+          "content": "…or there is no one left to remember her. I made that decision. I made that decision..."
         }
       ]
     },
@@ -3235,7 +3249,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(She speaks in an undisturbed tone)"
+          "content": "(She speaks in an undisturbed tone.)"
         },
         {
           "speaker": "Aurora",
@@ -3325,7 +3339,7 @@
         },
         {
           "speaker": "",
-          "content": "(It's different, definitely. Two worlds overlap in the dimension of time.）"
+          "content": "(It's different, definitely. Two worlds overlap in the dimension of time.)"
         },
         {
           "speaker": "",
@@ -3405,7 +3419,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "The pictures match. But the media is unknown."
+          "content": "The pictures match. But the medium is unknown."
         }
       ]
     },
@@ -3681,15 +3695,15 @@
         },
         {
           "speaker": "",
-          "content": "(The next line is too faint that it sounds like a whisper to self.)"
+          "content": "(The next line is so faint that it sounds like a whisper to herself.)"
         },
         {
           "speaker": "Aurora",
-          "content": "She might be feeling as guilty as ..."
+          "content": "She might be feeling as guilty as…"
         },
         {
           "speaker": "",
-          "content": "(The last few words disperse in the humming sound)"
+          "content": "(The last few words disperse in the humming sound.)"
         },
         {
           "speaker": "Aurora",
@@ -3731,7 +3745,7 @@
         },
         {
           "speaker": "",
-          "content": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday)"
+          "content": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday.)"
         },
         {
           "speaker": "Aurora",
@@ -3790,7 +3804,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(You almost asked that question, but deep down, you know the reason of it being here.)"
+          "content": "(You almost asked that question, but deep down, you know why it’s here.)"
         },
         {
           "speaker": "",
@@ -3813,7 +3827,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(If your guess is correct, she might not know. You decided to keep this question for later)"
+          "content": "(If your guess is correct, she might not know. You decided to keep this question for later.)"
         },
         {
           "speaker": "Aurora",

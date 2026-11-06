@@ -33,13 +33,132 @@ signal debug_overlay_changed(shown: bool)
 ## Development overlay: the tutorial hint box (with its skip button) and the
 ## searchlight placeholder cards. Hidden by default; F2 toggles it.
 var debug_overlay := false
+var _dev_menu: PanelContainer
+var _language_button: Button
+var chinese_playtest := false
+var _chinese_text: Dictionary = {}
+var _chinese_translation: Translation
+var _previous_locale := ""
+var ending_true := false
+var ending_preview := false
+
+# The solitary marker is discovered after this report and is not part of its score.
+const ENDING_REPORT_ANSWERS := {
+	"baby_tomb": ["infant", "euthanasia"],
+	"scholar_tomb": ["scholar", "disappearance"],
+	"sun_tomb": ["tycoon", "disappearance"],
+	"altar_tomb": ["divine_messenger", "disappearance"],
+	"mother_tomb": ["night_mother", "hunger_and_thirst"],
+	"father_tomb": ["night_father", "missed_sleeping_deadline"],
+}
+
+func ending_report_complete() -> bool:
+	for id in ENDING_REPORT_ANSWERS:
+		var report: Dictionary = gravestone_reports.get(id, {})
+		if report.get("identity", "").is_empty() or report.get("death", "").is_empty():
+			return false
+	return true
+
+func ending_report_passed() -> bool:
+	var correct := 0
+	for id in ENDING_REPORT_ANSWERS:
+		var report: Dictionary = gravestone_reports.get(id, {})
+		var answers: Array = ENDING_REPORT_ANSWERS[id]
+		correct += int(report.get("identity", "") == answers[0])
+		correct += int(report.get("death", "") == answers[1])
+	return correct * 100 >= ENDING_REPORT_ANSWERS.size() * 2 * 80
+
+func open_ending(is_true: bool, preview := false) -> void:
+	ending_true = is_true
+	ending_preview = preview
+	radio_modal_open = false
+	camera_modal_open = false
+	_set_debug_overlay(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
+
+func return_from_ending() -> void:
+	_set_debug_overlay(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/main.tscn")
+
+func _set_debug_overlay(shown: bool) -> void:
+	debug_overlay = shown
+	if OS.is_debug_build():
+		if not is_instance_valid(_dev_menu):
+			_build_dev_menu()
+		_dev_menu.visible = shown
+		_language_button.text = "Playtest in English" if chinese_playtest else "Playtest in Chinese"
+	debug_overlay_changed.emit(shown)
+
+func _build_dev_menu() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 120
+	add_child(layer)
+	_dev_menu = PanelContainer.new()
+	layer.add_child(_dev_menu)
+	_dev_menu.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_dev_menu.offset_left = -290
+	_dev_menu.offset_right = -24
+	_dev_menu.offset_top = 24
+	var stack := VBoxContainer.new()
+	_dev_menu.add_child(stack)
+	var title := Label.new()
+	title.text = "DEV / Scene shortcuts"
+	stack.add_child(title)
+	for item in [["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+		var button := Button.new()
+		button.text = item[0]
+		button.custom_minimum_size.y = 36
+		button.pressed.connect(item[1])
+		stack.add_child(button)
+	_language_button = Button.new()
+	_language_button.custom_minimum_size.y = 36
+	_language_button.pressed.connect(_toggle_playtest_language)
+	stack.add_child(_language_button)
+
+func _toggle_playtest_language() -> void:
+	if not OS.is_debug_build(): return
+	if not chinese_playtest:
+		if _chinese_text.is_empty():
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/chinese_playtest.json"))
+			if not parsed is Dictionary or parsed.is_empty():
+				push_error("Chinese playtest text is missing. Run tools/build_chinese_playtest.py.")
+				return
+			_chinese_text = parsed
+			_chinese_translation = Translation.new()
+			_chinese_translation.locale = "zh_CN"
+			for message in _chinese_text:
+				_chinese_translation.add_message(message, _chinese_text[message])
+			var fallback := SystemFont.new()
+			fallback.font_names = ["Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", "WenQuanYi Zen Hei"]
+			for font in [preload("res://assets/fonts/CormorantGaramond-Regular.ttf"), preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf"), preload("res://assets/fonts/CormorantGaramond-Italic.ttf")]:
+				var fonts: Array[Font] = font.fallbacks.duplicate()
+				fonts.append(fallback)
+				font.fallbacks = fonts
+		TranslationServer.add_translation(_chinese_translation)
+		_previous_locale = TranslationServer.get_locale()
+		chinese_playtest = true
+		TranslationServer.set_locale("zh_CN")
+	else:
+		chinese_playtest = false
+		TranslationServer.remove_translation(_chinese_translation)
+		TranslationServer.set_locale(_previous_locale)
+	_content.clear()
+	radio_modal_open = false
+	camera_modal_open = false
+	_set_debug_overlay(false)
+	get_tree().reload_current_scene.call_deferred()
+
+func zh_text(text: String) -> String:
+	return _chinese_text.get(text, text) if chinese_playtest else text
+
+func is_dev_menu_click(event: InputEvent) -> bool:
+	return is_instance_valid(_dev_menu) and _dev_menu.visible and event is InputEventMouseButton and _dev_menu.get_global_rect().has_point(event.position)
 
 
 func _input(event: InputEvent) -> void:
 	# Read before the GUI; the tutorial's input gate lets F2 through.
 	if event is InputEventKey and event.is_pressed() and not event.is_echo() and event.keycode == KEY_F2:
-		debug_overlay = not debug_overlay
-		debug_overlay_changed.emit(debug_overlay)
+		_set_debug_overlay(not debug_overlay)
 		get_viewport().set_input_as_handled()
 
 
@@ -103,6 +222,7 @@ func get_gravestone_rubbings(gravestone_id: String) -> Array[String]:
 
 ## Returns `text` with every name placeholder replaced by the player's name.
 func fill_placeholders(text: String) -> String:
+	text = zh_text(text)
 	for placeholder in NAME_PLACEHOLDERS:
 		text = text.replace(placeholder, player_name)
 	return text
@@ -126,6 +246,12 @@ func content_catalog() -> Dictionary:
 		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/notebook_content.json"))
 		if parsed is Dictionary:
 			_content = parsed
+			if chinese_playtest:
+				for section in ["gravestones", "evidence"]:
+					for entry in _content[section].values():
+						for field in ["title", "description", "body", "interactive_body"]:
+							if entry.has(field):
+								entry[field] = zh_text(entry[field])
 	return _content
 
 
@@ -140,7 +266,7 @@ func get_evidence(id: String) -> Dictionary:
 	entry["id"] = id
 	entry["category"] = entry.get("category", "observation")
 	if reveal.has("title"):
-		entry["title"] = reveal["title"]
+		entry["title"] = zh_text(reveal["title"])
 	var text: String = reveal.get("text", "")
 	entry["body"] = text
 	entry["interactive_body"] = text
@@ -542,7 +668,7 @@ func set_report_choice(tomb_id: String, field: String, value: String) -> bool:
 
 func rubbing_display(id: String) -> String:
 	var meaning := get_rubbing_meaning(id)
-	return ("☾" if id == "infant_moon_rubbing" else get_evidence(id).get("title", id)) + (" → " + meaning if not meaning.is_empty() else " · undeciphered")
+	return ("☾" if id == "infant_moon_rubbing" else get_evidence(id).get("title", id)) + (" → " + zh_text(meaning) if not meaning.is_empty() else " · " + zh_text("undeciphered"))
 
 
 # Negative scans retain checked endpoints when the scene is recreated.

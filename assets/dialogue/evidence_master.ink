@@ -595,6 +595,8 @@ A moon-shaped stone once lay among the altar's offerings. It resembles a small t
 A legend of the Crystal God:
 
 "When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more."
+
+The child foretold in the prophecy was called the <link="divine_messenger">Divine Messenger</link>.
 -> DONE
 
 === ev_moon_stone_blessing ===

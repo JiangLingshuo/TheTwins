@@ -112,6 +112,8 @@ func _input(event: InputEvent) -> void:
 	# _ready() waits a frame before wiring nodes up; ignore input until then.
 	if _skipping or _notebook == null:
 		return
+	if GameState.is_dev_menu_click(event):
+		return
 	if event is InputEventKey and event.keycode == KEY_F2:
 		return  # the development overlay toggle (GameState) always works
 	if _delivering:
@@ -187,12 +189,12 @@ func _set_step(value: Step, text: String, target: Control, persistent := false) 
 	_panel.z_index = 95 if persistent else 60
 	_panel.get_parent().visible = GameState.debug_overlay or persistent
 	_drag_hint.target = target if value == Step.DRAG else null
-	_text.text = text
+	_text.text = GameState.zh_text(text)
 	var radio := _main.get_node_or_null("RadioTool")
 	if radio and radio.is_open() and not radio._reply_playing:
 		_panel.visible = false
 		if is_instance_valid(radio._tutorial_hint):
-			radio._tutorial_hint.text = text
+			radio._tutorial_hint.text = GameState.zh_text(text)
 			radio._tutorial_hint.visible = GameState.debug_overlay or persistent
 	else:
 		_panel.visible = true

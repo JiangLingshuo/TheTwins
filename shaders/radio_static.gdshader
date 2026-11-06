@@ -11,6 +11,9 @@ shader_type canvas_item;
 // noise together (0 = plain dark band).
 
 uniform vec2 panel_size = vec2(1760.0, 202.0); // set by dialogue_box.gd
+uniform bool choice_panel = false;
+uniform sampler2D choice_art : source_color, filter_linear, repeat_disable;
+uniform float choice_feather = 12.0;
 
 // --- Band ---
 uniform vec4 base_color : source_color = vec4(0.012, 0.014, 0.02, 1.0);
@@ -94,7 +97,9 @@ float speck_layer(vec2 p, float spacing, vec2 drift, float seed) {
 void vertex() {
 	// Grow the rect: up into the fade, out to the sides and below.
 	vec2 corner = step(panel_size * 0.5, VERTEX);
-	VERTEX += vec2(mix(-side_bleed, side_bleed, corner.x), mix(-top_fade_height - mist_wobble, bottom_bleed, corner.y));
+	if (!choice_panel) {
+		VERTEX += vec2(mix(-side_bleed, side_bleed, corner.x), mix(-top_fade_height - mist_wobble, bottom_bleed, corner.y));
+	}
 	local = VERTEX;
 }
 
@@ -140,11 +145,18 @@ void fragment() {
 			+ 0.6 * speck_layer(p, speck_spacing * 1.7, speck_drift * vec2(-0.6, 0.7), 41.0);
 
 	// Noise follows the band: full where it is dark, reduced where it has faded clear.
-	float keep = mix(grain_in_fade, 1.0, f * f);
+	float keep = choice_panel ? 1.0 : mix(grain_in_fade, 1.0, f * f);
 	float na = (lit * grain_strength + specks * speck_strength + line * interference_strength) * live * keep;
 	na = clamp(na, 0.0, 1.0);
 
 	float out_a = na + alpha * (1.0 - na);
 	vec3 out_rgb = (noise_color.rgb * na + rgb * alpha * (1.0 - na)) / max(out_a, 1e-4);
-	COLOR = vec4(out_rgb, out_a * base_color.a);
+	if (choice_panel) {
+		vec2 edge = min(p, panel_size - p);
+		float soft_edge = smoothstep(0.0, choice_feather, edge.x) * smoothstep(0.0, choice_feather, edge.y);
+		float art = texture(choice_art, vec2(UV.x, mix(0.80, 1.0, UV.y))).a;
+		COLOR = vec4(out_rgb, soft_edge * (na + art * (1.0 - na)));
+	} else {
+		COLOR = vec4(out_rgb, out_a * base_color.a);
+	}
 }

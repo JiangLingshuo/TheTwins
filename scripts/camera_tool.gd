@@ -203,10 +203,10 @@ func _select_spot(id: String) -> void:
 	var complete := true
 	for required in rule["ids"]:
 		if not selections.has(required): complete = false
-	_caption.text = "Marked %d / %d matching details" % [selections.size(), rule["ids"].size()]
+	_caption.text = GameState.zh_text("Marked %d / %d matching details") % [selections.size(), rule["ids"].size()]
 	if complete:
 		GameState.record_evidence(rule["evidence"])
-		_caption.text = rule["label"] + " · " + GameState.get_evidence(rule["evidence"]).get("title", "")
+		_caption.text = GameState.zh_text(rule["label"]) + " · " + GameState.get_evidence(rule["evidence"]).get("title", "")
 		pattern_completed.emit(rule["evidence"])
 		if _tutorial: _finish_tutorial()
 

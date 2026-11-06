@@ -311,9 +311,9 @@ func _on_term_clicked(meta: Variant) -> void:
 	var id := str(meta)
 	term_selected.emit(id)
 	var text := id
-	for match in RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').search_all(_lines[_index].get("content", "") if _index >= 0 else ""):
+	for match in RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').search_all(GameState.zh_text(_lines[_index].get("content", "")) if _index >= 0 else ""):
 		if match.get_string(1) == id: text = match.get_string(2)
-	_term_notice.text = "✓ Recorded: " + text
+	_term_notice.text = GameState.zh_text("✓ Recorded: %s") % text
 	_term_notice.show()
 	_term_notice.modulate.a = 1.0
 	if _term_notice_tween: _term_notice_tween.kill()

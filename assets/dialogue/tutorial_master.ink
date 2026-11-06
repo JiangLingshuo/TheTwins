@@ -39,7 +39,7 @@ Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to
 // line_id:chat_start:008
 Yeah, I was just looking at it. Interesting color scheme. #player
 // line_id:chat_start:009
-There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that's a bonus to that name. When it was first named as the Twins, it's because it has an aligned Day and Night with the Earth, despite the distance between. #aurora
+There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them. #aurora
 // line_id:chat_start:010
 Should I expect to meet anyone here? #player
 // line_id:chat_start:011

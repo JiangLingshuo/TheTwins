@@ -288,11 +288,11 @@ func _refresh_options() -> void:
 		input.custom_minimum_size = Vector2(0, 30)
 		input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		input.clear()
-		input.add_item("Select…")
+		input.add_item(GameState.zh_text("Select…"))
 		input.set_item_metadata(0, "")
 		input.selected = 0
 		for value in GameState.report_options(pair[1], gravestone_id):
-			input.add_item(pair[3].get(value, value))
+			input.add_item(GameState.zh_text(pair[3].get(value, value)))
 			var index := input.item_count - 1
 			input.set_item_metadata(index, value)
 			if report.get(pair[2], "") == value: input.selected = index

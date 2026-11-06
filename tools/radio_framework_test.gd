@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 	state = root.get_node("GameState")
 	model = load("res://scripts/radio_model.gd").new()
-	check("all questions exported", model.data["questions"].size() == 49)
+	check("all questions exported", model.data["questions"].size() == 50)
 	for q in model.data["questions"]:
 		check("three unique candidates: " + q["id"], q["candidates"].size() == 3 and q["candidates"][0] != q["candidates"][1] and q["candidates"][1] != q["candidates"][2] and q["candidates"][0] != q["candidates"][2])
 	var repetition_target := "test_answer_repeated_beast"
@@ -80,6 +80,13 @@ func _run() -> void:
 	var filtered: Array = model.groups_for_filter(model.data["groups"].keys(), 2, true)
 	check("manuscript filter excludes symbols", filtered.all(func(id: String) -> bool: return model.data["groups"][id]["members"].any(func(member: String) -> bool: return model.record_type(member) == 2 and model.owns(member))))
 	state.record_gravestone("scholar_tomb")
+	var gate_target := "test_answer_scholar_passage_gate"
+	var gate := question(gate_target, "scholar_tomb")
+	state.record_evidence("one_way_passage_order")
+	check("gate question hidden when order is merely owned", not model.questions_for("scholar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == gate_target))
+	check("order in slot reveals gate question", model.questions_for("scholar_tomb", group("one_way_passage_order")).any(func(q: Dictionary) -> bool: return q["target"] == gate_target))
+	var gate_reply: Dictionary = model.send(gate, group("one_way_passage_order"))
+	check("gate reply explains crystal supply failure", joined(gate_reply).contains("crystal power supply") and joined(gate_reply).contains("with the gate open") and gate_reply.get("feedback") == "hidden")
 	state.record_evidence("skin_picture")
 	state.record_evidence("night_father_death")
 	model.progress["read_answers"].append("scholar_12_supported_15")

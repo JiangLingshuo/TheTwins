@@ -66,7 +66,7 @@
   {
     "stage": "开场",
     "role": "Aurora",
-    "text": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that's a bonus to that name. When it was first named as the Twins, it's because it has an aligned Day and Night with the Earth, despite the distance between.",
+    "text": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them.",
     "id": "chat_start:009",
     "xml": "start.xml",
     "knot": "chat_start"
