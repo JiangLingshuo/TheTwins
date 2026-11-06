@@ -54,7 +54,8 @@ var _submit_report: Button
 
 
 func _ready() -> void:
-	is_day = start_time == 0
+	is_day = GameState.current_city_day if GameState.resume_saved_city else start_time == 0
+	GameState.resume_saved_city = false
 	GameState.current_city_day = is_day
 	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.

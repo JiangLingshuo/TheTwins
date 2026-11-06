@@ -27,9 +27,12 @@ var _started := false
 var _dialogue_played := false
 var _fade_in: Tween
 var _pulse: Tween
+var _save_menu: CenterContainer
 
 
 func _ready() -> void:
+	if GameState.has_autosave():
+		_show_save_menu()
 	prompt.modulate.a = 0.0
 	_fade_in = create_tween()
 	_fade_in.tween_property(prompt, "modulate:a", 1.0, 1.5).set_trans(Tween.TRANS_SINE)
@@ -41,6 +44,36 @@ func _ready() -> void:
 	book.icon_margin = screen - preload("res://scripts/notebook_tool.gd").button_center(screen)
 
 
+func _show_save_menu() -> void:
+	prompt.hide()
+	_save_menu = CenterContainer.new()
+	add_child(_save_menu)
+	_save_menu.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	var buttons := VBoxContainer.new()
+	buttons.add_theme_constant_override("separation", 12)
+	_save_menu.add_child(buttons)
+	var resume := Button.new()
+	resume.text = "继续调查" if GameState.chinese_playtest else "Continue"
+	resume.custom_minimum_size = Vector2(220, 48)
+	resume.pressed.connect(_continue_game)
+	buttons.add_child(resume)
+	var restart := Button.new()
+	restart.text = "开始新调查" if GameState.chinese_playtest else "New Game"
+	restart.custom_minimum_size = resume.custom_minimum_size
+	restart.pressed.connect(_start_game)
+	buttons.add_child(restart)
+	resume.grab_focus()
+
+func _continue_game() -> void:
+	if _started: return
+	var scene := GameState.load_autosave()
+	if scene.is_empty():
+		_start_game()
+		return
+	_started = true
+	Music.play_bgm()
+	get_tree().change_scene_to_file.call_deferred(scene)
+
 func _start_pulse() -> void:
 	if _started:
 		return
@@ -50,7 +83,7 @@ func _start_pulse() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _started or event.is_echo() or not event.is_pressed():
+	if _started or is_instance_valid(_save_menu) or event.is_echo() or not event.is_pressed():
 		return
 	if event is InputEventKey or event is InputEventMouseButton or event is InputEventJoypadButton:
 		get_viewport().set_input_as_handled()
@@ -61,6 +94,8 @@ func _start_game() -> void:
 	if _started:
 		return
 	_started = true
+	if is_instance_valid(_save_menu): _save_menu.hide()
+	GameState.start_new_investigation()
 	Music.stop_bgm(0.0)
 	_fade_in.kill()
 	if _pulse:

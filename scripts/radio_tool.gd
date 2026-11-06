@@ -23,6 +23,7 @@ var _tutorial_hint: Label
 var tutorial_controls: Dictionary = {}
 var _reply_box: Control
 var _reply_playing := false
+var _heard_reply := false
 var _previous_layout: VBoxContainer
 ## Radio history context of the last question sent; follow-ups chosen from its
 ## reply are recorded under the same question and evidence.
@@ -80,6 +81,7 @@ func is_open() -> bool:
 func open() -> void:
 	if is_open() or not _can_open():
 		return
+	_heard_reply = false
 	GameState.radio_modal_open = true
 	get_parent().get_node("FlashlightTool").turn_off()
 	get_parent().get_node("RubbingTool").turn_off()
@@ -92,6 +94,9 @@ func open() -> void:
 
 func close() -> void:
 	if _reply_playing: return
+	if _heard_reply:
+		GameState.write_autosave()
+		_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
 	_question = {}
@@ -437,6 +442,9 @@ func _play_reply(lines: Array[Dictionary], log_session: String) -> void:
 	for line in lines: playback.append(line.duplicate(true))
 	_reply_box.play(playback, log_session)
 	await _reply_box.finished
+	_heard_reply = true
+	if not log_session.is_empty():
+		GameState.write_autosave()
 	_reply_playing = false
 	_overlay.visible = true
 	_queue_render()

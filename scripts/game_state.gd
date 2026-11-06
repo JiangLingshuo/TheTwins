@@ -41,6 +41,99 @@ var _previous_locale := ""
 var ending_true := false
 var ending_preview := false
 
+const AUTOSAVE_VERSION := 1
+const AUTOSAVE_FIELDS := [
+	"player_name", "notebook_pages", "notebook_spread", "notebook_section_spread",
+	"rubbings", "rubbing_records", "gravestones", "gravestone_reports", "evidence_ids",
+	"clue_states", "radio_logs", "radio_progress", "radio_question_history", "radio_other_history",
+	"play_time", "current_city_day", "searchlight_scan_progress", "camera_observations",
+	"cycle_hint_heard", "cycle_tutorial_completed", "investigation_tutorial_completed",
+	"tutorial_night_heard", "tutorial_hidden_heard", "tutorial_day_return_heard",
+	"tutorial_record_intro_heard", "tutorial_keyword_ack_heard", "tutorial_radio_intro_heard",
+	"tutorial_report_intro_heard", "tutorial_end_heard", "tutorial_searchlight_intro_heard",
+	"tutorial_searchlight_found_heard", "camera_tutorial_pending", "camera_tutorial_completed",
+	"formal_investigation_started",
+]
+var _autosave_path := "user://investigation.autosave"
+var _new_run_defaults: Dictionary
+var _autosave_enabled := false
+var resume_saved_city := false
+
+func _ready() -> void:
+	_new_run_defaults = _checkpoint_state()
+
+func _checkpoint_state() -> Dictionary:
+	var state := {}
+	for field in AUTOSAVE_FIELDS:
+		state[field] = get(field)
+	return state.duplicate(true)
+
+func _apply_checkpoint_state(state: Dictionary) -> void:
+	for field in AUTOSAVE_FIELDS:
+		set(field, state.get(field, _new_run_defaults[field]))
+	_radio_exchanges.clear()
+	radio_progress.erase("active_manuscript")
+	active_clue = ""
+	radio_modal_open = false
+	camera_modal_open = false
+	notebook_preview = false
+	ending_preview = false
+
+func start_new_investigation() -> void:
+	_apply_checkpoint_state(_new_run_defaults.duplicate(true))
+	ending_true = false
+	resume_saved_city = false
+	_autosave_enabled = true
+
+func write_autosave() -> bool:
+	if not _autosave_enabled or notebook_preview or ending_preview:
+		return false
+	var scene := get_tree().current_scene
+	var at_solitary_marker := scene != null and scene.scene_file_path == "res://scenes/ending.tscn" and ending_true
+	var temp := _autosave_path + ".tmp"
+	var file := FileAccess.open(temp, FileAccess.WRITE)
+	if file == null:
+		push_warning("Could not open local autosave.")
+		return false
+	file.store_var({"version": AUTOSAVE_VERSION, "solitary_marker": at_solitary_marker, "state": _checkpoint_state()})
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK or DirAccess.rename_absolute(temp, _autosave_path) != OK:
+		push_warning("Could not replace local autosave.")
+		return false
+	return true
+
+func _read_autosave() -> Dictionary:
+	if not FileAccess.file_exists(_autosave_path):
+		return {}
+	var file := FileAccess.open(_autosave_path, FileAccess.READ)
+	if file == null:
+		return {}
+	var payload: Variant = file.get_var()
+	if not payload is Dictionary or payload.get("version") != AUTOSAVE_VERSION:
+		return {}
+	var state: Variant = payload.get("state")
+	if not state is Dictionary:
+		return {}
+	for field in AUTOSAVE_FIELDS:
+		if not state.has(field) or typeof(state[field]) != typeof(_new_run_defaults[field]):
+			return {}
+	return payload
+
+func has_autosave() -> bool:
+	return not _read_autosave().is_empty()
+
+func load_autosave() -> String:
+	var saved := _read_autosave()
+	if saved.is_empty():
+		return ""
+	_apply_checkpoint_state(saved["state"])
+	_autosave_enabled = true
+	ending_true = saved.get("solitary_marker", false)
+	resume_saved_city = not ending_true
+	return "res://scenes/ending.tscn" if ending_true else "res://scenes/main.tscn"
+
 # The solitary marker is discovered after this report and is not part of its score.
 const ENDING_REPORT_ANSWERS := {
 	"baby_tomb": ["infant", "euthanasia"],
@@ -356,6 +449,7 @@ func record_gravestone(id: String) -> bool:
 	if id in ["mother_tomb", "father_tomb"] and "mother_tomb" in gravestones and "father_tomb" in gravestones:
 		record_evidence("infant_medical_record")
 	notebook_changed.emit()
+	write_autosave()
 	return true
 
 
