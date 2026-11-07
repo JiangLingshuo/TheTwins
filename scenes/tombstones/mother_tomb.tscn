@@ -5,6 +5,8 @@
 
 [ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="4_godsym"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/spar god.png" id="3_godsym_tex"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/hand in hand.png" id="5_hands"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/dry.png" id="6_river"]
 
 [node name="MotherTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
@@ -21,4 +23,29 @@ expand_mode = 1
 script = ExtResource("4_godsym")
 rubbing_id = "night_mother_god_rubbing"
 matching_target_id = "night_crystal"
+brush_radius = 14.0
+
+[node name="HandsSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 592.7
+offset_top = 649.9
+offset_right = 702.7
+offset_bottom = 759.9
+texture = ExtResource("5_hands")
+expand_mode = 1
+script = ExtResource("4_godsym")
+rubbing_id = "night_mother_hands_rubbing"
+matching_target_id = "skin_picture"
+brush_radius = 14.0
+
+[node name="RiverSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 590.0
+offset_top = 720.5
+offset_right = 686.0
+offset_bottom = 816.5
+texture = ExtResource("6_river")
+expand_mode = 1
+script = ExtResource("4_godsym")
+rubbing_id = "night_mother_river_rubbing"
 brush_radius = 14.0

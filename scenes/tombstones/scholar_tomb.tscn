@@ -1,9 +1,35 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
 [ext_resource type="Texture2D" path="res://assets/Art/tombstone/scholar_scene.png" id="2_art"]
+[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="3_symbol"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/spar.png" id="4_outline"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/footprint.png" id="5_beast"]
 
 [node name="ScholarTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
 gravestone_id = "scholar_tomb"
 zoom_rect = Rect2(470, 370, 260, 380)
+
+[node name="OutlineSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 355.9
+offset_top = 276.2
+offset_right = 800.7
+offset_bottom = 721.0
+texture = ExtResource("4_outline")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "crystal_marker_rubbing"
+
+[node name="BeastSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 276.3
+offset_top = 494.4
+offset_right = 714.2
+offset_bottom = 740.7
+texture = ExtResource("5_beast")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "scholar_beast_rubbing"
+brush_radius = 14.0

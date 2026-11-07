@@ -5,6 +5,7 @@
 
 [ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="4_godsym"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/spar god.png" id="3_godsym_tex"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/ladder.png" id="5_path"]
 
 [node name="FatherTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
@@ -21,4 +22,16 @@ expand_mode = 1
 script = ExtResource("4_godsym")
 rubbing_id = "night_father_god_rubbing"
 matching_target_id = "night_crystal"
+brush_radius = 14.0
+
+[node name="PathSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1196.7
+offset_top = 632.7
+offset_right = 1340.7
+offset_bottom = 776.7
+texture = ExtResource("5_path")
+expand_mode = 1
+script = ExtResource("4_godsym")
+rubbing_id = "night_father_path_rubbing"
 brush_radius = 14.0
