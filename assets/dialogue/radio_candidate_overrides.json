@@ -185,8 +185,8 @@
     "twin_beast_account"
   ],
   "altar:query_night_unending_path": [
+    "altar_blessing_translation",
     "altar_path_rubbing",
-    "altar_blessing_glyph",
     "crystal_god_rubbing"
   ],
   "altar:query_night_crystal_god": [
@@ -272,6 +272,26 @@
   "father:test_answer_repeated_blessing": [
     "altar_blessing_glyph",
     "altar_moon_stone",
+    "crystal_god_rubbing"
+  ],
+  "altar:test_answer_altar_crystal_shape": [
+    "crystal_god_crystal_correspondence",
+    "crystal_god_rubbing",
+    "night_city_crystal"
+  ],
+  "father:test_answer_altar_crystal_shape": [
+    "crystal_god_crystal_correspondence",
+    "crystal_god_rubbing",
+    "night_city_crystal"
+  ],
+  "mother:test_answer_altar_crystal_shape": [
+    "crystal_god_crystal_correspondence",
+    "crystal_god_rubbing",
+    "night_city_crystal"
+  ],
+  "altar:query_night_unending_path_hint": [
+    "altar_path_rubbing",
+    "altar_blessing_glyph",
     "crystal_god_rubbing"
   ]
 }

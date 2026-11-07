@@ -274,8 +274,16 @@
   {
     "stage": "返回昼城",
     "role": "Aurora",
-    "text": "Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook.",
+    "text": "Welcome back. By the way, every page of your notebook has a sun and moon icon in the corner, and you can use it to switch between day and night too.",
     "id": "chat_tutorial_day_return:002",
+    "xml": "tutorial_day_return.xml",
+    "knot": "chat_tutorial_day_return"
+  },
+  {
+    "stage": "返回昼城",
+    "role": "Aurora",
+    "text": "Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook.",
+    "id": "chat_tutorial_day_return:003",
     "xml": "tutorial_day_return.xml",
     "knot": "chat_tutorial_day_return"
   },

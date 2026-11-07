@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cqfbkjl17yn3t"
-path="res://.godot/imported/blessing_camera.svg-da144b710bd4a3b7078b93be0c138e92.ctex"
+uid="uid://bse1t85ur0grg"
+path="res://.godot/imported/spar_crop.png-c982bccfc3848e701bb9ffe473966894.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/blessing_camera.svg"
-dest_files=["res://.godot/imported/blessing_camera.svg-da144b710bd4a3b7078b93be0c138e92.ctex"]
+source_file="res://assets/Art/night/spar_crop.png"
+dest_files=["res://.godot/imported/spar_crop.png-c982bccfc3848e701bb9ffe473966894.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

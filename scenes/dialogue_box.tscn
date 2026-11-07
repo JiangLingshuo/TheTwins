@@ -1,7 +1,7 @@
 [gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/dialogue_box.gd" id="1_script"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_content"]
+[ext_resource type="FontFile" path="res://assets/fonts/IMFellEnglish-Regular.ttf" id="3_content"]
 [ext_resource type="Shader" path="res://shaders/radio_static.gdshader" id="4_static"]
 [ext_resource type="Texture2D" path="res://assets/Art/figure/aurora.png" id="5_aurora"]
 [ext_resource type="Shader" path="res://shaders/portrait_invert.gdshader" id="6_invert"]

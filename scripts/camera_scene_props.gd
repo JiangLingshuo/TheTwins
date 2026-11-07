@@ -8,14 +8,10 @@ extends Control
 ## the crystal monument's base, the sun-shaped monument's stand, the fountain.
 const BEAST_SPOTS := [Vector2(560, 690), Vector2(1110, 690), Vector2(1430, 560)]
 
-var night_symbols := false
-
-const BLESSING_SPOTS := [Vector2(890, 750), Vector2(620, 800), Vector2(1340, 760)]
-
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var beast: Texture2D = load("res://assets/Art/symbols/blessing_camera.svg" if night_symbols else "res://assets/Art/symbols/beast_camera.svg")
-	for at in BLESSING_SPOTS if night_symbols else BEAST_SPOTS:
+	var beast: Texture2D = load("res://assets/Art/symbols/beast_camera.svg")
+	for at in BEAST_SPOTS:
 		var icon := TextureRect.new()
 		icon.texture = beast
 		icon.position = at

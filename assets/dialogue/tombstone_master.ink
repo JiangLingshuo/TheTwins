@@ -37,8 +37,8 @@ The wishing pool nearby may still have held an offering around sixty years ago w
 # tombstone_id:altar
 # location:night_cemetery
 # title:The White Infant Altar
-A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.
-The recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time.
+A grand house-shaped memorial in the cramped underground cemetery. An infant rests on its white platform. An unending path runs along the pillars, the recess below is nearly empty, and one symbol is still unreadable.
+Try looking at the recess and platform as they were fifty years ago.
 ->->
 
 === tombstone_mother ===

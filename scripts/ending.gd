@@ -49,10 +49,10 @@ func _ready() -> void:
 	_choices.hide()
 
 	if GameState.ending_true:
-		if not GameState.ending_preview and "girl_tomb" in GameState.gravestones:
+		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
 			_stone.show()
 			_stone.disabled = true
-			_play_result.call_deferred(_model.begin_ending(true, false))
+			_play_result.call_deferred(_model.begin_ending(true, GameState.ending_preview))
 		else:
 			_discover_marker.call_deferred()
 	else:

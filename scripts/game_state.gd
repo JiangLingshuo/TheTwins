@@ -162,13 +162,30 @@ func ending_report_passed() -> bool:
 		correct += int(report.get("death", "") == answers[1])
 	return correct * 100 >= ENDING_REPORT_ANSWERS.size() * 2 * 80
 
-func open_ending(is_true: bool, preview := false) -> void:
+var ending_marker_investigated := false
+
+func open_ending(is_true: bool, preview := false, marker_investigated := false) -> void:
+	ending_marker_investigated = marker_investigated
 	ending_true = is_true
 	ending_preview = preview
 	radio_modal_open = false
 	camera_modal_open = false
 	_set_debug_overlay(false)
 	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
+
+func open_solitary_investigation() -> void:
+	# Developer preview: keep testing progress out of the local autosave.
+	ending_preview = true
+	cycle_tutorial_completed = true
+	investigation_tutorial_completed = true
+	camera_tutorial_completed = true
+	camera_tutorial_pending = false
+	current_city_day = true
+	resume_saved_city = false
+	radio_modal_open = false
+	camera_modal_open = false
+	_set_debug_overlay(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/solitary_investigation.tscn")
 
 func return_from_ending() -> void:
 	_set_debug_overlay(false)
@@ -197,7 +214,7 @@ func _build_dev_menu() -> void:
 	var title := Label.new()
 	title.text = "DEV / Scene shortcuts"
 	stack.add_child(title)
-	for item in [["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+	for item in [["Solitary marker investigation", open_solitary_investigation], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]
 		button.custom_minimum_size.y = 36
@@ -725,8 +742,16 @@ func radio_other_transmissions() -> Array[Dictionary]:
 
 
 ## A copy of a history record with its speakers, lines and follow-up label as displayed.
+var _retired_radio_narration: Dictionary = {}
+
 func _player_facing(record: Dictionary) -> Dictionary:
 	var copy: Dictionary = record.duplicate(true)
+	# Retired editorial narration should disappear from existing saves as well.
+	if _retired_radio_narration.is_empty():
+		var retired: Array = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/retired_radio_narration.json"))
+		for text: String in retired: _retired_radio_narration[text] = true
+	copy["lines"] = copy["lines"].filter(func(line: Dictionary) -> bool:
+		return not str(line.get("speaker", "")).is_empty() or not _retired_radio_narration.has(str(line.get("content", ""))))
 	for line in copy["lines"]:
 		line["speaker"] = fill_placeholders(line["speaker"])
 		line["content"] = fill_placeholders(line["content"])
@@ -753,11 +778,11 @@ func apply_notebook_event(tag: String) -> void:
 	if tag.begins_with("event:night_symbol_queried:"):
 		var glyph := tag.trim_prefix("event:night_symbol_queried:")
 		var translations := {
-			"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "A blessing for the departed"},
+			"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "The Crystal God's sign, left as a blessing for the departed"},
 			"unending_path": {"ids": ["altar_path_rubbing", "girl_path_rubbing"], "meaning": "An unending journey / disappearance"},
 			"dry_river": {"ids": ["night_mother_river_rubbing"], "meaning": "A river that has run dry"},
 			"ascending_path": {"ids": ["night_father_path_rubbing"], "meaning": "A path toward the surface"},
-			"crystal_god": {"ids": ["crystal_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God"},
+			"crystal_god": {"ids": ["crystal_god_rubbing", "night_mother_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God, also left on graves as a blessing"},
 		}
 		var translation: Dictionary = translations.get(glyph, {})
 		for rubbing_id in translation.get("ids", []):

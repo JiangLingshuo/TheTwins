@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 	state = root.get_node("GameState")
 	model = load("res://scripts/radio_model.gd").new()
-	check("all questions exported", model.data["questions"].size() == 55)
+	check("all questions exported", model.data["questions"].size() == 59)
 	for q in model.data["questions"]:
 		check("three unique candidates: " + q["id"], q["candidates"].size() == 3 and q["candidates"][0] != q["candidates"][1] and q["candidates"][1] != q["candidates"][2] and q["candidates"][0] != q["candidates"][2])
 	var repetition_target := "test_answer_repeated_beast"
@@ -108,11 +108,20 @@ func _run() -> void:
 	state.record_gravestone("father_tomb")
 	state.record_evidence("altar_blessing_glyph")
 	for id in ["altar_path_rubbing", "night_mother_river_rubbing", "night_father_path_rubbing", "crystal_god_rubbing"]: state.record_rubbing(id)
+	state.record_evidence("altar_blessing_translation")
+	check("path rubbing in the slot reveals the path question", model.questions_for("altar_tomb", group("altar_path_rubbing")).any(func(q: Dictionary) -> bool: return q["target"] == "query_night_unending_path_hint"))
+	check("blessing translation alone does not explain the path", not model.questions_for("altar_tomb", group("altar_blessing_translation")).any(func(q: Dictionary) -> bool: return q["target"] == "query_night_unending_path"))
+	model.send(question("query_night_unending_path_hint", "altar_tomb"), group("altar_path_rubbing"))
+	check("after the hint the blessing translation explains the path", model.questions_for("altar_tomb", group("altar_blessing_translation")).any(func(q: Dictionary) -> bool: return q["target"] == "query_night_unending_path"))
 	check("translation knowledge alone does not reveal translation question", not model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))
 	for pair in [["test_answer_altar_8", "altar_tomb"], ["query_night_unending_path", "altar_tomb"], ["query_night_dry_river", "mother_tomb"], ["query_night_ascending_path", "father_tomb"]]:
-		result = model.send(question(pair[0], pair[1]), group("altar_blessing_glyph") if pair[0] == "test_answer_altar_8" else "")
+		result = model.send(question(pair[0], pair[1]), group("altar_blessing_glyph") if pair[0] == "test_answer_altar_8" else (group("altar_blessing_translation") if pair[0] == "query_night_unending_path" else ""))
 	check("four translations do not unlock fifth requirement", model.progress.get("queried_night_glyphs", []).size() == 4 and not model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))
 	model.send(question("query_night_crystal_god", "altar_tomb"), "")
+	check("crystal god question hidden until the correspondence is shown", not model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_crystal_shape"))
+	state.record_evidence("crystal_god_crystal_correspondence")
+	for tomb_id in ["altar_tomb", "mother_tomb", "father_tomb"]:
+		check("showing the crystal correspondence reveals the crystal god question: " + tomb_id, model.questions_for(tomb_id, group("crystal_god_crystal_correspondence")).any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_crystal_shape"))
 	check("all five unlock translation question without evidence", model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))
 	var river_q := question("test_answer_mother_12", "mother_tomb")
 	model.send(river_q, "")

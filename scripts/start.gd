@@ -66,6 +66,7 @@ func _make_choice_button(text: String, action: Callable) -> Button:
 	button.text = text
 	button.custom_minimum_size = Vector2(320, 70)
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override("font", preload("res://assets/fonts/IMFellEnglish-Regular.ttf"))
 	button.add_theme_font_size_override("font_size", 23)
 	var panel := StyleBoxEmpty.new()
 	panel.set_content_margin_all(13.0)

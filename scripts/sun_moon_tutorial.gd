@@ -63,12 +63,33 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if _notebook == null: # _ready() is still waiting a frame
 		return
+	if _dialogue_is_playing():
+		_hide_guide_during_dialogue()
+		return
 	# Page-opening animations finish after notebook_opened; keep the hint in sync.
 	if not _speaking and not _skipping and step >= Step.BOOK:
 		refresh()
 
+func _dialogue_is_playing() -> bool:
+	var radio := _main.get_node_or_null("RadioTool")
+	return _speaking or (is_instance_valid(_dialogue) and _dialogue.is_playing()) or (radio and radio._reply_playing)
+
+
+func _hide_guide_during_dialogue() -> void:
+	_panel.hide()
+	_highlight.dismiss(false)
+	_highlight_target = null
+	_drag_hint.target = null
+	var radio := _main.get_node_or_null("RadioTool")
+	if radio and is_instance_valid(radio._tutorial_hint):
+		radio._tutorial_hint.hide()
+
+
 func refresh() -> void:
-	if _skipping or _speaking:
+	if _dialogue_is_playing():
+		_hide_guide_during_dialogue()
+		return
+	if _skipping:
 		return
 	# Mid-drag the notebook has folded away; keep the drag hint until the drop.
 	if _notebook.rubbing_drag.is_dragging():
