@@ -12,8 +12,10 @@ extends "res://scripts/decipher_target.gd"
 ## same camera move as for a tombstone (SceneZoom; its zoom-out magnifier
 ## brings the scene back).
 @export var inspectable := false
-## Height on screen when zoomed in, as a share of the screen height.
-@export_range(0.2, 1.0, 0.05) var zoom_height_ratio: float = 0.7
+## Height on screen when zoomed in, as a share of the screen height. Small
+## finds stay small (about 20%); each one sets its own ("zoom_height" in
+## searchlight_placeholders.json), roughly by its size.
+@export_range(0.05, 1.0, 0.01) var zoom_height_ratio: float = 0.2
 ## Small objects need a closer camera than a tombstone.
 @export var zoom_max_zoom: float = 12.0
 ## True while the view is zoomed in on this object (set by SceneZoom).
