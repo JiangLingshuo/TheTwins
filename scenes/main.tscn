@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
@@ -12,6 +12,8 @@
 [ext_resource type="PackedScene" path="res://scenes/tombstones/scholar_tomb.tscn" id="31_scholar"]
 [ext_resource type="PackedScene" path="res://scenes/tombstones/sun_tomb.tscn" id="32_sun_tomb"]
 [ext_resource type="PackedScene" path="res://scenes/tombstones/altar_tomb.tscn" id="33_altar"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/mother_tomb.tscn" id="34_mother"]
+[ext_resource type="PackedScene" path="res://scenes/tombstones/father_tomb.tscn" id="35_father"]
 [ext_resource type="PackedScene" path="res://scenes/toast.tscn" id="12_toast"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/moon.png" id="13_night_moon"]
 [ext_resource type="Script" path="res://scripts/decipher_target.gd" id="14_target"]
@@ -173,6 +175,12 @@ mouse_filter = 2
 texture = ExtResource("28_spar")
 
 [node name="AltarTomb" parent="NightCemetery" instance=ExtResource("33_altar")]
+layout_mode = 0
+
+[node name="MotherTomb" parent="NightCemetery" instance=ExtResource("34_mother")]
+layout_mode = 0
+
+[node name="FatherTomb" parent="NightCemetery" instance=ExtResource("35_father")]
 layout_mode = 0
 
 [node name="Moon" type="TextureRect" parent="NightCemetery"]
