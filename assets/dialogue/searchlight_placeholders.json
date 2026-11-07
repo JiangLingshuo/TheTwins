@@ -98,7 +98,8 @@
         64,
         87
       ],
-      "texture": "res://assets/Art/figure/family_photo.png"
+      "texture": "res://assets/Art/figure/family_photo.png",
+      "inspect": true
     },
     {
       "node": "CrystalGod",
