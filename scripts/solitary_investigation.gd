@@ -26,22 +26,10 @@ func _ready() -> void:
 	_toast.show_message("Inspect the solitary marker. Record its motif and compare it with your notebook cover. Use the searchlight at 45 years ago.")
 
 func _add_girl() -> void:
-	var stone = preload("res://scenes/tombstone.tscn").instantiate()
-	stone.name = "GirlTomb"
-	stone.texture = preload("res://assets/Art/tombstone/girl_day_scene.png")
-	stone.gravestone_id = "girl_tomb"
-	$DayCemetery.add_child(stone)
-	var motif = TextureRect.new()
-	motif.set_script(preload("res://scripts/rubbing_symbol.gd"))
-	motif.texture = preload("res://assets/Art/symbol/girl&coffin.png")
-	motif.position = Vector2(820, 390)
-	motif.size = Vector2(290, 340)
-	motif.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	motif.rubbing_id = "girl_signature_rubbing"
-	motif.matching_target_id = "notebook_cover"
-	motif.brush_strength = 0.55
-	motif.reveal_threshold = 0.4
-	stone.add_child(motif)
+	# The marker with its carved motif and parts (scenes/tombstones/girl_tomb.tscn),
+	# and the same marker by night.
+	$DayCemetery.add_child(preload("res://scenes/tombstones/girl_tomb.tscn").instantiate())
+	$NightCemetery.add_child(preload("res://scenes/tombstones/girl_tomb_night.tscn").instantiate())
 
 func _add_cover() -> void:
 	var cover = TextureRect.new()

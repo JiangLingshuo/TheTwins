@@ -20,7 +20,7 @@
       "title": "The Crystal Monument",
       "location": "day_cemetery",
       "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.\nAround forty-five years ago, the fragment may still have been clear enough to make out the drawing. Compare the foot of the monument as it is now with how it looked about forty-five years ago. Look for any trace of a later visit.",
-      "sketch": "res://assets/Art/day/草稿/scholar.png"
+      "sketch": "res://assets/Art/tombstone/single/scholar_single.png"
     },
     "sun_tomb": {
       "id": "sun_tomb",
@@ -28,7 +28,7 @@
       "title": "The Sun-Shaped Monument",
       "location": "day_cemetery",
       "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.\nThe wishing pool nearby may still have held an offering around sixty years ago when it's still in use. It might be worth looking into the basin. Someone may have left something here when the civilization was still alive and the conflict was just starting.",
-      "sketch": "res://assets/Art/day/草稿/the rich.png"
+      "sketch": "res://assets/Art/tombstone/single/the rich_single.png"
     },
     "altar_tomb": {
       "id": "altar_tomb",
@@ -60,7 +60,7 @@
       "title": "The Solitary Human-Shaped Marker",
       "location": "cemetery_edge",
       "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.\nThe paint on the stone may also have been easier to see then.",
-      "sketch": "res://assets/Art/day/草稿/girl.png"
+      "sketch": "res://assets/Art/tombstone/single/girl_day_single.png"
     }
   },
   "evidence": {

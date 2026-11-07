@@ -66,8 +66,8 @@
       "evidence_id": "twin_beast_trace",
       "city": "day",
       "position": [
-        1244,
-        871
+        1291,
+        872
       ],
       "caption": "Twin-beast footprint (oldest trace)",
       "target_id": "twin_beast_trace",
@@ -75,10 +75,10 @@
       "years_ago": 250.0,
       "date_status": "provisional_ancient_date",
       "size": [
-        285,
-        189
+        190,
+        187
       ],
-      "texture": "res://assets/Art/day/footprint.png",
+      "texture": "res://assets/Art/figure/twin_beast_footprint.png",
       "crop": true
     },
     {
@@ -86,14 +86,19 @@
       "evidence_id": "family_photo",
       "city": "day",
       "position": [
-        300,
-        880
+        1176,
+        658
       ],
       "caption": "Four-person photograph before sun marker",
       "target_id": "family_photo",
       "meaning": "Four-person photograph before sun marker",
       "years_ago": 50.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "size": [
+        64,
+        87
+      ],
+      "texture": "res://assets/Art/figure/family_photo.png"
     },
     {
       "node": "CrystalGod",
@@ -197,8 +202,8 @@
       "evidence_id": "girl_teddy_bear",
       "city": "day",
       "position": [
-        1480,
-        900
+        1000,
+        690
       ],
       "caption": "Mother leaving a teddy bear at the girl marker",
       "target_id": "girl_teddy_bear",
@@ -218,8 +223,8 @@
       "evidence_id": "night_mother_flower",
       "city": "night",
       "position": [
-        556,
-        620
+        612,
+        662
       ],
       "caption": "Faded paint on mother marker: a large flower",
       "target_id": "night_mother_flower",
@@ -228,24 +233,32 @@
       "date_status": "timeline_suggestion",
       "required_grave": "mother_tomb",
       "size": [
-        150,
-        110
-      ]
+        84,
+        83
+      ],
+      "texture": "res://assets/Art/figure/mother_flower_faded.png",
+      "crop": true
     },
     {
       "node": "GirlPaintedFlower",
       "evidence_id": "girl_painted_flower",
       "city": "day",
       "position": [
-        1580,
-        610
+        832,
+        585
       ],
       "caption": "Solitary marker: a painted flower",
       "target_id": "girl_painted_flower",
       "meaning": "Compare the painted flower with the Holy Mother’s stone",
       "years_ago": 45.0,
       "date_status": "timeline_suggestion",
-      "required_grave": "girl_tomb"
+      "required_grave": "girl_tomb",
+      "size": [
+        120,
+        118
+      ],
+      "texture": "res://assets/Art/figure/girl_flower_bright.png",
+      "crop": true
     }
   ]
 }

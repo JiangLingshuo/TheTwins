@@ -2,7 +2,7 @@ extends Control
 
 const DAY := preload("res://assets/Art/day/BG_day.png")
 const NIGHT := preload("res://assets/Art/night/BG_night.png")
-const STONE := preload("res://assets/Art/day/草稿/girl.png")
+const STONE := preload("res://assets/Art/tombstone/single/girl_day_single.png")
 const COVER := preload("res://assets/Art/note/notebook_cover.png")
 const CHOICE_ART := preload("res://assets/Art/dialog/dialog box.png")
 const RADIO_STATIC := preload("res://shaders/radio_static.gdshader")
