@@ -19,7 +19,8 @@
         150,
         121
       ],
-      "crop": true
+      "crop": true,
+      "inspect": true
     },
     {
       "node": "SkinPicture",
@@ -39,7 +40,8 @@
       "size": [
         110,
         86
-      ]
+      ],
+      "inspect": true
     },
     {
       "node": "WishPoolCoin",
@@ -59,7 +61,8 @@
         70,
         67
       ],
-      "crop": true
+      "crop": true,
+      "inspect": true
     },
     {
       "node": "TwinBeastTrace",
@@ -79,7 +82,8 @@
         187
       ],
       "texture": "res://assets/Art/figure/twin_beast_footprint.png",
-      "crop": true
+      "crop": true,
+      "inspect": true
     },
     {
       "node": "FamilyPhoto",
@@ -124,7 +128,8 @@
         300,
         219,
         205
-      ]
+      ],
+      "inspect": true
     },
     {
       "node": "AltarMoonStone",
@@ -217,7 +222,8 @@
         122
       ],
       "texture": "res://assets/Art/figure/winged_teddy_bear.png",
-      "crop": true
+      "crop": true,
+      "inspect": true
     },
     {
       "node": "MotherPaintedFlower",
@@ -238,7 +244,8 @@
         83
       ],
       "texture": "res://assets/Art/figure/mother_flower_faded.png",
-      "crop": true
+      "crop": true,
+      "inspect": true
     },
     {
       "node": "GirlPaintedFlower",
@@ -259,7 +266,8 @@
         118
       ],
       "texture": "res://assets/Art/figure/girl_flower_bright.png",
-      "crop": true
+      "crop": true,
+      "inspect": true
     }
   ]
 }

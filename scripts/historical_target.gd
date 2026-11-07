@@ -8,9 +8,16 @@ extends "res://scripts/decipher_target.gd"
 @export var required_grave := ""
 @export var date_status := ""
 @export var extra_aim_rect := Rect2()
-## Once found, hovering shows a magnifier that opens a close-up of the drawing
-## (for small details such as the family photograph).
+## Once found, hovering shows a magnifier that zooms the view in on it, the
+## same camera move as for a tombstone (SceneZoom; its zoom-out magnifier
+## brings the scene back).
 @export var inspectable := false
+## Height on screen when zoomed in, as a share of the screen height.
+@export_range(0.2, 1.0, 0.05) var zoom_height_ratio: float = 0.7
+## Small objects need a closer camera than a tombstone.
+@export var zoom_max_zoom: float = 12.0
+## True while the view is zoomed in on this object (set by SceneZoom).
+var zoomed := false
 var discovered := false
 var exposure := 0.0
 var _sample := -1
@@ -18,7 +25,7 @@ var label: Label
 var marker: PanelContainer
 var _inspect_button: Button
 var _last_hover_msec := -100000
-var _closeup: CanvasLayer
+var _hovered := false
 
 func _ready() -> void:
 	super._ready()
@@ -50,9 +57,9 @@ func _ready() -> void:
 	modulate.a = 0.8
 	_update_label()
 	if inspectable:
-		_inspect_button = _magnifier_button(44, true)
+		_inspect_button = _magnifier_button(44)
 		_inspect_button.tooltip_text = "Look closer"
-		_inspect_button.pressed.connect(open_closeup)
+		_inspect_button.pressed.connect(func() -> void: get_tree().call_group("scene_zoom", "zoom_to", self))
 		_inspect_button.visible = false
 		add_child(_inspect_button)
 
@@ -126,15 +133,18 @@ func _input(event: InputEvent) -> void:
 		var hovered := get_viewport().gui_get_hovered_control()
 		var over_button := _inspect_button.visible and _inspect_button.get_global_rect().has_point(event.position)
 		var over_me := get_global_rect().has_point(event.position) and (hovered == null or hovered == _inspect_button)
-		if discovered and is_visible_in_tree() and (over_me or over_button):
+		_hovered = discovered and is_visible_in_tree() and (over_me or over_button)
+		if _hovered:
 			_last_hover_msec = Time.get_ticks_msec()
 
 
 func _process(_delta: float) -> void:
 	if _inspect_button == null:
 		return
-	var lingering := Time.get_ticks_msec() - _last_hover_msec < 400
-	_inspect_button.visible = discovered and is_visible_in_tree() and lingering and _closeup == null
+	var lingering := _hovered or Time.get_ticks_msec() - _last_hover_msec < 400
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	var scene_zoomed: bool = scene_zoom != null and scene_zoom.is_zoomed()
+	_inspect_button.visible = discovered and is_visible_in_tree() and lingering and not scene_zoomed
 	if _inspect_button.visible:
 		var rect := get_global_rect()
 		var screen := get_viewport_rect().size
@@ -144,63 +154,15 @@ func _process(_delta: float) -> void:
 		_inspect_button.global_position = at
 
 
-## A close-up of the drawing over a dimmed scene; the zoom-out magnifier or a
-## click on the dimmed area puts it away.
-func open_closeup() -> void:
-	if _closeup or texture == null:
-		return
-	_closeup = CanvasLayer.new()
-	_closeup.layer = 20
-	var root := Control.new()
-	root.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_closeup.add_child(root)
-	var dim := ColorRect.new()
-	dim.color = Color(0.03, 0.025, 0.02, 0.82)
-	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	root.add_child(dim)
-	var screen := get_viewport_rect().size
-	var tex_size := texture.get_size()
-	var fit := minf(screen.y * 0.82 / tex_size.y, screen.x * 0.7 / tex_size.x)
-	var picture := TextureRect.new()
-	picture.texture = texture
-	picture.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	picture.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	picture.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	root.add_child(picture)
-	picture.size = tex_size * fit
-	picture.position = (screen - picture.size) / 2.0
-	picture.pivot_offset = picture.size / 2.0
-	var close := _magnifier_button(64, false)
-	close.tooltip_text = "Back"
-	close.position = Vector2(24, 64)
-	root.add_child(close)
-	close.pressed.connect(close_closeup)
-	dim.gui_input.connect(func(event: InputEvent) -> void:
-		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			close_closeup())
-	get_tree().current_scene.add_child(_closeup)
-	root.modulate.a = 0.0
-	picture.scale = Vector2.ONE * 0.9
-	var t := root.create_tween().set_parallel().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
-	t.tween_property(root, "modulate:a", 1.0, 0.3)
-	t.tween_property(picture, "scale", Vector2.ONE, 0.35)
+## What SceneZoom frames: the drawing's rect on screen.
+func get_stone_global_rect() -> Rect2:
+	return get_global_rect()
 
 
-func close_closeup() -> void:
-	if _closeup == null:
-		return
-	var layer := _closeup
-	_closeup = null
-	var root: Control = layer.get_child(0)
-	var t := root.create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
-	t.tween_property(root, "modulate:a", 0.0, 0.25)
-	t.tween_callback(layer.queue_free)
-
-
-## A round magnifier button like the tombstones' (+ to look closer, − to go back).
-func _magnifier_button(diameter: int, plus: bool) -> Button:
+## A round + magnifier like the tombstones'.
+func _magnifier_button(diameter: int) -> Button:
 	var button := Button.new()
-	button.top_level = plus  # beside the trace, screen-sized whatever the zoom
+	button.top_level = true  # beside the trace, screen-sized whatever the zoom
 	button.size = Vector2(diameter, diameter)
 	button.custom_minimum_size = button.size
 	button.focus_mode = Control.FOCUS_NONE
@@ -209,7 +171,7 @@ func _magnifier_button(diameter: int, plus: bool) -> Button:
 		var style := StyleBoxFlat.new()
 		style.bg_color = Color(0.1, 0.09, 0.08, 0.9 if state == "normal" else 0.97)
 		style.border_color = Color(1.0, 0.9, 0.66) if state == "hover" else Color(0.86, 0.73, 0.46)
-		style.set_border_width_all(2 if plus else 3)
+		style.set_border_width_all(2)
 		style.set_corner_radius_all(diameter / 2)
 		button.add_theme_stylebox_override(state, style)
 	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
@@ -220,6 +182,5 @@ func _magnifier_button(diameter: int, plus: bool) -> Button:
 		button.draw_arc(lens, 9.5 * k, 0, TAU, 32, ink, 2.5 * k, true)
 		button.draw_line(lens + Vector2(7, 7) * k, Vector2(33, 33) * k, ink, 4.0 * k, true)
 		button.draw_line(lens - Vector2(4.5 * k, 0), lens + Vector2(4.5 * k, 0), ink, 2.0 * k, true)
-		if plus:
-			button.draw_line(lens - Vector2(0, 4.5 * k), lens + Vector2(0, 4.5 * k), ink, 2.0 * k, true))
+		button.draw_line(lens - Vector2(0, 4.5 * k), lens + Vector2(0, 4.5 * k), ink, 2.0 * k, true))
 	return button
