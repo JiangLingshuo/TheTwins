@@ -1,9 +1,24 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="8_symbol"]
 [ext_resource type="Texture2D" path="res://assets/Art/tombstone/scholar_scene.png" id="2_art"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/footprint.png" id="9_foot"]
 
 [node name="ScholarTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
 gravestone_id = "scholar_tomb"
 zoom_rect = Rect2(470, 370, 260, 380)
+
+[node name="BeastFootprintSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 565.0
+offset_top = 672.0
+offset_right = 637.0
+offset_bottom = 744.0
+texture = ExtResource("9_foot")
+expand_mode = 1
+script = ExtResource("8_symbol")
+rubbing_id = "scholar_beast_rubbing"
+matching_target_id = "twin_beast_trace"
+brush_radius = 16.0

@@ -1,12 +1,11 @@
 extends Control
-## Camera-only markings on the day cemetery: the twin-beast footprints the
-## camera tutorial asks the player to compare (until they are drawn into the
-## tomb art). The three tombs and their shared base are real scene
+## Camera-only markings on the day cemetery: the twin-beast footprint by the
+## fountain. (The ones on the crystal and sun-shaped monuments are carved
+## rubbing symbols in their tombstone scenes.) The three tombs and their shared base are real scene
 ## art (Tombstone instances and the Pedestal layer).
 
-## Top-left corners of the footprints, in cemetery (1920×1080 art) pixels:
-## the crystal monument's base, the sun-shaped monument's stand, the fountain.
-const BEAST_SPOTS := [Vector2(560, 690), Vector2(1110, 690), Vector2(1430, 560)]
+## Top-left corners of the footprints, in cemetery (1920×1080 art) pixels.
+const BEAST_SPOTS := [Vector2(1430, 560)]
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE

@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
 [ext_resource type="Texture2D" path="res://assets/Art/tombstone/the rich_scene.png" id="2_art"]
 [ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="3_symbol"]
 [ext_resource type="Texture2D" path="res://assets/Art/symbol/coin&sun.png" id="4_sun"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/footprint.png" id="9_foot"]
 
 [node name="SunTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
@@ -22,3 +23,16 @@ rubbing_id = "sun_shaped_marker_rubbing"
 matching_target_id = "day_city_coin"
 brush_strength = 0.55
 reveal_threshold = 0.4
+
+[node name="BeastFootprintSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1105.0
+offset_top = 655.0
+offset_right = 1177.0
+offset_bottom = 727.0
+texture = ExtResource("9_foot")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "sun_shaped_beast_rubbing"
+matching_target_id = "twin_beast_trace"
+brush_radius = 16.0
