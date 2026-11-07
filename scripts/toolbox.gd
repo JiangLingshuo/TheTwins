@@ -27,6 +27,7 @@ func _ready() -> void:
 	button.texture_normal = TOOLBOX_ICON
 	button.ignore_texture_size = true
 	button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	SoftIcon.apply(button)
 	add_child(button)
 	button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
 	# The three right-edge buttons (toolbox, notebook, radio) are 96 px circles
@@ -61,6 +62,7 @@ func _ready() -> void:
 		proxy.texture_normal = tool.texture_normal
 		proxy.ignore_texture_size = true
 		proxy.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+		SoftIcon.apply(proxy)
 		proxy.custom_minimum_size = Vector2(84, 80)
 		proxy.size_flags_vertical = Control.SIZE_EXPAND_FILL
 		column.add_child(proxy)

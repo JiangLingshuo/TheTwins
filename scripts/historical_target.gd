@@ -49,16 +49,16 @@ func _unlocked() -> bool:
 
 func _update_label() -> void:
 	if not is_instance_valid(label): return
-	var date := str(int(2050 - years_ago)) + " · " + str(int(years_ago)) + " years ago"
+	var date := GameState.zh_text("%d · %d years ago") % [int(2050 - years_ago), int(years_ago)]
 	if not scan_years.is_empty():
-		date = "2005–2050 · scan 45 and 0 years ago"
-	if date_status == "provisional_ancient_date": date += " · provisional"
+		date = GameState.zh_text("2005–2050 · scan 45 and 0 years ago")
+	if date_status == "provisional_ancient_date": date += " · " + GameState.zh_text("provisional")
 	var status := "Recorded" if discovered else "Searchlight placeholder"
 	if not _unlocked(): status = "Locked: record the girl's marker first"
 	elif not scan_years.is_empty() and not discovered:
 		var checked: Array = GameState.searchlight_scan_progress.get(evidence_id, [])
-		status = "Scan endpoints: " + str(checked.size()) + "/" + str(scan_years.size())
-	label.text = caption + "\n" + date + "\n" + status
+		status = GameState.zh_text("Scan endpoints: %d/%d") % [checked.size(), scan_years.size()]
+	label.text = GameState.zh_text(caption) + "\n" + date + "\n" + GameState.zh_text(status)
 
 func apply_flashlight(lamp: Flashlight) -> void:
 	_update_label()
@@ -90,15 +90,16 @@ func apply_flashlight(lamp: Flashlight) -> void:
 		if not checked.has(sample):
 			checked.append(sample)
 			GameState.searchlight_scan_progress[evidence_id] = checked
-			_toast("Scan endpoint checked: " + str(int(2050 - scan_years[sample])))
+			_toast(GameState.zh_text("Scan endpoint checked: %d") % int(2050 - scan_years[sample]))
 		if checked.size() < scan_years.size():
 			_update_label()
 			return
 	discovered = true
 	modulate.a = 1.0
-	GameState.record_evidence(evidence_id)
+	if GameState.record_evidence(evidence_id):
+		GameState.write_autosave()
 	_update_label()
-	_toast("Recorded: " + caption)
+	_toast(GameState.zh_text("Recorded: %s") % GameState.zh_text(caption))
 
 func _toast(message: String) -> void:
 	var main := get_parent().get_parent()

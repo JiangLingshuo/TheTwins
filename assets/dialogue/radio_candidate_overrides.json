@@ -5,8 +5,8 @@
     "designer_manuscript"
   ],
   "baby:test_answer_baby_17": [
+    "dayfolk_appearance",
     "designer_manuscript",
-    "infant_figure_rubbing",
     "infant_graffiti"
   ],
   "baby:test_answer_baby_21": [
@@ -218,5 +218,35 @@
     "family_photo",
     "shared_family_base",
     "profession_record"
+  ],
+  "girl:test_answer_girl_bear_preview": [
+    "girl_teddy_bear",
+    "family_statuette",
+    "girl_diary"
+  ],
+  "girl:test_answer_girl_flower_preview": [
+    "girl_painted_flower",
+    "girl_figure_rubbing",
+    "family_statuette"
+  ],
+  "scholar:test_answer_repeated_beast": [
+    "repeated_beast_motifs",
+    "twin_beast_account",
+    "scholar_beast_rubbing"
+  ],
+  "sun:test_answer_repeated_beast": [
+    "repeated_beast_motifs",
+    "twin_beast_account",
+    "sun_shaped_beast_rubbing"
+  ],
+  "girl:test_answer_repeated_beast": [
+    "repeated_beast_motifs",
+    "twin_beast_account",
+    "girl_beast_rubbing"
+  ],
+  "scholar:test_answer_scholar_passage_gate": [
+    "one_way_passage_order",
+    "profession_record",
+    "day_city_history"
   ]
 }

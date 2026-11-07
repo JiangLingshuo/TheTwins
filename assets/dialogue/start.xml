@@ -8,7 +8,7 @@
   <line speaker="#PLAYER#">Aurora? Is that you? The connection’s finally back. I’ve landed safely on Twins.</line>
   <line speaker="Aurora">Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to look through your handbook?</line>
   <line speaker="#PLAYER#">Yeah, I was just looking at it. Interesting color scheme.</line>
-  <line speaker="Aurora">There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there.</line>
+  <line speaker="Aurora">There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them.</line>
   <line speaker="#PLAYER#">Should I expect to meet anyone here?</line>
   <line speaker="Aurora">No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked.</line>
   <line speaker="#PLAYER#">Where?</line>

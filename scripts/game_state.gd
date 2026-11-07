@@ -33,14 +33,266 @@ signal debug_overlay_changed(shown: bool)
 ## Development overlay: the tutorial hint box (with its skip button) and the
 ## searchlight placeholder cards. Hidden by default; F2 toggles it.
 var debug_overlay := false
+var _dev_menu: PanelContainer
+var _shortcut_menu: AcceptDialog
+var chinese_playtest := false
+var _chinese_text: Dictionary = {}
+var _chinese_font: SystemFont
+var _chinese_translation: Translation
+var _previous_locale := ""
+var ending_true := false
+var ending_preview := false
 
+const AUTOSAVE_VERSION := 1
+const AUTOSAVE_FIELDS := [
+	"player_name", "notebook_pages", "notebook_spread", "notebook_section_spread",
+	"rubbings", "rubbing_records", "gravestones", "gravestone_reports", "evidence_ids",
+	"clue_states", "radio_logs", "radio_progress", "radio_question_history", "radio_other_history",
+	"play_time", "current_city_day", "searchlight_scan_progress", "camera_observations",
+	"cycle_hint_heard", "cycle_tutorial_completed", "investigation_tutorial_completed",
+	"tutorial_night_heard", "tutorial_hidden_heard", "tutorial_day_return_heard",
+	"tutorial_record_intro_heard", "tutorial_keyword_ack_heard", "tutorial_radio_intro_heard",
+	"tutorial_report_intro_heard", "tutorial_end_heard", "tutorial_searchlight_intro_heard",
+	"tutorial_searchlight_found_heard", "camera_tutorial_pending", "camera_tutorial_completed",
+	"formal_investigation_started",
+]
+var _autosave_path := "user://investigation.autosave"
+var _new_run_defaults: Dictionary
+var _autosave_enabled := false
+var resume_saved_city := false
+
+func _ready() -> void:
+	_new_run_defaults = _checkpoint_state()
+
+func _checkpoint_state() -> Dictionary:
+	var state := {}
+	for field in AUTOSAVE_FIELDS:
+		state[field] = get(field)
+	return state.duplicate(true)
+
+func _apply_checkpoint_state(state: Dictionary) -> void:
+	for field in AUTOSAVE_FIELDS:
+		set(field, state.get(field, _new_run_defaults[field]))
+	_radio_exchanges.clear()
+	radio_progress.erase("active_manuscript")
+	active_clue = ""
+	radio_modal_open = false
+	camera_modal_open = false
+	notebook_preview = false
+	ending_preview = false
+
+func start_new_investigation() -> void:
+	_apply_checkpoint_state(_new_run_defaults.duplicate(true))
+	ending_true = false
+	resume_saved_city = false
+	_autosave_enabled = true
+
+func write_autosave() -> bool:
+	if not _autosave_enabled or notebook_preview or ending_preview:
+		return false
+	var scene := get_tree().current_scene
+	var at_solitary_marker := scene != null and scene.scene_file_path == "res://scenes/ending.tscn" and ending_true
+	var temp := _autosave_path + ".tmp"
+	var file := FileAccess.open(temp, FileAccess.WRITE)
+	if file == null:
+		push_warning("Could not open local autosave.")
+		return false
+	file.store_var({"version": AUTOSAVE_VERSION, "solitary_marker": at_solitary_marker, "state": _checkpoint_state()})
+	file.flush()
+	var error := file.get_error()
+	file.close()
+	if error != OK or DirAccess.rename_absolute(temp, _autosave_path) != OK:
+		push_warning("Could not replace local autosave.")
+		return false
+	return true
+
+func _read_autosave() -> Dictionary:
+	if not FileAccess.file_exists(_autosave_path):
+		return {}
+	var file := FileAccess.open(_autosave_path, FileAccess.READ)
+	if file == null:
+		return {}
+	var payload: Variant = file.get_var()
+	if not payload is Dictionary or payload.get("version") != AUTOSAVE_VERSION:
+		return {}
+	var state: Variant = payload.get("state")
+	if not state is Dictionary:
+		return {}
+	for field in AUTOSAVE_FIELDS:
+		if not state.has(field) or typeof(state[field]) != typeof(_new_run_defaults[field]):
+			return {}
+	return payload
+
+func has_autosave() -> bool:
+	return not _read_autosave().is_empty()
+
+func load_autosave() -> String:
+	var saved := _read_autosave()
+	if saved.is_empty():
+		return ""
+	_apply_checkpoint_state(saved["state"])
+	_autosave_enabled = true
+	ending_true = saved.get("solitary_marker", false)
+	resume_saved_city = not ending_true
+	return "res://scenes/ending.tscn" if ending_true else "res://scenes/main.tscn"
+
+# The solitary marker is discovered after this report and is not part of its score.
+const ENDING_REPORT_ANSWERS := {
+	"baby_tomb": ["infant", "euthanasia"],
+	"scholar_tomb": ["scholar", "disappearance"],
+	"sun_tomb": ["tycoon", "disappearance"],
+	"altar_tomb": ["divine_messenger", "disappearance"],
+	"mother_tomb": ["night_mother", "hunger_and_thirst"],
+	"father_tomb": ["night_father", "missed_sleeping_deadline"],
+}
+
+func ending_report_complete() -> bool:
+	for id in ENDING_REPORT_ANSWERS:
+		var report: Dictionary = gravestone_reports.get(id, {})
+		if report.get("identity", "").is_empty() or report.get("death", "").is_empty():
+			return false
+	return true
+
+func ending_report_passed() -> bool:
+	var correct := 0
+	for id in ENDING_REPORT_ANSWERS:
+		var report: Dictionary = gravestone_reports.get(id, {})
+		var answers: Array = ENDING_REPORT_ANSWERS[id]
+		correct += int(report.get("identity", "") == answers[0])
+		correct += int(report.get("death", "") == answers[1])
+	return correct * 100 >= ENDING_REPORT_ANSWERS.size() * 2 * 80
+
+func open_ending(is_true: bool, preview := false) -> void:
+	ending_true = is_true
+	ending_preview = preview
+	radio_modal_open = false
+	camera_modal_open = false
+	_set_debug_overlay(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
+
+func return_from_ending() -> void:
+	_set_debug_overlay(false)
+	get_tree().change_scene_to_file.call_deferred("res://scenes/main.tscn")
+
+func _set_debug_overlay(shown: bool) -> void:
+	debug_overlay = shown
+	if OS.is_debug_build():
+		if not is_instance_valid(_dev_menu):
+			_build_dev_menu()
+		_dev_menu.visible = shown
+	debug_overlay_changed.emit(shown)
+
+func _build_dev_menu() -> void:
+	var layer := CanvasLayer.new()
+	layer.layer = 120
+	add_child(layer)
+	_dev_menu = PanelContainer.new()
+	layer.add_child(_dev_menu)
+	_dev_menu.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_dev_menu.offset_left = -290
+	_dev_menu.offset_right = -24
+	_dev_menu.offset_top = 24
+	var stack := VBoxContainer.new()
+	_dev_menu.add_child(stack)
+	var title := Label.new()
+	title.text = "DEV / Scene shortcuts"
+	stack.add_child(title)
+	for item in [["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+		var button := Button.new()
+		button.text = item[0]
+		button.custom_minimum_size.y = 36
+		button.pressed.connect(item[1])
+		stack.add_child(button)
+
+func _toggle_playtest_language() -> void:
+	if not OS.is_debug_build(): return
+	if not chinese_playtest:
+		if _chinese_text.is_empty():
+			var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/chinese_playtest.json"))
+			if not parsed is Dictionary or parsed.is_empty():
+				push_error("Chinese playtest text is missing. Run tools/build_chinese_playtest.py.")
+				return
+			_chinese_text = parsed
+			_chinese_translation = Translation.new()
+			_chinese_translation.locale = "zh_CN"
+			for message in _chinese_text:
+				_chinese_translation.add_message(message, _chinese_text[message])
+			_chinese_font = SystemFont.new()
+			_chinese_font.font_names = ["Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", "WenQuanYi Zen Hei"]
+			for font in [preload("res://assets/fonts/CormorantGaramond-Regular.ttf"), preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf"), preload("res://assets/fonts/CormorantGaramond-Italic.ttf")]:
+				var fonts: Array[Font] = font.fallbacks.duplicate()
+				fonts.append(_chinese_font)
+				font.fallbacks = fonts
+		TranslationServer.add_translation(_chinese_translation)
+		_previous_locale = TranslationServer.get_locale()
+		chinese_playtest = true
+		TranslationServer.set_locale("zh_CN")
+	else:
+		chinese_playtest = false
+		TranslationServer.remove_translation(_chinese_translation)
+		TranslationServer.set_locale(_previous_locale)
+	_content.clear()
+	radio_modal_open = false
+	camera_modal_open = false
+	_set_debug_overlay(false)
+	get_tree().reload_current_scene.call_deferred()
+
+func playtest_font(default_font: Font) -> Font:
+	return _chinese_font if chinese_playtest and _chinese_font else default_font
+
+
+func zh_text(text: String) -> String:
+	return _chinese_text.get(text, text) if chinese_playtest else text
+
+func is_dev_menu_click(event: InputEvent) -> bool:
+	return is_instance_valid(_dev_menu) and _dev_menu.visible and event is InputEventMouseButton and _dev_menu.get_global_rect().has_point(event.position)
+
+
+func _show_shortcuts() -> void:
+	if is_instance_valid(_shortcut_menu):
+		_shortcut_menu.free()
+	_shortcut_menu = AcceptDialog.new()
+	_shortcut_menu.title = "快捷键" if chinese_playtest else "Controls"
+	_shortcut_menu.ok_button_text = "关闭" if chinese_playtest else "Close"
+	var table := GridContainer.new()
+	table.columns = 2
+	table.add_theme_constant_override("h_separation", 26)
+	table.add_theme_constant_override("v_separation", 7)
+	var rows := [
+		["Ctrl + T", "Show controls", "查看快捷键"],
+		["Tab / N", "Open or close notebook", "打开或合上笔记本"],
+		["Space / Enter", "Finish or advance dialogue", "显示整句或继续对白"],
+		["Esc", "Put away searchlight or photo, end idle radio, or cancel drag", "收起探照灯或照片、退出无线电菜单，或取消拖拽"],
+		["Mouse wheel", "Adjust the locked searchlight by one year", "锁定探照灯后，每格调一年"],
+		["Shift + mouse wheel", "Adjust the searchlight by ten years", "每格调十年"],
+		["Drag year ring", "Set the searchlight year directly", "拖动圆环刻度直接调年份"],
+		["F1", "Debug: switch between Day and Night", "调试：切换昼夜"],
+		["F2", "Debug: toggle the developer overlay", "调试：开关开发面板"],
+	]
+	if OS.is_debug_build():
+		rows.append(["F3", "Debug: switch Chinese / English", "调试：切换中英文"])
+		rows.append(["F8", "Debug: unlock notebook preview", "调试：解锁笔记本预览"])
+	for row in rows:
+		for text in [row[0], row[2] if chinese_playtest else row[1]]:
+			var label := Label.new()
+			label.text = text
+			table.add_child(label)
+	_shortcut_menu.add_child(table)
+	add_child(_shortcut_menu)
+	_shortcut_menu.popup_centered()
 
 func _input(event: InputEvent) -> void:
-	# Read before the GUI; the tutorial's input gate lets F2 through.
-	if event is InputEventKey and event.is_pressed() and not event.is_echo() and event.keycode == KEY_F2:
-		debug_overlay = not debug_overlay
-		debug_overlay_changed.emit(debug_overlay)
-		get_viewport().set_input_as_handled()
+	# Read before the GUI, including during the tutorial.
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.keycode == KEY_T and event.ctrl_pressed:
+			_show_shortcuts()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F2:
+			_set_debug_overlay(not debug_overlay)
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F3 and OS.is_debug_build():
+			_toggle_playtest_language()
+			get_viewport().set_input_as_handled()
 
 
 ## Record a rubbing the first time its symbol is revealed. Returns false if it
@@ -82,6 +334,8 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 
 ## Confirmed meaning of a rubbing, or "" while it is undeciphered.
 func get_rubbing_meaning(rubbing_id: String) -> String:
+	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
+		return "Dayfolk"
 	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
 
 
@@ -91,7 +345,11 @@ func get_rubbing_target(rubbing_id: String) -> String:
 
 
 ## Texture path of a rubbing's symbol ("" if unknown).
+const SUN_RUBBING_TEXTURE := "res://assets/Art/symbol/coin&sun.png"
+
 func get_rubbing_texture(rubbing_id: String) -> String:
+	if rubbing_id == "sky_sun_rubbing" and rubbings.has(rubbing_id):
+		return SUN_RUBBING_TEXTURE
 	return rubbing_records.get(rubbing_id, {}).get("texture", "")
 
 
@@ -103,6 +361,7 @@ func get_gravestone_rubbings(gravestone_id: String) -> Array[String]:
 
 ## Returns `text` with every name placeholder replaced by the player's name.
 func fill_placeholders(text: String) -> String:
+	text = zh_text(text)
 	for placeholder in NAME_PLACEHOLDERS:
 		text = text.replace(placeholder, player_name)
 	return text
@@ -126,6 +385,12 @@ func content_catalog() -> Dictionary:
 		var parsed = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/notebook_content.json"))
 		if parsed is Dictionary:
 			_content = parsed
+			if chinese_playtest:
+				for section in ["gravestones", "evidence"]:
+					for entry in _content[section].values():
+						for field in ["title", "description", "body", "interactive_body"]:
+							if entry.has(field):
+								entry[field] = zh_text(entry[field])
 	return _content
 
 
@@ -140,7 +405,7 @@ func get_evidence(id: String) -> Dictionary:
 	entry["id"] = id
 	entry["category"] = entry.get("category", "observation")
 	if reveal.has("title"):
-		entry["title"] = reveal["title"]
+		entry["title"] = zh_text(reveal["title"])
 	var text: String = reveal.get("text", "")
 	entry["body"] = text
 	entry["interactive_body"] = text
@@ -224,9 +489,15 @@ func record_gravestone(id: String) -> bool:
 		"father_tomb": ["skyway_history", "natural_collapse_record"],
 		"girl_tomb": ["girl_diary", "day_city_history"],
 	}
+	# During the tutorial, Aurora delivers these after the scene comparison.
+	if id == "baby_tomb" and tutorial_day_return_heard and not investigation_tutorial_completed and not notebook_preview and not evidence_ids.has("dayfolk_appearance"):
+		deliveries.erase(id)
 	for evidence_id in deliveries.get(id, []):
 		record_evidence(evidence_id)
+	if id in ["mother_tomb", "father_tomb"] and "mother_tomb" in gravestones and "father_tomb" in gravestones:
+		record_evidence("infant_medical_record")
 	notebook_changed.emit()
+	write_autosave()
 	return true
 
 
@@ -513,7 +784,7 @@ var tutorial_night_heard := false
 var tutorial_hidden_heard := false
 var current_city_day := true
 const IDENTITY_LABELS := {"infant": "Infant", "scholar": "Scholar", "tycoon": "Tycoon", "divine_messenger": "Divine Messenger", "night_mother": "Holy Mother", "night_father": "Holy Father", "aurora": "Aurora", "funerary_artist": "Funerary Artist"}
-const CAUSE_LABELS := {"natural": "Natural death", "unexplained": "Unexplained circumstances", "hunger_and_thirst": "Hunger and thirst", "disappearance": "Disappearance", "missed_sleeping_deadline": "Exceeded the day/night limit", "escape": "Departure"}
+const CAUSE_LABELS := {"natural": "Natural death", "unexplained": "Unexplained circumstances", "euthanasia": "Euthanasia", "hunger_and_thirst": "Hunger and thirst", "disappearance": "Disappearance", "missed_sleeping_deadline": "Exceeded the day/night limit", "escape": "Departure"}
 
 func report_options(pool: String, tomb_id: String) -> Array[String]:
 	var result: Array[String] = []
@@ -537,7 +808,7 @@ func set_report_choice(tomb_id: String, field: String, value: String) -> bool:
 
 func rubbing_display(id: String) -> String:
 	var meaning := get_rubbing_meaning(id)
-	return ("☾" if id == "infant_moon_rubbing" else get_evidence(id).get("title", id)) + (" → " + meaning if not meaning.is_empty() else " · undeciphered")
+	return ("☾" if id == "infant_moon_rubbing" else get_evidence(id).get("title", id)) + (" → " + zh_text(meaning) if not meaning.is_empty() else " · " + zh_text("undeciphered"))
 
 
 # Negative scans retain checked endpoints when the scene is recreated.
@@ -548,12 +819,13 @@ var tutorial_day_return_heard := false
 var tutorial_record_intro_heard := false
 var tutorial_keyword_ack_heard := false
 var tutorial_radio_intro_heard := false
+var tutorial_report_intro_heard := false
 var tutorial_end_heard := false
 signal term_collected(term_id: String)
 
 func collect_term(id: String) -> void:
 	var identities := {"infant": "infant", "scholar": "scholar", "tycoon": "tycoon", "divine_messenger": "divine_messenger", "night_mother": "night_mother", "night_father": "night_father", "aurora": "aurora", "funerary_artist": "funerary_artist"}
-	var causes := {"natural": "natural", "unexplained death": "unexplained", "thirst": "hunger_and_thirst", "disappearance": "disappearance", "missed_sleeping_deadline": "missed_sleeping_deadline", "escape": "escape"}
+	var causes := {"natural": "natural", "unexplained death": "unexplained", "euthanasia": "euthanasia", "thirst": "hunger_and_thirst", "disappearance": "disappearance", "missed_sleeping_deadline": "missed_sleeping_deadline", "escape": "escape"}
 	var pool := "identities" if identities.has(id) else ("causes" if causes.has(id) else "clue_terms")
 	var value: String = identities.get(id, causes.get(id, id))
 	var stored: Variant = radio_progress.get(pool, [])
@@ -566,6 +838,7 @@ func collect_term(id: String) -> void:
 
 func deliver_day_manuscripts() -> void:
 	for id in content_catalog().get("evidence", {}):
+		if id in ["infant_medical_record", "girl_diary"]: continue # Delivered at their own gravestone milestones.
 		var entry := get_evidence(id)
 		if entry.get("category", "") != "manuscript": continue
 		var places: Array = entry.get("metadata", {}).get("related_location", [])

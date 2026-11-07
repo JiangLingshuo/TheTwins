@@ -9,6 +9,7 @@ var _panel: PanelContainer
 var _layout: VBoxContainer
 var _tomb := ""
 var _question: Dictionary = {}
+var _candidate_order: Array[int] = [0, 1, 2]
 var _slot := ""
 var _filter := 0
 var _last_lines: Array = []
@@ -19,8 +20,10 @@ var _session := ""
 var _session_number := 0
 var _render_pending := false
 var _tutorial_hint: Label
+var tutorial_controls: Dictionary = {}
 var _reply_box: Control
 var _reply_playing := false
+var _heard_reply := false
 var _previous_layout: VBoxContainer
 ## Radio history context of the last question sent; follow-ups chosen from its
 ## reply are recorded under the same question and evidence.
@@ -35,6 +38,7 @@ func _ready() -> void:
 	_button.texture_normal = preload("res://assets/Art/symbols/radio_tool.svg")
 	_button.ignore_texture_size = true
 	_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	SoftIcon.apply(_button)
 	add_child(_button)
 	_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
 	_button.offset_left = -140
@@ -78,6 +82,7 @@ func is_open() -> bool:
 func open() -> void:
 	if is_open() or not _can_open():
 		return
+	_heard_reply = false
 	GameState.radio_modal_open = true
 	get_parent().get_node("FlashlightTool").turn_off()
 	get_parent().get_node("RubbingTool").turn_off()
@@ -90,6 +95,9 @@ func open() -> void:
 
 func close() -> void:
 	if _reply_playing: return
+	if _heard_reply:
+		GameState.write_autosave()
+		_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
 	_question = {}
@@ -104,17 +112,19 @@ func _queue_render() -> void:
 
 func _label(text: String, font_size: int = 22) -> Label:
 	var label := Label.new()
-	label.text = text
+	label.text = GameState.zh_text(text)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size.x = 800
-	label.add_theme_font_override("font", FONT)
+	label.add_theme_font_override("font", GameState.playtest_font(FONT))
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", Color(0.94, 0.92, 0.8))
 	return label
 
 func _action(text: String, callback: Callable, disabled: bool = false) -> Button:
+	text = GameState.zh_text(text)
 	var button := Button.new()
-	button.custom_minimum_size.x = maxf(110.0, FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
+	var font := GameState.playtest_font(FONT)
+	button.custom_minimum_size.x = maxf(110.0, font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
 	var wrapped := ""
 	var row := ""
 	for word in text.split(" "):
@@ -124,6 +134,9 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 		else: row += (" " if not row.is_empty() else "") + word
 	wrapped += row
 	button.custom_minimum_size.y = maxf(34, wrapped.split("\n").size() * 22 + 10)
+	if GameState.chinese_playtest:
+		var rows := ceilf(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x / 280.0)
+		button.custom_minimum_size.y = maxf(34.0, rows * 24.0 + 10.0)
 	button.size = Vector2(360, button.custom_minimum_size.y)
 	button.disabled = disabled
 	var frame := StyleBoxFlat.new()
@@ -137,7 +150,7 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("focus", hover)
 	var title := _label(wrapped, 20)
-	title.autowrap_mode = TextServer.AUTOWRAP_OFF
+	title.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART if GameState.chinese_playtest else TextServer.AUTOWRAP_OFF
 	title.clip_text = true
 	button.tooltip_text = text
 	button.add_child(title)
@@ -170,6 +183,7 @@ func _render() -> void:
 	if not is_open() or _reply_playing: return
 	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
 	_previous_layout = _layout
+	tutorial_controls.clear()
 	_layout = VBoxContainer.new()
 	_layout.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	_layout.size = Vector2(_menu_host.size.x, 400)
@@ -181,23 +195,25 @@ func _render() -> void:
 	header.add_child(title)
 	if not _tomb.is_empty(): header.add_child(_action("Change stone", _change_tomb))
 	header.add_child(_action("End call", close))
+	_tutorial_hint = _label("", 18)
+	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
+	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
+	_layout.add_child(_tutorial_hint)
 	if _tomb.is_empty():
 		_layout.add_child(_label("Which gravestone would you like to ask about?", 23))
 		var list := _scroll_stack(_layout, 140)
 		for id in GameState.gravestones:
 			if not model.city_allows(id): continue
 			var info := GameState.get_gravestone_info(id)
-			list.add_child(_action(info.get("title", id), _start_call.bind(id)))
+			var stone := _action(info.get("title", id), _start_call.bind(id))
+			list.add_child(stone)
+			if id == "baby_tomb": tutorial_controls["stone"] = stone
 		if list.get_child_count() == 0: list.add_child(_label("No recorded gravestones in this city yet. Return to Day City to continue the small marker investigation." if not GameState.current_city_day else "Record a Day City gravestone in your notebook first."))
 		_commit_layout()
 		return
 	var status := _label(_status if not _status.is_empty() else "Choose a question, or place evidence to reveal a hidden question.", 18)
 	if _feedback == "hidden": status.add_theme_color_override("font_color", Color(1, 0.8, 0.35))
 	_layout.add_child(status)
-	_tutorial_hint = _label("", 18)
-	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
-	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
-	_layout.add_child(_tutorial_hint)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 22)
@@ -207,50 +223,67 @@ func _render() -> void:
 	left.size_flags_stretch_ratio = 1.8
 	columns.add_child(left)
 	if not _last_lines.is_empty():
-		left.add_child(_action("Read last reply", _replay_reply))
+		var replay := _action("Read last reply", _replay_reply)
+		left.add_child(replay)
+		tutorial_controls["replay"] = replay
 	left.add_child(_label("Follow-up" if not _followups.is_empty() else "Questions", 20))
 	var questions := _scroll_stack(left, 110)
 	if not _followups.is_empty():
 		for choice in _followups: questions.add_child(_action(choice["label"], _follow.bind(choice)))
 	else:
 		for question in model.questions_for(_tomb, _slot):
-			var text: String = question["label"]
+			if not _lesson_allows(question): continue
+			var text := GameState.zh_text(question["label"])
 			if question["hidden"]: text = "◇ " + text
 			if _question.get("id", "") == question["id"]: text = "→ " + text
 			if not question["available"]:
-				text += "  (record the human-shaped symbol first)" if question["target"] == "test_answer_baby_17" else "  (symbol link needed)"
-			questions.add_child(_action(text, _select_question.bind(question), not question["available"]))
+				text += "  (" + GameState.zh_text("record the human-shaped symbol first" if question["target"] == "test_answer_baby_17" else "symbol link needed") + ")"
+			var question_button := _action(text, _select_question.bind(question), not question["available"])
+			questions.add_child(question_button)
+			tutorial_controls[question["target"]] = question_button
 	var right := VBoxContainer.new()
 	right.custom_minimum_size.x = 330
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
 	right.add_child(_label("Evidence · one record", 20))
-	var slot_title: String = model.group_title(_slot)
+	var slot_title := GameState.zh_text(model.group_title(_slot))
 	right.add_child(_action(slot_title + ("  ×" if not _slot.is_empty() else ""), _clear_slot, not _followups.is_empty()))
 	var filter := OptionButton.new()
-	for label in ["All types", "Symbol records", "Manuscripts", "Other clues"]: filter.add_item(label)
+	if GameState.chinese_playtest:
+		var font := GameState.playtest_font(FONT)
+		filter.add_theme_font_override("font", font)
+		filter.get_popup().add_theme_font_override("font", font)
+	for label in ["All types", "Symbol records", "Manuscripts", "Other clues"]: filter.add_item(GameState.zh_text(label))
 	filter.selected = _filter
 	filter.disabled = not _followups.is_empty()
 	filter.item_selected.connect(_set_filter)
 	right.add_child(filter)
-	var ids: Array = model.data["groups"].keys() if _question.is_empty() else model.candidates(_question, _slot)
+	var ids: Array = model.data["groups"].keys() if _question.is_empty() else _ordered_candidates()
 	var visible_ids: Array = model.groups_for_filter(ids, _filter, _question.is_empty())
-	right.add_child(_label("Collected records" if _question.is_empty() else "Three choices · %d shown" % visible_ids.size(), 17))
+	var sketch_group: String = model.data["evidence_groups"].get("infant_graffiti", "")
+	if _question.is_empty() and _lesson_question() == "test_answer_baby_21" and visible_ids.has(sketch_group):
+		visible_ids.erase(sketch_group)
+		visible_ids.push_front(sketch_group)
+	right.add_child(_label("Collected records" if _question.is_empty() else GameState.zh_text("Three choices · %d shown") % visible_ids.size(), 17))
 	var records := _scroll_stack(right, 170 if not _question.is_empty() else 115)
 	for id in visible_ids:
 		var unlocked: bool = model.group_unlocked(id)
 		var group: Dictionary = model.data["groups"][id]
-		var label: String = model.group_title(id) if unlocked else "Uncollected record"
-		if unlocked and group["members"].size() > 1: label += "  (combined)"
+		var label := GameState.zh_text(model.group_title(id) if unlocked else "Uncollected record")
+		if unlocked and group["members"].size() > 1: label += "  (" + GameState.zh_text("combined") + ")"
 		if id == _slot: label = "✓ " + label
 		var record_button := _action(label, _set_slot.bind(id), not unlocked or not _followups.is_empty())
 		if unlocked: record_button.tooltip_text = GameState.get_evidence(model.group_member(id)).get("body", "")
 		records.add_child(record_button)
+		if id == sketch_group: tutorial_controls["sketch"] = record_button
+	tutorial_controls["evidence"] = records.get_parent()
 	if visible_ids.is_empty(): records.add_child(_label("No unlocked records of this type.", 18))
 	if not _question.is_empty():
 		var actions := HBoxContainer.new()
 		right.add_child(actions)
-		actions.add_child(_action("Send evidence" if not _slot.is_empty() else "Ask", _send, not _followups.is_empty()))
+		var send_button := _action("Send evidence" if not _slot.is_empty() else "Ask", _send, not _followups.is_empty())
+		actions.add_child(send_button)
+		tutorial_controls["send"] = send_button
 		actions.add_child(_action("Back", _clear_question))
 
 	_commit_layout()
@@ -290,12 +323,31 @@ func _change_tomb() -> void:
 	_followups = []
 	_queue_render()
 
+func _lesson_question() -> String:
+	var guide := get_parent().get_node_or_null("SunMoonTutorial")
+	return guide.radio_lesson_question() if guide else ""
+
+
+func _lesson_allows(question: Dictionary) -> bool:
+	var target := _lesson_question()
+	return target.is_empty() or question.get("target", "") == target
+
+
+func _ordered_candidates() -> Array:
+	var candidates := model.candidates(_question, _slot)
+	var ordered: Array = []
+	for index in _candidate_order:
+		ordered.append(candidates[index])
+	return ordered
+
+
 func _select_question(question: Dictionary) -> void:
-	if _reply_playing: return
+	if _reply_playing or not _lesson_allows(question): return
 	_question = question
+	_candidate_order.shuffle()
 	if not model.candidates(question, _slot).has(_slot): _slot = ""
 	_filter = 0
-	_status = "Choose a record, or ask without evidence for Aurora's initial reply."
+	_status = "Choose the best evidence that helps answer the question." if not _lesson_question().is_empty() else "Choose a record, or ask without evidence for Aurora's initial reply."
 	_queue_render()
 
 func _clear_question() -> void:
@@ -322,7 +374,16 @@ func _set_filter(index: int) -> void:
 	_queue_render()
 
 func _send() -> void:
-	if _reply_playing or _question.is_empty(): return
+	if _reply_playing or _question.is_empty() or not _lesson_allows(_question): return
+	if not _lesson_question().is_empty():
+		if _slot.is_empty():
+			_status = "Choose the best evidence that helps answer the question."
+			_queue_render()
+			return
+		if _lesson_question() == "test_answer_baby_8" and not model.progress.get("read_answers", []).has("baby_8_normal_9") and model.group_member(_slot) == "infant_graffiti":
+			_status = "Choose evidence that identifies the icon. You can use the sketch to follow up later."
+			_queue_render()
+			return
 	# A submission owns one immutable question/evidence pair. Neither menu
 	# refreshes nor later selections may turn an ordinary reply into another one.
 	var sent_question: Dictionary = _question.duplicate(true)
@@ -333,7 +394,7 @@ func _send() -> void:
 		_queue_render()
 		return
 	GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": sent_question["label"]})
-	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": "Submitted record: " + str(model.data["groups"][sent_slot]["title"])})
+	if not sent_slot.is_empty(): GameState.append_radio_line(_session, {"speaker": "", "content": GameState.zh_text("Submitted record: %s") % GameState.zh_text(model.data["groups"][sent_slot]["title"])})
 	# The reply that plays now is one exchange of the radio history. model.submitted_id
 	# is the record send() actually evaluated ("" without evidence).
 	_exchange_context = {"gravestone_id": sent_question["tomb"], "question_id": sent_question["id"],
@@ -387,6 +448,9 @@ func _play_reply(lines: Array[Dictionary], log_session: String) -> void:
 	for line in lines: playback.append(line.duplicate(true))
 	_reply_box.play(playback, log_session)
 	await _reply_box.finished
+	_heard_reply = true
+	if not log_session.is_empty():
+		GameState.write_autosave()
 	_reply_playing = false
 	_overlay.visible = true
 	_queue_render()

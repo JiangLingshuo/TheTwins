@@ -46,14 +46,26 @@ var is_day: bool = true:
 			return
 		is_day = value
 		_fade_backgrounds()
+		if is_node_ready():
+			# The bell rings A#. Going to night it drops a semitone to A; going back to
+			# day it rises two semitones to C (the music sits in D minor: A, F, C, D).
+			_church_bell.pitch_scale = pow(2.0, (2.0 if is_day else -1.0) / 12.0)
+			_church_bell.play()
 		GameState.current_city_day = is_day
 		time_changed.emit(is_day)
 
 var _fade: Tween
+## Church bell that tolls whenever day and night swap.
+var _church_bell := AudioStreamPlayer.new()
+var _submit_report: Button
 
 
 func _ready() -> void:
-	is_day = start_time == 0
+	_church_bell.stream = preload("res://assets/audio/教堂钟声.wav")
+	_church_bell.volume_db = -22.0
+	add_child(_church_bell)
+	is_day = GameState.current_city_day if GameState.resume_saved_city else start_time == 0
+	GameState.resume_saved_city = false
 	GameState.current_city_day = is_day
 	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.
@@ -88,10 +100,10 @@ func _ready() -> void:
 		_toast.show_message(already_noted_message))
 	# Every new clue is announced (a revealed one too), queued after other messages.
 	GameState.evidence_recorded.connect(_on_evidence_recorded)
+	_add_report_submission()
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
-		gravestone.recorded.connect(func(id: String) -> void:
-			_notebook_tool.show_gravestone_next(id)
+		gravestone.recorded.connect(func(_id: String) -> void:
 			_toast.show_message(gravestone_recorded_message))
 
 
@@ -113,9 +125,33 @@ func _fade_in_from_black() -> void:
 		black.queue_free())
 
 
+func _add_report_submission() -> void:
+	_submit_report = Button.new()
+	var submit := _submit_report
+	submit.text = "Submit investigation reports"
+	submit.add_theme_font_size_override("font_size", 22)
+	add_child(submit)
+	submit.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
+	submit.offset_left = 24
+	submit.offset_top = -66
+	submit.offset_right = 286
+	submit.offset_bottom = -24
+	submit.pressed.connect(func() -> void:
+		if GameState.ending_report_complete():
+			GameState.open_ending(GameState.ending_report_passed()))
+	GameState.notebook_changed.connect(_update_report_submission)
+	_update_report_submission()
+
+
+func _update_report_submission() -> void:
+	_submit_report.visible = GameState.investigation_tutorial_completed and GameState.ending_report_complete()
+
+
 func _on_evidence_recorded(id: String) -> void:
-	if GameState.is_clue(id) and not GameState.notebook_preview:
-		_toast.show_message(clue_recorded_message % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
+	if id == "infant_medical_record" and not GameState.notebook_preview:
+		_toast.show_message("New manuscript received from Aurora: Day City Medical Record.")
+	elif GameState.is_clue(id) and not GameState.notebook_preview:
+		_toast.show_message(GameState.zh_text(clue_recorded_message) % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
 
 
 func _unhandled_key_input(event: InputEvent) -> void:
@@ -188,7 +224,14 @@ func _add_investigation_targets() -> void:
 			if not texture_path.begins_with("res://"):
 				texture_path = "res://assets/Art/symbols/" + texture_path
 			target.texture = load(texture_path)
-			if spec.get("crop", false):
+			if spec.has("region"):
+				# Part of a larger drawing, e.g. the detail that differs in a "past" version.
+				var atlas := AtlasTexture.new()
+				atlas.atlas = target.texture
+				var r: Array = spec["region"]
+				atlas.region = Rect2(r[0], r[1], r[2], r[3])
+				target.texture = atlas
+			elif spec.get("crop", false):
 				target.texture = _crop_to_used(target.texture)
 		if spec.has("size"):
 			target.size = Vector2(spec["size"][0], spec["size"][1])
@@ -202,15 +245,5 @@ func _add_investigation_targets() -> void:
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
 		max_year = maxf(max_year, target.years_ago)
 		(_day_cemetery if spec["city"] == "day" else _night_cemetery).add_child(target)
-	var symbol := TextureRect.new()
-	symbol.set_script(load("res://scripts/rubbing_symbol.gd"))
-	symbol.name = "SunMarkerSymbol"
-	symbol.position = Vector2(220, 680)
-	symbol.size = Vector2(100, 100)
-	symbol.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	symbol.texture = load("res://assets/Art/symbol/coin&sun.png")
-	symbol.rubbing_id = "sun_shaped_marker_rubbing"
-	symbol.matching_target_id = "day_city_coin"
-	_day_cemetery.add_child(symbol)
 	_flashlight_tool.flashlight.focus_max = max_year
 	_flashlight_tool.get_node("FocusScale").max_value = max_year

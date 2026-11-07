@@ -13,6 +13,7 @@ VAR player_name = "Investigator"
 + [发现婴儿涂鸦] -> chat_tutorial_searchlight_found
 + [进入无线电] -> chat_tutorial_radio_ready
 + [隐藏提问教学] -> chat_tutorial_hidden_question
++ [填写调查报告] -> chat_tutorial_report_intro
 + [新手调查结束] -> chat_tutorial_investigation_complete
 + [相机登场] -> chat_tutorial_camera_intro
 + [相机基座观察] -> chat_tutorial_camera_connections
@@ -38,7 +39,7 @@ Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to
 // line_id:chat_start:008
 Yeah, I was just looking at it. Interesting color scheme. #player
 // line_id:chat_start:009
-There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. #aurora
+There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them. #aurora
 // line_id:chat_start:010
 Should I expect to meet anyone here? #player
 // line_id:chat_start:011
@@ -149,6 +150,12 @@ Perhaps I should call Aurora to cross-check my findings so far. #player
 Choose the marker, then a question. Send a relevant record with it, and we can work out what your observations mean. Some records let you ask questions you couldn't ask before. Others reveal more in an answer you've already heard. #aurora
 -> END
 
+=== chat_tutorial_report_intro ===
+# runtime_xml:tutorial_report_intro.xml
+// line_id:chat_tutorial_report_intro:001
+You have enough to make a first report. Open Gravestones in your notebook and fill in the infant’s identity and cause of death. You can come back and revise either answer as you learn more. #aurora
+-> END
+
 === chat_tutorial_hidden_question ===
 # runtime_xml:tutorial_hidden_question.xml
 // line_id:chat_tutorial_hidden_question:001
@@ -216,15 +223,15 @@ Return to the manuscript list and read A Page of the Designer's Journal as well.
 // line_id:chat_guide_prompts:013
 Take your time reading. When finished, return to the manuscript list or close the notebook. #narrator
 // line_id:chat_guide_prompts:014
-Close the notebook and contact Aurora → small marker → interpret the icon. Submit ☾ → Moon for an informed reply. #narrator
+Contact Aurora and select the first question. Choose the best evidence that helps answer the question. #narrator
 // line_id:chat_guide_prompts:015
 Click the underlined natural death in Aurora's reply. You can also use Read last reply to collect a missed term. #narrator
 // line_id:chat_guide_prompts:016
-Ask why the marker is shaped like a person. Submit the designer's manuscript; continue through Aurora's follow-up. #narrator
+Now ask why the marker is shaped like a person. Submit the comparison you made with the Day City figure. #narrator
 // line_id:chat_guide_prompts:017
 Contact Aurora. Place A Sketch of the Infant in the slot before choosing a question: a hidden question about its artist will appear. #narrator
 // line_id:chat_guide_prompts:018
-Ask about the icon again with A Sketch of the Infant, revealed by the searchlight. Compare the child's actual appearance with the family's chosen image to question the recorded death. #narrator
+You can follow up on some questions with a different piece of evidence. Select the first question again and submit A Sketch of the Infant. #narrator
 // line_id:chat_guide_prompts:019
 Collect the underlined unexplained circumstances from Aurora's reply. #narrator
 // line_id:chat_guide_prompts:020

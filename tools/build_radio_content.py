@@ -69,6 +69,7 @@ for tomb in ['baby','scholar','sun','altar','mother','father','girl']:
         questions.append({'id':tomb+':'+target,'tomb':tomb+'_tomb','label':m[2],'condition':condition,'target':target,'hidden': 'has_tag(' in condition or 'submitted_id' in condition or target=='test_answer_altar_24'})
         needed.add(target)
 stop_prefixes=('END','test_radio_','test_hub','test_end_call','return_night_glyph','test_disappearance_return')
+needed.update(['test_confrontation','ending_false'])
 programs={}
 while needed:
     name=needed.pop()
@@ -129,7 +130,9 @@ for q in questions:
     if q['hidden'] or q['id']=='baby:test_answer_baby_8' or q['target']=='test_disappearance_hypothesis':
         continue
     tags, ids=relevant_atoms(blocks[q['target']])
-    for gid in q['candidates'][1:]:
+    # The human-shape question has a comparison and a manuscript follow-up.
+    first_distractor = 2 if q['id']=='baby:test_answer_baby_17' else 1
+    for gid in q['candidates'][first_distractor:]:
         for eid in groups[gid]['members']:
             assert eid not in ids and not tags.intersection(catalog['evidence'][eid]['metadata'].get('evidence_tag',[])), (q['id'],eid)
 

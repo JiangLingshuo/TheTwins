@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "984f763256b27bb636ada77426a9f25b948e50b7c41ae64f8ec9ce114fe0a0e7",
+    "evidence_master.ink": "a7fe8da943151c23df322c17e8971ccc1763568a129cde0fd096bf4ee56ae38b",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "161155eca385d2ad8b20401b9f2b3af35f691d1ac6ad0f175777ac61070ddd6b"
+    "telecomm_master.ink": "e45178efb23bdd1ca50bae15304bde569779ef77bc3049d8c422a8e66749a47a"
   },
   "gravestones": {
     "baby_tomb": {
@@ -36,7 +36,7 @@
       "title": "The White Infant Altar",
       "location": "night_cemetery",
       "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.",
-      "sketch": "res://assets/Art/night/alter.png"
+      "sketch": "res://assets/Art/tombstone/single/alter_now_single.png"
     },
     "mother_tomb": {
       "id": "mother_tomb",
@@ -44,7 +44,7 @@
       "title": "The Small Stone Beside the Altar",
       "location": "night_cemetery",
       "description": "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.",
-      "sketch": "res://assets/Art/night/mother.png"
+      "sketch": "res://assets/Art/tombstone/single/mother_single.png"
     },
     "father_tomb": {
       "id": "father_tomb",
@@ -52,7 +52,7 @@
       "title": "The Other Stone Beside the Altar",
       "location": "night_cemetery",
       "description": "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.",
-      "sketch": "res://assets/Art/night/father.png"
+      "sketch": "res://assets/Art/tombstone/single/father_single.png"
     },
     "girl_tomb": {
       "id": "girl_tomb",
@@ -67,7 +67,7 @@
     "dayfolk_appearance": {
       "gravestones": [],
       "id": "dayfolk_appearance",
-      "title": "The Appearance of the Dayfolk",
+      "title": "Human-Shaped Rubbing → Dayfolk Figure",
       "body": "The figure has a smooth face and the familiar outline of the Dayfolk. Its features offer a reference for the human-shaped marker.",
       "interactive_body": "The figure has a smooth face and the familiar outline of the Dayfolk. Its features offer a reference for the human-shaped marker.",
       "category": "observation",
@@ -80,7 +80,7 @@
           "dayfolk_appearance"
         ],
         "title": [
-          "The Appearance of the Dayfolk"
+          "Human-Shaped Rubbing → Dayfolk Figure"
         ],
         "category": [
           "observation"
@@ -89,7 +89,7 @@
           "day_cemetery"
         ],
         "tool": [
-          "camera"
+          "rubbing"
         ],
         "evidence_tag": [
           "dayfolk_appearance",
@@ -242,7 +242,7 @@
       "id": "designer_journal",
       "title": "A Page of the Designer's Journal",
       "body": "My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
-      "interactive_body": "My <link=\"student\">student</link> visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
+      "interactive_body": "My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.",
       "category": "manuscript",
       "gravestone": "baby_tomb",
       "metadata": {
@@ -315,6 +315,41 @@
         ]
       },
       "source_knot": "ev_infant_graffiti"
+    },
+    "infant_medical_record": {
+      "gravestones": [
+        "baby_tomb"
+      ],
+      "id": "infant_medical_record",
+      "title": "Day City Medical Record: Infant Case",
+      "body": "Clinical examination: The infant was covered in thick hair. His eyes barely opened. The attending physicians judged that he would be unable to adapt to conditions in Day City.\n\nAuthorization: Both parents signed the consent form.\n\nOutcome: Euthanasia was approved and carried out. Death was confirmed by the attending physician.",
+      "interactive_body": "Clinical examination: The infant was covered in thick hair. His eyes barely opened. The attending physicians judged that he would be unable to adapt to conditions in Day City.\n\nAuthorization: Both parents signed the consent form.\n\nOutcome: <link=\"euthanasia\">Euthanasia</link> was approved and carried out. Death was confirmed by the attending physician.",
+      "category": "manuscript",
+      "gravestone": "baby_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "infant_medical_record"
+        ],
+        "title": [
+          "Day City Medical Record: Infant Case"
+        ],
+        "category": [
+          "manuscript"
+        ],
+        "location": [
+          "aurora_transmission"
+        ],
+        "related_location": [
+          "day_cemetery"
+        ],
+        "evidence_tag": [
+          "infant_euthanasia"
+        ]
+      },
+      "source_knot": "ev_infant_medical_record"
     },
     "infant_death_doubt": {
       "gravestones": [
@@ -537,7 +572,7 @@
       "id": "disappearance_inquiry",
       "title": "The Scholar's Notes on Disappearances",
       "body": "The unexplained disappearances in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
-      "interactive_body": "The unexplained <link=\"disappearance\">disappearances</link> in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found <link=\"fresh_wounds\">fresh wounds</link> upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
+      "interactive_body": "The unexplained <link=\"disappearance\">disappearances</link> in Day City are always reported at dawn, when people wake.\n\nThe Dayfolk's bodies are unusual. Anyone who fails to enter a sleeping coffin on time will die. Once inside, however, they lose all awareness and ability to act for the entire night, under the coffin's complete protection.\n\nWho has been tampering with their sleeping coffins? I cannot investigate the movements of the Nightfolks while they are awake. I can only suspect that, while taking our food, they have also done something to my husband and my people.\n\nIt is not only disappearances. Many of us, myself included, have found fresh wounds upon waking. Given the Nightfolk's habit of plundering, they are most likely responsible. I must remain vigilant.",
       "category": "manuscript",
       "gravestone": "scholar_tomb",
       "metadata": {
@@ -1279,8 +1314,8 @@
       ],
       "id": "crystal_god_prophecy",
       "title": "The Crystal God's Prophecy",
-      "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
-      "interactive_body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"",
+      "body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"\n\nThe child foretold in the prophecy was called the Divine Messenger.",
+      "interactive_body": "A legend of the Crystal God:\n\n\"When an infant with skin as smooth as crystal comes to Night City, the Nightfolk will see the light once more.\"\n\nThe child foretold in the prophecy was called the <link=\"divine_messenger\">Divine Messenger</link>.",
       "category": "manuscript",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1753,7 +1788,7 @@
       "id": "natural_collapse_record",
       "title": "The Collapse That Sealed the Road",
       "body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a natural collapse sealed the road to the surface.",
-      "interactive_body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a <link=\"natural_collapse\">natural collapse</link> sealed the road to the surface.",
+      "interactive_body": "...Before the division of day and night, the People of Sun and Moon lived together. After the separation into upper and lower cities, a natural collapse sealed the road to the surface.",
       "category": "manuscript",
       "gravestone": "father_tomb",
       "metadata": {
@@ -2144,8 +2179,8 @@
       ],
       "id": "girl_teddy_bear",
       "title": "A Teddy Bear at the Solitary Marker",
-      "body": "In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.",
-      "interactive_body": "In the searchlight, a woman kneels before the solitary marker and sets a small teddy bear at its base. Her face and the toy can be compared with the family photograph.",
+      "body": "In the searchlight, a woman kneels before the solitary marker and sets a small toy at its base. Her face and the toy can be compared with the family photograph.",
+      "interactive_body": "In the searchlight, a woman kneels before the solitary marker and sets a small toy at its base. Her face and the toy can be compared with the family photograph.",
       "category": "trace",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2181,6 +2216,50 @@
         ]
       },
       "source_knot": "ev_girl_teddy_bear"
+    },
+    "girl_painted_flower": {
+      "gravestones": [
+        "girl_tomb"
+      ],
+      "id": "girl_painted_flower",
+      "title": "A Painted Flower at the Solitary Marker",
+      "body": "The searchlight brings out a large flower painted on the solitary marker. Its outline matches the flower on the Holy Mother's stone.",
+      "interactive_body": "The searchlight brings out a large flower painted on the solitary marker. Its outline matches the flower on the Holy Mother's stone.",
+      "category": "trace",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "girl_painted_flower"
+        ],
+        "title": [
+          "A Painted Flower at the Solitary Marker"
+        ],
+        "category": [
+          "trace"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "searchlight"
+        ],
+        "searchlight_year": [
+          "2005"
+        ],
+        "searchlight_years_ago": [
+          "45"
+        ],
+        "searchlight_date_status": [
+          "timeline_suggestion"
+        ],
+        "evidence_tag": [
+          "girl_painted_flower_trace"
+        ]
+      },
+      "source_knot": "ev_girl_painted_flower"
     },
     "night_mother_flower": {
       "gravestones": [
@@ -2265,7 +2344,7 @@
       "id": "day_city_history",
       "title": "A History of Day City",
       "body": "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
-      "interactive_body": "This history was a <link=\"banned_book\">banned book</link> until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their <link=\"sleeping_coffin\">sleeping coffins</link> at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the <link=\"sun_moon_people\">People of Sun and Moon</link>. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the <link=\"population_decline\">number of people on the surface decreased</link>. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
+      "interactive_body": "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.",
       "category": "manuscript",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2337,7 +2416,7 @@
       "id": "girl_diary",
       "title": "A Diary Page, Author Unknown",
       "body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.\n\nI wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. Neither of us would bring our mother. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
-      "interactive_body": "If the truth of death itself is being covered up, then <link=\"diary_complicity\">am I not an accomplice when I carve monuments to that lie</link>?\n\nI can no longer bear this <link=\"diary_hypocrisy\">hypocritical world</link>. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.\n\nI wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. <link=\"diary_mothers\">Neither of us would bring our mother</link>. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.\n\nI have to persuade her. We can only <link=\"diary_escape\">escape on our own</link>. The One-way Passage Order is launching soon. We need to act fast.",
+      "interactive_body": "If the truth of death itself is being covered up, then am I not an accomplice when I carve monuments to that lie?\n\nI can no longer bear this hypocritical world. If even one person had stopped to question what was wrong with the world we lived in, perhaps we would never have come to this.\n\nI once loved and respected my mother so much. She was my example from childhood. But first she failed to protect my brother; then she blamed my father's disappearance on others. Even when I tried to tell her the truth about our world, she insisted that useless sympathy would destroy Day City.\n\nHow many more times must we hurt our own people in the name of protecting them?\n\nShe left me a message on my windowsill when she came to the Day City. She is so intelligent that she acquired the language of Day City just by observing the surroundings and reading the library, and she found out my identity as her correspondence just by the messages conveyed by the stones. She said there was an old site in the ruins, with sleeping coffins that could keep the two of us alive.\n\nShe told me why she wanted to leave. Before her brother was born, she had a place in the family. Afterwards, every hope and every tenderness seemed to belong to him. When he disappeared, she waited for her parents to notice that she was still there. Instead, their grief filled the place he had left. Night City called them the Holy Father and Holy Mother. She could not remember the last time she had felt like their daughter.\n\nI wanted to leave a world my mother kept defending. She wanted to leave a home where she felt unseen. Neither of us would bring our mother. With my mother's influence in Day City, everyone would find out if she came. For the other girl, leaving without hers was the point.\n\nI have to persuade her. We can only escape on our own. The One-way Passage Order is launching soon. We need to act fast.",
       "category": "manuscript",
       "gravestone": "girl_tomb",
       "metadata": {
@@ -2627,7 +2706,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there."
+          "content": "There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them."
         },
         {
           "speaker": "#PLAYER#",
@@ -2686,7 +2765,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask two questions of the most curiosity."
+          "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about."
         },
         {
           "speaker": "",
@@ -2722,7 +2801,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residence. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation -- cemeteries are the diorama of cities."
+          "content": "No. There was a cemetery where both peoples were buried together. You will not visit it on this trip. They did not always keep their graves separate, nor their residences. If you learn about cemeteries in human civilization, they are often the microcosm of a city's history of integration and segregation—cemeteries are the diorama of cities."
         }
       ]
     },
@@ -2744,15 +2823,42 @@
     "test_confrontation_tail": {
       "id": "test_confrontation_tail",
       "source_knot": "test_confrontation",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(The wind echoes through the city no one has returned to. It might be your imagination, but it feels colder now.)"
+        },
+        {
+          "speaker": "",
+          "content": "(You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.)"
+        },
+        {
+          "speaker": "",
+          "content": "“We feel, and all that we have felt is swept away in the bright tumult of the world.”"
+        },
+        {
+          "speaker": "",
+          "content": "(You first read Goethe's poem An Lottchen from Zweig's The World of Yesterday, where he recounts the beautiful world before the war that strips us of our humanity.)"
+        },
+        {
+          "speaker": "",
+          "content": "(It is only when you witness a collapse that you realize how fragile our established routines can be. You wonder whether…)"
+        }
+      ]
+    },
+    "test_open_ending_tail": {
+      "id": "test_open_ending_tail",
+      "source_knot": "test_open_ending",
       "preview_only": false,
       "lines": [
         {
-          "speaker": "#PLAYER#",
-          "content": "The girl, the coffin, the hands. This is not just a similar decoration."
+          "speaker": "",
+          "content": "(You are not sure if the Day Aurora will call back when the night ends. But you look to the horizon, and see a beautiful light shine from the back of the solitary stone.)"
         },
         {
-          "speaker": "Aurora",
-          "content": "I carved it. I wrote the diary, too."
+          "speaker": "",
+          "content": "(No matter what—on Earth or these obsolete cities. Tomorrow the sun will rise.)"
         }
       ]
     },
@@ -2794,7 +2900,17 @@
         },
         {
           "speaker": "",
-          "content": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
+          "content": "(\"A child without an occupation is a person before anything else,” you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really separate from the social influence?)"
+        }
+      ]
+    },
+    "baby_17_comparison": {
+      "id": "baby_17_comparison",
+      "source_knot": "test_answer_baby_17",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "Yes, this is an icon for the Dayfolk. Have you found a designer's manuscript that explains why this marker was shaped like a person?"
         }
       ]
     },
@@ -2804,7 +2920,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "A design often leaves a paper shadow, #PLAYER#: a manuscript. Did you find the designer's?"
+          "content": "Compare the rubbing with the figure in the cemetery. What do the two shapes have in common?"
         }
       ]
     },
@@ -2850,17 +2966,21 @@
         }
       ]
     },
-    "scholar_12_supported_14": {
-      "id": "scholar_12_supported_14",
-      "source_knot": "test_answer_scholar_12",
+    "repeated_beast_hidden": {
+      "id": "repeated_beast_hidden",
+      "source_knot": "test_answer_repeated_beast",
       "lines": [
         {
           "speaker": "",
-          "content": "(A little lift in her voice. For once, encouragement arrives before caution.)"
+          "content": "(She goes quiet long enough for you to hear the wind at your end of the call.)"
         },
         {
           "speaker": "Aurora",
-          "content": "Nice catch. Think of an obelisk reaching upward, promising something that might outlast a life. A funerary ornament repeated across a whole cemetery can tell us about the city's losses, #PLAYER#, as well as any one person's."
+          "content": "On one stone, a creature might have belonged to a single life. When it keeps turning up on graves that have nothing else in common, I start to wonder what the whole city needed a way to say."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Look for a pattern like that in Night City. If the same sign turns up on several graves there, ask yourself what those people kept leaving for one another. They may have had something quite different to say."
         }
       ]
     },
@@ -2916,6 +3036,20 @@
         }
       ]
     },
+    "scholar_passage_gate_hidden": {
+      "id": "scholar_passage_gate_hidden",
+      "source_knot": "test_answer_scholar_passage_gate",
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(A small pause. You hear something click on her end of the line.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions."
+        }
+      ]
+    },
     "scholar_20_normal_21": {
       "id": "scholar_20_normal_21",
       "source_knot": "test_answer_scholar_20",
@@ -2968,7 +3102,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "… Or there is no one left to remember her. I made that decision. I made that decision..."
+          "content": "…or there is no one left to remember her. I made that decision. I made that decision..."
         }
       ]
     },
@@ -3115,7 +3249,7 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(She speaks in an undisturbed tone)"
+          "content": "(She speaks in an undisturbed tone.)"
         },
         {
           "speaker": "Aurora",
@@ -3205,7 +3339,7 @@
         },
         {
           "speaker": "",
-          "content": "(It's different, definitely. Two worlds overlap in the dimension of time.）"
+          "content": "(It's different, definitely. Two worlds overlap in the dimension of time.)"
         },
         {
           "speaker": "",
@@ -3285,7 +3419,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "The pictures match. But the media is unknown."
+          "content": "The pictures match. But the medium is unknown."
         }
       ]
     },
@@ -3444,12 +3578,8 @@
       "source_knot": "test_answer_girl_8",
       "lines": [
         {
-          "speaker": "",
-          "content": "(You describe the frame. Her breath catches at its upper edge, as though your finger has touched something she can feel.)"
-        },
-        {
           "speaker": "Aurora",
-          "content": "An upright sleeping coffin, like the one in the old illustration. A place to wait for another waking. Strange, perhaps, to give that shape to a memorial—unless someone hoped the story would continue outside it."
+          "content": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
         }
       ]
     },
@@ -3469,11 +3599,11 @@
       "lines": [
         {
           "speaker": "",
-          "content": "(A faint scrape, then the sound of a hand passing over the microphone. Her voice returns carefully composed.)"
+          "content": "(For a moment, the sentence seems to cost her more than it should.)"
         },
         {
           "speaker": "Aurora",
-          "content": "The diary writer was a funerary artist. She carved the stories other people wanted remembered, until she began to wonder what her own hands were leaving out. Perhaps this stone was an attempt to answer herself."
+          "content": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a funerary artist. Perhaps this was the one stone she could finally let speak for herself."
         }
       ]
     },
@@ -3481,10 +3611,6 @@
       "id": "girl_12_normal_13",
       "source_knot": "test_answer_girl_12",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(She draws a slow breath. You hear her choose the safer end of the question.)"
-        },
         {
           "speaker": "Aurora",
           "content": "A human shape can stand for many lives. Her work may have left a clearer signature in the diary."
@@ -3569,15 +3695,15 @@
         },
         {
           "speaker": "",
-          "content": "(The next line is too faint that it sounds like a whisper to self.)"
+          "content": "(The next line is so faint that it sounds like a whisper to herself.)"
         },
         {
           "speaker": "Aurora",
-          "content": "She might be feeling as guilty as ..."
+          "content": "She might be feeling as guilty as…"
         },
         {
           "speaker": "",
-          "content": "(The last few words disperse in the humming sound)"
+          "content": "(The last few words disperse in the humming sound.)"
         },
         {
           "speaker": "Aurora",
@@ -3619,7 +3745,7 @@
         },
         {
           "speaker": "",
-          "content": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday)"
+          "content": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday.)"
         },
         {
           "speaker": "Aurora",
@@ -3668,6 +3794,48 @@
         {
           "speaker": "Aurora",
           "content": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+        }
+      ]
+    },
+    "test_answer_girl_bear_preview_tail": {
+      "id": "test_answer_girl_bear_preview_tail",
+      "source_knot": "test_answer_girl_bear_preview",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(You almost asked that question, but deep down, you know why it’s here.)"
+        },
+        {
+          "speaker": "",
+          "content": "(You decided not to ask this way.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Anything else?"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I'm not sure what you are talking about."
+        }
+      ]
+    },
+    "test_answer_girl_flower_preview_tail": {
+      "id": "test_answer_girl_flower_preview_tail",
+      "source_knot": "test_answer_girl_flower_preview",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(If your guess is correct, she might not know. You decided to keep this question for later.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Anything else?"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I'm confused."
         }
       ]
     }

@@ -39,6 +39,36 @@ text = "Press any key to start..."
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="Epigraph" type="VBoxContainer" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.16
+anchor_top = 0.3
+anchor_right = 0.84
+anchor_bottom = 0.7
+mouse_filter = 2
+theme_override_constants/separation = 28
+alignment = 1
+
+[node name="Quote" type="Label" parent="Epigraph"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 36
+text = "And only decades later, when roof and walls fell in upon us, did we realize that the foundations had long since been undermined."
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="Attribution" type="Label" parent="Epigraph"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.75, 0.71, 0.64, 1)
+theme_override_fonts/font = ExtResource("2_font")
+theme_override_font_sizes/font_size = 24
+text = "— Stefan Zweig, The World of Yesterday"
+horizontal_alignment = 1
+
 [node name="Book" parent="." unique_id=1865872905 instance=ExtResource("3_book")]
 layout_mode = 1
 day_night_all_spreads = true

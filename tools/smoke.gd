@@ -4,7 +4,7 @@ extends SceneTree
 ## Prints PASS / FAIL per check and exits with 1 if anything failed.
 ## Run it with: powershell -File tools/run.ps1 smoke
 
-const TIMEOUT_SECONDS := 150.0
+const TIMEOUT_SECONDS := 180.0
 
 var _failures := 0
 
@@ -77,7 +77,12 @@ func _check_notebook_flow() -> void:
 
 	book.write(1, "Stored, #PLAYER#")
 	start._start_game()
+	await _wait(0.9)
+	var music_player: AudioStreamPlayer = _autoload("Music").get_node("BGMPlayer")
+	_expect("epigraph appears with no background music", start.epigraph.visible and not music_player.playing)
+	await start.epigraph.visibility_changed
 	await _wait(1.5)
+	_expect("epigraph fades out automatically before music starts", not start.epigraph.visible and music_player.playing)
 	_expect("prompt hides after a key press", not start.prompt.visible)
 
 	book._on_name_submitted("Ann")
@@ -141,7 +146,7 @@ func _check_main_after_close() -> void:
 	var start := current_scene
 	var book = start.get_node("Book")
 	start.dialogue_page = 99  # no dialogue in this check
-	start._start_game()
+	await start._start_game()
 	await _wait(1.5)
 	book._on_name_submitted("Ann")
 	await _wait(1.5)

@@ -23,6 +23,8 @@ static func paginate(raw: String, font: Font, width: float, height: float) -> Ar
 	var pages: Array[String] = []
 	var current := ""
 	var tokens := RegEx.create_from_string('<link="[^\"]+">[^<]+</link>\\s*|[^\\s]+\\s*').search_all(raw)
+	if GameState.chinese_playtest:
+		tokens = RegEx.create_from_string('<link="[^"]+">[^<]+</link>|\\p{Han}|[^\\p{Han}<\\s]+|\\s+|.').search_all(raw)
 	for token in tokens:
 		var word := token.get_string()
 		var candidate := current + word

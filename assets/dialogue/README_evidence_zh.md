@@ -76,20 +76,20 @@
 
 `location:aurora_transmission` 表示收到副本后可在历史手稿里反复打开，不要求玩家走到 `related_location` 才能读。接收某份资料、阅读资料、点击其中词条是三个不同事件。不要因一份手稿关联终局墓碑就自动把它锁到终局；发送时机尚需事件表配置。
 
-## 4 点击词条的三类收录
+## 4 调查词条
 
-下表穷举当前三个 Ink 文件中的实际 `<link>`，按现有设计给出接入分类。分类表需要程序注册，Ink 原文尚未给每个 link 写独立类型 tag。表中的 `identity:`、`death_cause:`、`clue:` 是建议的程序侧动作，不是现有 Ink 命令。
-
-身份／职业和死因加入全局候选池，所有墓碑调查页共享；解锁选项不等于替玩家选中答案，也不等于答案已经正确。独立线索词单独加入笔记本，可用作证据，不能混进调查下拉框。
+下划线只标记可填入调查表的身份和死因。点击后加入全局候选池，玩家可在笔记本修改报告。手稿和线索仍按整份记录收录。
 
 ### 身份／职业
 
 | 原始 link ID | 中文收录名 | 点击动作 | 来源与说明 |
 | --- | --- | --- | --- |
 | `infant` | 婴儿 | `identity:infant` | designer_manuscript |
-| `student` | 学生／学徒 | `identity:student` | designer_journal；称谓最终由作者确认 |
 | `scholar` | 学者 | `identity:scholar` | profession_record |
 | `tycoon` | 大亨 | `identity:tycoon` | profession_record |
+| `night_mother` | 圣母 | `identity:night_mother` | 夜母无线电回复 |
+| `night_father` | 圣父 | `identity:night_father` | 夜父无线电回复 |
+| `funerary_artist` | 墓碑设计师 | `identity:funerary_artist` | 女孩孤碑无线电回复 |
 
 ### 死因
 
@@ -100,29 +100,9 @@
 | `thirst` | 饥渴而死 | `death_cause:hunger_and_thirst` | night_mother_death_finding；需先解读后授予 |
 | `disappearance` | 消失 | `death_cause:disappearance` | disappearance_inquiry 的失踪记载，以及 infant_memorial_correspondence 的对应结论；任一已解锁来源点击后全局收录 |
 | `missed_sleeping_deadline` | 超出昼夜限制 | `death_cause:missed_sleeping_deadline` | night_father_death；先由对应调查／对话授予 finding，再点击收录 |
+| `euthanasia` | 安乐死 | `death_cause:euthanasia` | infant_medical_record |
 
-### 独立线索词
-
-| 原始 link ID | 中文收录名 | 点击动作 | 来源与说明 |
-| --- | --- | --- | --- |
-| `fresh_wounds` | 醒来时的新伤口 | `clue:fresh_wounds` | disappearance_inquiry；记录现象，不接受作者归罪为事实 |
-| `natural_collapse` | 史书所称的自然塌方 | `clue:natural_collapse` | natural_collapse_record；官方归因，不能直接视为真相 |
-| `banned_book` | 禁书 | `clue:banned_book` | day_city_history |
-| `sleeping_coffin` | 睡棺 | `clue:sleeping_coffin` | day_city_history |
-| `sun_moon_people` | 日月之民 | `clue:sun_moon_people` | day_city_history |
-| `population_decline` | 地表人口减少的记载 | `clue:population_decline` | day_city_history；保留史书立场 |
-| `diary_complicity` | 为谎言刻碑的共犯 | `clue:diary_complicity` | girl_diary；摘录完整句子 |
-| `diary_hypocrisy` | 虚伪的世界 | `clue:diary_hypocrisy` | girl_diary |
-| `diary_mothers` | 带上她的母亲，就得带上我的母亲 | `clue:diary_mothers` | girl_diary；保留完整条件关系 |
-| `diary_escape` | 只由我们自己逃离 | `clue:diary_escape` | girl_diary；不作为已确认死因 |
-
-点击时保存来源 `source_evidence_id`（对话则保存来源段落）和原文摘录。同一 link 多次出现只收录一次，可累积多个来源。独立线索词建议用 `term:<link_id>` 作为证据槽的独立 ID，避免和原始证据 ID 冲突。
-
-词条证据与原手稿的推理标签应显式配置，不要把整篇手稿的全部标签自动复制给每个摘录，否则“禁书”等任意单词也可能误触发整篇文章的隐藏分支。最小测试可先让玩家直接提交原始证据，再逐条补词条可接受的 tag。
-
-Godot 文本控件不会因为出现 `<link>` 就自动完成收录。UI 需将该格式转换为项目所用的可点击富文本，并把点击 ID 交给上表动作；显示下划线／高亮及“已记录”反馈。不要把 link 原始标记直接显示给玩家。
-
-已补入的死因词条：“消失”使用 `disappearance`；“超出昼夜限制”使用 `missed_sleeping_deadline`。二者都加入全局死因候选池。“消失”是调查栏中的记录分类，不等于已经证实死亡，也不等于自动确认逃离；它与 `diary_escape` 的独立线索用途不同。夜父的 finding 必须先由对应调查／对话授予，点击其中词条才解锁候选，不因注册全文而提前解锁。尚待补入：“夜父／夜母”的独立可点击身份词。`student` 当前按身份处理，“学生／学徒”的最终显示名仍需作者确认。
+夜父与夜母的碑都登记后，Aurora 会发来昼城医学记录。点击其中的 Euthanasia 才会解锁该死因。婴儿调查页保留原先的暂定答案，直到玩家手动更新。
 
 ## 5 证据槽与无线电
 

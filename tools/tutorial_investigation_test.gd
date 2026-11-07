@@ -67,6 +67,8 @@ func _run() -> void:
 	state.radio_progress["manuscript_keywords"] = ["infant"]
 	radio.open()
 	radio._start_call("baby_tomb")
+	state.record_evidence("dayfolk_appearance")
+	await send("test_answer_baby_17", "dayfolk_appearance")
 	await send("test_answer_baby_17", "designer_manuscript")
 	check("infant is explicitly clickable in supported reply", radio._last_lines.any(func(line: Dictionary) -> bool: return line.get("content", "").contains('<link="infant">')))
 	radio._collect_term("infant")

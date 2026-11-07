@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "90ada5c7ccf666476ac2a1620f2fb0bf2f03e441904416cbc1afff78bd88c61c",
+  "source_sha256": "a7659aef790fc7771fb4a5f5c9223f0607ca1b836548df7e1c6e1f74fcc90c28",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -34,8 +34,8 @@
       "target": "test_answer_baby_17",
       "hidden": false,
       "candidates": [
+        "dayfolk_appearance",
         "designer_manuscript",
-        "infant_figure_rubbing",
         "infant_graffiti"
       ]
     },
@@ -50,6 +50,19 @@
         "infant_graffiti",
         "designer_journal",
         "infant_figure_rubbing"
+      ]
+    },
+    {
+      "id": "scholar:test_answer_repeated_beast",
+      "tomb": "scholar_tomb",
+      "label": "What does it mean when the same symbol keeps appearing?",
+      "condition": "submitted_id == \"repeated_beast_motifs\"",
+      "target": "test_answer_repeated_beast",
+      "hidden": true,
+      "candidates": [
+        "repeated_beast_motifs",
+        "twin_beast_account",
+        "scholar_beast_rubbing"
       ]
     },
     {
@@ -92,9 +105,22 @@
       ]
     },
     {
+      "id": "scholar:test_answer_scholar_passage_gate",
+      "tomb": "scholar_tomb",
+      "label": "Why can I go between the cities? Shouldn’t the gate have closed?",
+      "condition": "submitted_id == \"one_way_passage_order\"",
+      "target": "test_answer_scholar_passage_gate",
+      "hidden": true,
+      "candidates": [
+        "one_way_passage_order",
+        "profession_record",
+        "day_city_history"
+      ]
+    },
+    {
       "id": "scholar:test_answer_scholar_20",
       "tomb": "scholar_tomb",
-      "label": "Why is the color in black and white?",
+      "label": "Why is it in black and white?",
       "condition": "1 == 1",
       "target": "test_answer_scholar_20",
       "hidden": false,
@@ -183,9 +209,22 @@
       ]
     },
     {
+      "id": "sun:test_answer_repeated_beast",
+      "tomb": "sun_tomb",
+      "label": "What does it mean when the same symbol keeps appearing?",
+      "condition": "submitted_id == \"repeated_beast_motifs\"",
+      "target": "test_answer_repeated_beast",
+      "hidden": true,
+      "candidates": [
+        "repeated_beast_motifs",
+        "twin_beast_account",
+        "scholar_beast_rubbing"
+      ]
+    },
+    {
       "id": "sun:test_answer_sun_13",
       "tomb": "sun_tomb",
-      "label": "Why is the same beast on other markers?",
+      "label": "What does the beast on this marker mean?",
       "condition": "((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))",
       "target": "test_answer_sun_13",
       "hidden": false,
@@ -521,6 +560,19 @@
       ]
     },
     {
+      "id": "girl:test_answer_repeated_beast",
+      "tomb": "girl_tomb",
+      "label": "What does it mean when the same symbol keeps appearing?",
+      "condition": "submitted_id == \"repeated_beast_motifs\"",
+      "target": "test_answer_repeated_beast",
+      "hidden": true,
+      "candidates": [
+        "repeated_beast_motifs",
+        "twin_beast_account",
+        "scholar_beast_rubbing"
+      ]
+    },
+    {
       "id": "girl:test_answer_girl_8",
       "tomb": "girl_tomb",
       "label": "What is the upright frame around her?",
@@ -576,7 +628,7 @@
       "id": "girl:test_answer_girl_24",
       "tomb": "girl_tomb",
       "label": "Aurora, why is this girl on the notebook you gave me?",
-      "condition": "(1 == 1) && (has_tag(EvidenceTag.aurora_provided_object) || has_tag(EvidenceTag.aurora_identity_reference)) && (links ? Relation.cover)",
+      "condition": "(1 == 1) && (has_tag(EvidenceTag.aurora_provided_object) || has_tag(EvidenceTag.aurora_identity_reference)) && ((links ? Relation.cover) || (owned_evidence ? EvidenceId.girl_cover_correspondence))",
       "target": "test_answer_girl_24",
       "hidden": true,
       "candidates": [
@@ -584,9 +636,141 @@
         "diary_cover",
         "girl_signature_rubbing"
       ]
+    },
+    {
+      "id": "girl:test_answer_girl_bear_preview",
+      "tomb": "girl_tomb",
+      "label": "Why is the toy bear in front of the solitary marker?",
+      "condition": "(owned_evidence ? EvidenceId.girl_teddy_bear) && (owned_evidence ? EvidenceId.family_photo)",
+      "target": "test_answer_girl_bear_preview",
+      "hidden": false,
+      "candidates": [
+        "girl_teddy_bear",
+        "family_statuette",
+        "girl_diary"
+      ]
+    },
+    {
+      "id": "girl:test_answer_girl_flower_preview",
+      "tomb": "girl_tomb",
+      "label": "What does the repeating pattern of the painted flower mean?",
+      "condition": "(owned_evidence ? EvidenceId.girl_painted_flower) && know(EvidenceTag.mother_daughter_flower_meaning)",
+      "target": "test_answer_girl_flower_preview",
+      "hidden": false,
+      "candidates": [
+        "girl_painted_flower",
+        "girl_figure_rubbing",
+        "family_statuette"
+      ]
     }
   ],
   "programs": {
+    "ending_false": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You close the notebook. For a moment your thumb rests in the seam between the black and the white.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You have the odd feeling that you have been to this city before. This is like all the cities that you've encountered before. Nothing less. Nothing more.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You picked up Aurora's call.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I have it. Thank you. You must be tired."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Can I ask you something before you go? Did anyone ever come back to the cemetery?"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "There were traces of visitors. I couldn’t tell you who they came for."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I see. And did you find anything on your way out?"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "Just the way back."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She gives a little laugh. You recognize the sound. She made it the first time you told her you’d landed safely.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Of course. Have a safe journey home."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You wait for her to say she’ll speak to you again. The radio clicks. You put it away.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You walk the same way you came. Your footprints are still there. You find it reassuring that there is something here you can recognize at a glance.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A few steps later, you hear her question again. Did you find anything? There was a small lift in her voice on the last word. You had mistaken it for the courtesy of someone letting you finish.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You recognize that sound now. Someone has spent a long time imagining the answer. You wonder what she had hoped you would say.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Perhaps there were stories you passed close enough to touch. Every day people pass that close to you. They go home, turn on a light, and forget they ever saw you. You have done the same to them.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(There was a first morning on this planet, and there was a last one anyone woke up to see. For a little while, between those mornings, people knew who they were waiting for.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(At the ship, you find yourself trying to remember a stone from the planet. It is strange that you miss something that doesn't really relate to your life.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Tomorrow the sun will rise. You start to think whether you left any coffee in your cup before you left. You hope there is no flies landing in it, or worse, hope it doesn’t stink.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(For a while the radio could still reach her. You leave it beside you and watch the Twins recede. First time you really see the planet from far, in a nicely divided black and white. You are in awe of that spectacular scene.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Years from now, you may remember that you once knew someone named Aurora. You may even remember that she was waiting for something, but that's it. By then, the world she carried will have slipped as far into your memory as it now slips into the dark, wild universe.)"
+      },
+      {
+        "op": "goto",
+        "target": "END"
+      }
+    ],
     "query_night_ascending_path": [
       {
         "op": "tag",
@@ -711,7 +895,7 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(She speaks in an undisturbed tone)"
+            "text": "(She speaks in an undisturbed tone.)"
           },
           {
             "op": "line",
@@ -960,7 +1144,7 @@
       {
         "op": "line",
         "speaker": "",
-        "text": "(It's different, definitely. Two worlds overlap in the dimension of time.）"
+        "text": "(It's different, definitely. Two worlds overlap in the dimension of time.)"
       },
       {
         "op": "line",
@@ -1084,7 +1268,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.infant_identity)",
+        "condition": "(read_answers ? AnswerId.baby_17_comparison) && submitted_id == \"designer_manuscript\"",
         "then": [
           {
             "op": "line",
@@ -1094,15 +1278,35 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(\"A child without an occupation is a person before anything else\", you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really seperate from the social influence?)"
+            "text": "(\"A child without an occupation is a person before anything else,” you were reminded of the quote from the manuscript. Despite the punchline, or slogan that speaks to everyone else but the infant, can he really separate from the social influence?)"
           },
           {
             "op": "set",
             "code": "read_answers += AnswerId.baby_17_supported_19"
           },
           {
-            "op": "tag",
-            "value": "event:decipher_human"
+            "op": "set",
+            "code": "supported = true"
+          },
+          {
+            "op": "set",
+            "code": "feedback_kind = \"linked\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "submitted_id == \"dayfolk_appearance\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Yes, this is an icon for the Dayfolk. Have you found a designer's manuscript that explains why this marker was shaped like a person?"
+          },
+          {
+            "op": "set",
+            "code": "read_answers += AnswerId.baby_17_comparison"
           },
           {
             "op": "set",
@@ -1122,7 +1326,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "A design often leaves a paper shadow, #PLAYER#: a manuscript. Did you find the designer's?"
+            "text": "Compare the rubbing with the figure in the cemetery. What do the two shapes have in common?"
           },
           {
             "op": "set",
@@ -1194,7 +1398,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference)",
         "then": [
           {
             "op": "line",
@@ -1212,13 +1416,20 @@
         ],
         "else": [
           {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
+            "op": "if",
+            "condition": "not ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+            "then": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
+              },
+              {
+                "op": "set",
+                "code": "feedback_kind = \"unmatched\""
+              }
+            ],
+            "else": []
           }
         ]
       },
@@ -1607,12 +1818,12 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(A faint scrape, then the sound of a hand passing over the microphone. Her voice returns carefully composed.)"
+            "text": "(For a moment, the sentence seems to cost her more than it should.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "The diary writer was a <link=\"funerary_artist\">funerary artist</link>. She carved the stories other people wanted remembered, until she began to wonder what her own hands were leaving out. Perhaps this stone was an attempt to answer herself."
+            "text": "The diary writer carved memorials and came to question the stories they were asked to preserve. She was a <link=\"funerary_artist\">funerary artist</link>. Perhaps this was the one stone she could finally let speak for herself."
           },
           {
             "op": "set",
@@ -1633,11 +1844,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(She draws a slow breath. You hear her choose the safer end of the question.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -1848,13 +2054,8 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(You describe the frame. Her breath catches at its upper edge, as though your finger has touched something she can feel.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
-            "text": "An upright sleeping coffin, like the one in the old illustration. A place to wait for another waking. Strange, perhaps, to give that shape to a memorial—unless someone hoped the story would continue outside it."
+            "text": "An upright sleeping coffin, just like the old illustration. A change in how people slept can leave a surprisingly long shadow."
           },
           {
             "op": "set",
@@ -1890,6 +2091,77 @@
           }
         ],
         "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_girl_bear_preview": [
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.girl_teddy_bear_trace) || submitted_id == \"family_photo\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(You almost asked that question, but deep down, you know why it’s here.)"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(You decided not to ask this way.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Anything else?"
+          }
+        ],
+        "else": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I'm not sure what you are talking about."
+          }
+        ]
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"\""
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_girl_flower_preview": [
+      {
+        "op": "if",
+        "condition": "has_tag(EvidenceTag.girl_painted_flower_trace) || submitted_id == \"mother_daughter_flower_meaning\"",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(If your guess is correct, she might not know. You decided to keep this question for later.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Anything else?"
+          }
+        ],
+        "else": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I'm confused."
+          }
+        ]
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"\""
       },
       {
         "op": "goto",
@@ -2016,7 +2288,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "The pictures match. But the media is unknown."
+            "text": "The pictures match. But the medium is unknown."
           },
           {
             "op": "set",
@@ -2231,6 +2503,61 @@
         "target": "test_radio_mother"
       }
     ],
+    "test_answer_repeated_beast": [
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She goes quiet long enough for you to hear the wind at your end of the call.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "On one stone, a creature might have belonged to a single life. When it keeps turning up on graves that have nothing else in common, I start to wonder what the whole city needed a way to say."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Look for a pattern like that in Night City. If the same sign turns up on several graves there, ask yourself what those people kept leaving for one another. They may have had something quite different to say."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.repeated_beast_hidden"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"scholar\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_scholar"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"sun\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_sun"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_girl"
+      }
+    ],
     "test_answer_scholar_12": [
       {
         "op": "tag",
@@ -2239,35 +2566,6 @@
       {
         "op": "set",
         "code": "temp supported = false"
-      },
-      {
-        "op": "if",
-        "condition": "submitted_id == \"repeated_beast_motifs\"",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(A little lift in her voice. For once, encouragement arrives before caution.)"
-          },
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "Nice catch. Think of an obelisk reaching upward, promising something that might outlast a life. A funerary ornament repeated across a whole cemetery can tell us about the city's losses, #PLAYER#, as well as any one person's."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.scholar_12_supported_14"
-          },
-          {
-            "op": "set",
-            "code": "supported = true"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"linked\""
-          }
-        ],
-        "else": []
       },
       {
         "op": "if",
@@ -2523,7 +2821,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "… Or there is no one left to remember her. I made that decision. I made that decision..."
+        "text": "…or there is no one left to remember her. I made that decision. I made that decision..."
       },
       {
         "op": "set",
@@ -2721,6 +3019,34 @@
           }
         ],
         "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_scholar"
+      }
+    ],
+    "test_answer_scholar_passage_gate": [
+      {
+        "op": "tag",
+        "value": "feedback:gold"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A small pause. You hear something click on her end of the line.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.scholar_passage_gate_hidden"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
       },
       {
         "op": "goto",
@@ -2954,17 +3280,66 @@
       },
       {
         "op": "line",
-        "speaker": "#PLAYER#",
-        "text": "The girl, the coffin, the hands. This is not just a similar decoration."
+        "speaker": "",
+        "text": "(The wind echoes through the city no one has returned to. It might be your imagination, but it feels colder now.)"
       },
       {
         "op": "line",
-        "speaker": "Aurora",
-        "text": "I carved it. I wrote the diary, too."
+        "speaker": "",
+        "text": "(You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.)"
       },
       {
-        "op": "goto",
-        "target": "test_ending_identity"
+        "op": "line",
+        "speaker": "",
+        "text": "“We feel, and all that we have felt is swept away in the bright tumult of the world.”"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You first read Goethe's poem An Lottchen from Zweig's The World of Yesterday, where he recounts the beautiful world before the war that strips us of our humanity.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(It is only when you witness a collapse that you realize how fragile our established routines can be. You wonder whether…)"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "The girl on the mark feels the same.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_reflect"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "The Night girl in the diary feels the same.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_reflect"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Aurora feels the same.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_reflect"
+              }
+            ],
+            "once": false
+          }
+        ]
       }
     ],
     "test_disappearance_followups": [
@@ -2994,7 +3369,7 @@
               {
                 "op": "line",
                 "speaker": "",
-                "text": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday)"
+                "text": "(Her voice fractures, just like the world you are standing in, a world that belongs to yesterday.)"
               },
               {
                 "op": "line",
@@ -3109,23 +3484,651 @@
         ]
       }
     ],
-    "test_ending_confirm": [
+    "test_ending_day_bear": [
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "She left your toy at the marker you made before you escaped."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "She was worried about you.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_bear_qualify"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "She came out to find you.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_bear_qualify"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "She loved you.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_bear_qualify"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_bear_qualify": [
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Despite the injustice she was complicit in.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_guilt"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Though you don't have to forgive her.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_guilt"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Though we all regret something that cannot be reversed.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_guilt"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_call": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You have your attribution with you. They mark your judgment after days of investigation.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Nothing right or wrong. It's all about interpretations.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(But what each of us called right became, in all our hands, a wrong no one could undo.)"
+      },
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "Yes. One body, two lives. We both answer to Aurora. You are speaking to the one who woke in Day City."
+        "text": "Hi?"
       },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A tentative greeting. As if it's the first time she's talking to you.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You may have captured a subtle sense of panic in her voice, as though that figure behind the husky voice is a lost teenage girl.)"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "I have completed my investigation thoroughly."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Good to hear. What else?"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "I have to ask you a few questions… that might be personal."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A brief, unnatural pause on the other side. You are not sure whether the person on the other side feels unprepared for the moment or has prepared for too long.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Long enough to be accustomed to waiting. Long enough to believe that this moment will never come.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Let me know your thoughts."
+      },
+      {
+        "op": "if",
+        "condition": "ending_cause == 1",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "I've found the reason that the Twins collapsed. It's Night City does not have the concept of exchange."
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "ending_cause == 2",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "I've found the reason that the Twins collapsed. It's The One-way Passage Order of the Day City."
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "ending_cause == 3",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "I've found the reason that the Twins collapsed. It's Inducing effect of ONE being perceived as TWO."
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "ending_cause == 3",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "That's what I thought as well."
+          }
+        ],
+        "else": [
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "Both of us know that it’s more than that."
+          }
+        ]
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "That's too similar to us human beings."
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "We drew a line around ourselves and named it civilization."
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "We expelled those beyond the defined boundaries and sent them downriver on a ship of fools."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We watched it disappear, never knowing it carried our own flesh."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She definitely knows what you are referring to. But you sense a more intimate implication beneath \"flesh\" as her word of choice.)"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "Disappointment in your fellow man, I understand. What about your blood relatives?"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You also left them alone, with no intention of salvage. You didn't speak that out. They were teenage girls. You can't blame them for not saving the world that now remains in yesterday.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "You knew it."
+      },
+      {
+        "op": "if",
+        "condition": "(owned_evidence ? EvidenceId.girl_teddy_bear) && (owned_evidence ? EvidenceId.family_photo)",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_ending_day_bear"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_ending_day_guilt"
+      }
+    ],
+    "test_ending_day_dream": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It took me quite a while to understand \"dream\" in human language. Dayfolk viewed sleep as a rehearsal of death because we totally lose our consciousness when we fall asleep in the sleeping coffin. That's when our night counterparts fully deploy our life for the other part of a day."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Then one day, after a day of conversation with the researchers, I was recalling the past details so intensely that I once again saw the familiar faces at night."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It was the first time I witnessed how dark a long night can be, and the first time her appearance became so clear that I recognized her at first sight."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "She was younger than the woman I had in mind. The night was so dark that it blurred her look. But it's already the clearest out of that vast pool of memories across time."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I said hi. Not sure if she responded. Perhaps deep in my consciousness I still had her voice, but I cannot frame it into a sound that I could match with her—the Scholar, or rather, my mother."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "She passed me the toy, smiling. She didn’t smile that much. She always looked worried. Day City is a place where everyone uses something to exchange for another, like my parents' marriage, like her education to me. That time she gave me a toy. First gift ever, not again."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I woke up the next morning with tears on my cheeks. It's the first and last time that I understood what it means to have a dream."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to that I felt the emptiness in that solitary silence."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "You missed her.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_empathy"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You loved her.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_empathy"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_earth": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(If things happened 50 years ago, you should now be speaking to an old lady that used to live on this planet.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A teenage girl thought that escaping would solve the entire problem. Yet when she's really light-years away from her homeland and dozens of years from the home in her memories, time suddenly becomes a counting unit that loses its tangibility.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The girl was stuck in the past that she was once determined to abandon.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I can't remember the day when the Earth first visited the Twins. I was found by the aliens. By then, I knew not a single word of human language, but I knew they wanted to pick us up."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We were relying on food in the Day City and in the wild. Those days were more about surviving than living. I pointed to the sleeping coffin. They understood, and we were both fetched to Earth."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Every day before my day ends, I write her a note on my thoughts and my progress in communicating with the people. Together, we learnt the human language."
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "So you never did anything together?"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We can't. We are the closest friends that never met each other. That's the limitation the Twins were born with."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "The archaeologists were friendly to us. But \"friendly\" is a different word to \"friend\". To my shame, I started to miss the people that I once deemed as stubborn, harsh and cruel, and most importantly, hypocritical, the trait that I do not want myself to fall into the most."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Neither of us can step out of the specially designed space adapted to our physical condition. Nothing is too different from our years of straying on the Twins."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We were sharing the same flesh—not only the Day and the Night. Also my people and I. As they were lost, I'm lost, too."
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "Have you ever been given a chance to come back?"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(If they can travel that far to Earth and stay alive for years, they should be able to return. But they sent you as the delegate. There is a deeper reason that stopped her from looking back.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I always have the choice. The researchers ask us from time to time. It was me that did not want to look back."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Because your health cannot support a journey this long?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_return_1"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Because you are busy?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_return_2"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Because of your guilt?",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_return_3"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_empathy": [
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "But you don't have to look back.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_empathy_finish"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You should allow yourself to preserve those emotions.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_empathy_finish"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You might follow your heart to visit her again.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_empathy_finish"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_empathy_finish": [
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Even if she did not love you in the way you want.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_goodbye"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Even if she is not perfect.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_goodbye"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "That's the complexity we have to embrace.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_goodbye"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_goodbye": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You feel that tremor in your limbs again, with fear and a little bit of anticipation for her response.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(For a while, she says nothing. You hear only the buzzing sound mixing with the wind.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You sit until the moon rises, randomly thinking about your decisions if you were in their situation.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You suppose you know the answers. But as always, they remain assumptions that change nothing. You call again.)"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Call again.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_start"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_guilt": [
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "You sent me here to make up for your guilt, but…"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "I can recover nothing but facts you mostly already know.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_earth"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You have to face that by yourself.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_earth"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "A witness has no ability to resolve the knots for someone who experienced all this.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_earth"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_day_return_1": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "To my surprise, I'm still quite healthy given my age and my living in a different environment."
+      },
+      {
+        "op": "goto",
+        "target": "test_ending_day_dream"
+      }
+    ],
+    "test_ending_day_return_2": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Time is the thing that I possess the most to waste."
+      },
+      {
+        "op": "goto",
+        "target": "test_ending_day_dream"
+      }
+    ],
+    "test_ending_day_return_3": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "…"
+      },
+      {
+        "op": "goto",
+        "target": "test_ending_day_dream"
+      }
+    ],
+    "test_ending_finish": [
       {
         "op": "set",
-        "code": "identities += Identity.aurora"
-      },
-      {
-        "op": "tag",
-        "value": "event:collect_term:aurora"
-      },
-      {
-        "op": "tag",
-        "value": "event:aurora_confronted"
+        "code": "final_confronted = true"
       },
       {
         "op": "if",
@@ -3143,114 +4146,8 @@
         "else": []
       },
       {
-        "op": "goto",
-        "target": "test_ending_day"
-      }
-    ],
-    "test_ending_day": [
-      {
-        "op": "choices",
-        "items": [
-          {
-            "label": "Why did you leave your mother behind?",
-            "condition": "not ending_day_story",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_day_story"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Show her the bear and the family photograph.",
-            "condition": "not ending_bear && know(EvidenceTag.girl_teddy_bear_trace) && (owned_evidence ? EvidenceId.family_photo)",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_day_bear"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Wait for night and call the other Aurora.",
-            "condition": "ending_day_story",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_night_start"
-              }
-            ],
-            "once": false
-          }
-        ]
-      }
-    ],
-    "test_ending_day_bear": [
-      {
-        "op": "line",
-        "speaker": "#PLAYER#",
-        "text": "The bear she puts down at your marker is the one you're holding in this photograph. Your mother came looking. She found the stone."
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(For a moment you can hear her breathe, but she makes no sound.)"
-      },
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "She brought the bear? I used to leave it on her desk when I wanted her to come home."
-      },
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "I don't know what I would have said if I'd been there. I wish I'd had to find out."
-      },
-      {
         "op": "set",
-        "code": "ending_bear = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_day"
-      }
-    ],
-    "test_ending_day_story": [
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "I watched my mother call cruelty protection. By the time we planned to leave, I could hear her making that argument before she even opened her mouth. I was afraid she would bring the whole city with her."
-      },
-      {
-        "op": "set",
-        "code": "ending_day_story = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_day"
-      }
-    ],
-    "test_ending_diary": [
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "The girl who left notes on my windowsill. I could read what she wrote after I woke. I couldn't remember writing it."
-      },
-      {
-        "op": "set",
-        "code": "ending_diary = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_identity"
-      }
-    ],
-    "test_ending_finish": [
-      {
-        "op": "set",
-        "code": "final_confronted = true"
+        "code": "identities += Identity.aurora"
       },
       {
         "op": "set",
@@ -3258,132 +4155,409 @@
       },
       {
         "op": "tag",
+        "value": "event:collect_term:aurora"
+      },
+      {
+        "op": "tag",
         "value": "event:collect_term:escape"
+      },
+      {
+        "op": "tag",
+        "value": "event:aurora_confronted"
       },
       {
         "op": "goto",
         "target": "test_open_ending"
       }
     ],
-    "test_ending_identity": [
-      {
-        "op": "choices",
-        "items": [
-          {
-            "label": "Why do you sound different after dark?",
-            "condition": "not ending_voice",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_voice"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Who is the girl you write to in your diary?",
-            "condition": "not ending_diary",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_diary"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Are you two people who take turns waking in one body?",
-            "condition": "ending_voice && ending_diary",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_confirm"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Could it be one person with two ways of speaking?",
-            "condition": "ending_voice && ending_diary && not ending_wrong",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_wrong"
-              }
-            ],
-            "once": false
-          }
-        ]
-      }
-    ],
-    "test_ending_night": [
-      {
-        "op": "choices",
-        "items": [
-          {
-            "label": "What made you want to leave Night City?",
-            "condition": "not ending_night_story",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_night_story"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Ask who the flower on her mother's stone was for.",
-            "condition": "not ending_flower && know(EvidenceTag.mother_daughter_flower_meaning)",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_night_flower"
-              }
-            ],
-            "once": false
-          },
-          {
-            "label": "Record both departures and leave the channel open.",
-            "condition": "ending_night_story",
-            "body": [
-              {
-                "op": "goto",
-                "target": "test_ending_finish"
-              }
-            ],
-            "once": false
-          }
-        ]
-      }
-    ],
-    "test_ending_night_flower": [
+    "test_ending_mothers_question": [
       {
         "op": "line",
-        "speaker": "#PLAYER#",
-        "text": "You said two people had a flower that meant “I love you.” Who were they?"
+        "speaker": "",
+        "text": "What did the mothers do to their daughter?"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "They simply love them.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_call"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "They hurt them.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_call"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Hard to conclude, it's not black or white.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_day_call"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_night_childhood": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(A long sigh comes from the other side.)"
       },
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "My mother and me. I used to draw mine too big. She always found a way to fit hers beside it."
+        "text": "Nightfolk do not have a language. We have no order, no social construct, nothing other than digging for survival."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We have icons. Some of them have a meaning that is agreed upon. Most of them remain between closely related individuals."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We Nightfolk have bad eyesight. When I was a child, I put a flower discreetly on my mother's head. It was loosely tied to the ends of her hair. When she was back, the flower was still there. She never noticed it."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I was laughing. She had a grin after me. The next day I put a flower in her hair again. Every day. Until one day I joined the working group and found that there was no way she could come back with that flower every day after that kind of rigorous labor."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We never specifically define that icon. It's never painted, delivered as a letter, or conveyed like a wish that was featured on my brother's stone. It is a meaning that was never described."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "What I felt was only anger. I felt angry when my brother rested in her arms. I felt angry when she was standing on the altar and the group was singing the same hymn."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I lost her when she became the godmother of our people. She no longer worked, and she took off the flower every day when she was preparing herself for the morning prayer."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "She decided to take off that unique icon just between us. The glossy son became her only child, a divine body that carried her flesh. I am nothing related to her."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I thought escaping without her would free me from that attachment. I learnt language from Day City. I started to describe my feelings via the letters to the other Aurora, but I still could not describe my feelings towards my mother."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Until I reached the human world and encountered that word again as “love.”"
       },
       {
         "op": "line",
         "speaker": "",
-        "text": "(The radio picks up a small swallow.)"
+        "text": "(She stopped her narration with a breath of relief.)"
+      },
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "If so, are you coming back one day?"
       },
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "I thought she had forgotten it. I don't know what to do with the fact that it was still there."
+        "text": "I may."
       },
       {
-        "op": "set",
-        "code": "ending_flower = true"
+        "op": "line",
+        "speaker": "",
+        "text": "(No promise. No decision. But you opened up a possibility of returning home.)"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She said goodbye, and the radio never calls back.)"
       },
       {
         "op": "goto",
-        "target": "test_ending_night"
+        "target": "test_ending_finish"
+      }
+    ],
+    "test_ending_night_empathy": [
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "But no matter how I choose, my feelings do not prove your feelings to be wrong.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_childhood"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You don't need my answer to make yourself an individual worthy of others' empathy.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_childhood"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_night_escape": [
+      {
+        "op": "line",
+        "speaker": "#PLAYER#",
+        "text": "That hard decision was made when you were girls, definitely."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She chuckled to herself.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Nothing hard for me. If I hadn't escaped, I would be locked in the underworld by the one-way passage."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "But you had the choice to take your mother.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_mother"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "But you had an option to stay for your people.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_mother"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_night_mother": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "We've been talking for a while. You should know I don't care for someone who cares nothing about me."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You spot slight reluctance towards the end of the sentence.)"
+      },
+      {
+        "op": "if",
+        "condition": "(owned_evidence ? EvidenceId.girl_painted_flower) && know(EvidenceTag.mother_daughter_flower_meaning)",
+        "then": [
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "I found a unique icon of a flower on your mother's stone, which repeats on your solitary marker. You told me that it is a symbol of love that is one of a kind, only between the two of you. Who left it there?"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Her voice is back to that sober tone, but with slight shivering hidden beneath.)"
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "I left it there. My mother has never come to the ground since my brother's disappearance."
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "This doesn’t mean I love her. I just feel pity that no one else is going to understand its meaning after her. Let the stone remember it beyond my mother or myself."
+          },
+          {
+            "op": "line",
+            "speaker": "#PLAYER#",
+            "text": "She remembered that icon before her death. It was left on her tombstone."
+          },
+          {
+            "op": "line",
+            "speaker": "Aurora",
+            "text": "…"
+          },
+          {
+            "op": "line",
+            "speaker": "",
+            "text": "(Silence. )"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(Night Aurora drained herself to learn and survive. She had to pretend to be strong, to act as though none of the sacrifices had left a mark. Only then could she tell herself it had been worth leaving.)"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "It can still hurt. That doesn’t mean it wasn’t worth leaving.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_question"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Admitting love does not conflict with your need to escape.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_question"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You do not have to put yourself in opposition to your mom to justify your choice.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_question"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_night_note": [
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "She's more sensitive than I am. Oversensitive. The guilt is torturing her all the time. Poor…"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She swallowed the last word. A sudden realization that time passed.)"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Poor Aurora.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_escape"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "Poor Girl.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_escape"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_night_question": [
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(She responded with an undisturbed voice.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "If you were me, how would you feel about my escape?"
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Honestly, I can never feel personally the ignorance you've been through, but I know it's tough.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_empathy"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "You were not making the wrong choice. I might make similar choices.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_empathy"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "It's a brave choice. We are born with attachments, which are so difficult to break.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_empathy"
+              }
+            ],
+            "once": false
+          }
+        ]
       }
     ],
     "test_ending_night_start": [
@@ -3393,103 +4567,122 @@
       },
       {
         "op": "line",
+        "speaker": "Aurora",
+        "text": "I read her note. I know what you are calling for."
+      },
+      {
+        "op": "choices",
+        "items": [
+          {
+            "label": "Perhaps I know more than you thought.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_note"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "But I still hope you can stay for the chat.",
+            "condition": "true",
+            "body": [
+              {
+                "op": "goto",
+                "target": "test_ending_night_note"
+              }
+            ],
+            "once": false
+          }
+        ]
+      }
+    ],
+    "test_ending_reflect": [
+      {
+        "op": "line",
         "speaker": "",
-        "text": "You wait for the moon to rise before you open the channel again. The voice that answers sounds familiar. The way she says your name does not."
+        "text": "(And they are one. One that shares the fate and memories of the civilization.)"
       },
       {
         "op": "line",
-        "speaker": "Aurora",
-        "text": "I'm here. What did you want to ask?"
+        "speaker": "",
+        "text": "(After some moments of solitude, you have to give Aurora a call. But before that, you might sort out your thoughts.)"
       },
-      {
-        "op": "goto",
-        "target": "test_ending_night"
-      }
-    ],
-    "test_ending_night_story": [
       {
         "op": "line",
-        "speaker": "Aurora",
-        "text": "After my brother was born, there was never time for me. After he disappeared, I thought they might see me again. They were grieving. I was still there. I got tired of waiting for that to matter."
+        "speaker": "",
+        "text": "What is the true reason of the civilization's fall?"
       },
       {
-        "op": "set",
-        "code": "ending_night_story = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_night"
-      }
-    ],
-    "test_ending_voice": [
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "At night you hear someone who remembers the city from below. In daylight you hear me. There are things she remembers that I only know because she told me."
-      },
-      {
-        "op": "set",
-        "code": "ending_voice = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_identity"
-      }
-    ],
-    "test_ending_wrong": [
-      {
-        "op": "line",
-        "speaker": "Aurora",
-        "text": "A voice can change. But a change of voice would not explain why I needed her to tell me what happened while she was awake."
-      },
-      {
-        "op": "set",
-        "code": "ending_wrong = true"
-      },
-      {
-        "op": "goto",
-        "target": "test_ending_identity"
+        "op": "choices",
+        "items": [
+          {
+            "label": "Night City does not have the concept of exchange",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "ending_cause = 1"
+              },
+              {
+                "op": "goto",
+                "target": "test_ending_mothers_question"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "The One-way Passage Order of the Day City",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "ending_cause = 2"
+              },
+              {
+                "op": "goto",
+                "target": "test_ending_mothers_question"
+              }
+            ],
+            "once": false
+          },
+          {
+            "label": "The effect of ONE being perceived as TWO",
+            "condition": "true",
+            "body": [
+              {
+                "op": "set",
+                "code": "ending_cause = 3"
+              },
+              {
+                "op": "goto",
+                "target": "test_ending_mothers_question"
+              }
+            ],
+            "once": false
+          }
+        ]
       }
     ],
     "test_open_ending": [
       {
         "op": "line",
         "speaker": "",
-        "text": "The radio stays open."
+        "text": "(You are not sure if the Day Aurora will call back when the night ends. But you look to the horizon, and see a beautiful light shine from the back of the solitary stone.)"
       },
       {
         "op": "line",
         "speaker": "",
-        "text": "You can record who left, and who stayed. Across the receiver, someone is still breathing. The next line does not come."
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "You leave a space beneath the last line."
+        "text": "(No matter what—on Earth or these obsolete cities. Tomorrow the sun will rise.)"
       },
       {
         "op": "tag",
         "value": "event:open_ending"
       },
       {
-        "op": "choices",
-        "items": [
-          {
-            "label": "End the call.",
-            "condition": "true",
-            "body": [
-              {
-                "op": "tag",
-                "value": "radio:hang_up"
-              },
-              {
-                "op": "goto",
-                "target": "END"
-              }
-            ],
-            "once": false
-          }
-        ]
+        "op": "goto",
+        "target": "END"
       }
     ],
     "test_scholar_mausoleum": [
@@ -3505,17 +4698,17 @@
           {
             "op": "line",
             "speaker": "",
-            "text": "(The next line is too faint that it sounds like a whisper to self.)"
+            "text": "(The next line is so faint that it sounds like a whisper to herself.)"
           },
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "She might be feeling as guilty as ..."
+            "text": "She might be feeling as guilty as…"
           },
           {
             "op": "line",
             "speaker": "",
-            "text": "(The last few words disperse in the humming sound)"
+            "text": "(The last few words disperse in the humming sound.)"
           },
           {
             "op": "set",
@@ -3543,11 +4736,11 @@
   "groups": {
     "dayfolk_appearance": {
       "id": "dayfolk_appearance",
-      "title": "The Appearance of the Dayfolk",
+      "title": "Human-Shaped Rubbing → Dayfolk Figure",
       "members": [
         "dayfolk_appearance"
       ],
-      "signature": "tags:dayfolk_appearance,human_figure_reference"
+      "signature": "id:dayfolk_appearance"
     },
     "moon_reference": {
       "id": "moon_reference",
@@ -3579,7 +4772,7 @@
       "members": [
         "designer_manuscript"
       ],
-      "signature": "tags:human_figure_reference,infant_identity,occupation_marker_custom"
+      "signature": "id:designer_manuscript"
     },
     "designer_journal": {
       "id": "designer_journal",
@@ -3596,6 +4789,14 @@
         "infant_graffiti"
       ],
       "signature": "tags:infant_actual_appearance,infant_appearance_mismatch"
+    },
+    "infant_medical_record": {
+      "id": "infant_medical_record",
+      "title": "Day City Medical Record: Infant Case",
+      "members": [
+        "infant_medical_record"
+      ],
+      "signature": "tags:infant_euthanasia"
     },
     "infant_death_doubt": {
       "id": "infant_death_doubt",
@@ -3669,7 +4870,7 @@
       "members": [
         "one_way_passage_order"
       ],
-      "signature": "tags:day_city_bias,intercity_resource_exchange,night_city_supply_blockade,one_way_passage"
+      "signature": "id:one_way_passage_order"
     },
     "sun_reference": {
       "id": "sun_reference",
@@ -3963,6 +5164,14 @@
       ],
       "signature": "tags:girl_teddy_bear_trace"
     },
+    "girl_painted_flower": {
+      "id": "girl_painted_flower",
+      "title": "A Painted Flower at the Solitary Marker",
+      "members": [
+        "girl_painted_flower"
+      ],
+      "signature": "tags:girl_painted_flower_trace"
+    },
     "night_mother_flower": {
       "id": "night_mother_flower",
       "title": "A Flower Beneath the Faded Paint",
@@ -3977,7 +5186,7 @@
       "members": [
         "mother_daughter_flower_meaning"
       ],
-      "signature": "tags:mother_daughter_flower_meaning"
+      "signature": "id:mother_daughter_flower_meaning"
     },
     "day_city_history": {
       "id": "day_city_history",
@@ -4052,6 +5261,7 @@
     "designer_manuscript": "designer_manuscript",
     "designer_journal": "designer_journal",
     "infant_graffiti": "infant_graffiti",
+    "infant_medical_record": "infant_medical_record",
     "infant_death_doubt": "infant_death_doubt",
     "shared_family_base": "shared_family_base",
     "crystal_marker_rubbing": "crystal_marker_rubbing",
@@ -4103,6 +5313,7 @@
     "girl_signature_rubbing": "girl_signature_rubbing",
     "family_statuette": "family_statuette",
     "girl_teddy_bear": "girl_teddy_bear",
+    "girl_painted_flower": "girl_painted_flower",
     "night_mother_flower": "night_mother_flower",
     "mother_daughter_flower_meaning": "mother_daughter_flower_meaning",
     "day_city_history": "day_city_history",
@@ -4135,13 +5346,7 @@
     "reports_submitted": false,
     "girl_revealed": false,
     "final_confronted": false,
-    "ending_flower": false,
-    "ending_night_story": false,
-    "ending_bear": false,
-    "ending_day_story": false,
-    "ending_wrong": false,
-    "ending_diary": false,
-    "ending_voice": false,
+    "ending_cause": 0,
     "sun_photo_asked": false,
     "searchlight_year": 2050,
     "scan_2005": false,

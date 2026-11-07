@@ -7,7 +7,7 @@ enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
 const GATED := [Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
 ## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
 @export var step1_notebook_message := "Notebook updated: the moon is recorded in Rise & Set."
-const SKY_SUN_TEXTURE := "res://assets/Art/symbols/sky_sun.svg"
+const SKY_SUN_TEXTURE := GameState.SUN_RUBBING_TEXTURE
 ## Least time the rubbed crescent blinks on the marker before the notebook opens.
 @export var moon_blink_time: float = 2.5
 ## Seconds for the crescent to drop from the marker onto the notebook, then to grow.
@@ -112,7 +112,9 @@ func _input(event: InputEvent) -> void:
 	# _ready() waits a frame before wiring nodes up; ignore input until then.
 	if _skipping or _notebook == null:
 		return
-	if event is InputEventKey and event.keycode == KEY_F2:
+	if GameState.is_dev_menu_click(event):
+		return
+	if event is InputEventKey and (event.keycode in [KEY_F2, KEY_F3] or (event.keycode == KEY_T and event.ctrl_pressed)):
 		return  # the development overlay toggle (GameState) always works
 	if _delivering:
 		if not (event is InputEventMouseMotion):
@@ -170,7 +172,7 @@ func _shake_hint() -> void:
 	for offset in [10.0, -8.0, 6.0, -4.0, 0.0]:
 		_shake_tween.tween_property(_panel, "position:x", home + offset, 0.05)
 
-func _set_step(value: Step, text: String, target: Control) -> void:
+func _set_step(value: Step, text: String, target: Control, persistent := false) -> void:
 	var box := _main.get_node_or_null("Toolbox")
 	if box and target:
 		target = box.proxy_for(target)
@@ -181,15 +183,19 @@ func _set_step(value: Step, text: String, target: Control) -> void:
 	if value != Step.DRAG:
 		_stop_icon_blink()
 	# Gated steps pulse until done; other hints blink a few times.
-	_highlight.loop = value in GATED
+	_highlight.loop = value in GATED or persistent
+	_highlight.z_index = 95 if persistent else 59
+	_highlight.padding = 5 if persistent else 14
+	_panel.z_index = 95 if persistent else 60
+	_panel.get_parent().visible = GameState.debug_overlay or persistent
 	_drag_hint.target = target if value == Step.DRAG else null
-	_text.text = text
+	_text.text = GameState.zh_text(text)
 	var radio := _main.get_node_or_null("RadioTool")
-	if radio and radio.is_open():
+	if radio and radio.is_open() and not radio._reply_playing:
 		_panel.visible = false
 		if is_instance_valid(radio._tutorial_hint):
-			radio._tutorial_hint.text = text
-			radio._tutorial_hint.visible = GameState.debug_overlay
+			radio._tutorial_hint.text = GameState.zh_text(text)
+			radio._tutorial_hint.visible = GameState.debug_overlay or persistent
 	else:
 		_panel.visible = true
 	if _highlight_target != target:
@@ -461,8 +467,14 @@ func _guide_investigation() -> void:
 	elif not GameState.rubbings.has("infant_figure_rubbing"):
 		# Step 3 is done. Step 4 is not gated yet: just the existing hint, no input lock.
 		_set_step(Step.AWAIT_STEP_4, "Make a rubbing of the small marker's person-shaped figure. Completing it will record the whole marker.", _human if _rubbing.active else _rubbing.get_node("RubbingButton"))
-	elif not GameState.tutorial_record_intro_heard:
+	elif not GameState.gravestones.has("baby_tomb"):
 		_record_first_marker.call_deferred()
+	elif not GameState.evidence_ids.has("dayfolk_appearance"):
+		_guide_human_comparison()
+	elif not GameState.tutorial_record_intro_heard:
+		GameState.record_evidence("designer_manuscript")
+		GameState.record_evidence("designer_journal")
+		_play_milestone.call_deferred("tutorial_recorded", "tutorial_record_intro_heard")
 	elif "designer_manuscript" not in progress.get("read_manuscripts", []):
 		_set_step(Step.DONE, "Open Manuscripts and read A Marker for Someone Without an Occupation.", _notebook.book.tabs._tabs[3] if _notebook.is_open() else _notebook.get_node("NotebookButton"))
 	elif "infant" not in progress.get("manuscript_keywords", []):
@@ -482,35 +494,92 @@ func _guide_investigation() -> void:
 	elif not GameState.tutorial_radio_intro_heard:
 		_play_milestone.call_deferred("tutorial_radio_ready", "tutorial_radio_intro_heard")
 	elif not read.has("baby_8_normal_9"):
-		_set_step(Step.DONE, "Close the notebook and contact Aurora → small marker → interpret the icon. Submit ☾ → Moon for an informed reply.", radio._button if not radio.is_open() else null)
+		_guide_radio(radio, "Contact Aurora and select the first question. Choose the best evidence that helps answer the question.")
 	elif "natural" not in progress.get("causes", []):
-		_set_step(Step.DONE, "Click the underlined natural death in Aurora's reply. You can also use Read last reply to collect a missed term.", null)
-	elif not read.has("baby_17_supported_19"):
-		_set_step(Step.DONE, "Ask why the marker is shaped like a person. Submit the designer's manuscript; continue through Aurora's follow-up.", radio._button if not radio.is_open() else null)
-	elif not GameState.tutorial_hidden_heard:
-		_hidden_hint.call_deferred()
-	elif not read.has("baby_21_hidden_23"):
-		_set_step(Step.DONE, "Contact Aurora. Place A Sketch of the Infant in the slot before choosing a question: a hidden question about its artist will appear.", radio._button if not radio.is_open() else null)
+		_guide_radio(radio, "Click the underlined natural death in Aurora's reply. You can also use Read last reply to collect a missed term.", true)
 	elif not read.has("baby_8_additional_10"):
-		_set_step(Step.DONE, "Ask about the icon again with A Sketch of the Infant, revealed by the searchlight. Compare the child's actual appearance with the family's chosen image to question the recorded death.", null)
+		_guide_radio(radio, "You can follow up on some questions with a different piece of evidence. Select the first question again and submit A Sketch of the Infant.")
 	elif "unexplained" not in progress.get("causes", []):
-		_set_step(Step.DONE, "Collect the underlined unexplained circumstances from Aurora's reply.", null)
+		_guide_radio(radio, "Collect the underlined unexplained circumstances from Aurora's reply.", true)
+	elif not read.has("baby_17_comparison"):
+		_guide_radio(radio, "Now ask why the marker is shaped like a person. Submit the comparison you made with the Day City figure.")
+	elif not read.has("baby_17_supported_19"):
+		_guide_radio(radio, "Select the second question again and follow up with the designer's manuscript.")
+	elif not GameState.tutorial_hidden_heard:
+		_play_milestone.call_deferred("tutorial_hidden_question", "tutorial_hidden_heard")
+	elif not read.has("baby_21_hidden_23"):
+		_guide_radio(radio, "Contact Aurora. Place A Sketch of the Infant in the slot before choosing a question: a hidden question about its artist will appear.")
+	elif not GameState.tutorial_report_intro_heard:
+		_play_milestone.call_deferred("tutorial_report_intro", "tutorial_report_intro_heard")
 	else:
 		var report: Dictionary = GameState.gravestone_reports.get("baby_tomb", {})
-		if report.get("identity", "") == "infant" and report.get("death", "") in ["natural", "unexplained"]:
+		if report.get("identity", "") == "infant" and report.get("death", "") in ["natural", "unexplained", "euthanasia"]:
 			_finish_investigation.call_deferred()
 		else:
-			_set_step(Step.DONE, "End the call. Open Gravestones and choose the small marker's identity and death from your collected keywords.", _notebook.get_node("NotebookButton") if not _notebook.is_open() else null)
+			_guide_report(report)
 
-func _hidden_hint() -> void:
-	if _speaking or GameState.tutorial_hidden_heard: return
-	_speaking = true
-	_main.get_node("FlashlightTool").turn_off()
-	_dialogue.play_file("res://assets/dialogue/tutorial_hidden_question.xml")
-	await _dialogue.finished
-	GameState.tutorial_hidden_heard = true
-	_speaking = false
-	refresh()
+func _guide_radio(radio: Control, instruction: String, collect_term := false) -> void:
+	var controls: Dictionary = radio.tutorial_controls
+	var target: Control
+	if not radio.is_open():
+		target = radio._button
+		if collect_term: instruction = "Call Aurora again to revisit the reply and collect the underlined term."
+	elif radio._reply_playing:
+		if not collect_term:
+			_panel.hide()
+			_highlight.dismiss(false)
+			_highlight_target = null
+			return
+		target = radio._reply_box.content_label
+	elif radio._tomb.is_empty():
+		instruction = "Choose the small human-shaped marker."
+		target = controls.get("stone")
+	elif collect_term:
+		target = controls.get("replay", controls.get(radio_lesson_question()))
+	elif not radio._question.is_empty():
+		if radio._slot.is_empty():
+			target = controls.get("evidence")
+		else:
+			instruction = "Send the selected evidence to Aurora."
+			target = controls.get("send")
+	elif radio_lesson_question() == "test_answer_baby_21":
+		if radio.model.group_member(radio._slot) != "infant_graffiti":
+			instruction = "Place A Sketch of the Infant in the evidence slot to reveal a new question."
+			target = controls.get("sketch", controls.get("evidence"))
+		else:
+			instruction = "Choose the hidden question that appeared after you selected the sketch."
+			target = controls.get("test_answer_baby_21")
+	else:
+		target = controls.get(radio_lesson_question())
+	_set_step(Step.DONE, instruction, target, true)
+
+func _guide_report(report: Dictionary) -> void:
+	if not _notebook.is_open():
+		_set_step(Step.DONE, "Open your notebook.", _notebook.get_node("NotebookButton"), true)
+	elif _notebook.book.get_section() != 0 or _notebook.book.get_section_spread() != 0:
+		_set_step(Step.DONE, "Turn to the small marker in Gravestones.", _notebook.book.tabs._tabs[0], true)
+	else:
+		var page: Control = _notebook.book.left_page.get_node("Gravestone")
+		if report.get("identity", "") != "infant":
+			_set_step(Step.DONE, "Open Identity and choose Infant.", page.identity_input, true)
+		else:
+			_set_step(Step.DONE, "Open Death / Departure and choose your provisional cause of death.", page.death_input, true)
+
+func radio_lesson_question() -> String:
+	if not GameState.tutorial_radio_intro_heard or GameState.investigation_tutorial_completed or GameState.notebook_preview:
+		return ""
+	var progress := GameState.radio_progress
+	var read: Array = progress.get("read_answers", [])
+	var causes: Array = progress.get("causes", [])
+	if not read.has("baby_8_normal_9") or not causes.has("natural") or not read.has("baby_8_additional_10") or not causes.has("unexplained"):
+		return "test_answer_baby_8"
+	if not read.has("baby_17_supported_19"):
+		return "test_answer_baby_17"
+	if not GameState.tutorial_hidden_heard:
+		return "tutorial_hidden_question"
+	if not read.has("baby_21_hidden_23"):
+		return "test_answer_baby_21"
+	return ""
 
 
 func _play_milestone(file: String, flag: String) -> void:
@@ -532,7 +601,7 @@ func _play_milestone(file: String, flag: String) -> void:
 	refresh()
 
 func _record_first_marker() -> void:
-	if _speaking or GameState.tutorial_record_intro_heard: return
+	if _speaking or GameState.gravestones.has("baby_tomb"): return
 	_speaking = true
 	_rubbing.turn_off()
 	_main.get_node("FlashlightTool").turn_off()
@@ -549,12 +618,23 @@ func _record_first_marker() -> void:
 		while _notebook.book._busy: await get_tree().process_frame
 	await get_tree().create_timer(0.35).timeout
 	_main.get_node("DayCemetery/BabyTomb").record()
-	await get_tree().create_timer(0.4).timeout
-	_dialogue.play_file("res://assets/dialogue/tutorial_recorded.xml")
-	await _dialogue.finished
-	GameState.tutorial_record_intro_heard = true
 	_speaking = false
 	refresh()
+
+func _guide_human_comparison() -> void:
+	if not _notebook.is_open():
+		_set_step(Step.BOOK, "Open your notebook to find the person-shaped rubbing you just made.", _notebook.get_node("NotebookButton"))
+	elif _notebook.book.get_section() == 1:
+		var page: Control = _notebook.book.left_page
+		_set_step(Step.DRAG, "Drag the person-shaped rubbing onto the figure in the Day City background.", page.get_node("Rubbings"))
+	elif _notebook.book.get_section() == 0 and _notebook.book.get_section_spread() == 0:
+		var page: Control = _notebook.book.left_page
+		var row: HBoxContainer = page.get_node("Gravestone").rubbings_row
+		var index := GameState.get_gravestone_rubbings("baby_tomb").find("infant_figure_rubbing")
+		var slot := row.get_child(index) as Control if index >= 0 and index < row.get_child_count() else null
+		_set_step(Step.TAB, "Click the small marker's person-shaped rubbing in its Rubbings row.", slot)
+	else:
+		_set_step(Step.TAB, "Return to Gravestones and find the small marker's person-shaped rubbing.", _notebook.book.tabs._tabs[0])
 
 func _finish_investigation() -> void:
 	if _speaking or GameState.investigation_tutorial_completed: return

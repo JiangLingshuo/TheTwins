@@ -8,6 +8,17 @@ var tomb := ""
 var submitted_id := ""
 var _context: Dictionary = {}
 var _depth := 0
+var _ending_preview_evidence: Array[String] = []
+
+func begin_ending(true_ending: bool, preview: bool) -> Dictionary:
+	if preview:
+		progress = progress.duplicate(true)
+		_ending_preview_evidence.assign(["girl_teddy_bear", "family_photo", "girl_painted_flower", "mother_daughter_flower_meaning"])
+	_context = {}
+	_depth = 0
+	var result := {"lines": [], "choices": []}
+	_program("test_confrontation" if true_ending else "ending_false", result)
+	return result
 
 func _init() -> void:
 	data = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/radio_content.json"))
@@ -16,7 +27,7 @@ func _init() -> void:
 	progress = GameState.radio_progress
 
 func owns(id: String) -> bool:
-	return GameState.evidence_ids.has(id) or GameState.rubbings.has(id)
+	return GameState.evidence_ids.has(id) or GameState.rubbings.has(id) or id in _ending_preview_evidence
 
 func record_type(id: String) -> int:
 	var entry := GameState.get_evidence(id)
@@ -53,7 +64,7 @@ func _tags(id: String) -> Array:
 func _knows(tag: String) -> bool:
 	if tag in progress.get("known_tags", []):
 		return true
-	for id in GameState.evidence_ids:
+	for id in GameState.evidence_ids + _ending_preview_evidence:
 		if tag in _tags(id):
 			return true
 	return false

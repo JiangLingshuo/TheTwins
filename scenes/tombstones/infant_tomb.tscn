@@ -1,0 +1,35 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/Art/tombstone/infant_scene.png" id="2_art"]
+[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="3_symbol"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/day.png" id="4_human"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/moon.png" id="5_moon"]
+
+[node name="InfantTomb" instance=ExtResource("1_base")]
+texture = ExtResource("2_art")
+gravestone_id = "baby_tomb"
+zoom_rect = Rect2(718, 388, 322, 362)
+
+[node name="HumanSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 598.0
+offset_top = 274.0
+offset_right = 1160.0
+offset_bottom = 836.0
+texture = ExtResource("4_human")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "infant_figure_rubbing"
+
+[node name="MoonSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 828.0
+offset_top = 539.0
+offset_right = 933.0
+offset_bottom = 644.0
+texture = ExtResource("5_moon")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "infant_moon_rubbing"
+matching_target_id = "moon"

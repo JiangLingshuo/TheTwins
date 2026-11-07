@@ -169,7 +169,7 @@ func _build_spots() -> void:
 	for spot in _spots:
 		if is_instance_valid(spot["button"]): spot["button"].queue_free()
 	_spots.clear()
-	var specs: Array = [["base_scholar", "base", Rect2(320, 845, 330, 45)], ["base_infant", "base", Rect2(665, 845, 330, 45)], ["base_sun", "base", Rect2(1000, 845, 330, 45)], ["beast_a", "beast", Rect2(430, 710, 85, 70)], ["beast_b", "beast", Rect2(1130, 710, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)], ["day_crescent", "moon", Rect2(800, 690, 60, 50)]] if _photo_day else [["night_moon", "moon", Rect2(1105, 241, 190, 178)]]
+	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)], ["day_crescent", "moon", Rect2(840, 555, 65, 65)]] if _photo_day else [["night_moon", "moon", Rect2(1105, 241, 190, 178)]]
 	var cemetery: Control = get_parent().get_node("DayCemetery" if _photo_day else "NightCemetery")
 	var image_rect := _image_rect()
 	var screen_size := get_viewport_rect().size
@@ -203,10 +203,10 @@ func _select_spot(id: String) -> void:
 	var complete := true
 	for required in rule["ids"]:
 		if not selections.has(required): complete = false
-	_caption.text = "Marked %d / %d matching details" % [selections.size(), rule["ids"].size()]
+	_caption.text = GameState.zh_text("Marked %d / %d matching details") % [selections.size(), rule["ids"].size()]
 	if complete:
 		GameState.record_evidence(rule["evidence"])
-		_caption.text = rule["label"] + " · " + GameState.get_evidence(rule["evidence"]).get("title", "")
+		_caption.text = GameState.zh_text(rule["label"]) + " · " + GameState.get_evidence(rule["evidence"]).get("title", "")
 		pattern_completed.emit(rule["evidence"])
 		if _tutorial: _finish_tutorial()
 
