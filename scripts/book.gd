@@ -341,11 +341,13 @@ func _turn_forward(to: int = -1) -> void:
 	var next := _spread + 1 if to < 0 else to
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
+	if use_sections: tabs.begin_turn(_section_of(next), flip_sheet)
 	_leave_reading_document()
 	_fill(right_text, right_number, next * 2 + 1)
 	await _fold_sheet(true)
 	# ...and lands on the left, showing its back.
 	_prepare_sheet(true, next * 2)
+	if use_sections: tabs.place_turning_tabs(_section_of(next), flip_sheet)
 	await _fold_sheet(false)
 	_fill(left_text, left_number, next * 2)
 	_finish_flip(next)
@@ -359,10 +361,12 @@ func _turn_backward(to: int = -1) -> void:
 	_flip_player.play()
 	var prev := _spread - 1 if to < 0 else to
 	_prepare_sheet(true, _spread * 2)
+	if use_sections: tabs.begin_turn(_section_of(prev), flip_sheet)
 	_leave_reading_document()
 	_fill(left_text, left_number, prev * 2)
 	await _fold_sheet(true)
 	_prepare_sheet(false, prev * 2 + 1)
+	if use_sections: tabs.place_turning_tabs(_section_of(prev), flip_sheet)
 	await _fold_sheet(false)
 	_fill(right_text, right_number, prev * 2 + 1)
 	_finish_flip(prev)

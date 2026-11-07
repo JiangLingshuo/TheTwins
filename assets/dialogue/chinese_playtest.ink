@@ -169,8 +169,8 @@ Aurora？是你吗？总算连上了。我已经安全降落在双子星上。
 -> DONE
 
 === zh_0034 ===
-// source: "Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook."
-欢迎回来。接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。
+// source: "Welcome back. By the way, every page of your notebook has a sun and moon icon in the corner, and you can use it to switch between day and night too."
+欢迎回来。顺便说一句，笔记本的每一页角落都有日月图标，同样可以用来切换昼夜。
 -> DONE
 
 === zh_0035 ===
@@ -4197,4 +4197,9 @@ Aurora 的其他通讯
 === zh_0817 ===
 // source: "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise."
 夜民祝愿离去的人一切安好。同一个符号被一次次留下，整个城市的人便都能认出这份祝愿。
+-> DONE
+
+=== zh_0818 ===
+// source: "Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook."
+接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。
 -> DONE

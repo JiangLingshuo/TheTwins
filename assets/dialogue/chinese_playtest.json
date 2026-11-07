@@ -32,7 +32,7 @@
   "You can ask over the field radio—but only when the sun rises.": "可以用无线电问我。等太阳升起来再说。",
   "Then let me bring back the sun.": "那我先把太阳带回来。",
   "I'm back in the daylight.": "我回到白天了。",
-  "Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook.": "欢迎回来。接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。",
+  "Welcome back. By the way, every page of your notebook has a sun and moon icon in the corner, and you can use it to switch between day and night too.": "欢迎回来。顺便说一句，笔记本的每一页角落都有日月图标，同样可以用来切换昼夜。",
   "Nice job. Now you have two questions to work with: who is commemorated by this tombstone, and how did they die?": "做得好。现在你有两个问题要查了：这座碑纪念的是谁？对方是怎么死的？",
   "I have no idea how to approach this.": "我不知道从哪儿查起。",
   "Don't worry. I've translated some manuscripts to help with your work. You'll find them under the Manuscripts tab. Translation takes time, so I'll send more from time to time, choosing the pieces most relevant to your progress.": "别急。我翻译了几份手稿，你可以去「手稿」页找。翻译需要时间，我会看你查到哪儿，陆续发给你最相关的几份。",
@@ -815,5 +815,6 @@
   "Why does the same blessing appear on all three graves?": "为什么三座碑上都有同样的祝福符号？",
   "Photograph the same sign on all three graves first. Bring me that record, and I can read it for you.": "先用相机记录三座碑上相同的符号。带着那份记录来，我就能为你解读。",
   "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person.": "一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。",
-  "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise.": "夜民祝愿离去的人一切安好。同一个符号被一次次留下，整个城市的人便都能认出这份祝愿。"
+  "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise.": "夜民祝愿离去的人一切安好。同一个符号被一次次留下，整个城市的人便都能认出这份祝愿。",
+  "Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook.": "接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。"
 }
