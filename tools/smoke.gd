@@ -403,12 +403,17 @@ func _check_rubbing(main: Node) -> void:
 	flashlight_tool._set_state(flashlight_tool.State.ON)
 	rubbing_tool.set_active(true)
 	_expect("picking up the rubbing tool turns the flashlight off", flashlight_tool.state == flashlight_tool.State.OFF)
+	_scribble(symbol, rect)
+	_expect("rubbing needs the stone zoomed in on", symbol.get_touched() == 0.0)
+	_zoom(main, main.get_node("DayCemetery/BabyTomb"))
+	rect = symbol.get_global_rect()
 	rubbing_tool._brush(rect.position + Vector2(2, rect.size.y / 2), rect.position + Vector2(8, rect.size.y / 2))
 	_expect("one short stroke only reveals part of the symbol", symbol.get_touched() > 0.0 and not symbol.is_rubbed)
 	_scribble(symbol, rect)
 	_expect("brushing over the symbol rubs it", symbol.is_rubbed)
 	_expect("the rubbing is recorded", _autoload("GameState").rubbings.has("infant_moon_rubbing"))
 	rubbing_tool.set_active(false)
+	_zoom(main, null)
 
 
 func _check_rubbing_notebook(main: Node) -> void:
@@ -432,8 +437,10 @@ func _check_rubbing_notebook(main: Node) -> void:
 	_expect("a repeated reveal adds nothing and shows no toast", not toast.visible and game_state.rubbings.count("infant_moon_rubbing") == 1)
 
 	rubbing_tool.set_active(true)
+	_zoom(main, main.get_node("DayCemetery/BabyTomb"))
 	_scribble(human, human.get_global_rect())
 	rubbing_tool.set_active(false)
+	_zoom(main, null)
 	await _wait(0.1)
 	_expect("other rubbings show the toast", toast.visible and label.text == "New rubbing recorded in the Notebook.")
 	_expect("rubbings keep their collection order", game_state.rubbings == ["infant_moon_rubbing", "infant_figure_rubbing"])
@@ -627,6 +634,17 @@ func _drag_mouse(position: Vector2) -> void:
 	motion.global_position = position
 	motion.button_mask = MOUSE_BUTTON_MASK_LEFT
 	root.push_input(motion, true)
+
+
+## Zoom in on `stone` (or back out with null) at once: rubbing only works up close.
+func _zoom(main: Node, stone: Control) -> void:
+	var scene_zoom = main.get_node("SceneZoom")
+	if stone:
+		scene_zoom.zoom_to(stone)
+	else:
+		scene_zoom.zoom_out()
+	if scene_zoom._tween:
+		scene_zoom._tween.custom_step(10.0)
 
 
 ## Brush back and forth across `rect` a few times through the rubbing tool.

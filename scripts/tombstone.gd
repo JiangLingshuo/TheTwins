@@ -40,10 +40,17 @@ const SHADER: Shader = preload("res://shaders/tomb_highlight.gdshader")
 
 ## True while the view is zoomed in on this stone (set by SceneZoom).
 var zoomed := false
+## Keeps the magnifier shown without hovering (the tutorial points at it).
+var show_zoom_button := false:
+	set(value):
+		show_zoom_button = value
+		if _zoom_button:
+			_update_zoom_button()  # at once, so a highlight can frame it this frame
 
 var _image: Image
 var _material: ShaderMaterial
 var _hovered := false
+var _pointing := false  # mouse on the stone or its magnifier, glowing or not
 var _tween: Tween
 var _stone_rect := Rect2()  # visible part of the stone, in local coordinates
 var _head_rect := Rect2()  # its top part; the magnifier sits to the right of it
@@ -94,25 +101,31 @@ func _input(event: InputEvent) -> void:
 		var hovered_control := get_viewport().gui_get_hovered_control()
 		var over_button := _zoom_button.visible and _zoom_button.get_global_rect().has_point(event.position)
 		var on_stone := _is_on_stone(event) and (hovered_control == null or hovered_control == _zoom_button)
-		# Stones that are not open yet stay unlit (the first one lights up for the tutorial).
+		# Stones that are not open yet stay unlit (the first one lights up for the tutorial),
+		# but every stone can be zoomed in on at any time.
 		var can_glow := _interaction_allowed() or gravestone_id == "baby_tomb"
-		_set_hovered((on_stone or over_button) and can_glow)
-		if _hovered:
+		_pointing = on_stone or over_button
+		_set_hovered(_pointing and can_glow)
+		if _pointing:
 			_last_hover_msec = Time.get_ticks_msec()
 
 
 func _process(_delta: float) -> void:
-	var lingering := _hovered or Time.get_ticks_msec() - _last_hover_msec < zoom_button_linger * 1000.0
+	_update_zoom_button()
+
+
+func _update_zoom_button() -> void:
+	var lingering := _pointing or Time.get_ticks_msec() - _last_hover_msec < zoom_button_linger * 1000.0
 	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
 	var scene_zoomed: bool = scene_zoom != null and scene_zoom.is_zoomed()
-	_zoom_button.visible = is_visible_in_tree() and _interaction_allowed() and lingering and not scene_zoomed
+	_zoom_button.visible = is_visible_in_tree() and (lingering or show_zoom_button) and not scene_zoomed
 	if _zoom_button.visible:
 		_place_zoom_button()
 
 
 ## Before the guided rubbing/open-notebook sequence registers the first marker,
-## the baby tomb ignores clicks (and offers no zoom); the other stones wait
-## until the investigation tutorial is over.
+## the baby tomb ignores clicks; the other stones wait until the investigation
+## tutorial is over. Zooming is not gated.
 func _interaction_allowed() -> bool:
 	if GameState.investigation_tutorial_completed:
 		return true

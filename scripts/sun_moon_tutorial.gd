@@ -2,9 +2,10 @@ extends Node
 ## A small ordered tutorial; all progression survives scene recreation in GameState.
 ## BOOK / TAB / DRAG are used by both Step 2 (moon onto sun, by day) and Step 3
 ## (sun onto moon, at night). AWAIT_STEP_4: Step 3 is done; Step 4 comes next.
-enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
+## ZOOM comes first: look closer at the small marker before picking up the rubbing tool.
+enum Step { ZOOM, TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
 ## Steps where only the highlighted control may be used; anything else shakes the hint.
-const GATED := [Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
+const GATED := [Step.ZOOM, Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
 ## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
 @export var step1_notebook_message := "Notebook updated: the moon is recorded in Rise & Set."
 const SKY_SUN_TEXTURE := GameState.SUN_RUBBING_TEXTURE
@@ -27,6 +28,8 @@ var _dialogue: Control
 var _main: Control
 var _notebook: Control
 var _rubbing: Control
+var _baby_tomb: Tombstone
+var _scene_zoom: SceneZoom
 var _moon: RubbingSymbol
 var _human: RubbingSymbol
 var _box: Control
@@ -39,9 +42,13 @@ func _ready() -> void:
 	_main = get_parent()
 	_notebook = _main.get_node("NotebookTool")
 	_rubbing = _main.get_node("RubbingTool")
-	_moon = _main.get_node("DayCemetery/BabyTomb/MoonSymbol")
-	_human = _main.get_node("DayCemetery/BabyTomb/HumanSymbol")
+	_baby_tomb = _main.get_node("DayCemetery/BabyTomb")
+	_moon = _baby_tomb.get_node("MoonSymbol")
+	_human = _baby_tomb.get_node("HumanSymbol")
 	_build_guide()
+	_scene_zoom = _main.get_node_or_null("SceneZoom")
+	if _scene_zoom:
+		_scene_zoom.zoom_changed.connect(func(_tombstone: Control) -> void: refresh())
 	_box = _main.get_node_or_null("Toolbox")
 	if _box: _box.tray_toggled.connect(func(_expanded: bool) -> void: refresh())
 	_rubbing.state_changed.connect(func(_on: bool) -> void: refresh())
@@ -103,7 +110,12 @@ func refresh() -> void:
 	if GameState.cycle_tutorial_completed:
 		_guide_investigation()
 	elif not has_moon:
-		if _rubbing.active:
+		# Rubbing only works up close, so every step of part one starts zoomed in on the small marker.
+		var close_up: bool = _scene_zoom == null or _scene_zoom.get_zoomed() == _baby_tomb
+		_baby_tomb.show_zoom_button = not close_up
+		if not close_up:
+			_set_step(Step.ZOOM, "1 / 4  Click the magnifier to take a closer look at the small marker.", _baby_tomb.get_node("ZoomButton"))
+		elif _rubbing.active:
 			_set_step(Step.MOON, "1 / 4  There seems to be a crescent shape on the base. Make a rubbing of it.", _moon)
 		elif _box and _box.tray and not _box.tray.visible:
 			# Onboarding, part one: the toolbox starts folded; only it can be clicked.
@@ -166,6 +178,8 @@ func _input(event: InputEvent) -> void:
 			return
 		if _skip_button.is_visible_in_tree() and _skip_button.get_global_rect().has_point(point):
 			return
+		if _on_zoom_button(point):
+			return  # looking closer at a stone never breaks a step
 	elif step == Step.BOOK and event is InputEventKey and event.keycode in [_notebook.toggle_key, _notebook.alt_toggle_key]:
 		return
 	get_viewport().set_input_as_handled()
@@ -174,6 +188,15 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index not in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT, MOUSE_BUTTON_MIDDLE]:
 		return # wheel: blocked quietly
 	_shake_hint()
+
+## True if `point` is on a tombstone's zoom-in magnifier or the zoom-out button.
+func _on_zoom_button(point: Vector2) -> bool:
+	for stone in get_tree().get_nodes_in_group("gravestones"):
+		var button: Control = stone.get_node_or_null("ZoomButton")
+		if button and button.is_visible_in_tree() and button.get_global_rect().has_point(point):
+			return true
+	var zoom_out: Control = _main.get_node_or_null("ZoomOutButton")
+	return zoom_out != null and zoom_out.is_visible_in_tree() and zoom_out.get_global_rect().has_point(point)
 
 func _block_notebook(event: InputEvent) -> void:
 	var opens := false
@@ -246,6 +269,11 @@ func _speak() -> void:
 	if left > 0.0:
 		await get_tree().create_timer(left).timeout
 	_moon.stop_blinking()
+	# Back to the whole scene: the next step drags the moon onto the sun in the sky.
+	var scene_zoom := _main.get_node_or_null("SceneZoom")
+	if scene_zoom and scene_zoom.is_zoomed():
+		scene_zoom.zoom_out()
+		await get_tree().create_timer(scene_zoom.zoom_time).timeout
 	var invert := ShaderMaterial.new()
 	invert.shader = preload("res://shaders/portrait_invert.gdshader")
 	invert.set_shader_parameter("invert", 1.0)
@@ -390,6 +418,7 @@ func skip() -> void:
 	if _speaking:
 		return
 	_skipping = true
+	_baby_tomb.show_zoom_button = false
 	GameState.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
 	_record_cycle_symbols()
 	GameState.cycle_hint_heard = true
