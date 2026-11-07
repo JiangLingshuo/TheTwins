@@ -240,6 +240,8 @@ func _add_investigation_targets() -> void:
 		if spec.has("size"):
 			target.size = Vector2(spec["size"][0], spec["size"][1])
 		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(790, 480, 220, 300)  # the infant marker (art moved 30 px right)
+		target.inspectable = spec.get("inspect", false)
+		target.zoom_height_ratio = spec.get("zoom_height", target.zoom_height_ratio)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
 		target.required_grave = spec.get("required_grave", "")

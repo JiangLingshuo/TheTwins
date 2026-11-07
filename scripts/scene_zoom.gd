@@ -1,6 +1,7 @@
 class_name SceneZoom
 extends Node
-## Zooms the scene in on a tombstone, like a camera move, and back out.
+## Zooms the scene in on a tombstone (or a searchlight find), like a camera
+## move, and back out.
 ## Every Tombstone's magnifier button calls toggle() through the "scene_zoom"
 ## group, so a new tombstone needs no wiring. Zooming scales and moves the
 ## `layers` (backgrounds and cemeteries) together; the tools, notebook and other
@@ -83,7 +84,9 @@ func zoom_to(tombstone: Control) -> void:
 	var screen: Vector2 = tombstone.get_viewport_rect().size
 	var now: Rect2 = tombstone.get_stone_global_rect()
 	var unzoomed := Rect2((now.position - _offset) / _zoom, now.size / _zoom)
-	var target := clampf(screen.y * tombstone.zoom_height_ratio / unzoomed.size.y, 1.0, max_zoom)
+	# A small object (a searchlight find) may allow a closer camera than a tombstone.
+	var limit: float = tombstone.get("zoom_max_zoom") if tombstone.get("zoom_max_zoom") != null else max_zoom
+	var target := clampf(screen.y * tombstone.zoom_height_ratio / unzoomed.size.y, 1.0, limit)
 	var offset := screen / 2.0 - unzoomed.get_center() * target
 	offset = offset.clamp(screen - screen * target, Vector2.ZERO)
 	if _zoomed and _zoomed != tombstone:

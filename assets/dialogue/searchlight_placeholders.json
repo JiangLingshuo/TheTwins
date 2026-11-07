@@ -19,7 +19,9 @@
         150,
         121
       ],
-      "crop": true
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.25
     },
     {
       "node": "SkinPicture",
@@ -39,7 +41,9 @@
       "size": [
         110,
         86
-      ]
+      ],
+      "inspect": true,
+      "zoom_height": 0.22
     },
     {
       "node": "WishPoolCoin",
@@ -59,7 +63,9 @@
         70,
         67
       ],
-      "crop": true
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.18
     },
     {
       "node": "TwinBeastTrace",
@@ -79,21 +85,30 @@
         187
       ],
       "texture": "res://assets/Art/figure/twin_beast_footprint.png",
-      "crop": true
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.3
     },
     {
       "node": "FamilyPhoto",
       "evidence_id": "family_photo",
       "city": "day",
       "position": [
-        300,
-        880
+        1176,
+        658
       ],
       "caption": "Four-person photograph before sun marker",
       "target_id": "family_photo",
       "meaning": "Four-person photograph before sun marker",
       "years_ago": 50.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "size": [
+        64,
+        87
+      ],
+      "texture": "res://assets/Art/figure/family_photo.png",
+      "inspect": true,
+      "zoom_height": 0.22
     },
     {
       "node": "CrystalGod",
@@ -118,7 +133,9 @@
         300,
         219,
         205
-      ]
+      ],
+      "inspect": true,
+      "zoom_height": 0.2
     },
     {
       "node": "AltarMoonStone",
@@ -211,7 +228,9 @@
         122
       ],
       "texture": "res://assets/Art/figure/winged_teddy_bear.png",
-      "crop": true
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.25
     },
     {
       "node": "MotherPaintedFlower",
@@ -232,14 +251,16 @@
         83
       ],
       "texture": "res://assets/Art/figure/mother_flower_faded.png",
-      "crop": true
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.2
     },
     {
       "node": "GirlPaintedFlower",
       "evidence_id": "girl_painted_flower",
       "city": "day",
       "position": [
-        880,
+        832,
         585
       ],
       "caption": "Solitary marker: a painted flower",
@@ -249,9 +270,13 @@
       "date_status": "timeline_suggestion",
       "required_grave": "girl_tomb",
       "size": [
-        130,
-        110
-      ]
+        120,
+        118
+      ],
+      "texture": "res://assets/Art/figure/girl_flower_bright.png",
+      "crop": true,
+      "inspect": true,
+      "zoom_height": 0.25
     }
   ]
 }
