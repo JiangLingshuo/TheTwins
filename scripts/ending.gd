@@ -49,7 +49,12 @@ func _ready() -> void:
 	_choices.hide()
 
 	if GameState.ending_true:
-		_discover_marker.call_deferred()
+		if not GameState.ending_preview and "girl_tomb" in GameState.gravestones:
+			_stone.show()
+			_stone.disabled = true
+			_play_result.call_deferred(_model.begin_ending(true, false))
+		else:
+			_discover_marker.call_deferred()
 	else:
 		_play_result.call_deferred(_model.begin_ending(false, GameState.ending_preview))
 
@@ -89,6 +94,8 @@ func _discover_marker() -> void:
 	_stone.grab_focus()
 	await _stone.pressed
 	_stone.disabled = true
+	if not GameState.ending_preview:
+		GameState.record_gravestone("girl_tomb")
 	var discovery: Array[Dictionary] = [{"speaker": "", "content": "(The figure on the cover. You turn the notebook over in your hands. Aurora gave it to you before you ever set foot here.)"}]
 	_dialogue.play(discovery)
 	await _dialogue.finished

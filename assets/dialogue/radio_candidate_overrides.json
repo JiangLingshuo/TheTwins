@@ -71,7 +71,7 @@
   ],
   "altar:test_answer_altar_8": [
     "altar_blessing_glyph",
-    "altar_path_rubbing",
+    "altar_moon_stone",
     "crystal_god_rubbing"
   ],
   "altar:test_answer_altar_12": [
@@ -248,5 +248,30 @@
     "one_way_passage_order",
     "profession_record",
     "day_city_history"
+  ],
+  "altar:test_answer_repeated_blessing": [
+    "altar_blessing_glyph",
+    "altar_moon_stone",
+    "crystal_god_rubbing"
+  ],
+  "mother:test_answer_altar_8": [
+    "altar_blessing_glyph",
+    "altar_moon_stone",
+    "crystal_god_rubbing"
+  ],
+  "mother:test_answer_repeated_blessing": [
+    "altar_blessing_glyph",
+    "altar_moon_stone",
+    "crystal_god_rubbing"
+  ],
+  "father:test_answer_altar_8": [
+    "altar_blessing_glyph",
+    "altar_moon_stone",
+    "crystal_god_rubbing"
+  ],
+  "father:test_answer_repeated_blessing": [
+    "altar_blessing_glyph",
+    "altar_moon_stone",
+    "crystal_god_rubbing"
   ]
 }

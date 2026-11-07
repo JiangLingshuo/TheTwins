@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "46152c6427296d7affd3452d788622a836a7c07824fe1f75cc6073a90d60e585",
+  "source_sha256": "a9cb5c88659532990ecce54522fa7a7d45c01a6de132b1ec0be850a63c593e0c",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -289,13 +289,13 @@
     {
       "id": "altar:test_answer_altar_8",
       "tomb": "altar_tomb",
-      "label": "There is a symbol on the platform. What does it mean?",
-      "condition": "1 == 1",
+      "label": "What does this repeated symbol mean?",
+      "condition": "submitted_id == \"altar_blessing_glyph\"",
       "target": "test_answer_altar_8",
-      "hidden": false,
+      "hidden": true,
       "candidates": [
         "altar_blessing_glyph",
-        "altar_path_rubbing",
+        "altar_moon_stone",
         "crystal_god_rubbing"
       ]
     },
@@ -391,6 +391,19 @@
       ]
     },
     {
+      "id": "altar:test_answer_repeated_blessing",
+      "tomb": "altar_tomb",
+      "label": "Why does the same blessing appear on all three graves?",
+      "condition": "(submitted_id == \"altar_blessing_glyph\") && (read_answers ? AnswerId.altar_8_supported_10)",
+      "target": "test_answer_repeated_blessing",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
       "id": "mother:test_answer_mother_8",
       "tomb": "mother_tomb",
       "label": "Who is the figure holding the child?",
@@ -466,6 +479,32 @@
         "night_mother_flower",
         "night_mother_hands_rubbing",
         "night_mother_child_rubbing"
+      ]
+    },
+    {
+      "id": "mother:test_answer_altar_8",
+      "tomb": "mother_tomb",
+      "label": "What does this repeated symbol mean?",
+      "condition": "submitted_id == \"altar_blessing_glyph\"",
+      "target": "test_answer_altar_8",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
+      "id": "mother:test_answer_repeated_blessing",
+      "tomb": "mother_tomb",
+      "label": "Why does the same blessing appear on all three graves?",
+      "condition": "(submitted_id == \"altar_blessing_glyph\") && (read_answers ? AnswerId.altar_8_supported_10)",
+      "target": "test_answer_repeated_blessing",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
       ]
     },
     {
@@ -557,6 +596,32 @@
         "crystal_god_rubbing",
         "night_father_path_rubbing",
         "altar_moon_stone"
+      ]
+    },
+    {
+      "id": "father:test_answer_altar_8",
+      "tomb": "father_tomb",
+      "label": "What does this repeated symbol mean?",
+      "condition": "submitted_id == \"altar_blessing_glyph\"",
+      "target": "test_answer_altar_8",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
+      "id": "father:test_answer_repeated_blessing",
+      "tomb": "father_tomb",
+      "label": "Why does the same blessing appear on all three graves?",
+      "condition": "(submitted_id == \"altar_blessing_glyph\") && (read_answers ? AnswerId.altar_8_supported_10)",
+      "target": "test_answer_repeated_blessing",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_glyph",
+        "altar_moon_stone",
+        "crystal_god_rubbing"
       ]
     },
     {
@@ -1190,7 +1255,7 @@
       },
       {
         "op": "if",
-        "condition": "(owned_evidence ? EvidenceId.altar_blessing_glyph) || has_tag(EvidenceTag.night_blessing_glyph)",
+        "condition": "submitted_id == \"altar_blessing_glyph\"",
         "then": [
           {
             "op": "line",
@@ -1215,7 +1280,7 @@
           },
           {
             "op": "set",
-            "code": "feedback_kind = \"linked\""
+            "code": "feedback_kind = \"hidden\""
           },
           {
             "op": "set",
@@ -1239,7 +1304,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "Record the symbol with your rubbing tool first. Then I can read it for you."
+            "text": "Photograph the same sign on all three graves first. Bring me that record, and I can read it for you."
           },
           {
             "op": "set",
@@ -1248,6 +1313,28 @@
           {
             "op": "set",
             "code": "feedback_kind = \"unmatched\""
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"mother\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_mother"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"father\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_father"
           }
         ],
         "else": []
@@ -1398,7 +1485,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference)",
         "then": [
           {
             "op": "line",
@@ -1416,13 +1503,20 @@
         ],
         "else": [
           {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
+            "op": "if",
+            "condition": "not ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+            "then": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
+              },
+              {
+                "op": "set",
+                "code": "feedback_kind = \"unmatched\""
+              }
+            ],
+            "else": []
           }
         ]
       },
@@ -2549,6 +2643,52 @@
       {
         "op": "goto",
         "target": "test_radio_girl"
+      }
+    ],
+    "test_answer_repeated_blessing": [
+      {
+        "op": "tag",
+        "value": "question_id:repeated_blessing"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise."
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"hidden\""
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"mother\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_mother"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"father\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_father"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
       }
     ],
     "test_answer_scholar_12": [
@@ -4949,11 +5089,11 @@
     },
     "altar_blessing_glyph": {
       "id": "altar_blessing_glyph",
-      "title": "An Unfamiliar Glyph on the Altar",
+      "title": "A Repeated Sign on Three Night City Graves",
       "members": [
         "altar_blessing_glyph"
       ],
-      "signature": "tags:aurora_translation_knowledge,night_blessing_glyph,night_symbol_translation"
+      "signature": "id:altar_blessing_glyph"
     },
     "altar_blessing_translation": {
       "id": "altar_blessing_translation",

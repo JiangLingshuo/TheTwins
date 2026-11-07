@@ -18,7 +18,7 @@ var _running := false
 var _completing := false
 var _capturing := false
 var _elapsed := 0.0
-const GROUPS := {"base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "moon": {"ids": ["day_crescent", "night_moon"], "evidence": "moon_reference", "label": "Similar forms across cities"}}
+const GROUPS := {"base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}}
 
 func _ready() -> void:
 	z_index = 110
@@ -86,6 +86,11 @@ func _ready() -> void:
 	_props.name = "CameraCemeteryProps"
 	_props.set_script(preload("res://scripts/camera_scene_props.gd"))
 	get_parent().get_node("DayCemetery").add_child(_props)
+	var night_props := Control.new()
+	night_props.name = "NightCameraCemeteryProps"
+	night_props.set_script(preload("res://scripts/camera_scene_props.gd"))
+	night_props.night_symbols = true
+	get_parent().get_node("NightCemetery").add_child(night_props)
 	_props.visible = GameState.investigation_tutorial_completed
 	if GameState.camera_tutorial_pending: play_tutorial.call_deferred()
 
@@ -169,7 +174,7 @@ func _build_spots() -> void:
 	for spot in _spots:
 		if is_instance_valid(spot["button"]): spot["button"].queue_free()
 	_spots.clear()
-	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)], ["day_crescent", "moon", Rect2(840, 555, 65, 65)]] if _photo_day else [["night_moon", "moon", Rect2(1105, 241, 190, 178)]]
+	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)]] if _photo_day else [["blessing_altar", "blessing", Rect2(880, 740, 85, 70)], ["blessing_mother", "blessing", Rect2(610, 790, 85, 70)], ["blessing_father", "blessing", Rect2(1330, 750, 85, 70)]]
 	var cemetery: Control = get_parent().get_node("DayCemetery" if _photo_day else "NightCemetery")
 	var image_rect := _image_rect()
 	var screen_size := get_viewport_rect().size

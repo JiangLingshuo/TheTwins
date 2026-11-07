@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 	state = root.get_node("GameState")
 	model = load("res://scripts/radio_model.gd").new()
-	check("all questions exported", model.data["questions"].size() == 50)
+	check("all questions exported", model.data["questions"].size() == 55)
 	for q in model.data["questions"]:
 		check("three unique candidates: " + q["id"], q["candidates"].size() == 3 and q["candidates"][0] != q["candidates"][1] and q["candidates"][1] != q["candidates"][2] and q["candidates"][0] != q["candidates"][2])
 	var repetition_target := "test_answer_repeated_beast"
@@ -106,10 +106,11 @@ func _run() -> void:
 	state.record_gravestone("altar_tomb")
 	state.record_gravestone("mother_tomb")
 	state.record_gravestone("father_tomb")
-	for id in ["altar_blessing_glyph", "altar_path_rubbing", "night_mother_river_rubbing", "night_father_path_rubbing", "crystal_god_rubbing"]: state.record_rubbing(id)
+	state.record_evidence("altar_blessing_glyph")
+	for id in ["altar_path_rubbing", "night_mother_river_rubbing", "night_father_path_rubbing", "crystal_god_rubbing"]: state.record_rubbing(id)
 	check("translation knowledge alone does not reveal translation question", not model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))
 	for pair in [["test_answer_altar_8", "altar_tomb"], ["query_night_unending_path", "altar_tomb"], ["query_night_dry_river", "mother_tomb"], ["query_night_ascending_path", "father_tomb"]]:
-		result = model.send(question(pair[0], pair[1]), "")
+		result = model.send(question(pair[0], pair[1]), group("altar_blessing_glyph") if pair[0] == "test_answer_altar_8" else "")
 	check("four translations do not unlock fifth requirement", model.progress.get("queried_night_glyphs", []).size() == 4 and not model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))
 	model.send(question("query_night_crystal_god", "altar_tomb"), "")
 	check("all five unlock translation question without evidence", model.questions_for("altar_tomb").any(func(q: Dictionary) -> bool: return q["target"] == "test_answer_altar_24"))

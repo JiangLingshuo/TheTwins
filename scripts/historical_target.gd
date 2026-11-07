@@ -96,7 +96,8 @@ func apply_flashlight(lamp: Flashlight) -> void:
 			return
 	discovered = true
 	modulate.a = 1.0
-	GameState.record_evidence(evidence_id)
+	if GameState.record_evidence(evidence_id):
+		GameState.write_autosave()
 	_update_label()
 	_toast(GameState.zh_text("Recorded: %s") % GameState.zh_text(caption))
 

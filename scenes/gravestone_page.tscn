@@ -1,17 +1,9 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/gravestone_page.gd" id="1_page"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="2_regular"]
-[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="3_semibold"]
+[ext_resource type="FontFile" path="res://assets/fonts/ZhaohuaTypeWriter.ttf" id="2_regular"]
 
-[sub_resource type="StyleBoxFlat" id="Style_input"]
-content_margin_left = 2.0
-content_margin_top = 2.0
-content_margin_right = 2.0
-content_margin_bottom = 2.0
-draw_center = false
-border_width_bottom = 1
-border_color = Color(0.17, 0.14, 0.12, 0.6)
+[ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_body"]
 
 [node name="GravestonePage" type="Control"]
 layout_mode = 3
@@ -20,8 +12,8 @@ offset_right = 340.0
 offset_bottom = 430.0
 mouse_filter = 2
 script = ExtResource("1_page")
-body_font = ExtResource("2_regular")
-heading_font = ExtResource("3_semibold")
+body_font = ExtResource("3_body")
+heading_font = ExtResource("2_regular")
 
 [node name="Sketch" type="TextureRect" parent="."]
 layout_mode = 0
@@ -46,9 +38,6 @@ text = "Identity"
 [node name="IdentityInput" type="OptionButton" parent="Form"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("Style_input")
-theme_override_styles/read_only = SubResource("Style_input")
-theme_override_styles/focus = SubResource("Style_input")
 
 [node name="Gap" type="Control" parent="Form"]
 custom_minimum_size = Vector2(0, 14)
@@ -62,9 +51,6 @@ text = "Death / Departure"
 [node name="DeathInput" type="OptionButton" parent="Form"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 18
-theme_override_styles/normal = SubResource("Style_input")
-theme_override_styles/read_only = SubResource("Style_input")
-theme_override_styles/focus = SubResource("Style_input")
 
 [node name="Info" type="VBoxContainer" parent="."]
 layout_mode = 0

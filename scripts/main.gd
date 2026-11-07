@@ -46,15 +46,26 @@ var is_day: bool = true:
 			return
 		is_day = value
 		_fade_backgrounds()
+		if is_node_ready():
+			# The bell rings A#. Going to night it drops a semitone to A; going back to
+			# day it rises two semitones to C (the music sits in D minor: A, F, C, D).
+			_church_bell.pitch_scale = pow(2.0, (2.0 if is_day else -1.0) / 12.0)
+			_church_bell.play()
 		GameState.current_city_day = is_day
 		time_changed.emit(is_day)
 
 var _fade: Tween
+## Church bell that tolls whenever day and night swap.
+var _church_bell := AudioStreamPlayer.new()
 var _submit_report: Button
 
 
 func _ready() -> void:
-	is_day = start_time == 0
+	_church_bell.stream = preload("res://assets/audio/教堂钟声.wav")
+	_church_bell.volume_db = -22.0
+	add_child(_church_bell)
+	is_day = GameState.current_city_day if GameState.resume_saved_city else start_time == 0
+	GameState.resume_saved_city = false
 	GameState.current_city_day = is_day
 	_add_investigation_targets()
 	# Show the starting background straight away, without cross-fading.
@@ -92,8 +103,7 @@ func _ready() -> void:
 	_add_report_submission()
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
-		gravestone.recorded.connect(func(id: String) -> void:
-			_notebook_tool.show_gravestone_next(id)
+		gravestone.recorded.connect(func(_id: String) -> void:
 			_toast.show_message(gravestone_recorded_message))
 
 
@@ -196,7 +206,7 @@ func _add_investigation_targets() -> void:
 	# Source dates come from evidence metadata; positions are editable layout placeholders.
 	var target_script = load("res://scripts/historical_target.gd")
 	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/searchlight_placeholders.json"))
-	var max_year := 50.0
+	var max_year: float = _flashlight_tool.flashlight.focus_min
 	for spec in layout["records"]:
 		var target = TextureRect.new()
 		target.set_script(target_script)
@@ -225,7 +235,7 @@ func _add_investigation_targets() -> void:
 				target.texture = _crop_to_used(target.texture)
 		if spec.has("size"):
 			target.size = Vector2(spec["size"][0], spec["size"][1])
-		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(760, 480, 220, 300)
+		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(790, 480, 220, 300)  # the infant marker (art moved 30 px right)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
 		target.required_grave = spec.get("required_grave", "")
@@ -234,6 +244,8 @@ func _add_investigation_targets() -> void:
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_min"][0]))
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
 		max_year = maxf(max_year, target.years_ago)
+		for year: float in target.scan_years:
+			max_year = maxf(max_year, year)
 		(_day_cemetery if spec["city"] == "day" else _night_cemetery).add_child(target)
 	_flashlight_tool.flashlight.focus_max = max_year
-	_flashlight_tool.get_node("FocusScale").max_value = max_year
+	_flashlight_tool.get_node("FocusScale").set_year_range(_flashlight_tool.flashlight.focus_min, max_year)

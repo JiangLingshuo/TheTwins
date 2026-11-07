@@ -19,12 +19,22 @@ var active := false
 
 var _drawing := false
 var _last_point := Vector2.ZERO
+## Wiping sound: a long recording that plays only while the charcoal is moving.
+const WIPE_SOUND: AudioStream = preload("res://assets/audio/擦拭.wav")
+## Seconds without mouse movement before the wiping sound pauses.
+const WIPE_IDLE := 0.09
+var _wipe: AudioStreamPlayer
+var _wipe_idle := 0.0
 
 @onready var _button: TextureButton = $RubbingButton
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_wipe = AudioStreamPlayer.new()
+	_wipe.stream = WIPE_SOUND
+	_wipe.volume_db = -8.0
+	add_child(_wipe)
 	_button.pressed.connect(func() -> void: set_active(not active))
 	for symbol in get_tree().get_nodes_in_group("rubbing_symbols"):
 		_connect_symbol(symbol)
@@ -37,6 +47,7 @@ func _ready() -> void:
 func set_active(value: bool) -> void:
 	active = value
 	_drawing = false
+	_wipe_stop()
 	_button.texture_normal = icon_on if active else icon_off
 	if not active:
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
@@ -49,9 +60,13 @@ func turn_off() -> void:
 		set_active(false)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if not active:
 		return
+	if _wipe.playing and not _wipe.stream_paused:
+		_wipe_idle += delta
+		if _wipe_idle > WIPE_IDLE:
+			_wipe.stream_paused = true
 	# Show the brush instead of the arrow, except over the button.
 	var over_button := _button.get_global_rect().has_point(get_global_mouse_position())
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if over_button else Input.MOUSE_MODE_HIDDEN
@@ -67,14 +82,33 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		_drawing = event.pressed
+		if not _drawing: _wipe_stop()
 		if _drawing:
 			_last_point = event.global_position
 			_brush(_last_point, _last_point)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and _drawing:
+		_wipe_move(event.global_position.distance_to(_last_point))
 		_brush(_last_point, event.global_position)
 		_last_point = event.global_position
 		get_viewport().set_input_as_handled()
+
+
+func _wipe_move(distance: float) -> void:
+	if distance < 0.5:
+		return
+	_wipe_idle = 0.0
+	if not _wipe.playing:
+		_wipe.play(randf() * maxf(WIPE_SOUND.get_length() - 2.0, 0.0))
+	_wipe.stream_paused = false
+	# Faster strokes sound firmer.
+	_wipe.volume_db = lerpf(-16.0, -4.0, clampf(distance / 30.0, 0.0, 1.0))
+
+
+func _wipe_stop() -> void:
+	if _wipe and _wipe.playing:
+		_wipe.stop()
+	_wipe_idle = 0.0
 
 
 func _brush(from_point: Vector2, to_point: Vector2) -> void:

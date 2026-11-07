@@ -20,6 +20,7 @@ signal page_changed(spread: int)
 signal closed
 ## The folded entry (clue or manuscript) open for reading, and its section (2 or 3).
 var _reading_document := ""
+var _clue_return_spread := -1
 var _reading_section := -1
 var _reading_offsets: Dictionary = {}
 var _reading_cache: Dictionary = {}
@@ -30,6 +31,7 @@ var _reading_key := ""
 var _radio_stone := ""
 var _radio_question := ""
 const RadioLogPages := preload("res://scripts/radio_log_pages.gd")
+const SpreadReader := preload("res://scripts/spread_reader.gd")
 ## Emitted when write() has finished writing on a page.
 signal written(page_index: int)
 
@@ -77,7 +79,7 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Loudness of the page turn sound, in decibels (0 = original level).
 @export_range(-40.0, 6.0, 0.5) var flip_volume_db: float = 0.0
 ## Loudness of the writing sound, in decibels (0 = original level).
-@export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 0.0
+@export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 6.0
 
 @export_group("Day/Night pages")
 ## Sections (indices into SECTION_TITLES) whose spreads show a Day page on the
@@ -146,6 +148,7 @@ func _ready() -> void:
 	if use_sections:
 		for page in [left_page, right_page]:
 			page.get_node("Gravestone").rubbing_pressed.connect(show_rubbing)
+			page.get_node("Gravestone").clue_pressed.connect(_open_gravestone_clue, CONNECT_DEFERRED)
 		tabs.setup(SECTION_TITLES, SECTION_ORDER)
 		tabs.tab_pressed.connect(jump_to_section)
 		_update_rubbing_spreads()
@@ -223,11 +226,10 @@ func flip_backward() -> void:
 
 ## Turn straight to the first spread of a section, in a single page turn.
 func jump_to_section(section: int) -> void:
-	if section != _reading_section and not _reading_document.is_empty():
-		GameState.finish_current_manuscript()
-		_reading_document = ""
 	if _busy or _locked or _stowed or not _opened or not use_sections:
 		return
+	if section != _reading_section:
+		_leave_reading_document()
 	var target := _section_start(clampi(section, 0, section_spreads.size() - 1))
 	if target > _spread:
 		_turn_forward(target)
@@ -620,9 +622,8 @@ func _fold_sheet(folding: bool) -> void:
 
 
 func _finish_flip(spread: int) -> void:
-	if use_sections and _section_of(spread) != _reading_section and not _reading_document.is_empty():
-		GameState.finish_current_manuscript()
-		_reading_document = ""
+	if use_sections and _section_of(spread) != _reading_section:
+		_leave_reading_document()
 	flip_sheet.visible = false
 	_spread = spread
 	_busy = false
@@ -851,7 +852,7 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 	var reader: Control = page.get_node_or_null("SpreadReader")
 	if reader == null:
 		reader = Control.new()
-		reader.set_script(preload("res://scripts/spread_reader.gd"))
+		reader.set_script(SpreadReader)
 		reader.name = "SpreadReader"
 		reader.position = text_label.position
 		reader.size = text_label.size
@@ -873,8 +874,8 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 	var cache_key := key + ":" + str(raw.hash())
 	if not _reading_cache.has(cache_key):
 		# A revealed clue's text sits under its figure, so it gets shorter pages.
-		var height: int = 300 if entry.get("reveal", {}).is_empty() else preload("res://scripts/spread_reader.gd").REVEAL_TEXT_HEIGHT
-		_reading_cache[cache_key] = preload("res://scripts/spread_reader.gd").paginate(raw, text_label.label_settings.font, 320, height)
+		var height: int = 300 if entry.get("reveal", {}).is_empty() else SpreadReader.REVEAL_TEXT_HEIGHT
+		_reading_cache[cache_key] = SpreadReader.paginate(raw, SpreadReader.BODY_FONT, 320, height)
 	var chunks: Array = _reading_cache[cache_key]
 	var offset: int = mini(_reading_offsets.get(key, 0), maxi(0, (chunks.size() - 1) / 2 * 2))
 	var side := page_index % 2
@@ -883,9 +884,25 @@ func _fill_records(text_label: Label, page_index: int) -> void:
 		_reading_key = key
 		_reading_count = chunks.size()
 	var back_text: String = {2: "← Clues", 3: "← Manuscripts"}.get(section, "")
+	if section == 2 and _clue_return_spread >= 0:
+		back_text = "← " + GameState.zh_text("Gravestones")
 	if section == 4:
 		back_text = "← Questions" if not _radio_question.is_empty() else "← Radio Logs"
 	reader.setup(title, chunk, text_label.label_settings.font, text_label.label_settings.font_color, side == 0, offset, chunks.size(), section == 3, page != flip_sheet, back_text, entry.get("reveal", {}), section == 4)
+
+## Limit the open list (Manuscripts: one gravestone, Clues: one tool; "" = all) and
+## return to its first spread.
+func _set_list_filter(key: String) -> void:
+	var section := _section_of(_spread)
+	if section == 3:
+		GameState.manuscript_filter = key
+	elif section == 2:
+		GameState.clue_filter = key
+	else:
+		return
+	_spread = _section_start(section)
+	_on_rubbings_changed()
+
 
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
@@ -899,6 +916,7 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		page.add_child(items)
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
+		items.filter_requested.connect(_set_list_filter, CONNECT_DEFERRED)
 	items.visible = (section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)) \
 		or (section == 4 and not _radio_reading())
 	if not items.visible: return
@@ -910,6 +928,17 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 	var first := (page_index - _section_start(section) * 2) * 4
 	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
 	items.set_list_header()
+	# Filter chips on the left page only (the right page keeps blank space so both
+	# pages' cards line up): manuscripts by gravestone, clues by the tool that found them.
+	var tool_order := ["rubbing", "searchlight", "camera", "finding"]
+	var keys: Array = []
+	for entry in GameState.notebook_entries(section, false):
+		var key: String = GameState.clue_tool(entry) if section == 2 else str(entry.get("gravestone", ""))
+		if not keys.has(key):
+			keys.append(key)
+	if section == 2:
+		keys.sort_custom(func(a: String, b: String) -> bool: return tool_order.find(a) < tool_order.find(b))
+	items.set_manuscript_extras(keys, GameState.clue_filter if section == 2 else GameState.manuscript_filter, 0 if keys.size() < 2 else (1 if page_index % 2 == 0 else 2), "clue" if section == 2 else "manuscript")
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
 
@@ -943,6 +972,8 @@ func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> voi
 	else:
 		items.set_list_header("", "", 19 if questions else 23)
 	var empty_text := "No radio transmissions recorded yet." if side == 0 and offset == 0 else ""
+	if not questions:
+		items.set_manuscript_extras([], "", 0, "radio")
 	items.setup(entries.slice(first, first + (left_cards if side == 0 else 4)), page_index, left_text.label_settings.font,
 		left_text.label_settings.font_color, interactive, false, empty_text)
 
@@ -969,6 +1000,15 @@ func _radio_back() -> void:
 	_refresh_reading()
 
 
+func _open_gravestone_clue(id: String) -> void:
+	if _busy or _locked or _stowed or not _opened or get_section() != 0:
+		return
+	var origin := get_section_spread()
+	await _turn_forward(_section_start(2))
+	_clue_return_spread = origin
+	_open_reading_document(id)
+
+
 func _open_reading_document(id: String) -> void:
 	if get_section() == 4:
 		_open_radio_entry(id)
@@ -986,14 +1026,18 @@ func _leave_reading_document() -> void:
 		return
 	GameState.finish_current_manuscript()
 	_reading_document = ""
+	_clue_return_spread = -1
 
 func _close_reading_document() -> void:
 	if get_section() == 4:
 		_radio_back()
 		return
-	GameState.finish_current_manuscript()
-	_reading_document = ""
-	_refresh_reading()
+	var origin := _clue_return_spread
+	_leave_reading_document()
+	if origin >= 0:
+		_turn_backward(_section_start(0) + mini(origin, section_spreads[0] - 1))
+	else:
+		_refresh_reading()
 
 func _step_reading(delta: int) -> void:
 	var current: int = _reading_offsets.get(_reading_key, 0)

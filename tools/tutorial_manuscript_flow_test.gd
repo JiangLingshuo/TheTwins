@@ -195,7 +195,7 @@ func _run() -> void:
 	await drain_camera(camera._dialogue)
 	check("camera finishes formal investigation handoff", state.camera_tutorial_completed and state.formal_investigation_started and state.evidence_ids.has("shared_family_base"))
 	check("closing dialogue completes tutorial", state.tutorial_end_heard and state.investigation_tutorial_completed)
-	check("all eight Day manuscripts delivered", state.notebook_entries(3).size() == 8)
+	check("seven Day manuscripts delivered, with diary held for the solitary marker", state.notebook_entries(3).size() == 7 and not state.evidence_ids.has("girl_diary"))
 	check("Night manuscripts remain locked", not state.evidence_ids.has("crystal_god_prophecy") and not state.evidence_ids.has("skyway_history") and not state.evidence_ids.has("natural_collapse_record"))
 	# Reproduce the user's pre-existing state: rubbing present, grave absent.
 	state.gravestones.erase("baby_tomb")

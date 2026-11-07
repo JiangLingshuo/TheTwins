@@ -23,6 +23,7 @@ var _tutorial_hint: Label
 var tutorial_controls: Dictionary = {}
 var _reply_box: Control
 var _reply_playing := false
+var _heard_reply := false
 var _previous_layout: VBoxContainer
 ## Radio history context of the last question sent; follow-ups chosen from its
 ## reply are recorded under the same question and evidence.
@@ -37,6 +38,7 @@ func _ready() -> void:
 	_button.texture_normal = preload("res://assets/Art/symbols/radio_tool.svg")
 	_button.ignore_texture_size = true
 	_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	SoftIcon.apply(_button)
 	add_child(_button)
 	_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_RIGHT)
 	_button.offset_left = -140
@@ -80,6 +82,7 @@ func is_open() -> bool:
 func open() -> void:
 	if is_open() or not _can_open():
 		return
+	_heard_reply = false
 	GameState.radio_modal_open = true
 	get_parent().get_node("FlashlightTool").turn_off()
 	get_parent().get_node("RubbingTool").turn_off()
@@ -92,6 +95,9 @@ func open() -> void:
 
 func close() -> void:
 	if _reply_playing: return
+	if _heard_reply:
+		GameState.write_autosave()
+		_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
 	_question = {}
@@ -106,10 +112,10 @@ func _queue_render() -> void:
 
 func _label(text: String, font_size: int = 22) -> Label:
 	var label := Label.new()
-	label.text = text
+	label.text = GameState.zh_text(text)
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	label.size.x = 800
-	label.add_theme_font_override("font", FONT)
+	label.add_theme_font_override("font", GameState.playtest_font(FONT))
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color", Color(0.94, 0.92, 0.8))
 	return label
@@ -117,7 +123,8 @@ func _label(text: String, font_size: int = 22) -> Label:
 func _action(text: String, callback: Callable, disabled: bool = false) -> Button:
 	text = GameState.zh_text(text)
 	var button := Button.new()
-	button.custom_minimum_size.x = maxf(110.0, FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
+	var font := GameState.playtest_font(FONT)
+	button.custom_minimum_size.x = maxf(110.0, font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x + 28.0) if text.length() <= 16 else 110.0
 	var wrapped := ""
 	var row := ""
 	for word in text.split(" "):
@@ -128,7 +135,7 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	wrapped += row
 	button.custom_minimum_size.y = maxf(34, wrapped.split("\n").size() * 22 + 10)
 	if GameState.chinese_playtest:
-		var rows := ceilf(FONT.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x / 280.0)
+		var rows := ceilf(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x / 280.0)
 		button.custom_minimum_size.y = maxf(34.0, rows * 24.0 + 10.0)
 	button.size = Vector2(360, button.custom_minimum_size.y)
 	button.disabled = disabled
@@ -242,6 +249,10 @@ func _render() -> void:
 	var slot_title := GameState.zh_text(model.group_title(_slot))
 	right.add_child(_action(slot_title + ("  ×" if not _slot.is_empty() else ""), _clear_slot, not _followups.is_empty()))
 	var filter := OptionButton.new()
+	if GameState.chinese_playtest:
+		var font := GameState.playtest_font(FONT)
+		filter.add_theme_font_override("font", font)
+		filter.get_popup().add_theme_font_override("font", font)
 	for label in ["All types", "Symbol records", "Manuscripts", "Other clues"]: filter.add_item(GameState.zh_text(label))
 	filter.selected = _filter
 	filter.disabled = not _followups.is_empty()
@@ -437,6 +448,9 @@ func _play_reply(lines: Array[Dictionary], log_session: String) -> void:
 	for line in lines: playback.append(line.duplicate(true))
 	_reply_box.play(playback, log_session)
 	await _reply_box.finished
+	_heard_reply = true
+	if not log_session.is_empty():
+		GameState.write_autosave()
 	_reply_playing = false
 	_overlay.visible = true
 	_queue_render()

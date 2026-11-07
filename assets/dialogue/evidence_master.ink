@@ -438,6 +438,8 @@ The searchlight reveals the creature that once occupied this space: one body wit
 Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.
 
 Then, in a single night, they disappeared.
+
+The oldest account places the creature here <date>250</date> years ago. If it ever walked these grounds, a trace of it might still be found under the searchlight.
 -> DONE
 
 === ev_repeated_beast_motifs ===
@@ -504,14 +506,13 @@ A path runs along the altar's pillars. Its pattern has no visible end.
 === ev_altar_blessing_glyph ===
 # type:evidence
 # id:altar_blessing_glyph
-# title:An Unfamiliar Glyph on the Altar
-# category:rubbing
+# title:A Repeated Sign on Three Night City Graves
+# category:observation
 # location:night_cemetery
+# tool:camera
 # evidence_tag:night_blessing_glyph
-# evidence_tag:night_symbol_translation
-# evidence_tag:aurora_translation_knowledge
-// Source: 05_婴儿夜城祭坛!B9. The translation is a separate finding below.
-An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.
+// Acquired only after marking this same sign on the altar, the mother's stone and the father's stone in the camera photograph.
+The same unfamiliar sign appears on three separate graves: the infant altar and the two stones beside it. The camera records all three occurrences. Its meaning is still unknown.
 -> DONE
 
 === ev_altar_blessing_translation ===

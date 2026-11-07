@@ -20,3 +20,5 @@ expand_mode = 1
 script = ExtResource("3_symbol")
 rubbing_id = "sun_shaped_marker_rubbing"
 matching_target_id = "day_city_coin"
+brush_strength = 0.55
+reveal_threshold = 0.4

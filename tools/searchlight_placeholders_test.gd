@@ -27,7 +27,7 @@ func _run() -> void:
 	lamp = main.get_node("FlashlightTool/Flashlight")
 	var catalog: Dictionary = state.content_catalog()["evidence"]
 	var targets := get_nodes_in_group("flashlight_targets")
-	check("fourteen searchlight targets placed", targets.size() == 14)
+	check("thirteen searchlight targets placed", targets.size() == 13)
 	check("dial reaches ancient beast year", lamp.focus_max == 250 and main.get_node("FlashlightTool/FocusScale").max_value == 250)
 	for target in targets:
 		check("text card exists: " + target.evidence_id, target.marker.is_inside_tree() and not target.label.text.is_empty())
@@ -41,7 +41,7 @@ func _run() -> void:
 			aim(target, target.years_ago)
 			check("trace waits for its required marker", not target.discovered)
 			state.record_gravestone(target.required_grave)
-		aim(target, target.years_ago + 8 if target.years_ago < 240 else 240)
+		aim(target, 0.0)
 		check("wrong year does not collect: " + target.evidence_id, not target.discovered)
 		aim(target, target.years_ago)
 		check("correct year records: " + target.evidence_id, target.discovered and state.evidence_ids.has(target.evidence_id))

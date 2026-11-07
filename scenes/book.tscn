@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dyfjl6igy3fjv" path="res://scripts/book.gd" id="1_book"]
 [ext_resource type="Script" uid="uid://6msd8gfx47sb" path="res://scripts/page_corner.gd" id="2_corner"]
-[ext_resource type="FontFile" uid="uid://ys6yv2bncks2" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="3_regular"]
+[ext_resource type="FontFile" path="res://assets/fonts/ZhaohuaTypeWriter.ttf" id="3_regular"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_page.png" id="4_page"]
 [ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
 [ext_resource type="Script" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
@@ -256,9 +256,9 @@ theme_override_styles/panel = SubResource("Style_cover")
 [node name="NameInput" type="LineEdit" parent="Cover" unique_id=1016538121]
 layout_mode = 0
 offset_left = 160.0
-offset_top = 380.0
+offset_top = 464.0
 offset_right = 380.0
-offset_bottom = 422.0
+offset_bottom = 506.0
 theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_colors/font_uneditable_color = Color(1, 1, 1, 1)
 theme_override_colors/caret_color = Color(1, 1, 1, 1)
@@ -274,9 +274,9 @@ caret_blink = true
 
 [node name="Hint" type="Label" parent="Cover" unique_id=651567210]
 layout_mode = 0
-offset_top = 450.0
+offset_top = 516.0
 offset_right = 438.0
-offset_bottom = 476.0
+offset_bottom = 542.0
 theme_override_colors/font_color = Color(1, 1, 1, 0.55)
 theme_override_fonts/font = ExtResource("3_regular")
 theme_override_font_sizes/font_size = 18

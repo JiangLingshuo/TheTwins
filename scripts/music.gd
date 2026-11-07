@@ -2,7 +2,7 @@ extends Node
 ## Background music player (autoload "Music").
 ## Lives outside any scene, so the music keeps playing across scene changes.
 
-const BGM_MAIN: AudioStream = preload("res://assets/audio/mic_melody.ogg")
+const BGM_MAIN: AudioStream = preload("res://assets/audio/初期调查bgm loop加长版.wav")
 
 ## Target loudness of the background music, in decibels (0 = original level).
 @export_range(-40.0, 6.0, 0.5) var music_volume_db: float = -8.0
@@ -24,6 +24,11 @@ func play_bgm(stream: AudioStream = BGM_MAIN) -> void:
 		return
 	if stream is AudioStreamOggVorbis:
 		(stream as AudioStreamOggVorbis).loop = true
+	elif stream is AudioStreamWAV:
+		var wave := stream as AudioStreamWAV
+		wave.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		wave.loop_begin = 0
+		wave.loop_end = roundi(wave.get_length() * wave.mix_rate)
 	_player.stream = stream
 	_player.volume_db = -60.0
 	_player.play()

@@ -1,0 +1,8 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/Art/tombstone/father_scene.png" id="2_art"]
+
+[node name="FatherTomb" instance=ExtResource("1_base")]
+texture = ExtResource("2_art")
+gravestone_id = "father_tomb"

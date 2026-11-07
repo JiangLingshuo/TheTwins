@@ -8,6 +8,7 @@ signal keyword_selected(id: String)
 var body: RichTextLabel
 ## Height of the text under a clue's reveal figure (Book paginates with it).
 const REVEAL_TEXT_HEIGHT := 140
+const BODY_FONT := preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
 
 ## Radio Logs marks (RadioLogPages.HEADING / SPEAKER) -> BBCode, marks removed.
 static func _style_log(content: String, ink: Color) -> String:
@@ -17,14 +18,15 @@ static func _style_log(content: String, ink: Color) -> String:
 	return content.replace("\u2060", "").replace("\u2063", "")
 
 static func plain(text: String) -> String:
+	text = text.replace("<date>", "").replace("</date>", "")
 	return RegEx.create_from_string('<link="[^\"]+">([^<]+)</link>').sub(text, '$1', true)
 
 static func paginate(raw: String, font: Font, width: float, height: float) -> Array[String]:
 	var pages: Array[String] = []
 	var current := ""
-	var tokens := RegEx.create_from_string('<link="[^\"]+">[^<]+</link>\\s*|[^\\s]+\\s*').search_all(raw)
+	var tokens := RegEx.create_from_string('<date>[^<]+</date>\\s*|<link="[^\"]+">[^<]+</link>\\s*|[^\\s]+\\s*').search_all(raw)
 	if GameState.chinese_playtest:
-		tokens = RegEx.create_from_string('<link="[^"]+">[^<]+</link>|\\p{Han}|[^\\p{Han}<\\s]+|\\s+|.').search_all(raw)
+		tokens = RegEx.create_from_string('<date>[^<]+</date>|<link="[^"]+">[^<]+</link>|\\p{Han}|[^\\p{Han}<\\s]+|\\s+|.').search_all(raw)
 	for token in tokens:
 		var word := token.get_string()
 		var candidate := current + word
@@ -106,11 +108,13 @@ func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, off
 	body.fit_content = false
 	body.clip_contents = true
 	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	body.add_theme_font_override("normal_font", font)
+	body.add_theme_font_override("normal_font", BODY_FONT)
 	body.add_theme_font_size_override("normal_font_size", 22)
 	body.add_theme_color_override("default_color", ink)
 	var content := GameState.fill_placeholders(chunk).replace("[", "[lb]")
 	content = RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').sub(content, '[url=$1][color=#843c42][u]$2[/u][/color][/url]', true)
+	var date_color := "#f3ca79" if ink.get_luminance() > 0.5 else "#25666b"
+	content = content.replace("<date>", "[color=%s]" % date_color).replace("</date>", "[/color]")
 	if log_style:
 		content = _style_log(content, ink)
 	if manuscript and "infant" not in GameState.radio_progress.get("manuscript_keywords", []):

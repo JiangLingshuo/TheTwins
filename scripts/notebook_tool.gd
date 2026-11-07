@@ -1,7 +1,7 @@
 extends Control
 ## Notebook button for the game scenes.
-## Click it (or press Tab / N) to bring the notebook out, open on Rise & Set
-## (or on a page asked for, e.g. a new gravestone); click it again, click the
+## Click it (or press Tab / N) to bring the notebook out at the last spread.
+## It starts on Rise & Set unless the tutorial requests a page. Click again, click the
 ## dark area around the book, or turn past the last page to put it away. It
 ## shrinks back into the button.
 
@@ -35,6 +35,7 @@ static func button_center(screen: Vector2) -> Vector2:
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_dim.visible = false
+	SoftIcon.apply(_button)
 	_button.pressed.connect(toggle)
 	_dim.gui_input.connect(_on_dim_input)
 	book.closed.connect(_on_book_closed)
@@ -42,6 +43,8 @@ func _ready() -> void:
 	# Built straight away: the start screen's book is still showing in this spot.
 	_icon = book.make_icon()
 	_button.add_child(_icon)
+	# Same soft, grainy finish as the other tool buttons.
+	SoftIcon.apply_tree(_icon.get_child(0))
 	var offset := _icon.position  # make_icon() centres the copy on (0, 0)
 	_button.resized.connect(func() -> void: _icon.position = offset + _button.size / 2.0)
 	_icon.position = offset + _button.size / 2.0
@@ -86,11 +89,10 @@ func open() -> void:
 	if _icon:
 		_icon.visible = false  # the notebook itself comes out of the button
 	notebook_opened.emit()
-	# Open on Rise & Set, unless a page was asked for (see show_gravestone_next).
-	var spread: int = GameState.notebook_section_spread
+	# The live book tracks its spread even if earlier sections gain pages.
+	var spread: int = book.get_spread() if _taken_out else GameState.notebook_section_spread
 	if spread < 0:
 		spread = book.get_opening_spread()
-	GameState.notebook_section_spread = -1
 	if not _taken_out:
 		_taken_out = true
 		# The start screen's book has no sections, so its spread is not reused here.
@@ -101,7 +103,7 @@ func open() -> void:
 		await book.open_from_icon()
 
 
-## Open on gravestone `id`'s page next time (call it when one is recorded).
+## Let the tutorial open directly to a particular gravestone.
 func show_gravestone_next(id: String) -> void:
 	var spread: int = book.get_gravestone_spread(id)
 	if spread < 0 or is_open():
@@ -121,6 +123,7 @@ func _on_book_closed() -> void:
 		_icon.visible = true
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
+	GameState.notebook_section_spread = book.get_spread()
 	_set_dim(false)
 	notebook_closed.emit()
 
