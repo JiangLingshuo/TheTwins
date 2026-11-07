@@ -7,14 +7,19 @@
       "city": "day",
       "position": [
         930,
-        700
+        690
       ],
       "caption": "Infant sketch behind small marker",
       "target_id": "infant_graffiti",
       "meaning": "Infant's actual appearance",
       "years_ago": 50.0,
       "date_status": "timeline_suggestion",
-      "texture": "history_infant.svg"
+      "texture": "res://assets/Art/figure/infant_sketch.png",
+      "size": [
+        150,
+        121
+      ],
+      "crop": true
     },
     {
       "node": "SkinPicture",
@@ -41,15 +46,20 @@
       "evidence_id": "day_city_coin",
       "city": "day",
       "position": [
-        1462,
-        520
+        1580,
+        487
       ],
       "caption": "Wishing-pool coin",
       "target_id": "day_city_coin",
       "meaning": "Wishing-pool coin",
       "years_ago": 60.0,
       "date_status": "timeline_suggestion",
-      "texture": "history_coin.svg"
+      "texture": "res://assets/Art/figure/wish_pool_coin.png",
+      "size": [
+        70,
+        67
+      ],
+      "crop": true
     },
     {
       "node": "TwinBeastTrace",
@@ -202,7 +212,13 @@
       "meaning": "Teddy bear and visitor: compare with family photograph",
       "years_ago": 45.0,
       "date_status": "timeline_suggestion",
-      "required_grave": "girl_tomb"
+      "required_grave": "girl_tomb",
+      "size": [
+        150,
+        122
+      ],
+      "texture": "res://assets/Art/figure/winged_teddy_bear.png",
+      "crop": true
     },
     {
       "node": "MotherPaintedFlower",
