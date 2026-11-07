@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "ed073d7f14e9d089ddbd7ebdb26f6756f31438ad9e70606c91f56560fb527f73",
+    "evidence_master.ink": "9392749402488f3793a9f9cddfd674a3c3ec73c3f3924bb98e9b9b2df09af1d7",
     "tombstone_master.ink": "fde52350ca032956b7f62c51cee42f768cf9fd84b54bd0707545a69363a11468",
-    "telecomm_master.ink": "f37fa89eef85b492e04c501162d63496348c52c5a7b222608e93c312c1ce924b"
+    "telecomm_master.ink": "4a65b6432ef23023025636aa95352bc8a193e3ca13d914fffbec6f944481af88"
   },
   "gravestones": {
     "baby_tomb": {
@@ -1155,8 +1155,8 @@
       ],
       "id": "altar_blessing_translation",
       "title": "A Blessing for the Unending Journey",
-      "body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
-      "interactive_body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "body": "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "interactive_body": "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
       "category": "finding",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -3230,7 +3230,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+          "content": "It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
         }
       ]
     },
@@ -3794,7 +3794,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+          "content": "The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
         }
       ]
     },
@@ -3847,7 +3847,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+          "content": "The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
         },
         {
           "speaker": "Aurora",

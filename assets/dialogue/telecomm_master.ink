@@ -746,7 +746,7 @@ An unfamiliar symbol is carved into the altar. It does not resemble a passage of
 
 === test_preview_altar_blessing_translation ===
 # ui:open_evidence:altar_blessing_translation
-Aurora interprets the symbol as a blessing:
+Aurora reads the symbol as the Crystal God, left on a grave as a blessing:
 
 "To disappear is to set out on a journey without end. May the wishes of crystal remain with you."
 + [Collect a highlighted term] -> test_terms
@@ -2609,7 +2609,7 @@ Someone was still there after the others were gone. I wonder whether the family 
 # question_id:altar_8
 ~ temp supported = false
 {submitted_id == "altar_blessing_glyph":
-It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well. #aurora
+It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well. #aurora
 ~ queried_night_glyphs += NightGlyph.blessing
 # event:night_symbol_queried:blessing
 ~ read_answers += AnswerId.altar_8_supported_10
@@ -3194,7 +3194,7 @@ A path leading upward, toward the surface. It records a journey. It does not tel
 
 === query_night_crystal_god ===
 # question_id:query_night_crystal_god
-The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals. #aurora
+The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals. #aurora
 ~ queried_night_glyphs += NightGlyph.crystal_god
 # event:night_symbol_queried:crystal_god
 ~ feedback_kind = "linked"
@@ -3252,7 +3252,7 @@ Of course. Have a safe journey home. #aurora
 
 === test_answer_repeated_blessing ===
 # question_id:repeated_blessing
-A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person. #aurora
+The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person. #aurora
 The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise. #aurora
 ~ feedback_kind = "hidden"
 {active_tomb == "mother": -> test_radio_mother}

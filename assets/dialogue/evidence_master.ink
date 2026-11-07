@@ -526,7 +526,7 @@ The same unfamiliar sign appears on three separate graves: the infant altar and 
 # evidence_tag:endless_path_motif
 # evidence_tag:aurora_translation_knowledge
 // Source: 05_婴儿夜城祭坛!B9. Award after Aurora interprets the glyph.
-Aurora interprets the symbol as a blessing:
+Aurora reads the symbol as the Crystal God, left on a grave as a blessing:
 
 "To disappear is to set out on a journey without end. May the wishes of crystal remain with you."
 -> DONE

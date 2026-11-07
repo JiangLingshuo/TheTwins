@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "a9cb5c88659532990ecce54522fa7a7d45c01a6de132b1ec0be850a63c593e0c",
+  "source_sha256": "3772893f42707ea9ad811f30fd9f85ac2ae3192e11bd66cff23eda2ea9afceff",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -871,7 +871,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+        "text": "The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
       },
       {
         "op": "set",
@@ -1260,7 +1260,7 @@
           {
             "op": "line",
             "speaker": "Aurora",
-            "text": "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+            "text": "It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
           },
           {
             "op": "set",
@@ -2653,7 +2653,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+        "text": "The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
       },
       {
         "op": "line",

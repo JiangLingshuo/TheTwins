@@ -86,11 +86,6 @@ func _ready() -> void:
 	_props.name = "CameraCemeteryProps"
 	_props.set_script(preload("res://scripts/camera_scene_props.gd"))
 	get_parent().get_node("DayCemetery").add_child(_props)
-	var night_props := Control.new()
-	night_props.name = "NightCameraCemeteryProps"
-	night_props.set_script(preload("res://scripts/camera_scene_props.gd"))
-	night_props.night_symbols = true
-	get_parent().get_node("NightCemetery").add_child(night_props)
 	_props.visible = GameState.investigation_tutorial_completed
 	if GameState.camera_tutorial_pending: play_tutorial.call_deferred()
 
@@ -174,7 +169,7 @@ func _build_spots() -> void:
 	for spot in _spots:
 		if is_instance_valid(spot["button"]): spot["button"].queue_free()
 	_spots.clear()
-	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)]] if _photo_day else [["blessing_altar", "blessing", Rect2(880, 740, 85, 70)], ["blessing_mother", "blessing", Rect2(610, 790, 85, 70)], ["blessing_father", "blessing", Rect2(1330, 750, 85, 70)]]
+	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)]] if _photo_day else [["blessing_altar", "blessing", Rect2(895, 372, 76, 66)], ["blessing_mother", "blessing", Rect2(563, 713, 40, 40)], ["blessing_father", "blessing", Rect2(1172, 735, 50, 50)]]
 	var cemetery: Control = get_parent().get_node("DayCemetery" if _photo_day else "NightCemetery")
 	var image_rect := _image_rect()
 	var screen_size := get_viewport_rect().size

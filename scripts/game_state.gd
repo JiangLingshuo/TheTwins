@@ -753,11 +753,11 @@ func apply_notebook_event(tag: String) -> void:
 	if tag.begins_with("event:night_symbol_queried:"):
 		var glyph := tag.trim_prefix("event:night_symbol_queried:")
 		var translations := {
-			"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "A blessing for the departed"},
+			"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "The Crystal God's sign, left as a blessing for the departed"},
 			"unending_path": {"ids": ["altar_path_rubbing", "girl_path_rubbing"], "meaning": "An unending journey / disappearance"},
 			"dry_river": {"ids": ["night_mother_river_rubbing"], "meaning": "A river that has run dry"},
 			"ascending_path": {"ids": ["night_father_path_rubbing"], "meaning": "A path toward the surface"},
-			"crystal_god": {"ids": ["crystal_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God"},
+			"crystal_god": {"ids": ["crystal_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God, also left on graves as a blessing"},
 		}
 		var translation: Dictionary = translations.get(glyph, {})
 		for rubbing_id in translation.get("ids", []):

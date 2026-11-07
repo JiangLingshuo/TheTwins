@@ -744,8 +744,8 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 -> DONE
 
 === zh_0149 ===
-// source: "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
-晶石神，代表对神祇的信仰。祭坛和私人墓碑都可能用这个图案，单凭它看不出谁取走了晶石。
+// source: "The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+晶石神，代表对神祇的信仰，夜民也会把它刻在墓碑上，作为给离开者的祝福。祭坛和私人墓碑都可能用这个图案，单凭它看不出谁取走了晶石。
 -> DONE
 
 === zh_0150 ===
@@ -829,8 +829,8 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 -> DONE
 
 === zh_0166 ===
-// source: "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
-这是祝福：「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」这是给离开的人留的一句好话。
+// source: "It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+这是晶石神，夜民表达信仰的符号。刻在墓碑上，它同时是一句祝福：「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」这是给离开的人留的一句好话。
 -> DONE
 
 === zh_0167 ===
@@ -2543,8 +2543,8 @@ Aurora 也这么想。
 -> DONE
 
 === zh_0503 ===
-// source: "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\""
-Aurora 把符号解读为一句祝福：
+// source: "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\""
+Aurora 把符号解读为晶石神，并说它刻在墓碑上是一句祝福：
 
 「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」
 -> DONE
@@ -4190,8 +4190,8 @@ Aurora 的其他通讯
 -> DONE
 
 === zh_0816 ===
-// source: "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
-一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。
+// source: "The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+晶石神，作为一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。
 -> DONE
 
 === zh_0817 ===

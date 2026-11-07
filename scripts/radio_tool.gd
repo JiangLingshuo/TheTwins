@@ -1,6 +1,6 @@
 extends Control
 ## Temporary radio UI for the tutorial branch. Styling can be replaced independently.
-const FONT := preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 var model = preload("res://scripts/radio_model.gd").new()
 var _button: TextureButton
 var _overlay: Control
