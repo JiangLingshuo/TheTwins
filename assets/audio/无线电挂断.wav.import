@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://8762cf2anlpx"
-path="res://.godot/imported/挂断.wav-814ddcaa793a12b4a2bd4b2bf5349081.sample"
+path="res://.godot/imported/无线电挂断.wav-51416caa010492d827ff31bc53625141.sample"
 
 [deps]
 
-source_file="res://assets/audio/挂断.wav"
-dest_files=["res://.godot/imported/挂断.wav-814ddcaa793a12b4a2bd4b2bf5349081.sample"]
+source_file="res://assets/audio/无线电挂断.wav"
+dest_files=["res://.godot/imported/无线电挂断.wav-51416caa010492d827ff31bc53625141.sample"]
 
 [params]
 
