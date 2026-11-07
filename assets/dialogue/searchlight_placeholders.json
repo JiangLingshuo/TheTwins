@@ -66,8 +66,8 @@
       "evidence_id": "twin_beast_trace",
       "city": "day",
       "position": [
-        1244,
-        871
+        1291,
+        872
       ],
       "caption": "Twin-beast footprint (oldest trace)",
       "target_id": "twin_beast_trace",
@@ -75,10 +75,10 @@
       "years_ago": 250.0,
       "date_status": "provisional_ancient_date",
       "size": [
-        285,
-        189
+        190,
+        187
       ],
-      "texture": "res://assets/Art/day/footprint.png",
+      "texture": "res://assets/Art/figure/twin_beast_footprint.png",
       "crop": true
     },
     {
