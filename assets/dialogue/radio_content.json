@@ -4895,6 +4895,59 @@
         "op": "goto",
         "target": "test_radio_scholar"
       }
+    ],
+    "test_walk": [
+      {
+        "op": "tag",
+        "value": "ui:notebook_cover"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You close the investigation pages and plan your journey back. For a while, you look at the black-and-white cover."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "All this time, the girl has been standing quietly inside her frame."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You carry the book with you as you walk. You witnessed the stones and the people they recorded, but you would never know how they truly lived."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "Nothing can be changed. But something can be remembered."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "That way feels longer than the way you came. You came with nothing, but now you are leaving with a civilization's weight."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "The path extends to a single stone. Cold and lonely. Like one standing beside the street for a delayed bus to come."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "It's a standing monument that belongs to neither the Day nor the Night."
+      },
+      {
+        "op": "set",
+        "code": "girl_revealed = true"
+      },
+      {
+        "op": "tag",
+        "value": "event:reveal_girl_marker"
+      },
+      {
+        "op": "goto",
+        "target": "test_desc_girl"
+      }
     ]
   },
   "groups": {
@@ -5047,9 +5100,10 @@
     },
     "day_city_coin": {
       "id": "day_city_coin",
-      "title": "A Coin from the Wishing Pool",
+      "title": "Sun shape records",
       "members": [
-        "day_city_coin"
+        "day_city_coin",
+        "sun_coin_correspondence"
       ],
       "signature": "tags:day_city_currency,sun_motif,sun_shape"
     },
@@ -5431,6 +5485,14 @@
         "scholar_no_traces"
       ],
       "signature": "tags:absence_of_readable_traces,last_survivor_question,scholar_no_visitors"
+    },
+    "crystal_marker_correspondence": {
+      "id": "crystal_marker_correspondence",
+      "title": "A Crystal Shaped into a Memorial",
+      "members": [
+        "crystal_marker_correspondence"
+      ],
+      "signature": "tags:crystal_shape_observation"
     }
   },
   "evidence_groups": {
@@ -5505,7 +5567,9 @@
     "notebook_cover": "notebook_cover",
     "four_person_family_finding": "four_person_family_finding",
     "girl_cover_correspondence": "girl_cover_correspondence",
-    "scholar_no_traces": "scholar_no_traces"
+    "scholar_no_traces": "scholar_no_traces",
+    "crystal_marker_correspondence": "crystal_marker_correspondence",
+    "sun_coin_correspondence": "day_city_coin"
   },
   "defaults": {
     "owned_evidence": [],

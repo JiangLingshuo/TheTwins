@@ -12,6 +12,16 @@ var _depth := 0
 var preview_only := false
 var _ending_preview_evidence: Array[String] = []
 
+func begin_report_walk() -> Dictionary:
+	# A dev preview must not grant evidence or modify the live investigation.
+	progress = progress.duplicate(true)
+	preview_only = true
+	_context = {}
+	_depth = 0
+	var result := {"lines": [], "choices": []}
+	_program("test_walk", result)
+	return result
+
 func begin_ending(true_ending: bool, preview: bool) -> Dictionary:
 	if preview:
 		progress = progress.duplicate(true)
@@ -75,6 +85,8 @@ func _membership(pool: String, value: String) -> bool:
 	if pool == "owned_evidence":
 		return owns(value)
 	if pool == "links":
+		if value == "sun" and GameState.evidence_ids.has("sun_coin_correspondence"):
+			return true
 		if value == "moon" and GameState.cycle_tutorial_completed:
 			return true # tutorial established which shape is the moon, not its death meaning
 		var rubbing_relations := {"human": "infant_figure_rubbing", "crystal": "crystal_marker_rubbing", "sun": "sun_shaped_marker_rubbing", "beast": "scholar_beast_rubbing", "river": "night_mother_river_rubbing", "father_path": "night_father_path_rubbing"}

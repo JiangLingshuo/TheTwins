@@ -1,7 +1,7 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "391fd23b78f709ea3c67b36548cfc849e0107eb6cff8ab467f9f0c119a24516e",
+    "evidence_master.ink": "dd04bb0b548bcab604cdd72a25f24dc1f9b7dd1d67de0efdf3bb0ee3980c3f01",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
     "telecomm_master.ink": "b83814f2ac8452fa3d82b67dd20bda36b6eb0f188431cf2878338eeacc384c01"
   },
@@ -386,7 +386,9 @@
     },
     "shared_family_base": {
       "gravestones": [
-        "baby_tomb"
+        "baby_tomb",
+        "scholar_tomb",
+        "sun_tomb"
       ],
       "id": "shared_family_base",
       "title": "One Base, Three Tombs",
@@ -2733,6 +2735,78 @@
         ]
       },
       "source_knot": "ev_sky_sun_rubbing"
+    },
+    "crystal_marker_correspondence": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "crystal_marker_correspondence",
+      "title": "A Crystal Shaped into a Memorial",
+      "body": "The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.",
+      "interactive_body": "The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.",
+      "category": "observation",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_marker_correspondence"
+        ],
+        "title": [
+          "A Crystal Shaped into a Memorial"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "crystal_shape_observation"
+        ]
+      },
+      "source_knot": "ev_crystal_marker_correspondence"
+    },
+    "sun_coin_correspondence": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "sun_coin_correspondence",
+      "title": "The Sun, the Coin and the Monument",
+      "body": "The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.",
+      "interactive_body": "The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.",
+      "category": "observation",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sun_coin_correspondence"
+        ],
+        "title": [
+          "The Sun, the Coin and the Monument"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "sun_shape",
+          "day_city_currency",
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_sun_coin_correspondence"
     }
   },
   "radio_answers": {

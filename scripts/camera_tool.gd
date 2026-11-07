@@ -18,7 +18,7 @@ var _running := false
 var _completing := false
 var _capturing := false
 var _elapsed := 0.0
-const GROUPS := {"base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}}
+const GROUPS := {"sun_coin": {"ids": ["shape_sky_sun", "shape_sun_marker", "shape_pool_coin"], "evidence": "sun_coin_correspondence", "label": "Shape correspondence"}, "crystal": {"ids": ["crystal_marker", "crystal_lamp"], "evidence": "crystal_marker_correspondence", "label": "Shape correspondence"}, "base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}}
 
 func _ready() -> void:
 	z_index = 110
@@ -170,6 +170,13 @@ func _build_spots() -> void:
 		if is_instance_valid(spot["button"]): spot["button"].queue_free()
 	_spots.clear()
 	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)]] if _photo_day else [["blessing_altar", "blessing", Rect2(895, 372, 76, 66)], ["blessing_mother", "blessing", Rect2(563, 713, 40, 40)], ["blessing_father", "blessing", Rect2(1172, 735, 50, 50)]]
+	if _photo_day:
+		specs.append(["crystal_marker", "crystal", Rect2(470, 370, 260, 280)])
+		specs.append(["crystal_lamp", "crystal", Rect2(128, 300, 144, 351)])
+		specs.append(["shape_sky_sun", "sun_coin", Rect2(1423, 78, 144, 161)])
+		specs.append(["shape_sun_marker", "sun_coin", Rect2(975, 360, 365, 300)])
+		if GameState.evidence_ids.has("day_city_coin"):
+			specs.append(["shape_pool_coin", "sun_coin", Rect2(1580, 487, 70, 67)])
 	var cemetery: Control = get_parent().get_node("DayCemetery" if _photo_day else "NightCemetery")
 	var image_rect := _image_rect()
 	var screen_size := get_viewport_rect().size

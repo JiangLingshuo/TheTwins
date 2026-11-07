@@ -105,6 +105,7 @@ func cancel() -> void:
 	_texture = null
 	_left_book = false
 	queue_redraw()
+	_tool.release_cover_comparison.call_deferred()
 
 
 ## Show the hover hint next to screen position `pointer`.
@@ -132,7 +133,9 @@ func _input(event: InputEvent) -> void:
 		if not _left_book and not _over_book(_pointer):
 			_left_book = true
 		if _left_book and _tool.is_open():
-			_tool.close()  # ignored while a page is turning; tried again on the next move
+			if rubbing_id == "girl_signature_rubbing":
+				_tool.hold_cover_for_comparison()
+			else: _tool.close()  # ignored while a page is turning; tried again on the next move
 		queue_redraw()
 	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
 		_drop(event.global_position)
@@ -148,6 +151,9 @@ func _notification(what: int) -> void:
 
 func _drop(pointer: Vector2) -> void:
 	var id := rubbing_id
+	if id == "girl_signature_rubbing" and _tool._cover_holding and not _tool._cover_ready:
+		await _tool.cover_comparison_ready
+		if rubbing_id != id: return
 	var cycle_drop := _cycle_drag
 	var in_scene := _left_book and get_viewport_rect().has_point(pointer)
 	cancel()

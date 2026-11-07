@@ -5,6 +5,8 @@
 [ext_resource type="PackedScene" uid="uid://jl8bitp1yt3r" path="res://scenes/book.tscn" id="3_book"]
 [ext_resource type="PackedScene" path="res://scenes/dialogue_box.tscn" id="4_box"]
 
+[ext_resource type="FontFile" path="res://assets/fonts/IMFellEnglish-Regular.ttf" id="5_dialogue_font"]
+
 [node name="Start" type="Control" unique_id=49563097]
 layout_mode = 3
 anchors_preset = 15
@@ -54,7 +56,7 @@ alignment = 1
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.92, 0.89, 0.82, 1)
-theme_override_fonts/font = ExtResource("2_font")
+theme_override_fonts/font = ExtResource("5_dialogue_font")
 theme_override_font_sizes/font_size = 36
 text = "And only decades later, when roof and walls fell in upon us, did we realize that the foundations had long since been undermined."
 horizontal_alignment = 1
@@ -64,7 +66,7 @@ autowrap_mode = 3
 layout_mode = 2
 mouse_filter = 2
 theme_override_colors/font_color = Color(0.75, 0.71, 0.64, 1)
-theme_override_fonts/font = ExtResource("2_font")
+theme_override_fonts/font = ExtResource("5_dialogue_font")
 theme_override_font_sizes/font_size = 24
 text = "— Stefan Zweig, The World of Yesterday"
 horizontal_alignment = 1

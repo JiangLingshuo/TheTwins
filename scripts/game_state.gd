@@ -163,9 +163,11 @@ func ending_report_passed() -> bool:
 	return correct * 100 >= ENDING_REPORT_ANSWERS.size() * 2 * 80
 
 var ending_marker_investigated := false
+var solitary_report_preview := false
 
 func open_ending(is_true: bool, preview := false, marker_investigated := false) -> void:
 	ending_marker_investigated = marker_investigated
+	solitary_report_preview = false
 	ending_true = is_true
 	ending_preview = preview
 	radio_modal_open = false
@@ -173,7 +175,12 @@ func open_ending(is_true: bool, preview := false, marker_investigated := false) 
 	_set_debug_overlay(false)
 	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
 
-func open_solitary_investigation() -> void:
+func open_solitary_investigation(from_report_submission: bool = false) -> void:
+	if from_report_submission:
+		open_ending(true, true)
+		solitary_report_preview = true
+		return
+	solitary_report_preview = false
 	# Developer preview: keep testing progress out of the local autosave.
 	ending_preview = true
 	cycle_tutorial_completed = true
@@ -214,7 +221,7 @@ func _build_dev_menu() -> void:
 	var title := Label.new()
 	title.text = "DEV / Scene shortcuts"
 	stack.add_child(title)
-	for item in [["Solitary marker investigation", open_solitary_investigation], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]
 		button.custom_minimum_size.y = 36
@@ -350,6 +357,11 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 
 ## Confirmed meaning of a rubbing, or "" while it is undeciphered.
 func get_rubbing_meaning(rubbing_id: String) -> String:
+	if rubbing_id == "sky_sun_rubbing" and rubbings.has(rubbing_id):
+		var coin: Dictionary = rubbing_records.get("sun_shaped_marker_rubbing", {})
+		return "Coin and Sun" if evidence_ids.has("sun_coin_correspondence") or (coin.get("target", "") == "day_city_coin" and not str(coin.get("meaning", "")).is_empty()) else "Sun"
+	if rubbing_id == "sun_shaped_marker_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("sun_coin_correspondence"):
+		return "Coin and Sun"
 	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
 		return "Dayfolk"
 	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
@@ -531,6 +543,19 @@ func get_gravestone_info(id: String) -> Dictionary:
 var manuscript_filter := ""
 ## Tool ("rubbing", "searchlight", "camera" or "finding") the Clues section is limited to ("" = all).
 var clue_filter := ""
+var clue_source_filter := ""
+
+func clue_sources(entry: Dictionary) -> Array:
+	var sources: Array = entry.get("gravestones", []).duplicate()
+	if sources.is_empty() and not str(entry.get("gravestone", "")).is_empty():
+		sources.append(entry["gravestone"])
+	if sources.is_empty():
+		var metadata: Dictionary = entry.get("metadata", {})
+		var places: Array = metadata.get("location", []) + metadata.get("related_location", [])
+		if "day_cemetery" in places: sources.append("__day")
+		if "night_cemetery" in places: sources.append("__night")
+	return sources
+
 
 ## How a clue was obtained: the tool named in its metadata, else "finding"
 ## (something worked out in the notebook or handed over).
@@ -548,6 +573,8 @@ func notebook_entries(section: int, apply_filter: bool = true) -> Array[Dictiona
 		if section == 3 and category == "manuscript" and apply_filter and not manuscript_filter.is_empty() and entry.get("gravestone", "") != manuscript_filter:
 			continue
 		if section == 2 and category not in ["manuscript", "rubbing"] and apply_filter and not clue_filter.is_empty() and clue_tool(entry) != clue_filter:
+			continue
+		if section == 2 and apply_filter and not clue_source_filter.is_empty() and clue_source_filter not in clue_sources(entry):
 			continue
 		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"]):
 			entries.append(entry)

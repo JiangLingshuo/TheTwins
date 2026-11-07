@@ -374,7 +374,7 @@ func _turn_backward(to: int = -1) -> void:
 
 ## Close the cover over the current spread, then shrink the book into the
 ## bottom-right corner, where it stays as an icon.
-func close_to_icon() -> void:
+func close_to_icon(hold_cover: bool = false) -> void:
 	_busy = true
 	_release_page_focus()
 	_set_corners_visible(false)
@@ -403,6 +403,15 @@ func close_to_icon() -> void:
 	await t.finished
 	right_page.visible = false
 
+	if hold_cover:
+		_busy = false
+		return
+	await stow_closed_cover()
+
+
+## Finish putting away a closed book after a cover comparison.
+func stow_closed_cover() -> void:
+	_busy = true
 	# Shrink into the corner.
 	var s := create_tween().set_parallel(true)
 	s.tween_property(self, "position", _icon_position(), stow_time) \
@@ -908,6 +917,11 @@ func _set_list_filter(key: String) -> void:
 	_on_rubbings_changed()
 
 
+func _set_clue_source_filter(key: String) -> void:
+	GameState.clue_source_filter = key
+	_spread = _section_start(2)
+	_on_rubbings_changed()
+
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
 	var items: Control = page.get_node_or_null("ManuscriptItems")
@@ -921,6 +935,7 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
 		items.filter_requested.connect(_set_list_filter, CONNECT_DEFERRED)
+		items.source_filter_requested.connect(_set_clue_source_filter, CONNECT_DEFERRED)
 	items.visible = (section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)) \
 		or (section == 4 and not _radio_reading())
 	if not items.visible: return
@@ -930,7 +945,7 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		return
 	var entries := GameState.notebook_entries(section)
 	var first := (page_index - _section_start(section) * 2) * 4
-	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
+	var empty_text := ("No clues recorded yet." if section == 2 else "No documents received yet.") if entries.is_empty() and page_index % 2 == 0 else ""
 	items.set_list_header()
 	# Filter chips on the left page only (the right page keeps blank space so both
 	# pages' cards line up): manuscripts by gravestone, clues by the tool that found them.
@@ -942,7 +957,13 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 			keys.append(key)
 	if section == 2:
 		keys.sort_custom(func(a: String, b: String) -> bool: return tool_order.find(a) < tool_order.find(b))
-	items.set_manuscript_extras(keys, GameState.clue_filter if section == 2 else GameState.manuscript_filter, 0 if keys.size() < 2 else (1 if page_index % 2 == 0 else 2), "clue" if section == 2 else "manuscript")
+	items.set_manuscript_extras(keys, GameState.clue_filter if section == 2 else GameState.manuscript_filter, (1 if page_index % 2 == 0 else 2) if section == 2 else (0 if keys.size() < 2 else (1 if page_index % 2 == 0 else 2)), "clue" if section == 2 else "manuscript")
+	if section == 2:
+		items.source_filter_keys = []
+		for entry in GameState.notebook_entries(2, false):
+			for key: String in GameState.clue_sources(entry):
+				if key not in items.source_filter_keys: items.source_filter_keys.append(key)
+		items.source_filter_selected = GameState.clue_source_filter
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
 

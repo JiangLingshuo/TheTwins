@@ -231,7 +231,7 @@ func _set_step(value: Step, text: String, target: Control, persistent := false) 
 	_highlight.z_index = 95 if persistent else 59
 	_highlight.padding = 5 if persistent else 14
 	_panel.z_index = 95 if persistent else 60
-	_panel.get_parent().visible = GameState.debug_overlay or persistent
+	_panel.get_parent().visible = true
 	_drag_hint.target = target if value == Step.DRAG else null
 	_text.text = GameState.zh_text(text)
 	var radio := _main.get_node_or_null("RadioTool")
@@ -239,7 +239,7 @@ func _set_step(value: Step, text: String, target: Control, persistent := false) 
 		_panel.visible = false
 		if is_instance_valid(radio._tutorial_hint):
 			radio._tutorial_hint.text = GameState.zh_text(text)
-			radio._tutorial_hint.visible = GameState.debug_overlay or persistent
+			radio._tutorial_hint.visible = true
 	else:
 		_panel.visible = true
 	if _highlight_target != target:
@@ -378,7 +378,7 @@ func _record_cycle_symbols(with_sun: bool = true) -> void:
 		GameState.record_rubbing("sky_sun_rubbing", "", SKY_SUN_TEXTURE)
 	for id in ["infant_moon_rubbing", "sky_sun_rubbing"]:
 		if GameState.rubbings.has(id) and not GameState.is_rubbing_deciphered(id):
-			GameState.confirm_rubbing_meaning(id, GameState.get_rubbing_texture(id).get_file().get_basename())
+			GameState.confirm_rubbing_meaning(id, "Sun" if id == "sky_sun_rubbing" else "Moon")
 
 ## The moon has taken the sun's place for the first time: the sky sun drops into
 ## the notebook's Day page the way the crescent did, then the notebook closes.
@@ -450,21 +450,20 @@ func _build_guide() -> void:
 	stack.add_child(_text)
 	_skip_button = Button.new()
 	_skip_button.text = "DEV — skip tutorial"
-	_skip_button.visible = OS.is_debug_build()
+	_skip_button.visible = OS.is_debug_build() and GameState.debug_overlay
 	_skip_button.size_flags_horizontal = Control.SIZE_SHRINK_END
 	_skip_button.pressed.connect(skip)
 	stack.add_child(_skip_button)
-	# The hint box is part of the development overlay (F2); the steps still run.
+	# Player-facing instructions remain visible; only the DEV skip button follows F2.
 	var overlay := Control.new()
 	overlay.name = "TutorialOverlay"
 	overlay.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	overlay.visible = GameState.debug_overlay
+	overlay.visible = true
 	overlay.add_child(_panel)
 	_main.add_child(overlay)
 	GameState.debug_overlay_changed.connect(func(shown: bool) -> void:
-		overlay.visible = shown
-		var radio := _main.get_node_or_null("RadioTool")
-		if radio and is_instance_valid(radio._tutorial_hint): radio._tutorial_hint.visible = shown)
+		_skip_button.visible = OS.is_debug_build() and shown
+		refresh())
 	_highlight = HighlightFrame.new()
 	_highlight.z_index = 59
 	_highlight.blinks = 8

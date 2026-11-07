@@ -2,6 +2,31 @@ extends Control
 ## Temporary radio UI for the tutorial branch. Styling can be replaced independently.
 const FONT := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 var model = preload("res://scripts/radio_model.gd").new()
+const HANGUP_SOUND := preload("res://assets/audio/挂断.wav")
+## Aurora's goodbyes when the player ends a call. Daylight Aurora is warm and
+## polite; Night Aurora is brief, and only rarely shows any concern.
+const FAREWELLS_DAY: Array[String] = [
+	"Have a nice day ahead. I hope your investigation goes well.",
+	"The Twins can be windy at this time of year. Please take good care of yourself.",
+	"Thank you for the update. Be careful out there, and call whenever you like.",
+	"Don't forget to rest and drink some water. Talk to you soon.",
+	"I hope the light stays kind to you today. Until next time.",
+	"Please look after yourself, #PLAYER#. I'll be here whenever you need me.",
+]
+const FAREWELLS_NIGHT: Array[String] = [
+	"Bye. Talk to you later.",
+	"I still have work. I have to drop.",
+	"That's all for now. Later.",
+	"Got it. Call me when you have more.",
+	"Mm. Bye.",
+]
+const FAREWELLS_NIGHT_CARE: Array[String] = [
+	"Watch your step down there.",
+	"Mind yourself. Don't wander off the path.",
+]
+## Share of Night farewells that show concern.
+const NIGHT_CARE_CHANCE := 0.15
+var _hangup: AudioStreamPlayer
 var _button: TextureButton
 var _overlay: Control
 var _menu_host: VBoxContainer
@@ -60,6 +85,10 @@ func _ready() -> void:
 	_reply_box.z_index = 10
 	add_child(_reply_box)
 	_reply_box.term_selected.connect(_collect_term)
+	_hangup = AudioStreamPlayer.new()
+	_hangup.stream = HANGUP_SOUND
+	_hangup.volume_db = 6.0
+	add_child(_hangup)
 
 func _exit_tree() -> void:
 	GameState.radio_modal_open = false
@@ -94,8 +123,25 @@ func open() -> void:
 	_status = ""
 	_render()
 
+## The player ends the call: Aurora says a short goodbye, then the line drops.
+func _end_call() -> void:
+	if _reply_playing: return
+	_feedback = ""
+	await _play_reply([{"speaker": "Aurora", "content": GameState.zh_text(_farewell())}], "")
+	close()
+
+## A random goodbye, in the voice of whichever Aurora the player is talking to.
+func _farewell() -> String:
+	if GameState.current_city_day:
+		return FAREWELLS_DAY.pick_random()
+	if randf() < NIGHT_CARE_CHANCE:
+		return FAREWELLS_NIGHT_CARE.pick_random()
+	return FAREWELLS_NIGHT.pick_random()
+
 func close() -> void:
 	if _reply_playing: return
+	if GameState.radio_modal_open:
+		_hangup.play()
 	if _heard_reply:
 		GameState.write_autosave()
 		_heard_reply = false
@@ -195,7 +241,7 @@ func _render() -> void:
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
 	if not _tomb.is_empty(): header.add_child(_action("Change stone", _change_tomb))
-	header.add_child(_action("End call", close))
+	header.add_child(_action("End call", _end_call))
 	_tutorial_hint = _label("", 18)
 	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
 	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
@@ -221,7 +267,7 @@ func _render() -> void:
 	_layout.add_child(columns)
 	var left := VBoxContainer.new()
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 1.4
+	left.size_flags_stretch_ratio = 1.8
 	columns.add_child(left)
 	if not _last_lines.is_empty():
 		var replay := _action("Read last reply", _replay_reply)
@@ -243,7 +289,7 @@ func _render() -> void:
 			questions.add_child(question_button)
 			tutorial_controls[question["target"]] = question_button
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 440
+	right.custom_minimum_size.x = 360
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
 	right.add_child(_label("Evidence · one record", 20))
@@ -495,12 +541,11 @@ func _can_open() -> bool:
 
 
 func _fit_selection_panel() -> void:
-	_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_panel.offset_left = 20
-	_panel.offset_right = -20
-	_panel.offset_top = 20
-	_panel.offset_bottom = -20
-	# The dialogue shader normally fades above a bottom panel; the menu fills the screen.
+	_panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_panel.offset_left = 80
+	_panel.offset_right = -80
+	_panel.offset_top = -450
+	_panel.offset_bottom = -48
 	var grain: ColorRect = _overlay.get_node("Panel/RadioStatic")
-	grain.material.set_shader_parameter("top_fade_height", 0.0)
-	grain.material.set_shader_parameter("top_fade_inset", 0.0)
+	grain.material.set_shader_parameter("top_fade_height", 220.0)
+	grain.material.set_shader_parameter("top_fade_inset", 30.0)

@@ -3,6 +3,9 @@ signal document_requested(id: String)
 signal list_requested
 ## A gravestone chip of the manuscript filter was pressed ("" = All).
 signal filter_requested(stone_id: String)
+signal source_filter_requested(stone_id: String)
+var source_filter_keys: Array = []
+var source_filter_selected := ""
 ## A notebook page of folded entries (manuscripts, clues or radio logs), one
 ## card per entry showing its title. Clicking a card opens its full text.
 
@@ -66,6 +69,7 @@ const SUBTITLES := {
 ## title size. The node is shared by several sections: set it before each setup().
 func set_list_header(heading: String = "", back_text: String = "", card_font_size: int = 23) -> void:
 	_heading = heading
+	source_filter_keys = []
 	list_notice = ""
 	_back_text = back_text
 	_card_font_size = card_font_size
@@ -86,6 +90,8 @@ static func stone_thumbnail(stone_id: String) -> Texture2D:
 	if _thumbnails.has(stone_id):
 		return _thumbnails[stone_id]
 	var path: String = "res://assets/Art/figure/aurora.png" if stone_id == "__other" else GameState.get_gravestone_info(stone_id).get("sketch", "")
+	if stone_id == "__day": path = GameState.SUN_RUBBING_TEXTURE
+	if stone_id == "__night": path = "res://assets/Art/symbol/moon.png"
 	var atlas: AtlasTexture = null
 	var texture := load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path, "Texture2D") else null
 	if texture:
@@ -103,9 +109,9 @@ static func stone_thumbnail(stone_id: String) -> Texture2D:
 func _entry_key(entry: Dictionary) -> String:
 	return GameState.clue_tool(entry) if _kind == "clue" else str(entry.get("gravestone", ""))
 
-func _thumbnail_rect(key: String) -> TextureRect:
+func _thumbnail_rect(key: String, source: bool = false) -> TextureRect:
 	var rect := TextureRect.new()
-	if _kind == "clue":
+	if _kind == "clue" and not source:
 		rect.texture = TOOL_ICONS.get(key)
 		# Same soft, grainy finish as the tool buttons.
 		SoftIcon.apply_tree(rect)
@@ -116,18 +122,19 @@ func _thumbnail_rect(key: String) -> TextureRect:
 			invert.shader = preload("res://shaders/portrait_invert.gdshader")
 			invert.set_shader_parameter("invert", 1.0)
 			rect.material = invert
+	if source: rect.modulate = Color(0.48, 0.65, 0.75, 0.95)
 	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	return rect
 
-func _chip(stone_id: String) -> Button:
+func _chip(stone_id: String, source: bool = false) -> Button:
 	var chip := Button.new()
 	chip.name = "Filter_" + (stone_id if not stone_id.is_empty() else "all")
 	chip.custom_minimum_size = Vector2(40, 40)
 	chip.disabled = not _interactive
 	chip.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	var selected := stone_id == _filter_selected
+	var selected := stone_id == (source_filter_selected if source else _filter_selected)
 	var frame := StyleBoxFlat.new()
 	frame.bg_color = Color(_ink, 0.16 if selected else 0.035)
 	frame.border_color = Color(_ink, 0.9 if selected else 0.35)
@@ -147,18 +154,22 @@ func _chip(stone_id: String) -> Button:
 			chip.add_theme_color_override(state, _ink)
 		chip.tooltip_text = GameState.zh_text("All tools" if _kind == "clue" else "All gravestones")
 	else:
-		if _kind == "clue":
+		if _kind == "clue" and not source:
 			chip.tooltip_text = GameState.zh_text(TOOL_NAMES.get(stone_id, ""))
 		else:
 			chip.tooltip_text = GameState.fill_placeholders(str(GameState.get_gravestone_info(stone_id).get("title", "")))
-		var thumbnail := _thumbnail_rect(stone_id)
+		var thumbnail := _thumbnail_rect(stone_id, source)
 		chip.add_child(thumbnail)
 		thumbnail.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		for side in [SIDE_LEFT, SIDE_TOP]:
 			thumbnail.set_offset(side, 4)
 		for side in [SIDE_RIGHT, SIDE_BOTTOM]:
 			thumbnail.set_offset(side, -4)
-	chip.pressed.connect(func() -> void: filter_requested.emit(stone_id))
+	if source:
+		chip.tooltip_text = GameState.zh_text("Day City · general" if stone_id == "__day" else ("Night City · general" if stone_id == "__night" else ("All sources" if stone_id.is_empty() else chip.tooltip_text)))
+		chip.pressed.connect(func() -> void: source_filter_requested.emit(stone_id))
+	else:
+		chip.pressed.connect(func() -> void: filter_requested.emit(stone_id))
 	return chip
 
 func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool, manuscript: bool = true, empty_text: String = "No documents received yet.") -> void:
@@ -224,6 +235,17 @@ func _rebuild() -> void:
 		if _filter_row_mode == 1:
 			for stone_id in [""] + _filter_stones:
 				row.add_child(_chip(stone_id))
+		elif _kind == "clue":
+			var scroll := ScrollContainer.new()
+			scroll.name = "SourceFilter"
+			scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+			row.add_child(scroll)
+			var chips := HBoxContainer.new()
+			chips.add_theme_constant_override("separation", 5)
+			scroll.add_child(chips)
+			for key: String in [""] + source_filter_keys:
+				chips.add_child(_chip(key, true))
 	for entry in _entries:
 		var button := Button.new()
 		button.name = entry["id"]
@@ -282,9 +304,25 @@ func _rebuild() -> void:
 				subtitle.clip_text = true
 				subtitle.add_theme_color_override("font_color", Color(_ink, 0.68))
 				text_box.add_child(subtitle)
+			if _kind == "clue":
+				text_box.offset_right = -82
+				var sources := HBoxContainer.new()
+				sources.name = "SourceThumbnails"
+				sources.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				button.add_child(sources)
+				sources.set_anchors_and_offsets_preset(Control.PRESET_RIGHT_WIDE)
+				sources.offset_left = -76
+				sources.offset_right = -8
+				sources.offset_top = 27
+				sources.offset_bottom = -8
+				for key: String in GameState.clue_sources(entry):
+					var origin := _thumbnail_rect(key, true)
+					origin.custom_minimum_size = Vector2(20, 40)
+					origin.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+					sources.add_child(origin)
 			# An unread clue shows NEW in its top-right corner until it has been read.
 			if _kind == "clue" and GameState.is_clue_unread(str(entry["id"])):
-				text_box.offset_right = -58
+				text_box.offset_right = -82
 				var badge := _label("NEW", 15)
 				badge.name = "NewBadge"
 				badge.add_theme_color_override("font_color", NEW_COLOR)

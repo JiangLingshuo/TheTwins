@@ -17,6 +17,9 @@ const SYMBOL_COLUMN := 96.0
 ## Largest size a symbol is drawn at (it keeps its proportions).
 const SYMBOL_BOX := Vector2(76, 76)
 const MEANING_SIZE := 21
+const SOURCE_WIDTH := 58.0
+const SOURCE_TINT := Color(0.48, 0.65, 0.75, 0.9)
+const SourceCards := preload("res://scripts/manuscript_items.gd")
 const UNKNOWN_TEXT := "Meaning unknown"
 ## How far the mouse moves with the button held before a drag starts.
 const DRAG_THRESHOLD := 6.0
@@ -157,8 +160,17 @@ func _draw_entry(id: String, row: Rect2) -> void:
 		draw_tick(self, box.end - Vector2(4, SYMBOL_BOX.y - 2), 18.0, _ink)
 	# Meaning, in the right column.
 	var x := SYMBOL_COLUMN + 12.0
-	var width := row.size.x - x
-	var text := meaning if not meaning.is_empty() else UNKNOWN_TEXT
+	var source: String = GameState.rubbing_records.get(id, {}).get("gravestone", "")
+	var width := row.size.x - x - (SOURCE_WIDTH if not source.is_empty() else 0.0)
+	if not source.is_empty():
+		var thumbnail := SourceCards.stone_thumbnail(source)
+		if thumbnail:
+			var source_box := Rect2(row.end.x - SOURCE_WIDTH + 5, row.position.y + (row.size.y - 62) / 2.0, 44, 62)
+			draw_style_box(_source_frame(), source_box.grow(3))
+			var ratio := minf(source_box.size.x / thumbnail.get_width(), source_box.size.y / thumbnail.get_height())
+			var drawn_source := Vector2(thumbnail.get_size()) * ratio
+			draw_texture_rect(thumbnail, Rect2(source_box.get_center() - drawn_source / 2, drawn_source), false, SOURCE_TINT)
+	var text := GameState.zh_text(meaning if not meaning.is_empty() else UNKNOWN_TEXT)
 	var color := _ink if not meaning.is_empty() else _faded_ink
 	var line_height := FONT.get_height(MEANING_SIZE)
 	var lines := mini(3, _line_count(text, width))
@@ -188,3 +200,12 @@ static func draw_tick(canvas: CanvasItem, at: Vector2, length: float, color: Col
 	var offset := Vector2(0.7, -0.4)
 	canvas.draw_polyline(PackedVector2Array([points[1] + offset, points[2] + offset, points[3] + offset]),
 		Color(color, color.a * 0.6), 1.2, true)
+
+
+func _source_frame() -> StyleBoxFlat:
+	var frame := StyleBoxFlat.new()
+	frame.bg_color = Color(0.35, 0.55, 0.67, 0.10)
+	frame.border_color = Color(0.35, 0.55, 0.67, 0.35)
+	frame.set_border_width_all(1)
+	frame.set_corner_radius_all(3)
+	return frame

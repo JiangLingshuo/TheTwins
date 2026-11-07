@@ -1176,3 +1176,27 @@ Across the checked period after the burial, the searchlight reveals no readable 
 # evidence_tag:sun_motif
 The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.
 -> DONE
+
+=== ev_crystal_marker_correspondence ===
+# type:evidence
+# id:crystal_marker_correspondence
+# title:A Crystal Shaped into a Memorial
+# category:observation
+# location:day_cemetery
+# tool:camera
+# evidence_tag:crystal_shape_observation
+The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.
+-> DONE
+
+=== ev_sun_coin_correspondence ===
+# type:evidence
+# id:sun_coin_correspondence
+# title:The Sun, the Coin and the Monument
+# category:observation
+# location:day_cemetery
+# tool:camera
+# evidence_tag:sun_shape
+# evidence_tag:day_city_currency
+# evidence_tag:sun_motif
+The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.
+-> DONE
