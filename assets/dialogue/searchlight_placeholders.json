@@ -239,7 +239,7 @@
       "evidence_id": "girl_painted_flower",
       "city": "day",
       "position": [
-        880,
+        832,
         585
       ],
       "caption": "Solitary marker: a painted flower",
@@ -249,9 +249,11 @@
       "date_status": "timeline_suggestion",
       "required_grave": "girl_tomb",
       "size": [
-        130,
-        110
-      ]
+        120,
+        118
+      ],
+      "texture": "res://assets/Art/figure/girl_flower_bright.png",
+      "crop": true
     }
   ]
 }
