@@ -30,3 +30,6 @@ mono_crash.*.json
 # Local AI development tools
 /.mcp.json
 /addons/godot_mcp_toolkit/
+
+# Microsoft Office lock files
+~$*

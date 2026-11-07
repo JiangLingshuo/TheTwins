@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "3772893f42707ea9ad811f30fd9f85ac2ae3192e11bd66cff23eda2ea9afceff",
+  "source_sha256": "5c0171d2b6162bc22cfee4c87725ff524ecc3aff5c1a2281e7df3fd9cbb03c26",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -365,15 +365,28 @@
       ]
     },
     {
-      "id": "altar:query_night_unending_path",
+      "id": "altar:query_night_unending_path_hint",
       "tomb": "altar_tomb",
-      "label": "What does the geometric border on the altar mean?",
-      "condition": "owned_evidence ? EvidenceId.altar_path_rubbing",
-      "target": "query_night_unending_path",
-      "hidden": false,
+      "label": "What does the unending path symbol mean?",
+      "condition": "submitted_id == \"altar_path_rubbing\"",
+      "target": "query_night_unending_path_hint",
+      "hidden": true,
       "candidates": [
         "altar_path_rubbing",
         "altar_blessing_glyph",
+        "crystal_god_rubbing"
+      ]
+    },
+    {
+      "id": "altar:query_night_unending_path",
+      "tomb": "altar_tomb",
+      "label": "Does the blessing explain the unending path?",
+      "condition": "(submitted_id == \"altar_blessing_translation\") && (read_answers ? AnswerId.altar_path_hint)",
+      "target": "query_night_unending_path",
+      "hidden": true,
+      "candidates": [
+        "altar_blessing_translation",
+        "altar_path_rubbing",
         "crystal_god_rubbing"
       ]
     },
@@ -388,6 +401,19 @@
         "crystal_god_rubbing",
         "altar_path_rubbing",
         "altar_moon_stone"
+      ]
+    },
+    {
+      "id": "altar:test_answer_altar_crystal_shape",
+      "tomb": "altar_tomb",
+      "label": "Why does the Crystal God look like this crystal?",
+      "condition": "submitted_id == \"crystal_god_crystal_correspondence\"",
+      "target": "test_answer_altar_crystal_shape",
+      "hidden": true,
+      "candidates": [
+        "crystal_god_crystal_correspondence",
+        "crystal_god_rubbing",
+        "night_city_crystal"
       ]
     },
     {
@@ -508,6 +534,19 @@
       ]
     },
     {
+      "id": "mother:test_answer_altar_crystal_shape",
+      "tomb": "mother_tomb",
+      "label": "Why does the Crystal God look like this crystal?",
+      "condition": "submitted_id == \"crystal_god_crystal_correspondence\"",
+      "target": "test_answer_altar_crystal_shape",
+      "hidden": true,
+      "candidates": [
+        "crystal_god_crystal_correspondence",
+        "crystal_god_rubbing",
+        "night_city_crystal"
+      ]
+    },
+    {
       "id": "father:test_answer_father_8",
       "tomb": "father_tomb",
       "label": "Who is carrying the child?",
@@ -596,6 +635,19 @@
         "crystal_god_rubbing",
         "night_father_path_rubbing",
         "altar_moon_stone"
+      ]
+    },
+    {
+      "id": "father:test_answer_altar_crystal_shape",
+      "tomb": "father_tomb",
+      "label": "Why does the Crystal God look like this crystal?",
+      "condition": "submitted_id == \"crystal_god_crystal_correspondence\"",
+      "target": "test_answer_altar_crystal_shape",
+      "hidden": true,
+      "candidates": [
+        "crystal_god_crystal_correspondence",
+        "crystal_god_rubbing",
+        "night_city_crystal"
       ]
     },
     {
@@ -925,7 +977,12 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "It means an unending journey: someone left and did not return. On a memorial, it records <link=\"disappearance\">disappearance</link>. It does not tell us what happened to that person."
+        "text": "That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that <link=\"disappearance\">disappearance</link>."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It does not tell us what happened to that person."
       },
       {
         "op": "set",
@@ -938,6 +995,34 @@
       {
         "op": "set",
         "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "goto",
+        "target": "return_night_glyph"
+      }
+    ],
+    "query_night_unending_path_hint": [
+      {
+        "op": "tag",
+        "value": "question_id:query_night_unending_path_hint"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "A path that does not end and does not return."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "I have heard that idea before, in one of the translations I gave you: a journey without end. Look back through my words, and bring me the one that says it."
+      },
+      {
+        "op": "set",
+        "code": "read_answers += AnswerId.altar_path_hint"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"unmatched\""
       },
       {
         "op": "goto",
@@ -957,11 +1042,6 @@
         "op": "if",
         "condition": "has_tag(EvidenceTag.infant_memorial) || has_tag(EvidenceTag.paired_day_night_memorials)",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(She speaks in an undisturbed tone.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -1090,11 +1170,6 @@
         "op": "if",
         "condition": "has_tag(EvidenceTag.removed_crystal_offering) || has_tag(EvidenceTag.crystal_extraction_reference)",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(Her voice tightens around the missing object, then settles back into its usual level register.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -1344,6 +1419,57 @@
         "target": "test_radio_altar"
       }
     ],
+    "test_answer_altar_crystal_shape": [
+      {
+        "op": "tag",
+        "value": "question_id:altar_crystal_shape"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "(You look from the carving to the crystal in the scene. The outline is the same, and for a moment the sign seems less carved than set down.)"
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "Set the stone beside the carving: the same facets, the same point at the top. The Nightfolk did not picture their god as a person. They carved the crystal itself."
+      },
+      {
+        "op": "line",
+        "speaker": "Aurora",
+        "text": "It is what they dug from the dark and came to trust. A figure made of that stone is faith, and it is also a blessing: “May the wishes of crystal remain with you.”"
+      },
+      {
+        "op": "set",
+        "code": "feedback_kind = \"linked\""
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"mother\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_mother"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "if",
+        "condition": "active_tomb == \"father\"",
+        "then": [
+          {
+            "op": "goto",
+            "target": "test_radio_father"
+          }
+        ],
+        "else": []
+      },
+      {
+        "op": "goto",
+        "target": "test_radio_altar"
+      }
+    ],
     "test_answer_baby_17": [
       {
         "op": "tag",
@@ -1527,11 +1653,6 @@
           {
             "op": "tag",
             "value": "feedback:gold"
-          },
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
           },
           {
             "op": "line",
@@ -1790,11 +1911,6 @@
       },
       {
         "op": "line",
-        "speaker": "",
-        "text": "(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.)"
-      },
-      {
-        "op": "line",
         "speaker": "Aurora",
         "text": "The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that."
       },
@@ -1839,11 +1955,6 @@
         "op": "if",
         "condition": "has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_father_past)",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -1967,11 +2078,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
           },
@@ -1994,11 +2100,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -2270,11 +2371,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(The first word sounds choked up. She takes another breath and continues.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "The border matches the dry riverbed. It records <link=\"thirst\">hunger and thirst</link> as her cause of death."
           },
@@ -2309,11 +2405,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(Her answer comes after a single, deliberate beat.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -2471,11 +2562,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(For one word, the bluntness gives way to something gentler. Then it is gone.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "That is the altar infant. The figure is his <link=\"night_mother\">mother in Night City</link>."
           },
@@ -2498,11 +2584,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(A quiet intake of breath. She answers before it has quite left her.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -2594,11 +2675,6 @@
       {
         "op": "tag",
         "value": "feedback:gold"
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(She goes quiet long enough for you to hear the wind at your end of the call.)"
       },
       {
         "op": "line",
@@ -2706,11 +2782,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(The last word of the old account seems to hold her for a moment. She lets it go slowly.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record <link=\"disappearance\">disappearance</link>. You may find other traces of what disappearance meant for the Dayfolk."
           },
@@ -2733,11 +2804,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(A faint click interrupts her breath. She waits until the channel is quiet before answering.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -2772,11 +2838,6 @@
         "op": "if",
         "condition": "has_tag(EvidenceTag.night_city_mineral_origin) || has_tag(EvidenceTag.intercity_resource_exchange)",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -2826,11 +2887,6 @@
       {
         "op": "tag",
         "value": "question_id:scholar_20"
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.)"
       },
       {
         "op": "line",
@@ -2995,11 +3051,6 @@
       },
       {
         "op": "line",
-        "speaker": "",
-        "text": "(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.)"
-      },
-      {
-        "op": "line",
         "speaker": "Aurora",
         "text": "You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities."
       },
@@ -3105,11 +3156,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(Pride enters her voice so briefly that you cannot tell whose it is.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "As the manuscript says, they gave her the title <link=\"scholar\">Scholar</link> when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of."
           },
@@ -3162,11 +3208,6 @@
       {
         "op": "tag",
         "value": "feedback:gold"
-      },
-      {
-        "op": "line",
-        "speaker": "",
-        "text": "(A small pause. You hear something click on her end of the line.)"
       },
       {
         "op": "line",
@@ -3264,11 +3305,6 @@
         "then": [
           {
             "op": "line",
-            "speaker": "",
-            "text": "(She exhales, quietly pleased. The next sentence comes without hesitation.)"
-          },
-          {
-            "op": "line",
             "speaker": "Aurora",
             "text": "Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted."
           },
@@ -3291,11 +3327,6 @@
         "op": "if",
         "condition": "not supported",
         "then": [
-          {
-            "op": "line",
-            "speaker": "",
-            "text": "(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.)"
-          },
           {
             "op": "line",
             "speaker": "Aurora",
@@ -5080,12 +5111,11 @@
     },
     "altar_path_rubbing": {
       "id": "altar_path_rubbing",
-      "title": "Unending path symbols",
+      "title": "The Altar's Unending Path",
       "members": [
-        "altar_path_rubbing",
-        "girl_path_rubbing"
+        "altar_path_rubbing"
       ],
-      "signature": "tags:endless_path_motif,night_departure_reference"
+      "signature": "id:altar_path_rubbing"
     },
     "altar_blessing_glyph": {
       "id": "altar_blessing_glyph",
@@ -5101,13 +5131,14 @@
       "members": [
         "altar_blessing_translation"
       ],
-      "signature": "tags:aurora_translation_knowledge,endless_path_motif,night_blessing_glyph,night_symbol_translation"
+      "signature": "id:altar_blessing_translation"
     },
     "crystal_god_rubbing": {
       "id": "crystal_god_rubbing",
       "title": "Crystal God symbols",
       "members": [
         "crystal_god_rubbing",
+        "night_mother_god_rubbing",
         "night_father_god_rubbing"
       ],
       "signature": "tags:crystal_god_motif,night_city_belief"
@@ -5217,6 +5248,14 @@
       ],
       "signature": "tags:ascending_path_motif,night_father_final_journey"
     },
+    "crystal_god_crystal_correspondence": {
+      "id": "crystal_god_crystal_correspondence",
+      "title": "The Crystal God Is the Crystal",
+      "members": [
+        "crystal_god_crystal_correspondence"
+      ],
+      "signature": "id:crystal_god_crystal_correspondence"
+    },
     "natural_collapse_record": {
       "id": "natural_collapse_record",
       "title": "The Collapse That Sealed the Road",
@@ -5272,6 +5311,14 @@
         "girl_coffin_rubbing"
       ],
       "signature": "tags:girl_memorial,upright_coffin_motif"
+    },
+    "girl_path_rubbing": {
+      "id": "girl_path_rubbing",
+      "title": "The Unending Path Around the Girl",
+      "members": [
+        "girl_path_rubbing"
+      ],
+      "signature": "tags:endless_path_motif,night_departure_reference"
     },
     "girl_signature_rubbing": {
       "id": "girl_signature_rubbing",
@@ -5428,11 +5475,13 @@
     "night_mother_hands_rubbing": "night_mother_hands_rubbing",
     "night_mother_river_rubbing": "night_mother_river_rubbing",
     "dry_underground_river": "dry_underground_river",
+    "night_mother_god_rubbing": "crystal_god_rubbing",
     "night_mother_no_traces": "night_mother_no_traces",
     "night_mother_death_finding": "night_mother_death_finding",
     "night_father_child_rubbing": "night_father_child_rubbing",
     "night_father_path_rubbing": "night_father_path_rubbing",
     "night_father_god_rubbing": "crystal_god_rubbing",
+    "crystal_god_crystal_correspondence": "crystal_god_crystal_correspondence",
     "night_father_moon_stone": "altar_moon_stone",
     "natural_collapse_record": "natural_collapse_record",
     "skyway_history": "skyway_history",
@@ -5442,7 +5491,7 @@
     "girl_figure_rubbing": "girl_figure_rubbing",
     "girl_coffin_rubbing": "girl_coffin_rubbing",
     "girl_beast_rubbing": "scholar_beast_rubbing",
-    "girl_path_rubbing": "altar_path_rubbing",
+    "girl_path_rubbing": "girl_path_rubbing",
     "girl_signature_rubbing": "girl_signature_rubbing",
     "family_statuette": "family_statuette",
     "girl_teddy_bear": "girl_teddy_bear",

@@ -8,7 +8,7 @@
 INCLUDE evidence_master.ink
 INCLUDE tombstone_master.ink
 
-LIST EvidenceId = infant_medical_record, girl_painted_flower, girl_teddy_bear, night_mother_flower, mother_daughter_flower_meaning, dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces
+LIST EvidenceId = infant_medical_record, girl_painted_flower, girl_teddy_bear, night_mother_flower, mother_daughter_flower_meaning, dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces, night_mother_god_rubbing, crystal_god_crystal_correspondence
 
 LIST EvidenceTag = infant_euthanasia, girl_painted_flower_trace, girl_teddy_bear_trace, night_mother_flower_trace, mother_daughter_flower_meaning, absence_of_readable_traces, ancient_creature_trace, ancient_disappearance, ascending_path_motif, aurora_identity_reference, aurora_provided_object, aurora_translation_knowledge, author_identity_reference, contradictory_death_accounts, contrasting_halves, crystal_extraction_reference, crystal_god_motif, crystal_research_reference, crystal_shape, dawn_disappearances, day_city_belief, day_city_bias, day_city_currency, day_night_handholding, dayfolk_appearance, death_by_hunger_and_thirst, deliberate_departure, different_exchange_customs, disappearance_symbol_reference, dry_river_motif, endless_path_motif, family_image_reference, family_mausoleum_custom, family_requested_depiction, four_person_family, funerary_artist_reference, girl_coffin_motif, girl_memorial, human_figure_reference, husband_disappearance, infant_actual_appearance, infant_appearance_mismatch, infant_death_unresolved, infant_identity, infant_memorial, intercity_resource_exchange, last_survivor_question, missed_sleeping_deadline, missing_family_member_reference, moon_motif, moon_reference, moon_stone_offering, natural_collapse, night_blessing_glyph, night_blessing_reference, night_city_belief, night_city_mineral_origin, night_city_supply_blockade, night_departure_reference, night_father_final_journey, night_father_past, night_infant_reference, night_mother_death_reference, night_mother_future, night_mother_past, night_symbol_translation, occupation_marker_custom, one_way_passage, original_separation, paired_day_night_death, paired_day_night_memorials, parent_child_image, population_decline, ram_spirit_motif, removed_crystal_offering, repeated_local_symbol, resentment_toward_mother, scholar_identity, scholar_no_visitors, scholar_tycoon_marriage, shared_body_reference, shared_day_night_history, shared_family_plot, skin_as_message_medium, skyway_not_steep, sleep_coffin_required, smooth_skinned_child, sun_motif, sun_shape, three_family_markers, twin_beast_motif, twin_beast_reference, two_mothers_dilemma, tycoon_identity, unexplained_waking_wounds, upright_coffin_motif, water_source_lost, well_preserved_diary
 
@@ -56,7 +56,7 @@ VAR natural_reply_seen = false
 VAR player_name = "Investigator"
 VAR feedback_kind = ""
 VAR pending_relation_feedback = false
-LIST AnswerId = scholar_passage_gate_hidden, mother_flower_supported, mother_flower_normal, baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_comparison, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, repeated_beast_hidden, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21
+LIST AnswerId = scholar_passage_gate_hidden, mother_flower_supported, mother_flower_normal, baby_8_normal_9, baby_8_additional_10, baby_17_supported_19, baby_17_comparison, baby_17_normal_13, baby_21_hidden_23, scholar_8_supported_10, scholar_8_normal_9, repeated_beast_hidden, scholar_12_supported_15, scholar_12_normal_13, scholar_17_supported_19, scholar_17_normal_18, scholar_20_normal_21, scholar_25_supported_27, scholar_25_normal_26, scholar_31_hidden_33, scholar_35_hidden_37, scholar_39_hidden_41, sun_13_supported_15, sun_13_normal_14, sun_17_supported_19, sun_17_normal_18, sun_25_hidden_27, altar_8_supported_10, altar_8_normal_9, altar_12_supported_14, altar_12_normal_13, altar_16_supported_18, altar_16_normal_17, altar_20_supported_22, altar_20_normal_21, altar_24_hidden_26, altar_28_hidden_30, mother_8_supported_10, mother_8_normal_9, mother_12_supported_14, mother_12_normal_13, mother_17_supported_19, mother_17_normal_18, mother_21_supported_23, mother_21_normal_22, mother_25_hidden_27, father_8_supported_10, father_8_normal_9, father_12_supported_14, father_12_normal_13, father_16_supported_18, father_16_normal_17, father_20_supported_22, father_20_normal_21, father_24_hidden_26, girl_8_supported_10, girl_8_normal_9, girl_12_supported_14, girl_12_normal_13, girl_16_supported_18, girl_16_normal_17, girl_20_supported_22, girl_20_normal_21, altar_path_hint
 VAR read_answers = ()
 LIST NightGlyph = blessing, unending_path, dry_river, ascending_path, crystal_god
 VAR queried_night_glyphs = ()
@@ -1726,12 +1726,16 @@ What would you like to ask?
 + {1 == 1} [What was removed from the empty recess?] -> test_answer_altar_20
 + {LIST_COUNT(queried_night_glyphs) == 5} [How can you translate a symbol from a culture without a written language?] -> test_answer_altar_24
 + {(1 == 1) && (has_tag(EvidenceTag.infant_appearance_mismatch) || has_tag(EvidenceTag.infant_actual_appearance))} [Was the child in the wrong city?] -> test_answer_altar_28
-+ {owned_evidence ? EvidenceId.altar_path_rubbing} [What does the geometric border on the altar mean?]
++ {submitted_id == "altar_path_rubbing"} [What does the unending path symbol mean?]
+    ~ glyph_return = "altar"
+    -> query_night_unending_path_hint
++ {(submitted_id == "altar_blessing_translation") && (read_answers ? AnswerId.altar_path_hint)} [Does the blessing explain the unending path?]
     ~ glyph_return = "altar"
     -> query_night_unending_path
 + {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
     ~ glyph_return = "altar"
     -> query_night_crystal_god
++ {submitted_id == "crystal_god_crystal_correspondence"} [Why does the Crystal God look like this crystal?] -> test_answer_altar_crystal_shape
 + {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
 + [Collect a word from this call] -> test_radio_terms_altar
 + [End this call] -> test_end_call
@@ -1750,6 +1754,7 @@ What would you like to ask?
 + {owned_evidence ? EvidenceId.night_mother_flower} [What does the painted flower mean?] -> test_answer_mother_flower
 + {submitted_id == "altar_blessing_glyph"} [What does this repeated symbol mean?] -> test_answer_altar_8
 + {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
++ {submitted_id == "crystal_god_crystal_correspondence"} [Why does the Crystal God look like this crystal?] -> test_answer_altar_crystal_shape
 + [Collect a word from this call] -> test_radio_terms_mother
 + [End this call] -> test_end_call
 
@@ -1768,6 +1773,7 @@ What would you like to ask?
 + {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
     ~ glyph_return = "father"
     -> query_night_crystal_god
++ {submitted_id == "crystal_god_crystal_correspondence"} [Why does the Crystal God look like this crystal?] -> test_answer_altar_crystal_shape
 + {submitted_id == "altar_blessing_glyph"} [What does this repeated symbol mean?] -> test_answer_altar_8
 + {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
 + [Collect a word from this call] -> test_radio_terms_father
@@ -2023,7 +2029,6 @@ This test report is not yet supported. Check the identity, fate, and relevant ev
 
 === test_bonus ===
 // Dialogue source: 05_婴儿夜城祭坛!B13. Unlock after two accepted Day City reports AND two accepted Night City reports. Two bonus QUESTIONS, not an overall radio call limit.
-(Her breathing steadies. She sounds ready to answer something larger than a single grave.) #narrator
 You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about. #aurora
 DEV: bonus questions remaining {bonus_remaining}.
 * {bonus_remaining > 0} [What are the Dayfolk and Nightfolk?]
@@ -2336,7 +2341,6 @@ The outline is a starting point. Show me your comparison with the moon, and we c
 }
 {has_tag(EvidenceTag.infant_actual_appearance):
 # feedback:gold
-(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.) #narrator
 The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were <link="unexplained death">unexplained circumstances</link> behind his death. Let us keep looking. #aurora
 ~ read_answers += AnswerId.baby_8_additional_10
 ~ owned_evidence += EvidenceId.infant_death_doubt
@@ -2404,7 +2408,6 @@ What would you like to ask?
 # question_id:scholar_8
 ~ temp supported = false
 {has_tag(EvidenceTag.crystal_shape) || has_tag(EvidenceTag.crystal_research_reference):
-(Pride enters her voice so briefly that you cannot tell whose it is.) #narrator
 As the manuscript says, they gave her the title <link="scholar">Scholar</link> when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of. #aurora
 (You can't help thinking back to the moment when you first saw the crystal in the Night City. Unlike its transparency in the Day City, the enigmatic darkness draws you in and makes you wonder how these beautiful stones changed Day and Night.) #narrator
 ~ read_answers += AnswerId.scholar_8_supported_10
@@ -2420,7 +2423,6 @@ The crystal had a history before it became a memorial. {player_name}, find its m
 
 === test_answer_repeated_beast ===
 # feedback:gold
-(She goes quiet long enough for you to hear the wind at your end of the call.) #narrator
 On one stone, a creature might have belonged to a single life. When it keeps turning up on graves that have nothing else in common, I start to wonder what the whole city needed a way to say. #aurora
 Look for a pattern like that in Night City. If the same sign turns up on several graves there, ask yourself what those people kept leaving for one another. They may have had something quite different to say. #aurora
 ~ read_answers += AnswerId.repeated_beast_hidden
@@ -2433,14 +2435,12 @@ Look for a pattern like that in Night City. If the same sign turns up on several
 # question_id:scholar_12
 ~ temp supported = false
 {has_tag(EvidenceTag.ancient_disappearance):
-(The last word of the old account seems to hold her for a moment. She lets it go slowly.) #narrator
 The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record <link="disappearance">disappearance</link>. You may find other traces of what disappearance meant for the Dayfolk. #aurora
 ~ read_answers += AnswerId.scholar_12_supported_15
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(A faint click interrupts her breath. She waits until the channel is quiet before answering.) #narrator
 A familiar shape can travel from grave to grave without telling us its name. Look for the creature beyond these stones, {player_name}. Perhaps a trace of it—or the same icon returning again and again. #aurora
 ~ read_answers += AnswerId.scholar_12_normal_13
 ~ feedback_kind = "unmatched"
@@ -2451,7 +2451,6 @@ A familiar shape can travel from grave to grave without telling us its name. Loo
 # question_id:scholar_17
 ~ temp supported = false
 {has_tag(EvidenceTag.night_city_mineral_origin) || has_tag(EvidenceTag.intercity_resource_exchange):
-(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.) #narrator
 This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence — though there is still insufficient evidence to establish whether they shared any aspect of life. #aurora
 ~ read_answers += AnswerId.scholar_17_supported_19
 ~ supported = true
@@ -2466,7 +2465,6 @@ I would be careful about asking a single stone to speak for two cities. We need 
 
 === test_answer_scholar_passage_gate ===
 # feedback:gold
-(A small pause. You hear something click on her end of the line.) #narrator
 The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions. #aurora
 ~ read_answers += AnswerId.scholar_passage_gate_hidden
 ~ feedback_kind = "hidden"
@@ -2474,7 +2472,6 @@ The gate was meant to close behind anyone going down. Its crystal power supply r
 
 === test_answer_scholar_20 ===
 # question_id:scholar_20
-(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.) #narrator
 I cannot speak for her. But I believe she must have discovered something about the world she lived in. Some truth she could not leave out of her own memorial. Your notebook is black and white for a reason, too. #aurora
 (You look at your notebook once again. One double-page spread accommodating two contrasting halves. Does it signal a kind of coexistence, or a history of segregation?) #narrator
 ~ read_answers += AnswerId.scholar_20_normal_21
@@ -2519,7 +2516,6 @@ I cannot make out the picture, but I am fairly sure that fragment is skin — fr
 === test_answer_scholar_35 ===
 # question_id:scholar_35
 # feedback:gold
-(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.) #narrator
 You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities. #aurora
 ~ read_answers += AnswerId.scholar_35_hidden_37
 ~ owned_evidence += EvidenceId.paired_skin_pictures
@@ -2566,14 +2562,12 @@ The creature keeps returning, doesn't it? Let us give it a name before we give i
 # question_id:sun_17
 ~ temp supported = false
 {has_tag(EvidenceTag.shared_family_plot) || has_tag(EvidenceTag.three_family_markers):
-(She exhales, quietly pleased. The next sentence comes without hesitation.) #narrator
 Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted. #aurora
 ~ read_answers += AnswerId.sun_17_supported_19
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.) #narrator
 Look beneath their feet. A family resemblance may be written in the stone they stand on. Are their bases truly joined? #aurora
 ~ read_answers += AnswerId.sun_17_normal_18
 ~ feedback_kind = "unmatched"
@@ -2632,7 +2626,6 @@ Photograph the same sign on all three graves first. Bring me that record, and I 
 # question_id:altar_12
 ~ temp supported = false
 {has_tag(EvidenceTag.infant_memorial) || has_tag(EvidenceTag.paired_day_night_memorials):
-(She speaks in an undisturbed tone.) #narrator
 Day City records a death. Night City records a <link="disappearance">disappearance</link>. That difference does not mean there were two children. Check the figures together. #aurora
 ~ read_answers += AnswerId.altar_12_supported_14
 ~ supported = true
@@ -2668,7 +2661,6 @@ Show me the stones first. #aurora
 # question_id:altar_20
 ~ temp supported = false
 {has_tag(EvidenceTag.removed_crystal_offering) || has_tag(EvidenceTag.crystal_extraction_reference):
-(Her voice tightens around the missing object, then settles back into its usual level register.) #narrator
 The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but I cannot prove they did it. For now, you can take this as a provisional argument. #aurora
 ~ read_answers += AnswerId.altar_20_supported_22
 ~ supported = true
@@ -2679,6 +2671,16 @@ Use the searchlight on the empty recess. We need to see what was there. #aurora
 ~ read_answers += AnswerId.altar_20_normal_21
 ~ feedback_kind = "unmatched"
 }
+-> test_radio_altar
+
+=== test_answer_altar_crystal_shape ===
+# question_id:altar_crystal_shape
+(You look from the carving to the crystal in the scene. The outline is the same, and for a moment the sign seems less carved than set down.) #narrator
+Set the stone beside the carving: the same facets, the same point at the top. The Nightfolk did not picture their god as a person. They carved the crystal itself. #aurora
+It is what they dug from the dark and came to trust. A figure made of that stone is faith, and it is also a blessing: “May the wishes of crystal remain with you.” #aurora
+~ feedback_kind = "linked"
+{active_tomb == "mother": -> test_radio_mother}
+{active_tomb == "father": -> test_radio_father}
 -> test_radio_altar
 
 === test_answer_altar_24 ===
@@ -2713,14 +2715,12 @@ Check the division first. If it was wrong, 'born in the wrong city' may be the w
 # question_id:mother_8
 ~ temp supported = false
 {has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_mother_past):
-(For one word, the bluntness gives way to something gentler. Then it is gone.) #narrator
 That is the altar infant. The figure is his <link="night_mother">mother in Night City</link>. #aurora
 ~ read_answers += AnswerId.mother_8_supported_10
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(A quiet intake of breath. She answers before it has quite left her.) #narrator
 Compare the child with the altar infant. That will tell us who she was holding. #aurora
 ~ read_answers += AnswerId.mother_8_normal_9
 ~ feedback_kind = "unmatched"
@@ -2731,7 +2731,6 @@ Compare the child with the altar infant. That will tell us who she was holding. 
 # question_id:mother_12
 ~ temp supported = false
 {submitted_id == "dry_underground_river" || has_tag(EvidenceTag.water_source_lost):
-(The first word sounds choked up. She takes another breath and continues.) #narrator
 The border matches the dry riverbed. It records <link="thirst">hunger and thirst</link> as her cause of death. #aurora
 ~ read_answers += AnswerId.mother_12_supported_14
 ~ supported = true
@@ -2741,7 +2740,6 @@ The border matches the dry riverbed. It records <link="thirst">hunger and thirst
 # event:grant_evidence:night_mother_death_finding
 }
 {not supported:
-(Her answer comes after a single, deliberate beat.) #narrator
 The symbol means a dry river. Check the actual riverbed or the records of lost water before we conclude that she died of hunger and thirst. #aurora
 ~ read_answers += AnswerId.mother_12_normal_13
 ~ feedback_kind = "unmatched"
@@ -2803,7 +2801,6 @@ Show me the flower the searchlight recovered. We should not assume that every pa
 # question_id:father_8
 ~ temp supported = false
 {has_tag(EvidenceTag.parent_child_image) || has_tag(EvidenceTag.night_father_past):
-(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.) #narrator
 The same child. Look at the way he is held. The man carrying him is his <link="night_father">father in Night City</link>. #aurora
 ~ read_answers += AnswerId.father_8_supported_10
 ~ supported = true
@@ -2873,7 +2870,6 @@ Record the stone. Compare it with the altar offerings. #aurora
 === test_answer_father_24 ===
 # question_id:father_24
 # feedback:gold
-(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.) #narrator
 The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that. #aurora
 ~ read_answers += AnswerId.father_24_hidden_26
 {not (seen_subtexts ? Subtext.father_24):
@@ -2920,14 +2916,12 @@ A human shape can stand for many lives. Her work may have left a clearer signatu
 # question_id:girl_16
 ~ temp supported = false
 {has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family):
-(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.) #narrator
 The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites. #aurora
 ~ read_answers += AnswerId.girl_16_supported_18
 ~ supported = true
 ~ feedback_kind = "linked"
 }
 {not supported:
-(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.) #narrator
 Let us put the four little figures beside the four faces. We should know the family before we name its missing place. #aurora
 ~ read_answers += AnswerId.girl_16_normal_17
 ~ feedback_kind = "unmatched"
@@ -3168,9 +3162,18 @@ The Dayfolk often get stuck in their own understanding of the world. You may wan
 -> test_radio_sun
 
 
+=== query_night_unending_path_hint ===
+# question_id:query_night_unending_path_hint
+A path that does not end and does not return. #aurora
+I have heard that idea before, in one of the translations I gave you: a journey without end. Look back through my words, and bring me the one that says it. #aurora
+~ read_answers += AnswerId.altar_path_hint
+~ feedback_kind = "unmatched"
+-> return_night_glyph
+
 === query_night_unending_path ===
 # question_id:query_night_unending_path
-It means an unending journey: someone left and did not return. On a memorial, it records <link="disappearance">disappearance</link>. It does not tell us what happened to that person. #aurora
+That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that <link="disappearance">disappearance</link>. #aurora
+It does not tell us what happened to that person. #aurora
 ~ queried_night_glyphs += NightGlyph.unending_path
 # event:night_symbol_queried:unending_path
 ~ feedback_kind = "linked"

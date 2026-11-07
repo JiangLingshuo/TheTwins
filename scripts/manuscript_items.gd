@@ -20,6 +20,7 @@ var _manuscript := true
 var _empty_text := "No documents received yet."
 ## Optional heading and back button above the cards (set_list_header()).
 var _heading := ""
+var list_notice := ""
 var _back_text := ""
 var _card_font_size := 23
 ## Manuscript cards: a gravestone thumbnail, a small title and a one-line subtitle,
@@ -65,6 +66,7 @@ const SUBTITLES := {
 ## title size. The node is shared by several sections: set it before each setup().
 func set_list_header(heading: String = "", back_text: String = "", card_font_size: int = 23) -> void:
 	_heading = heading
+	list_notice = ""
 	_back_text = back_text
 	_card_font_size = card_font_size
 	_rich = false
@@ -204,6 +206,11 @@ func _rebuild() -> void:
 			back.add_theme_color_override(state, _ink)
 		back.pressed.connect(func() -> void: list_requested.emit())
 		_stack.add_child(back)
+	if not list_notice.is_empty():
+		var notice := _label(list_notice, 14)
+		notice.name = "ProgressNotice"
+		notice.add_theme_color_override("font_color", Color("765044") if _ink.get_luminance() < 0.5 else Color("ddbd88"))
+		_stack.add_child(notice)
 	if not _heading.is_empty():
 		_stack.add_child(_label(_heading, 22))
 	if _entries.is_empty() and not _empty_text.is_empty():
@@ -257,6 +264,17 @@ func _rebuild() -> void:
 			text_box.offset_top = 6
 			text_box.offset_bottom = -6
 			text_box.add_child(title)
+			if entry.has("progress"):
+				text_box.offset_bottom = -25
+				var progress := _label(str(entry["progress"]), 16)
+				progress.name = "DialogueProgress"
+				progress.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+				button.add_child(progress)
+				progress.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+				progress.offset_left = -78
+				progress.offset_right = -10
+				progress.offset_top = -25
+				progress.offset_bottom = -5
 			if _kind == "manuscript":
 				var subtitle := _label(GameState.zh_text(SUBTITLES.get(entry["id"], "")), 13)
 				subtitle.name = "Subtitle"

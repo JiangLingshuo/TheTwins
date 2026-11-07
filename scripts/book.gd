@@ -961,8 +961,9 @@ func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> voi
 	var questions := not _radio_stone.is_empty()
 	var entries: Array[Dictionary] = RadioLogPages.question_entries(_radio_stone) if questions else RadioLogPages.gravestone_entries()
 	# The heading and back button take the place of one card on the left page.
-	var left_cards := 3 if questions else 4
-	var per_spread := left_cards + 4
+	var left_cards := 3
+	var right_cards := 4 if questions else 3
+	var per_spread := left_cards + right_cards
 	var key := "4:stone:" + _radio_stone if questions else "4:list"
 	var count := maxi(1, ceili(entries.size() / float(per_spread))) * 2
 	var offset: int = mini(_reading_offsets.get(key, 0), count - 2)
@@ -978,7 +979,8 @@ func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> voi
 	var empty_text := "No radio transmissions recorded yet." if side == 0 and offset == 0 else ""
 	if not questions:
 		items.set_manuscript_extras([], "", 0, "radio")
-	items.setup(entries.slice(first, first + (left_cards if side == 0 else 4)), page_index, left_text.label_settings.font,
+		items.list_notice = (["进度仅表示本日志已解锁的对话数量，无需收集全部回复即可完成调查。", "额外回复有助于深入了解这个世界，但并非完成调查的必要条件。"][side] if GameState.chinese_playtest else ["Progress counts the dialogue passages unlocked in this log; you do not need every response to solve the investigation.", "Additional replies may deepen your understanding of the world and its people, but they are entirely optional."][side])
+	items.setup(entries.slice(first, first + (left_cards if side == 0 else right_cards)), page_index, left_text.label_settings.font,
 		left_text.label_settings.font_color, interactive, false, empty_text)
 
 

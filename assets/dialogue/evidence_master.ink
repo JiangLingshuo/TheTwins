@@ -682,6 +682,18 @@ Cracked lines surround the stone like the bed of a dried river. They form the bo
 The underground river has dried up. Its exposed bed preserves the cracked pattern seen around the small stone.
 -> DONE
 
+=== ev_night_mother_god_rubbing ===
+# type:evidence
+# id:night_mother_god_rubbing
+# title:The Crystal God Beside the Mother
+# category:rubbing
+# location:night_cemetery
+# evidence_tag:crystal_god_motif
+# evidence_tag:night_city_belief
+// The same Crystal God sign is carved low on the mother's stone.
+Low on the mother's stone, beside her carved figures, is the image of the Crystal God. It matches the sign on the altar and on the father's stone.
+-> DONE
+
 === ev_night_mother_no_traces ===
 # type:evidence
 # id:night_mother_no_traces
@@ -755,6 +767,18 @@ A figure climbs an upward path along the border of the stone. The route resemble
 # evidence_tag:night_city_belief
 // Source: 07_夜父石碑!B8:B9. Lower field: faith/future.
 The lower part of the stone bears the image of the Crystal God. It resembles the figure once installed on the infant's altar.
+-> DONE
+
+=== ev_crystal_god_crystal_correspondence ===
+# type:evidence
+# id:crystal_god_crystal_correspondence
+# title:The Crystal God Is the Crystal
+# category:finding
+# location:notebook
+# evidence_tag:crystal_god_motif
+# evidence_tag:night_city_belief
+// Award after a Crystal God rubbing from ANY Night City stone is matched to the crystal in the scene.
+The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal.
 -> DONE
 
 === ev_night_father_moon_stone ===
