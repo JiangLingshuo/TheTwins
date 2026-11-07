@@ -3,12 +3,12 @@
 importer="wav"
 type="AudioStreamWAV"
 uid="uid://wr88adraud3g"
-path="res://.godot/imported/嘟嘟嘟忙音.wav-071e4af9cf4ab18b7a08276fcfc38bc2.sample"
+path="res://.godot/imported/忙音.wav-3e4f3ea8f5ec0a3484ba856467849e7c.sample"
 
 [deps]
 
-source_file="res://assets/audio/嘟嘟嘟忙音.wav"
-dest_files=["res://.godot/imported/嘟嘟嘟忙音.wav-071e4af9cf4ab18b7a08276fcfc38bc2.sample"]
+source_file="res://assets/audio/忙音.wav"
+dest_files=["res://.godot/imported/忙音.wav-3e4f3ea8f5ec0a3484ba856467849e7c.sample"]
 
 [params]
 

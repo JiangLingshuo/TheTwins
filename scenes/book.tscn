@@ -2,21 +2,17 @@
 
 [ext_resource type="Script" uid="uid://dyfjl6igy3fjv" path="res://scripts/book.gd" id="1_book"]
 [ext_resource type="Script" uid="uid://6msd8gfx47sb" path="res://scripts/page_corner.gd" id="2_corner"]
-[ext_resource type="FontFile" path="res://assets/fonts/ZhaohuaTypeWriter.ttf" id="3_regular"]
-[ext_resource type="Texture2D" path="res://assets/Art/note/notebook_page.png" id="4_page"]
-[ext_resource type="Texture2D" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
-[ext_resource type="Script" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
-[ext_resource type="Script" path="res://scripts/notebook_page_art.gd" id="7_art"]
+[ext_resource type="FontFile" uid="uid://b2nvpvowplpyl" path="res://assets/fonts/ZhaohuaTypeWriter.ttf" id="3_regular"]
+[ext_resource type="Texture2D" uid="uid://dfm7i4f4bmxt0" path="res://assets/Art/note/notebook_page.png" id="4_page"]
+[ext_resource type="Texture2D" uid="uid://d0n11hqcct831" path="res://assets/Art/note/notebook_cover.png" id="5_cover"]
+[ext_resource type="Script" uid="uid://bfgd0yqtc26sj" path="res://scripts/notebook_tabs.gd" id="6_tabs"]
+[ext_resource type="Script" uid="uid://dgaxmsajq4drm" path="res://scripts/notebook_page_art.gd" id="7_art"]
 [ext_resource type="PackedScene" path="res://scenes/gravestone_page.tscn" id="8_gravestone"]
-[ext_resource type="Script" path="res://scripts/rubbing_page.gd" id="9_rubbings"]
+[ext_resource type="Script" uid="uid://dm4autm24i2no" path="res://scripts/rubbing_page.gd" id="9_rubbings"]
 
 [sub_resource type="StyleBoxTexture" id="Style_left_page"]
 texture = ExtResource("4_page")
 region_rect = Rect2(298, 110, 630, 876)
-
-[sub_resource type="StyleBoxTexture" id="Style_right_page"]
-texture = ExtResource("4_page")
-region_rect = Rect2(928, 110, 630, 876)
 
 [sub_resource type="LabelSettings" id="Label_ink"]
 line_spacing = 6.0
@@ -28,6 +24,10 @@ font_color = Color(0.17, 0.14, 0.12, 1)
 font = ExtResource("3_regular")
 font_size = 18
 font_color = Color(0.3, 0.29, 0.28, 1)
+
+[sub_resource type="StyleBoxTexture" id="Style_right_page"]
+texture = ExtResource("4_page")
+region_rect = Rect2(928, 110, 630, 876)
 
 [sub_resource type="StyleBoxTexture" id="Style_cover"]
 texture = ExtResource("5_cover")
@@ -65,8 +65,8 @@ offset_right = 420.0
 offset_bottom = 584.0
 theme_override_styles/panel = SubResource("Style_left_page")
 
-[node name="Art" type="Control" parent="LeftPage"]
-layout_mode = 0
+[node name="Art" type="Control" parent="LeftPage" unique_id=2031361050]
+anchors_preset = 0
 offset_left = 66.0
 offset_top = 50.0
 offset_right = 386.0
@@ -74,8 +74,8 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
 
-[node name="Rubbings" type="Control" parent="LeftPage"]
-layout_mode = 0
+[node name="Rubbings" type="Control" parent="LeftPage" unique_id=827772068]
+anchors_preset = 0
 offset_left = 66.0
 offset_top = 50.0
 offset_right = 386.0
@@ -83,7 +83,7 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("9_rubbings")
 
-[node name="Gravestone" parent="LeftPage" instance=ExtResource("8_gravestone")]
+[node name="Gravestone" parent="LeftPage" unique_id=448136181 instance=ExtResource("8_gravestone")]
 visible = false
 layout_mode = 0
 offset_left = 52.0
@@ -118,8 +118,8 @@ offset_right = 840.0
 offset_bottom = 584.0
 theme_override_styles/panel = SubResource("Style_right_page")
 
-[node name="Art" type="Control" parent="RightPage"]
-layout_mode = 0
+[node name="Art" type="Control" parent="RightPage" unique_id=1464617930]
+anchors_preset = 0
 offset_left = 31.0
 offset_top = 50.0
 offset_right = 351.0
@@ -127,8 +127,8 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
 
-[node name="Rubbings" type="Control" parent="RightPage"]
-layout_mode = 0
+[node name="Rubbings" type="Control" parent="RightPage" unique_id=728000649]
+anchors_preset = 0
 offset_left = 31.0
 offset_top = 50.0
 offset_right = 351.0
@@ -136,7 +136,7 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("9_rubbings")
 
-[node name="Gravestone" parent="RightPage" instance=ExtResource("8_gravestone")]
+[node name="Gravestone" parent="RightPage" unique_id=1974014038 instance=ExtResource("8_gravestone")]
 visible = false
 layout_mode = 0
 offset_left = 28.0
@@ -185,9 +185,9 @@ script = ExtResource("2_corner")
 flap_color = Color(0.72, 0.74, 0.77, 1)
 backdrop_color = Color(0.2, 0.2, 0.33, 1)
 
-[node name="Tabs" type="Control" parent="."]
+[node name="Tabs" type="Control" parent="." unique_id=1837450249]
 z_index = 1
-layout_mode = 0
+anchors_preset = 0
 offset_right = 840.0
 offset_bottom = 584.0
 mouse_filter = 2
@@ -201,8 +201,8 @@ offset_bottom = 584.0
 mouse_filter = 2
 theme_override_styles/panel = SubResource("Style_right_page")
 
-[node name="Art" type="Control" parent="FlipSheet"]
-layout_mode = 0
+[node name="Art" type="Control" parent="FlipSheet" unique_id=1194997052]
+anchors_preset = 0
 offset_left = 31.0
 offset_top = 50.0
 offset_right = 351.0
@@ -210,8 +210,8 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("7_art")
 
-[node name="Rubbings" type="Control" parent="FlipSheet"]
-layout_mode = 0
+[node name="Rubbings" type="Control" parent="FlipSheet" unique_id=922242936]
+anchors_preset = 0
 offset_left = 31.0
 offset_top = 50.0
 offset_right = 351.0
@@ -219,7 +219,7 @@ offset_bottom = 490.0
 mouse_filter = 2
 script = ExtResource("9_rubbings")
 
-[node name="Gravestone" parent="FlipSheet" instance=ExtResource("8_gravestone")]
+[node name="Gravestone" parent="FlipSheet" unique_id=713376647 instance=ExtResource("8_gravestone")]
 visible = false
 layout_mode = 0
 offset_left = 28.0
