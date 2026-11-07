@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "ed073d7f14e9d089ddbd7ebdb26f6756f31438ad9e70606c91f56560fb527f73",
-    "tombstone_master.ink": "fde52350ca032956b7f62c51cee42f768cf9fd84b54bd0707545a69363a11468",
-    "telecomm_master.ink": "f37fa89eef85b492e04c501162d63496348c52c5a7b222608e93c312c1ce924b"
+    "evidence_master.ink": "391fd23b78f709ea3c67b36548cfc849e0107eb6cff8ab467f9f0c119a24516e",
+    "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
+    "telecomm_master.ink": "b83814f2ac8452fa3d82b67dd20bda36b6eb0f188431cf2878338eeacc384c01"
   },
   "gravestones": {
     "baby_tomb": {
@@ -20,7 +20,7 @@
       "title": "The Crystal Monument",
       "location": "day_cemetery",
       "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.\nAround forty-five years ago, the fragment may still have been clear enough to make out the drawing. Compare the foot of the monument as it is now with how it looked about forty-five years ago. Look for any trace of a later visit.",
-      "sketch": "res://assets/Art/day/草稿/scholar.png"
+      "sketch": "res://assets/Art/tombstone/single/scholar_single.png"
     },
     "sun_tomb": {
       "id": "sun_tomb",
@@ -28,14 +28,14 @@
       "title": "The Sun-Shaped Monument",
       "location": "day_cemetery",
       "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.\nThe wishing pool nearby may still have held an offering around sixty years ago when it's still in use. It might be worth looking into the basin. Someone may have left something here when the civilization was still alive and the conflict was just starting.",
-      "sketch": "res://assets/Art/day/草稿/the rich.png"
+      "sketch": "res://assets/Art/tombstone/single/the rich_single.png"
     },
     "altar_tomb": {
       "id": "altar_tomb",
       "source_id": "altar",
       "title": "The White Infant Altar",
       "location": "night_cemetery",
-      "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.\nThe recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time.",
+      "description": "A grand house-shaped memorial in the cramped underground cemetery. An infant rests on its white platform. An unending path runs along the pillars, the recess below is nearly empty, and one symbol is still unreadable.\nTry looking at the recess and platform as they were fifty years ago.",
       "sketch": "res://assets/Art/tombstone/single/alter_now_single.png"
     },
     "mother_tomb": {
@@ -60,7 +60,7 @@
       "title": "The Solitary Human-Shaped Marker",
       "location": "cemetery_edge",
       "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.\nThe paint on the stone may also have been easier to see then.",
-      "sketch": "res://assets/Art/day/草稿/girl.png"
+      "sketch": "res://assets/Art/tombstone/single/girl_day_single.png"
     }
   },
   "evidence": {
@@ -1155,8 +1155,8 @@
       ],
       "id": "altar_blessing_translation",
       "title": "A Blessing for the Unending Journey",
-      "body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
-      "interactive_body": "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "body": "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
+      "interactive_body": "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\"",
       "category": "finding",
       "gravestone": "altar_tomb",
       "metadata": {
@@ -1551,6 +1551,39 @@
       },
       "source_knot": "ev_dry_underground_river"
     },
+    "night_mother_god_rubbing": {
+      "gravestones": [
+        "mother_tomb"
+      ],
+      "id": "night_mother_god_rubbing",
+      "title": "The Crystal God Beside the Mother",
+      "body": "Low on the mother's stone, beside her carved figures, is the image of the Crystal God. It matches the sign on the altar and on the father's stone.",
+      "interactive_body": "Low on the mother's stone, beside her carved figures, is the image of the Crystal God. It matches the sign on the altar and on the father's stone.",
+      "category": "rubbing",
+      "gravestone": "mother_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "night_mother_god_rubbing"
+        ],
+        "title": [
+          "The Crystal God Beside the Mother"
+        ],
+        "category": [
+          "rubbing"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "evidence_tag": [
+          "crystal_god_motif",
+          "night_city_belief"
+        ]
+      },
+      "source_knot": "ev_night_mother_god_rubbing"
+    },
     "night_mother_no_traces": {
       "gravestones": [
         "mother_tomb"
@@ -1735,6 +1768,41 @@
         ]
       },
       "source_knot": "ev_night_father_god_rubbing"
+    },
+    "crystal_god_crystal_correspondence": {
+      "gravestones": [
+        "altar_tomb",
+        "mother_tomb",
+        "father_tomb"
+      ],
+      "id": "crystal_god_crystal_correspondence",
+      "title": "The Crystal God Is the Crystal",
+      "body": "The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal.",
+      "interactive_body": "The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal.",
+      "category": "finding",
+      "gravestone": "father_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_god_crystal_correspondence"
+        ],
+        "title": [
+          "The Crystal God Is the Crystal"
+        ],
+        "category": [
+          "finding"
+        ],
+        "location": [
+          "notebook"
+        ],
+        "evidence_tag": [
+          "crystal_god_motif",
+          "night_city_belief"
+        ]
+      },
+      "source_knot": "ev_crystal_god_crystal_correspondence"
     },
     "night_father_moon_stone": {
       "gravestones": [
@@ -2761,10 +2829,6 @@
       "preview_only": true,
       "lines": [
         {
-          "speaker": "",
-          "content": "(Her breathing steadies. She sounds ready to answer something larger than a single grave.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about."
         },
@@ -2882,10 +2946,6 @@
           "content": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
         },
         {
-          "speaker": "",
-          "content": "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were unexplained circumstances behind his death. Let us keep looking."
         }
@@ -2944,10 +3004,6 @@
       "source_knot": "test_answer_scholar_8",
       "lines": [
         {
-          "speaker": "",
-          "content": "(Pride enters her voice so briefly that you cannot tell whose it is.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "As the manuscript says, they gave her the title Scholar when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of."
         },
@@ -2972,10 +3028,6 @@
       "source_knot": "test_answer_repeated_beast",
       "lines": [
         {
-          "speaker": "",
-          "content": "(She goes quiet long enough for you to hear the wind at your end of the call.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "On one stone, a creature might have belonged to a single life. When it keeps turning up on graves that have nothing else in common, I start to wonder what the whole city needed a way to say."
         },
@@ -2990,10 +3042,6 @@
       "source_knot": "test_answer_scholar_12",
       "lines": [
         {
-          "speaker": "",
-          "content": "(The last word of the old account seems to hold her for a moment. She lets it go slowly.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record disappearance. You may find other traces of what disappearance meant for the Dayfolk."
         }
@@ -3004,10 +3052,6 @@
       "source_knot": "test_answer_scholar_12",
       "lines": [
         {
-          "speaker": "",
-          "content": "(A faint click interrupts her breath. She waits until the channel is quiet before answering.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "A familiar shape can travel from grave to grave without telling us its name. Look for the creature beyond these stones, #PLAYER#. Perhaps a trace of it—or the same icon returning again and again."
         }
@@ -3017,10 +3061,6 @@
       "id": "scholar_17_supported_19",
       "source_knot": "test_answer_scholar_17",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.)"
-        },
         {
           "speaker": "Aurora",
           "content": "This is an important step. Food went down; crystal came up. For a long while, each city worked to produce something the other needed. The stone has kept a little of that old dependence — though there is still insufficient evidence to establish whether they shared any aspect of life."
@@ -3042,10 +3082,6 @@
       "source_knot": "test_answer_scholar_passage_gate",
       "lines": [
         {
-          "speaker": "",
-          "content": "(A small pause. You hear something click on her end of the line.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The gate was meant to close behind anyone going down. Its crystal power supply ran for far longer than it was designed to. The mechanism failed years ago, with the gate open. That’s how you’ve been able to cross in both directions."
         }
@@ -3055,10 +3091,6 @@
       "id": "scholar_20_normal_21",
       "source_knot": "test_answer_scholar_20",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.)"
-        },
         {
           "speaker": "Aurora",
           "content": "I cannot speak for her. But I believe she must have discovered something about the world she lived in. Some truth she could not leave out of her own memorial. Your notebook is black and white for a reason, too."
@@ -3112,10 +3144,6 @@
       "source_knot": "test_answer_scholar_35",
       "lines": [
         {
-          "speaker": "",
-          "content": "(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities."
         }
@@ -3164,10 +3192,6 @@
       "source_knot": "test_answer_sun_17",
       "lines": [
         {
-          "speaker": "",
-          "content": "(She exhales, quietly pleased. The next sentence comes without hesitation.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted."
         }
@@ -3177,10 +3201,6 @@
       "id": "sun_17_normal_18",
       "source_knot": "test_answer_sun_17",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Look beneath their feet. A family resemblance may be written in the stone they stand on. Are their bases truly joined?"
@@ -3230,7 +3250,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+          "content": "It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
         }
       ]
     },
@@ -3248,10 +3268,6 @@
       "id": "altar_12_supported_14",
       "source_knot": "test_answer_altar_12",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(She speaks in an undisturbed tone.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Day City records a death. Night City records a disappearance. That difference does not mean there were two children. Check the figures together."
@@ -3293,10 +3309,6 @@
       "source_knot": "test_answer_altar_20",
       "lines": [
         {
-          "speaker": "",
-          "content": "(Her voice tightens around the missing object, then settles back into its usual level register.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The Crystal God stood there intact. The crystals were later pried out. Day City needed crystal, but I cannot prove they did it. For now, you can take this as a provisional argument."
         }
@@ -3309,6 +3321,25 @@
         {
           "speaker": "Aurora",
           "content": "Use the searchlight on the empty recess. We need to see what was there."
+        }
+      ]
+    },
+    "test_answer_altar_crystal_shape_tail": {
+      "id": "test_answer_altar_crystal_shape_tail",
+      "source_knot": "test_answer_altar_crystal_shape",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "",
+          "content": "(You look from the carving to the crystal in the scene. The outline is the same, and for a moment the sign seems less carved than set down.)"
+        },
+        {
+          "speaker": "Aurora",
+          "content": "Set the stone beside the carving: the same facets, the same point at the top. The Nightfolk did not picture their god as a person. They carved the crystal itself."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "It is what they dug from the dark and came to trust. A figure made of that stone is faith, and it is also a blessing: “May the wishes of crystal remain with you.”"
         }
       ]
     },
@@ -3353,10 +3384,6 @@
       "source_knot": "test_answer_mother_8",
       "lines": [
         {
-          "speaker": "",
-          "content": "(For one word, the bluntness gives way to something gentler. Then it is gone.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "That is the altar infant. The figure is his mother in Night City."
         }
@@ -3366,10 +3393,6 @@
       "id": "mother_8_normal_9",
       "source_knot": "test_answer_mother_8",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(A quiet intake of breath. She answers before it has quite left her.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Compare the child with the altar infant. That will tell us who she was holding."
@@ -3381,10 +3404,6 @@
       "source_knot": "test_answer_mother_12",
       "lines": [
         {
-          "speaker": "",
-          "content": "(The first word sounds choked up. She takes another breath and continues.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The border matches the dry riverbed. It records hunger and thirst as her cause of death."
         }
@@ -3394,10 +3413,6 @@
       "id": "mother_12_normal_13",
       "source_knot": "test_answer_mother_12",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(Her answer comes after a single, deliberate beat.)"
-        },
         {
           "speaker": "Aurora",
           "content": "The symbol means a dry river. Check the actual riverbed or the records of lost water before we conclude that she died of hunger and thirst."
@@ -3481,10 +3496,6 @@
       "source_knot": "test_answer_father_8",
       "lines": [
         {
-          "speaker": "",
-          "content": "(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The same child. Look at the way he is held. The man carrying him is his father in Night City."
         }
@@ -3565,10 +3576,6 @@
       "source_knot": "test_answer_father_24",
       "lines": [
         {
-          "speaker": "",
-          "content": "(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that."
         }
@@ -3623,10 +3630,6 @@
       "source_knot": "test_answer_girl_16",
       "lines": [
         {
-          "speaker": "",
-          "content": "(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.)"
-        },
-        {
           "speaker": "Aurora",
           "content": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
         }
@@ -3636,10 +3639,6 @@
       "id": "girl_16_normal_17",
       "source_knot": "test_answer_girl_16",
       "lines": [
-        {
-          "speaker": "",
-          "content": "(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.)"
-        },
         {
           "speaker": "Aurora",
           "content": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
@@ -3754,6 +3753,20 @@
         }
       ]
     },
+    "altar_path_hint": {
+      "id": "altar_path_hint",
+      "source_knot": "query_night_unending_path_hint",
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "A path that does not end and does not return."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "I have heard that idea before, in one of the translations I gave you: a journey without end. Look back through my words, and bring me the one that says it."
+        }
+      ]
+    },
     "query_night_unending_path_tail": {
       "id": "query_night_unending_path_tail",
       "source_knot": "query_night_unending_path",
@@ -3761,7 +3774,11 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "It means an unending journey: someone left and did not return. On a memorial, it records disappearance. It does not tell us what happened to that person."
+          "content": "That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that disappearance."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "It does not tell us what happened to that person."
         }
       ]
     },
@@ -3794,7 +3811,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+          "content": "The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
         }
       ]
     },
@@ -3847,7 +3864,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+          "content": "The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
         },
         {
           "speaker": "Aurora",

@@ -341,11 +341,13 @@ func _turn_forward(to: int = -1) -> void:
 	var next := _spread + 1 if to < 0 else to
 	# The current right page lifts and turns over the spine...
 	_prepare_sheet(false, _spread * 2 + 1)
+	if use_sections: tabs.begin_turn(_section_of(next), flip_sheet)
 	_leave_reading_document()
 	_fill(right_text, right_number, next * 2 + 1)
 	await _fold_sheet(true)
 	# ...and lands on the left, showing its back.
 	_prepare_sheet(true, next * 2)
+	if use_sections: tabs.place_turning_tabs(_section_of(next), flip_sheet)
 	await _fold_sheet(false)
 	_fill(left_text, left_number, next * 2)
 	_finish_flip(next)
@@ -359,10 +361,12 @@ func _turn_backward(to: int = -1) -> void:
 	_flip_player.play()
 	var prev := _spread - 1 if to < 0 else to
 	_prepare_sheet(true, _spread * 2)
+	if use_sections: tabs.begin_turn(_section_of(prev), flip_sheet)
 	_leave_reading_document()
 	_fill(left_text, left_number, prev * 2)
 	await _fold_sheet(true)
 	_prepare_sheet(false, prev * 2 + 1)
+	if use_sections: tabs.place_turning_tabs(_section_of(prev), flip_sheet)
 	await _fold_sheet(false)
 	_fill(right_text, right_number, prev * 2 + 1)
 	_finish_flip(prev)
@@ -957,8 +961,9 @@ func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> voi
 	var questions := not _radio_stone.is_empty()
 	var entries: Array[Dictionary] = RadioLogPages.question_entries(_radio_stone) if questions else RadioLogPages.gravestone_entries()
 	# The heading and back button take the place of one card on the left page.
-	var left_cards := 3 if questions else 4
-	var per_spread := left_cards + 4
+	var left_cards := 3
+	var right_cards := 4 if questions else 3
+	var per_spread := left_cards + right_cards
 	var key := "4:stone:" + _radio_stone if questions else "4:list"
 	var count := maxi(1, ceili(entries.size() / float(per_spread))) * 2
 	var offset: int = mini(_reading_offsets.get(key, 0), count - 2)
@@ -974,7 +979,8 @@ func _fill_radio_list(items: Control, page_index: int, interactive: bool) -> voi
 	var empty_text := "No radio transmissions recorded yet." if side == 0 and offset == 0 else ""
 	if not questions:
 		items.set_manuscript_extras([], "", 0, "radio")
-	items.setup(entries.slice(first, first + (left_cards if side == 0 else 4)), page_index, left_text.label_settings.font,
+		items.list_notice = (["进度仅表示本日志已解锁的对话数量，无需收集全部回复即可完成调查。", "额外回复有助于深入了解这个世界，但并非完成调查的必要条件。"][side] if GameState.chinese_playtest else ["Progress counts the dialogue passages unlocked in this log; you do not need every response to solve the investigation.", "Additional replies may deepen your understanding of the world and its people, but they are entirely optional."][side])
+	items.setup(entries.slice(first, first + (left_cards if side == 0 else right_cards)), page_index, left_text.label_settings.font,
 		left_text.label_settings.font_color, interactive, false, empty_text)
 
 

@@ -10,6 +10,55 @@ extends RefCounted
 ## Id of the Other Transmissions entry in the gravestone list.
 const OTHER := "__other"
 const OTHER_TITLE := "Aurora — Other Transmissions"
+const PROGRESS_NOTE := "Progress counts the dialogue passages unlocked in this log. You do not need every response to solve the investigation. Additional replies may deepen your understanding of the world, but they are optional."
+static var _reply_catalog: Dictionary = {}
+
+## Count authored reply passages, not evidence submissions or repeat listening.
+## Follow answer/query diversions only: returning to a menu is not another reply.
+static func _reply_blocks(ops: Array, programs: Dictionary, visited: Array, blocks: Dictionary) -> void:
+	var passage: Array[String] = []
+	for op: Dictionary in ops:
+		if op.get("op") == "line":
+			passage.append(str(op.get("text", "")))
+		elif op.get("op") in ["if", "goto", "choice"]:
+			if not passage.is_empty():
+				blocks[JSON.stringify(passage)] = passage.duplicate()
+				passage.clear()
+			if op.get("op") == "if":
+				_reply_blocks(op.get("then", []), programs, visited, blocks)
+				_reply_blocks(op.get("else", []), programs, visited, blocks)
+			else:
+				var target := str(op.get("target", ""))
+				if (target.begins_with("test_answer_") or target.begins_with("query_night_")) and target not in visited:
+					_reply_blocks(programs.get(target, []), programs, visited + [target], blocks)
+	if not passage.is_empty():
+		blocks[JSON.stringify(passage)] = passage.duplicate()
+
+static func _plain_reply(text: String) -> String:
+	return GameState.fill_placeholders(RegEx.create_from_string('<link="[^"]+">([^<]+)</link>').sub(text, "$1", true))
+
+static func dialogue_progress(stone: String) -> Vector2i:
+	if _reply_catalog.is_empty():
+		var data: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/radio_content.json"))
+		for question: Dictionary in data.get("questions", []):
+			var tomb := str(question.get("tomb", ""))
+			if not _reply_catalog.has(tomb): _reply_catalog[tomb] = {}
+			var target := str(question.get("target", ""))
+			_reply_blocks(data.get("programs", {}).get(target, []), data.get("programs", {}), [target], _reply_catalog[tomb])
+	var heard: Dictionary = {}
+	for question in GameState.radio_history_questions(stone):
+		for record: Dictionary in question.get("records", []):
+			for line: Dictionary in record.get("lines", []):
+				heard[_plain_reply(str(line.get("content", "")))] = true
+	var unlocked := 0
+	var blocks: Dictionary = _reply_catalog.get(stone, {})
+	for passage: Array in blocks.values():
+		var complete := true
+		for line: String in passage:
+			if not heard.has(_plain_reply(line)):
+				complete = false
+		if complete: unlocked += 1
+	return Vector2i(unlocked, blocks.size())
 ## Invisible marks in reader text; SpreadReader (log_style) styles and removes them.
 ## HEADING starts a record's heading line, SPEAKER ends a speaker's name.
 const HEADING := "⁠"
@@ -20,7 +69,8 @@ const SPEAKER := "⁣"
 static func gravestone_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	for stone in GameState.radio_history_gravestones():
-		entries.append({"id": stone, "gravestone": stone, "title": str(GameState.get_gravestone_info(stone).get("title", stone))})
+		var progress := dialogue_progress(stone)
+		entries.append({"id": stone, "gravestone": stone, "title": str(GameState.get_gravestone_info(stone).get("title", stone)), "progress": "%d/%d" % [progress.x, progress.y]})
 	if not GameState.radio_other_transmissions().is_empty():
 		entries.append({"id": OTHER, "gravestone": OTHER, "title": OTHER_TITLE})
 	return entries

@@ -1,0 +1,75 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/tombstone.tscn" id="1_base"]
+[ext_resource type="Texture2D" path="res://assets/Art/tombstone/girl_day_scene.png" id="2_art"]
+[ext_resource type="Script" path="res://scripts/rubbing_symbol.gd" id="3_symbol"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/girl&coffin.png" id="4_motif"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/girl.png" id="5_girl"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/coffin.png" id="6_coffin"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/road.png" id="7_road"]
+[ext_resource type="Texture2D" path="res://assets/Art/symbol/footprint.png" id="9_foot"]
+
+[node name="GirlTomb" instance=ExtResource("1_base")]
+texture = ExtResource("2_art")
+gravestone_id = "girl_tomb"
+
+[node name="CoffinSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 317.0
+offset_right = 1187.0
+offset_bottom = 749.0
+texture = ExtResource("6_coffin")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "girl_coffin_rubbing"
+
+[node name="GirlSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 317.0
+offset_right = 1187.0
+offset_bottom = 749.0
+texture = ExtResource("5_girl")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "girl_figure_rubbing"
+
+[node name="PathSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 934.0
+offset_top = 358.0
+offset_right = 994.0
+offset_bottom = 418.0
+texture = ExtResource("7_road")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "girl_path_rubbing"
+brush_radius = 14.0
+
+[node name="MotifSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 720.0
+offset_top = 317.0
+offset_right = 1187.0
+offset_bottom = 749.0
+texture = ExtResource("4_motif")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "girl_signature_rubbing"
+matching_target_id = "notebook_cover"
+brush_strength = 0.55
+reveal_threshold = 0.4
+
+[node name="BeastFootprintSymbol" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 918.0
+offset_top = 746.0
+offset_right = 982.0
+offset_bottom = 810.0
+texture = ExtResource("9_foot")
+expand_mode = 1
+script = ExtResource("3_symbol")
+rubbing_id = "girl_beast_rubbing"
+matching_target_id = "twin_beast_trace"
+brush_radius = 16.0

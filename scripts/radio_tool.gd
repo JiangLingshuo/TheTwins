@@ -1,6 +1,6 @@
 extends Control
 ## Temporary radio UI for the tutorial branch. Styling can be replaced independently.
-const FONT := preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 var model = preload("res://scripts/radio_model.gd").new()
 var _button: TextureButton
 var _overlay: Control
@@ -12,6 +12,7 @@ var _question: Dictionary = {}
 var _candidate_order: Array[int] = [0, 1, 2]
 var _slot := ""
 var _filter := 0
+var _direct_only := false
 var _last_lines: Array = []
 var _followups: Array = []
 var _status := ""
@@ -50,7 +51,7 @@ func _ready() -> void:
 	_overlay.name = "RadioSelectionBox"
 	add_child(_overlay)
 	_panel = _overlay.panel
-	_panel.offset_top = -450
+	_fit_selection_panel()
 	_menu_host = _overlay.get_node("Panel/Margin/VBox")
 	GameState.notebook_changed.connect(_queue_render)
 	resized.connect(_reposition_button)
@@ -220,7 +221,7 @@ func _render() -> void:
 	_layout.add_child(columns)
 	var left := VBoxContainer.new()
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 1.8
+	left.size_flags_stretch_ratio = 1.4
 	columns.add_child(left)
 	if not _last_lines.is_empty():
 		var replay := _action("Read last reply", _replay_reply)
@@ -242,7 +243,7 @@ func _render() -> void:
 			questions.add_child(question_button)
 			tutorial_controls[question["target"]] = question_button
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 330
+	right.custom_minimum_size.x = 440
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
 	right.add_child(_label("Evidence · one record", 20))
@@ -258,8 +259,23 @@ func _render() -> void:
 	filter.disabled = not _followups.is_empty()
 	filter.item_selected.connect(_set_filter)
 	right.add_child(filter)
-	var ids: Array = model.data["groups"].keys() if _question.is_empty() else _ordered_candidates()
+	var direct := CheckButton.new()
+	direct.text = "仅显示本碑直接线索" if GameState.chinese_playtest else "Directly related to current marker"
+	direct.tooltip_text = "仅显示从本碑获得的拓印、痕迹和观察记录，不包括 Aurora 发来的文献。" if GameState.chinese_playtest else "Only rubbings, traces and observations obtained from this marker; excludes documents sent by Aurora."
+	direct.button_pressed = _direct_only
+	direct.disabled = not _followups.is_empty()
+	direct.add_theme_font_override("font", GameState.playtest_font(FONT))
+	direct.add_theme_font_size_override("font_size", 18)
+	direct.toggled.connect(func(on: bool) -> void:
+		_direct_only = on
+		_queue_render())
+	right.add_child(direct)
+	var ids: Array = model.related_groups(_tomb) if _question.is_empty() else _ordered_candidates()
 	var visible_ids: Array = model.groups_for_filter(ids, _filter, _question.is_empty())
+	if _direct_only:
+		visible_ids = visible_ids.filter(func(id: String) -> bool: return model.directly_from_marker(id, _tomb))
+	if _question.is_empty():
+		visible_ids = visible_ids.filter(func(id: String) -> bool: return id == _slot or model.has_unheard_reply(_tomb, id))
 	var sketch_group: String = model.data["evidence_groups"].get("infant_graffiti", "")
 	if _question.is_empty() and _lesson_question() == "test_answer_baby_21" and visible_ids.has(sketch_group):
 		visible_ids.erase(sketch_group)
@@ -298,11 +314,12 @@ func _commit_layout() -> void:
 	_previous_layout = null
 	_overlay.show_menu()
 	_overlay.set_feedback(_feedback)
-	_panel.offset_top = -450
+	_fit_selection_panel()
 
 func _start_call(id: String) -> void:
 	if _reply_playing: return
 	_tomb = id
+	_direct_only = false
 	_question = {}
 	_slot = ""
 	_filter = 0
@@ -475,3 +492,15 @@ func _can_open() -> bool:
 	var guide := get_parent().get_node_or_null("SunMoonTutorial")
 	if guide and guide.get("_speaking"): return false
 	return GameState.cycle_tutorial_completed and ((GameState.tutorial_radio_intro_heard and GameState.evidence_ids.has("infant_graffiti")) or GameState.investigation_tutorial_completed or GameState.notebook_preview)
+
+
+func _fit_selection_panel() -> void:
+	_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_panel.offset_left = 20
+	_panel.offset_right = -20
+	_panel.offset_top = 20
+	_panel.offset_bottom = -20
+	# The dialogue shader normally fades above a bottom panel; the menu fills the screen.
+	var grain: ColorRect = _overlay.get_node("Panel/RadioStatic")
+	grain.material.set_shader_parameter("top_fade_height", 0.0)
+	grain.material.set_shader_parameter("top_fade_inset", 0.0)

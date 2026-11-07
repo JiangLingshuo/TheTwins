@@ -59,13 +59,6 @@ pivot_offset = Vector2(420, 292)
 mouse_filter = 2
 script = ExtResource("1_book")
 
-[node name="Tabs" type="Control" parent="."]
-layout_mode = 0
-offset_right = 840.0
-offset_bottom = 584.0
-mouse_filter = 2
-script = ExtResource("6_tabs")
-
 [node name="LeftPage" type="Panel" parent="." unique_id=851242292]
 layout_mode = 0
 offset_right = 420.0
@@ -192,7 +185,16 @@ script = ExtResource("2_corner")
 flap_color = Color(0.72, 0.74, 0.77, 1)
 backdrop_color = Color(0.2, 0.2, 0.33, 1)
 
+[node name="Tabs" type="Control" parent="."]
+z_index = 1
+layout_mode = 0
+offset_right = 840.0
+offset_bottom = 584.0
+mouse_filter = 2
+script = ExtResource("6_tabs")
+
 [node name="FlipSheet" type="Panel" parent="." unique_id=731727759]
+z_index = 2
 layout_mode = 0
 offset_right = 420.0
 offset_bottom = 584.0

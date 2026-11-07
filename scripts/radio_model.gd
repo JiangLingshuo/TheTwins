@@ -8,6 +8,8 @@ var tomb := ""
 var submitted_id := ""
 var _context: Dictionary = {}
 var _depth := 0
+## Side-effect-free evaluation for hiding exhausted evidence in the picker.
+var preview_only := false
 var _ending_preview_evidence: Array[String] = []
 
 func begin_ending(true_ending: bool, preview: bool) -> Dictionary:
@@ -20,8 +22,8 @@ func begin_ending(true_ending: bool, preview: bool) -> Dictionary:
 	_program("test_confrontation" if true_ending else "ending_false", result)
 	return result
 
-func _init() -> void:
-	data = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/radio_content.json"))
+func _init(shared_data: Dictionary = {}) -> void:
+	data = shared_data if not shared_data.is_empty() else JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/radio_content.json"))
 	if GameState.radio_progress.is_empty():
 		GameState.radio_progress = data.get("defaults", {}).duplicate(true)
 	progress = GameState.radio_progress
@@ -204,7 +206,7 @@ func _assignment(code: String) -> void:
 		var current: Array = progress.get(key, [])
 		for id in value:
 			if not current.has(id): current.append(id)
-			if key == "owned_evidence": GameState.record_evidence(id)
+			if key == "owned_evidence" and not preview_only: GameState.record_evidence(id)
 		progress[key] = current
 	elif operator == "+=":
 		progress[key] = int(progress.get(key, 0)) + int(value)
@@ -229,7 +231,7 @@ func _nodes(nodes: Array, result: Dictionary, source: String) -> bool:
 			"tag":
 				var tag: String = instruction["value"]
 				if tag == "feedback:gold": _context["feedback_kind"] = "hidden"
-				if tag.begins_with("event:"): GameState.apply_notebook_event(tag)
+				if tag.begins_with("event:") and not preview_only: GameState.apply_notebook_event(tag)
 				if tag == "city:night": result["city"] = "night"
 				if tag == "radio:hang_up": result["hang_up"] = true
 			"if":
@@ -258,3 +260,86 @@ func group_title(id: String) -> String:
 	var member := group_member(id)
 	if member in GameState.rubbings: return GameState.rubbing_display(member)
 	return data.get("groups", {}).get(id, {}).get("title", "No record selected")
+
+
+## Include three-choice records and any alternative matching a submitted tag/id,
+## even if collected at a different marker. Do not follow menu-return loops.
+func _related_code(target: String, visited: Array) -> String:
+	if target in visited or target.begins_with("test_radio_"): return ""
+	visited.append(target)
+	var ops: Array = data.get("programs", {}).get(target, [])
+	var code := JSON.stringify(ops)
+	for match in RegEx.create_from_string('"target"\\s*:\\s*"([^" ]+)"').search_all(code):
+		code += _related_code(match.get_string(1), visited)
+	return code.replace("\\\"", "\"")
+
+func related_groups(tomb_id: String) -> Array:
+	var result: Array = []
+	for question: Dictionary in data.get("questions", []):
+		if question.get("tomb", "") != tomb_id: continue
+		for group in question.get("candidates", []):
+			if group not in result: result.append(group)
+		var code: String = question.get("condition", "") + " " + _related_code(question.get("target", ""), [])
+		var tags: Array = []
+		for match in RegEx.create_from_string('has_tag\\(EvidenceTag\\.(\\w+)\\)').search_all(code): tags.append(match.get_string(1))
+		for group: String in data.get("groups", {}):
+			for member: String in data["groups"][group].get("members", []):
+				var relevant := code.contains('submitted_id == \"' + member + '\"') or code.contains('submitted_id == "' + member + '"')
+				for tag in _tags(member):
+					if tag in tags: relevant = true
+				if relevant and group not in result: result.append(group)
+	return result
+
+func directly_from_marker(group_id: String, tomb_id: String) -> bool:
+	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/searchlight_placeholders.json"))
+	for member: String in data.get("groups", {}).get(group_id, {}).get("members", []):
+		if not owns(member): continue
+		var entry := GameState.get_evidence(member)
+		# Aurora-delivered documents and interpreted notebook findings are related
+		# records, but were not obtained directly from the marker itself.
+		if entry.get("category", "") in ["manuscript", "finding"]: continue
+		var source := str(entry.get("gravestone", ""))
+		for record: Dictionary in layout.get("records", []):
+			if record.get("evidence_id", "") == member:
+				source = str(record.get("required_grave", source))
+		if source == tomb_id or member in GameState.get_gravestone_rubbings(tomb_id): return true
+	return false
+
+## Compare a read-only simulation with actually delivered log text. New state
+## or new follow-ups can put a previously exhausted record back in the picker.
+func has_unheard_reply(tomb_id: String, group_id: String) -> bool:
+	var submitted := group_member(group_id)
+	if submitted.is_empty(): return false
+	var plain := RegEx.create_from_string('<link="[^"]+">([^<]+)</link>')
+	for question: Dictionary in data.get("questions", []):
+		if question.get("tomb", "") != tomb_id: continue
+		var probe = get_script().new(data)
+		probe.preview_only = true
+		probe.progress = progress.duplicate(true)
+		probe.submitted_id = submitted
+		probe._context = {"active_tomb": tomb_id.trim_suffix("_tomb"), "supported": false}
+		if not probe.condition(question.get("condition", "false")): continue
+		if group_id not in probe.candidates(question, group_id if question.get("hidden", false) else ""): continue
+		var heard: Dictionary = {}
+		for record in GameState.radio_history_records(tomb_id, question["id"]):
+			for line: Dictionary in record.get("lines", []): heard[GameState.fill_placeholders(str(line.get("content", "")))] = true
+		var reply: Dictionary = probe.send(question, group_id)
+		if _reply_has_new_text(probe, reply, heard, plain, []): return true
+	return false
+
+
+func _reply_has_new_text(probe: RefCounted, reply: Dictionary, heard: Dictionary, plain: RegEx, visited: Array) -> bool:
+	for line: Dictionary in reply.get("lines", []):
+		var text := GameState.fill_placeholders(plain.sub(str(line.get("content", "")), "$1", true))
+		if not heard.has(text): return true
+	for choice: Dictionary in reply.get("choices", []):
+		var key := str(choice.get("key", ""))
+		if key in visited or visited.size() > 12: continue
+		var branch = get_script().new(data)
+		branch.preview_only = true
+		branch.progress = probe.progress.duplicate(true)
+		branch._context = probe._context.duplicate(true)
+		branch.submitted_id = probe.submitted_id
+		branch.tomb = probe.tomb
+		if _reply_has_new_text(branch, branch.choose(choice), heard, plain, visited + [key]): return true
+	return false

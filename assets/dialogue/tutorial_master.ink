@@ -103,7 +103,9 @@ Then let me bring back the sun. #player
 // line_id:chat_tutorial_day_return:001
 I'm back in the daylight. #player
 // line_id:chat_tutorial_day_return:002
-Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook. #aurora
+Welcome back. By the way, every page of your notebook has a sun and moon icon in the corner, and you can use it to switch between day and night too. #aurora
+// line_id:chat_tutorial_day_return:003
+Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook. #aurora
 -> END
 
 === chat_tutorial_recorded ===

@@ -11,6 +11,8 @@ signal time_changed(is_day: bool)
 
 ## Time of day when the scene starts.
 @export_enum("Day", "Night") var start_time: int = 0
+## Optional filter for the isolated final-marker playtest.
+@export var investigation_grave_filter: String = ""
 ## Seconds for the cross-fade between backgrounds.
 @export var transition_time: float = 0.8
 ## Seconds to fade in from black when the scene opens.
@@ -208,6 +210,8 @@ func _add_investigation_targets() -> void:
 	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/searchlight_placeholders.json"))
 	var max_year: float = _flashlight_tool.flashlight.focus_min
 	for spec in layout["records"]:
+		if not investigation_grave_filter.is_empty() and spec.get("required_grave", "") != investigation_grave_filter:
+			continue
 		var target = TextureRect.new()
 		target.set_script(target_script)
 		target.name = spec["node"]
@@ -236,6 +240,8 @@ func _add_investigation_targets() -> void:
 		if spec.has("size"):
 			target.size = Vector2(spec["size"][0], spec["size"][1])
 		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(790, 480, 220, 300)  # the infant marker (art moved 30 px right)
+		target.inspectable = spec.get("inspect", false)
+		target.zoom_height_ratio = spec.get("zoom_height", target.zoom_height_ratio)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
 		target.required_grave = spec.get("required_grave", "")

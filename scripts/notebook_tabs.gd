@@ -1,7 +1,7 @@
 extends Control
 ## Index tabs along the sides of the open notebook, one per section. The current
 ## section and the ones before it sit on the left edge, later ones on the right.
-## The tabs are drawn behind the pages, so only their ends stick out; the active
+## Tabs end at the paper edge and lie over the cover board. The active
 ## tab sticks out a little further and lies on top of its neighbours.
 
 signal tab_pressed(section: int)
@@ -23,20 +23,19 @@ const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 ## (less than tab_size.y, so neighbouring tabs overlap a little).
 @export var first_tab_y: float = 36.0
 @export var tab_spacing: float = 102.0
-## Distance from each side of the book to the visible edge of the cover board.
-@export var left_edge_inset: float = 14.0
-@export var right_edge_inset: float = 6.0
-## How far a tab sticks out past the cover board: inactive / active.
+## Distance from each side of the book to the outer edge of its paper.
+@export var left_edge_inset: float = 31.0
+@export var right_edge_inset: float = 36.0
+## How far a tab sticks out past the paper edge: inactive / active.
 @export var inactive_reach: float = 26.0
 @export var active_reach: float = 36.0
 @export var font_size: int = 17
 ## How much darker the inactive tabs are.
 @export_range(0.0, 1.0, 0.05) var inactive_shade: float = 0.15
-## Seconds for a tab to slide to its new place.
-@export var move_time: float = 0.3
 
 var _tabs: Array[Tab] = []
 var _active := -1
+var _turning_tabs: Array[Tab] = []
 ## Section ids in the order their tabs run down the book.
 var _order: PackedInt32Array = []
 
@@ -66,24 +65,52 @@ func setup(titles: PackedStringArray, order: PackedInt32Array = []) -> void:
 
 ## Show `section` as the open one and move every tab to its side.
 func set_active(section: int) -> void:
-	var instant := _active < 0
+	for tab in _turning_tabs:
+		tab.reparent(self, false)
+		tab.mouse_filter = Control.MOUSE_FILTER_STOP
+	_turning_tabs.clear()
 	_active = section
 	for rank in _order.size():
 		var i := _order[rank]
 		var tab := _tabs[i]
 		tab.on_left = rank <= _rank(section)
 		tab.shade = 0.0 if i == section else inactive_shade
-		tab.text_inset = (active_reach if i == section else inactive_reach) / 2.0
+		var reach := active_reach if i == section else inactive_reach
+		tab.size.x = reach
+		tab.text_inset = reach / 2.0
 		tab.queue_redraw()
-		move_child(tab, rank)  # lower tabs overlap the ones above them...
-		var target := _tab_position(i)
-		if instant:
-			tab.position = target
-		elif tab.position != target:
-			create_tween().tween_property(tab, "position", target, move_time) \
-				.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
-	if section >= 0 and section < _tabs.size():
-		move_child(_tabs[section], -1)  # ...and the active one lies on top.
+		tab.position = _tab_position(i)
+	# On the left, lower tabs cover upper tabs; on the right, upper tabs cover lower tabs.
+	for i in _order:
+		if _tabs[i].on_left:
+			move_child(_tabs[i], -1)
+	for rank in range(_order.size() - 1, -1, -1):
+		var tab := _tabs[_order[rank]]
+		if not tab.on_left:
+			move_child(tab, -1)
+
+
+## Tabs crossing the spine belong to the actual turning sheet for both halves.
+func begin_turn(section: int, sheet: Control) -> void:
+	for i in _order:
+		var tab := _tabs[i]
+		if tab.on_left != (_rank(i) <= _rank(section)):
+			_turning_tabs.append(tab)
+			tab.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			tab.reparent(sheet)
+
+
+func place_turning_tabs(section: int, sheet: Control) -> void:
+	for i in _order:
+		var tab := _tabs[i]
+		if tab not in _turning_tabs:
+			continue
+		tab.on_left = _rank(i) <= _rank(section)
+		tab.shade = 0.0 if i == section else inactive_shade
+		tab.size.x = active_reach if i == section else inactive_reach
+		tab.text_inset = tab.size.x * 0.5
+		tab.position = position + _tab_position(i, section) - sheet.position
+		tab.queue_redraw()
 
 
 ## Place of section `i` down the book (0 = top).
@@ -91,12 +118,13 @@ func _rank(i: int) -> int:
 	return _order.find(i)
 
 
-func _tab_position(i: int) -> Vector2:
-	var reach := active_reach if i == _active else inactive_reach
+func _tab_position(i: int, section: int = -1) -> Vector2:
+	var current := _active if section < 0 else section
+	var reach := active_reach if i == current else inactive_reach
 	var y := first_tab_y + _rank(i) * tab_spacing
-	if _rank(i) <= _rank(_active):
+	if _rank(i) <= _rank(current):
 		return Vector2(left_edge_inset - reach, y)
-	return Vector2(size.x - right_edge_inset + reach - tab_size.x, y)
+	return Vector2(size.x - right_edge_inset, y)
 
 
 func _on_tab_input(event: InputEvent, section: int) -> void:
@@ -114,6 +142,17 @@ class Tab extends Control:
 	var shade := 0.0
 	## Distance of the name's centre line from the tab's outer end.
 	var text_inset := 13.0
+	var _surface: Panel
+
+	func _ready() -> void:
+		_surface = Panel.new()
+		_surface.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_surface.show_behind_parent = true
+		var foil := ShaderMaterial.new()
+		foil.shader = preload("res://shaders/notebook_tab_foil.gdshader")
+		_surface.material = foil
+		add_child(_surface)
+		_surface.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	func _init() -> void:
 		mouse_filter = Control.MOUSE_FILTER_STOP
@@ -132,7 +171,9 @@ class Tab extends Control:
 		style.corner_radius_bottom_left = radius if on_left else 0
 		style.corner_radius_top_right = 0 if on_left else radius
 		style.corner_radius_bottom_right = 0 if on_left else radius
-		draw_style_box(style, Rect2(Vector2.ZERO, size))
+		if _surface:
+			_surface.add_theme_stylebox_override("panel", style)
+			(_surface.material as ShaderMaterial).set_shader_parameter("tab_size", size)
 
 		# The name reads upwards on the left edge and downwards on the right,
 		# centred on the part of the tab that sticks out.

@@ -173,6 +173,10 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("28_spar")
+script = ExtResource("14_target")
+target_id = "night_crystal"
+meaning = "The crystal itself"
+hit_by_alpha = true
 
 [node name="AltarTomb" parent="NightCemetery" instance=ExtResource("33_altar")]
 layout_mode = 0

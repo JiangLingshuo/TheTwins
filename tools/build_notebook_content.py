@@ -5,7 +5,7 @@ import json,re,hashlib
 ROOT=Path(__file__).resolve().parents[1] if Path(__file__).parent.name=='tools' else Path('C:/godotproject/TheTwins')
 D=ROOT/'assets/dialogue'
 ALIASES={'baby':'baby_tomb','scholar':'scholar_tomb','sun':'sun_tomb','altar':'altar_tomb','mother':'mother_tomb','father':'father_tomb','girl':'girl_tomb'}
-SKETCH={'baby':'day/baby_single.png','scholar':'day/草稿/scholar.png','sun':'day/草稿/the rich.png','altar':'tombstone/single/alter_now_single.png','mother':'tombstone/single/mother_single.png','father':'tombstone/single/father_single.png','girl':'day/草稿/girl.png'}
+SKETCH={'baby':'day/baby_single.png','scholar':'tombstone/single/scholar_single.png','sun':'tombstone/single/the rich_single.png','altar':'tombstone/single/alter_now_single.png','mother':'tombstone/single/mother_single.png','father':'tombstone/single/father_single.png','girl':'tombstone/single/girl_day_single.png'}
 def plain(s):
     return re.sub(r'<link="[^"]+">(.*?)</link>',r'\1',s).replace('<date>', '').replace('</date>', '').replace('{player_name}','#PLAYER#')
 def knots(text):
@@ -29,7 +29,7 @@ for m in knots((D/'evidence_master.ink').read_text(encoding='utf-8-sig')):
     body='\n'.join(l for l in m[2].splitlines() if not l.startswith(('#','//','->'))).strip()
     cat=meta['category'][0];tomb='' if eid in environment else ALIASES[owner]
     if eid=='scholar_no_traces':tomb=ALIASES['scholar']
-    owners={'girl_teddy_bear':['girl_tomb'], 'night_mother_flower':['mother_tomb'], 'mother_daughter_flower_meaning':['mother_tomb'], 'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
+    owners={'crystal_god_crystal_correspondence':['altar_tomb','mother_tomb','father_tomb'],'girl_teddy_bear':['girl_tomb'], 'night_mother_flower':['mother_tomb'], 'mother_daughter_flower_meaning':['mother_tomb'], 'infant_memorial_correspondence':['baby_tomb','altar_tomb'], 'paired_skin_pictures':['scholar_tomb','mother_tomb'], 'four_person_family_finding':['sun_tomb','girl_tomb']}.get(eid, [tomb] if tomb else [])
     evidence[eid]={'gravestones':owners,'id':eid,'title':meta['title'][0],'body':plain(body),'interactive_body':body,'category':cat,'gravestone':tomb,'metadata':meta,'source_knot':m[1]}
 radio={}
 for m in knots((D/'telecomm_master.ink').read_text(encoding='utf-8-sig')):

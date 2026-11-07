@@ -7,6 +7,38 @@
       "title": "Appearance of the Dayfolk",
       "object_texture": "res://assets/Art/day/Appearance_of_the_Dayfolk.png",
       "text": ""
+    },
+    {
+      "rubbing": "girl_signature_rubbing",
+      "target": "notebook_cover",
+      "clue": "girl_cover_correspondence",
+      "title": "The Same Girl on Stone and Paper",
+      "object_texture": "res://assets/Art/note/notebook_cover.png",
+      "text": ""
+    },
+    {
+      "rubbing": "crystal_god_rubbing",
+      "target": "night_crystal",
+      "clue": "crystal_god_crystal_correspondence",
+      "title": "The Crystal God Is the Crystal",
+      "object_texture": "res://assets/Art/night/spar_crop.png",
+      "text": ""
+    },
+    {
+      "rubbing": "night_mother_god_rubbing",
+      "target": "night_crystal",
+      "clue": "crystal_god_crystal_correspondence",
+      "title": "The Crystal God Is the Crystal",
+      "object_texture": "res://assets/Art/night/spar_crop.png",
+      "text": ""
+    },
+    {
+      "rubbing": "night_father_god_rubbing",
+      "target": "night_crystal",
+      "clue": "crystal_god_crystal_correspondence",
+      "title": "The Crystal God Is the Crystal",
+      "object_texture": "res://assets/Art/night/spar_crop.png",
+      "text": ""
     }
   ]
 }

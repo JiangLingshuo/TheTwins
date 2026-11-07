@@ -19,9 +19,10 @@ func drain(box) -> void:
 	await wait(0.1)
 func brush(tool, symbol) -> void:
 	var rect: Rect2 = symbol.get_global_rect()
+	var rows := maxi(10, int(rect.size.y / 10.0))  # zoomed in, the symbol is larger on screen
 	for pass_index in 8:
-		for row in 10:
-			var y := rect.position.y + rect.size.y * row / 9.0
+		for row in rows:
+			var y := rect.position.y + rect.size.y * row / float(rows - 1)
 			tool._brush(Vector2(rect.position.x, y), Vector2(rect.end.x, y))
 func send(target: String, evidence: String) -> void:
 	var item: Dictionary = {}
@@ -57,7 +58,12 @@ func _run() -> void:
 	var notebook = main.get_node("NotebookTool")
 	var tool = main.get_node("RubbingTool")
 	tool.set_active(true)
+	var scene_zoom = main.get_node("SceneZoom")  # rubbing only works up close
+	scene_zoom.zoom_to(main.get_node("DayCemetery/BabyTomb"))
+	scene_zoom._tween.custom_step(10.0)
 	brush(tool, main.get_node("DayCemetery/BabyTomb/HumanSymbol"))
+	scene_zoom.zoom_out()
+	scene_zoom._tween.custom_step(10.0)
 	await wait(0.3)
 	check("human rubbing actually collected", state.rubbings.has("infant_figure_rubbing"))
 	await drain(tutorial._dialogue)

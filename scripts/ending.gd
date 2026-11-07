@@ -2,7 +2,7 @@ extends Control
 
 const DAY := preload("res://assets/Art/day/BG_day.png")
 const NIGHT := preload("res://assets/Art/night/BG_night.png")
-const STONE := preload("res://assets/Art/day/草稿/girl.png")
+const STONE := preload("res://assets/Art/tombstone/single/girl_day_single.png")
 const COVER := preload("res://assets/Art/note/notebook_cover.png")
 const CHOICE_ART := preload("res://assets/Art/dialog/dialog box.png")
 const RADIO_STATIC := preload("res://shaders/radio_static.gdshader")
@@ -49,10 +49,10 @@ func _ready() -> void:
 	_choices.hide()
 
 	if GameState.ending_true:
-		if not GameState.ending_preview and "girl_tomb" in GameState.gravestones:
+		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
 			_stone.show()
 			_stone.disabled = true
-			_play_result.call_deferred(_model.begin_ending(true, false))
+			_play_result.call_deferred(_model.begin_ending(true, GameState.ending_preview))
 		else:
 			_discover_marker.call_deferred()
 	else:

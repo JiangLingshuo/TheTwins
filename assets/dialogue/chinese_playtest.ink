@@ -169,8 +169,8 @@ Aurora？是你吗？总算连上了。我已经安全降落在双子星上。
 -> DONE
 
 === zh_0034 ===
-// source: "Welcome back. Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook."
-欢迎回来。接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。
+// source: "Welcome back. By the way, every page of your notebook has a sun and moon icon in the corner, and you can use it to switch between day and night too."
+欢迎回来。顺便说一句，笔记本的每一页角落都有日月图标，同样可以用来切换昼夜。
 -> DONE
 
 === zh_0035 ===
@@ -533,10 +533,6 @@ Aurora 正在通话……
 这个孩子生错城市了吗？
 -> DONE
 
-=== zh_0107 ===
-// source: "What does the geometric border on the altar mean?"
-祭坛上的几何边纹是什么意思？
--> DONE
 
 === zh_0108 ===
 // source: "What does the angular figure represent?"
@@ -744,8 +740,8 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 -> DONE
 
 === zh_0149 ===
-// source: "The Crystal God. It marks faith in the deity. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
-晶石神，代表对神祇的信仰。祭坛和私人墓碑都可能用这个图案，单凭它看不出谁取走了晶石。
+// source: "The Crystal God. It marks faith in the deity, and the Nightfolk also leave it on graves as a blessing for the departed. The same figure can appear on an altar or a personal memorial; its presence alone does not tell us who removed the crystals."
+晶石神，代表对神祇的信仰，夜民也会把它刻在墓碑上，作为给离开者的祝福。祭坛和私人墓碑都可能用这个图案，单凭它看不出谁取走了晶石。
 -> DONE
 
 === zh_0150 ===
@@ -753,15 +749,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 它表示一条干涸的河。至于它指的是此地、水源的消失，还是她死亡的经过，还得找证据。
 -> DONE
 
-=== zh_0151 ===
-// source: "It means an unending journey: someone left and did not return. On a memorial, it records <link=\"disappearance\">disappearance</link>. It does not tell us what happened to that person."
-它表示没有尽头的旅程：有人离开，再没有回来。刻在碑上，它记录的是<link="disappearance">消失</link>。那个人究竟遇到了什么，还看不出来。
--> DONE
-
-=== zh_0152 ===
-// source: "(She speaks in an undisturbed tone.)"
-（她的语调没有起伏。）
--> DONE
 
 === zh_0153 ===
 // source: "Day City records a death. Night City records a <link=\"disappearance\">disappearance</link>. That difference does not mean there were two children. Check the figures together."
@@ -781,11 +768,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 === zh_0156 ===
 // source: "Show me the stones first."
 先让我看看石头。
--> DONE
-
-=== zh_0157 ===
-// source: "(Her voice tightens around the missing object, then settles back into its usual level register.)"
-（说到那件缺失的东西，她的声音绷紧了一下，又恢复了平稳。）
 -> DONE
 
 === zh_0158 ===
@@ -829,8 +811,8 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 -> DONE
 
 === zh_0166 ===
-// source: "It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
-这是祝福：「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」这是给离开的人留的一句好话。
+// source: "It is the Crystal God, the Nightfolk's sign of faith. Left on a grave, it is also a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well."
+这是晶石神，夜民表达信仰的符号。刻在墓碑上，它同时是一句祝福：「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」这是给离开的人留的一句好话。
 -> DONE
 
 === zh_0167 ===
@@ -878,11 +860,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 轮廓只是个起点。给我看你和月亮比对的结果，我们再想它对昼民意味着什么。
 -> DONE
 
-=== zh_0176 ===
-// source: "(The warmth in her voice draws back. For a moment, the grain of the transmission is clearer than her breathing.)"
-（她声音里的暖意退了回去。有那么一会儿，电流的杂音比她的呼吸还清楚。）
--> DONE
-
 === zh_0177 ===
 // source: "The moon offers a peaceful ending, but that is the story the family chose to put in stone. If the child's real face was left out, perhaps there were <link=\"unexplained death\">unexplained circumstances</link> behind his death. Let us keep looking."
 月亮给了他一个平静的结尾，那也是家人选来刻在石头上的说法。如果孩子真实的脸被省去了，他的死或许也<link="unexplained death">另有隐情</link>。继续查吧。
@@ -918,19 +895,9 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 先记下这块石头，再和祭坛上的祭品比一比。
 -> DONE
 
-=== zh_0184 ===
-// source: "(There is no hesitation in the first sentence. She slows down only to mark the limits of what you know.)"
-（第一句毫不犹豫。接着她放慢了，只为了说清你目前能知道多少。）
--> DONE
-
 === zh_0185 ===
 // source: "The history calls it natural. Shared coffins weaken the claim that there was no room. They do not prove who caused the collapse. We need separate evidence for that."
 史书说是自然塌方。共用睡棺让「地方不够」的说法站不住脚，但不能证明是谁造成了塌方。那得另找证据。
--> DONE
-
-=== zh_0186 ===
-// source: "(She starts to answer, stops, then swallows close to the microphone. The second attempt is steady.)"
-（她刚要回答，又停住了。话筒收进一声吞咽。再开口时，她的声音稳了。）
 -> DONE
 
 === zh_0187 ===
@@ -958,19 +925,9 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 人形可以代表许多人。日记里也许留下了更清楚的署名。
 -> DONE
 
-=== zh_0192 ===
-// source: "(A breath shivers against the microphone. When she speaks, the composure is there, but thinner.)"
-（一丝颤抖的呼吸贴着话筒传来。再开口时，她依然镇定，只是薄了一层。）
--> DONE
-
 === zh_0193 ===
 // source: "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
 四个人形和全家福对得上。三座碑共用基座，女孩的碑独自立在外面。雕像和照片让我们认出了两处墓地记着的是同一家人。
--> DONE
-
-=== zh_0194 ===
-// source: "(There is a small break in the rhythm of her breathing. She asks you to compare the figures with unusual care.)"
-（她的呼吸断了半拍。她请你格外仔细地比对这些人形。）
 -> DONE
 
 === zh_0195 ===
@@ -1053,19 +1010,9 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 我不明白。
 -> DONE
 
-=== zh_0211 ===
-// source: "(The first word sounds choked up. She takes another breath and continues.)"
-（第一个字像是哽在喉咙里。她又吸了口气，才说下去。）
--> DONE
-
 === zh_0212 ===
 // source: "The border matches the dry riverbed. It records <link=\"thirst\">hunger and thirst</link> as her cause of death."
 边纹和干涸的河床一致。它记下了她的死因：<link="thirst">饥渴而死</link>。
--> DONE
-
-=== zh_0213 ===
-// source: "(Her answer comes after a single, deliberate beat.)"
-（她有意停了一拍才回答。）
 -> DONE
 
 === zh_0214 ===
@@ -1098,19 +1045,9 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 扫一次没发现东西还不够。再查她下葬之后那段时间。
 -> DONE
 
-=== zh_0220 ===
-// source: "(For one word, the bluntness gives way to something gentler. Then it is gone.)"
-（有一个字比她惯常的语气柔和。转瞬就过去了。）
--> DONE
-
 === zh_0221 ===
 // source: "That is the altar infant. The figure is his <link=\"night_mother\">mother in Night City</link>."
 那是祭坛上的婴儿。抱他的是他在夜城的<link="night_mother">母亲</link>。
--> DONE
-
-=== zh_0222 ===
-// source: "(A quiet intake of breath. She answers before it has quite left her.)"
-（她轻轻吸了口气，还没完全呼出来就作答。）
 -> DONE
 
 === zh_0223 ===
@@ -1138,11 +1075,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 给我看探照灯照出的花。不是所有画上去的痕迹都是葬礼符号。
 -> DONE
 
-=== zh_0228 ===
-// source: "(She goes quiet long enough for you to hear the wind at your end of the call.)"
-（她沉默下来，你听见自己这边的风。）
--> DONE
-
 === zh_0229 ===
 // source: "On one stone, a creature might have belonged to a single life. When it keeps turning up on graves that have nothing else in common, I start to wonder what the whole city needed a way to say."
 一只兽刻在一块碑上，可能只与那一个人有关。可它出现在许多互不相干的墓上时，我就想，整座城有什么话要借它来说？
@@ -1153,29 +1085,14 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 去夜城找找这样的规律。要是同一个图案也出现在好几座墓上，想想那里的人一次次给彼此留下了什么。也许他们要说的是另一件事。
 -> DONE
 
-=== zh_0231 ===
-// source: "(The last word of the old account seems to hold her for a moment. She lets it go slowly.)"
-（旧记载的最后一个字仿佛绊住了她。她慢慢放开它。）
--> DONE
-
 === zh_0232 ===
 // source: "The old account says the creature vanished in a single night. These little figures seem to carry that absence from stone to stone. They record <link=\"disappearance\">disappearance</link>. You may find other traces of what disappearance meant for the Dayfolk."
 传说里，那只兽一夜之间消失了。那些小兽好像把这份缺席从一座碑带到了下一座。它们记的是<link="disappearance">消失</link>。你或许还能找到别的痕迹，看看消失对昼民意味着什么。
 -> DONE
 
-=== zh_0233 ===
-// source: "(A faint click interrupts her breath. She waits until the channel is quiet before answering.)"
-（一声轻响打断了她的呼吸。她等线路安静下来才答。）
--> DONE
-
 === zh_0234 ===
 // source: "A familiar shape can travel from grave to grave without telling us its name. Look for the creature beyond these stones, #PLAYER#. Perhaps a trace of it—or the same icon returning again and again."
 一个熟悉的形状可以从一座碑传到另一座，却不告诉我们它叫什么。{player_name}，到墓碑以外的地方找找这只兽。也许能找到它的痕迹，或发现同一个图案一再出现。
--> DONE
-
-=== zh_0235 ===
-// source: "(Something opens in her voice. For a second, the distance between the two cities seems to shrink with it.)"
-（她的声音松开了一点。仿佛连两座城市之间的距离也短了一瞬。）
 -> DONE
 
 === zh_0236 ===
@@ -1186,11 +1103,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 === zh_0237 ===
 // source: "I would be careful about asking a single stone to speak for two cities. We need some evidence that passed between them."
 我不敢让一座碑替两座城说话。得找一份确实在两城之间流通过的证据。
--> DONE
-
-=== zh_0238 ===
-// source: "(The answer comes quickly. Too quickly, perhaps. Then her voice finds its usual unhurried rhythm.)"
-（她答得很快，也许太快了些。随后声音又回到了平日不紧不慢的节奏。）
 -> DONE
 
 === zh_0239 ===
@@ -1228,11 +1140,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 ……也可能已经没有人记得她了。是我做的决定。是我做的决定……
 -> DONE
 
-=== zh_0246 ===
-// source: "(The static swells around her silence. You hear the beginning of a word, then a slow breath. When she speaks again, she has chosen each word with care.)"
-（沉默里，杂音渐渐涨起来。你听见一个字的开头，然后是一口慢慢吸进的气。她再开口，每个字都像斟酌过。）
--> DONE
-
 === zh_0247 ===
 // source: "You are perceptive. Dayfolk and Nightfolk share one life. A wound left on one body is still there when the other wakes. Few people discovered they could send a message that way. Most called the injuries Nightfolk retaliation. The misunderstanding only widened the divide between the cities."
 你很敏锐。昼民和夜民共用一条生命。一个人身上的伤，另一个醒来时还在。很少有人发现可以这样传信。多数人以为那是夜民报复留下的伤。这个误会让两城之间的裂缝更深了。
@@ -1248,11 +1155,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 换了谁都会动容吧，{player_name}。让自己的皮肤传递一条消息……谁都能为此动容，即使从来不认识她。我们继续查，好吗？
 -> DONE
 
-=== zh_0250 ===
-// source: "(Pride enters her voice so briefly that you cannot tell whose it is.)"
-（她语气里闪过一丝骄傲，太短了，你听不出那是为谁。）
--> DONE
-
 === zh_0251 ===
 // source: "As the manuscript says, they gave her the title <link=\"scholar\">Scholar</link> when she discovered what the crystal could do. Her stone remembers that work in the very material she studied—the work she was truly proud of."
 就像手稿写的那样。她发现晶石的用途之后，得到了<link="scholar">学者</link>的称号。她的碑用她研究过的材料记下了这份工作，也是她真正引以为傲的事。
@@ -1266,11 +1168,6 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 === zh_0253 ===
 // source: "The crystal had a history before it became a memorial. #PLAYER#, find its mineral counterpart, or the record of the work it made possible."
 晶石在成为墓碑之前就有自己的历史。{player_name}，找找和它对应的矿物，或是记载它成就了什么工作的材料。
--> DONE
-
-=== zh_0254 ===
-// source: "(A small pause. You hear something click on her end of the line.)"
-（她顿了一下。你听见线路那端有什么东西咔哒一声。）
 -> DONE
 
 === zh_0255 ===
@@ -1293,19 +1190,9 @@ Aurora，你给我的笔记本上为什么有这个女孩？
 （也许该再用工具观察一下那几座碑。）
 -> DONE
 
-=== zh_0259 ===
-// source: "(She exhales, quietly pleased. The next sentence comes without hesitation.)"
-（她轻轻吐气，听起来有些高兴。下一句没有停顿。）
--> DONE
-
 === zh_0260 ===
 // source: "Yes. One unbroken base carries all three. They belong to the same family plot. The stone has kept them together, even after their stories parted."
 是的。一整块石座托着三座碑。它们是同一座家族墓。即使故事各自走远，石头还是让他们留在了一起。
--> DONE
-
-=== zh_0261 ===
-// source: "(A soft tap reaches you through the line. She answers with the patient rhythm of someone guiding a hand along an edge.)"
-（线路里传来轻轻一叩。她说得很耐心，像引着一只手沿边缘慢慢摸过去。）
 -> DONE
 
 === zh_0262 ===
@@ -2184,8 +2071,8 @@ Aurora 也这么想。
 -> DONE
 
 === zh_0437 ===
-// source: "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure."
-狭窄的地下墓园里，一座房屋形的大祭坛格外醒目。婴儿躺在白石台面上。柱子上刻着一条没有尽头的路，下方空龛只剩几块晶石碎片。台面另有一个含义不明的符号。
+// source: "A grand house-shaped memorial in the cramped underground cemetery. An infant rests on its white platform. An unending path runs along the pillars, the recess below is nearly empty, and one symbol is still unreadable."
+地下墓园里一座气派的屋形纪念碑。婴儿躺在白色石台上。柱子上刻着一条没有尽头的路，下方的凹槽几乎是空的，还有一个符号仍然读不懂。
 -> DONE
 
 === zh_0438 ===
@@ -2543,8 +2430,8 @@ Aurora 也这么想。
 -> DONE
 
 === zh_0503 ===
-// source: "Aurora interprets the symbol as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\""
-Aurora 把符号解读为一句祝福：
+// source: "Aurora reads the symbol as the Crystal God, left on a grave as a blessing:\n\n\"To disappear is to set out on a journey without end. May the wishes of crystal remain with you.\""
+Aurora 把符号解读为晶石神，并说它刻在墓碑上是一句祝福：
 
 「消失，就是踏上一段无尽的旅程。愿晶石的祝愿与你同在。」
 -> DONE
@@ -2987,11 +2874,6 @@ Aurora 说，这是女儿小时候和母亲共用的私人记号。给对方画�
 墓园上空太阳的轮廓。它和从小碑拓下来的月亮在笔记本的同一个跨页。
 -> DONE
 
-=== zh_0584 ===
-// source: "(Her breathing steadies. She sounds ready to answer something larger than a single grave.)"
-（她的呼吸平稳下来，像是准备回答一件比一座墓更大的事。）
--> DONE
-
 === zh_0585 ===
 // source: "You didn't expect a call from her. But she'd like to talk to you briefly. She wants this call to be brief, so you can only ask the two questions you’re most curious about."
 你没想到她会打来。她想跟你简短地聊一会儿，所以你只能问两个你最好奇的问题。
@@ -3137,10 +3019,6 @@ Aurora 是个名字。它不告诉你有几个人在说话，也不告诉你有�
 写日记的人刻过墓碑，也开始怀疑自己被要求留下的那些故事。她是一位墓碑设计师。也许只有这座碑，终于可以替她自己开口。
 -> DONE
 
-=== zh_0614 ===
-// source: "It means an unending journey: someone left and did not return. On a memorial, it records disappearance. It does not tell us what happened to that person."
-它表示没有尽头的旅程：有人离开，再没有回来。刻在碑上，它记录的是消失。那个人究竟遇到了什么，还看不出来。
--> DONE
 
 === zh_0615 ===
 // source: "A translated copy of designer manuscript\nOur cemetery usually represents a person through an icon of their occupation. This burial is different: the deceased is an infant who had not yet been assigned an occupation. None of the existing designs would do.\n\nThe family asked us not to define the child by work he had never begun. We chose a human figure instead. The child had no occupation, but he was still a person.\n\n\"A child without an occupation is a person before anything else.\""
@@ -4113,9 +3991,9 @@ Aurora 的其他通讯
 -> DONE
 
 === zh_0802 ===
-// source: "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.\nThe recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time."
-狭窄的地下墓园里，一座房屋形的大祭坛格外醒目。婴儿躺在白石台面上。柱子上刻着一条没有尽头的路，下方空龛只剩几块晶石碎片。台面另有一个含义不明的符号。
-五十年前，壁龛里也许还摆着什么。可以照照那时的壁龛。同一时期，石台附近或许也留下过祭品的痕迹。
+// source: "A grand house-shaped memorial in the cramped underground cemetery. An infant rests on its white platform. An unending path runs along the pillars, the recess below is nearly empty, and one symbol is still unreadable.\nTry looking at the recess and platform as they were fifty years ago."
+地下墓园里一座气派的屋形纪念碑。婴儿躺在白色石台上。柱子上刻着一条没有尽头的路，下方的凹槽几乎是空的，还有一个符号仍然读不懂。
+试着看看凹槽和石台在五十年前的样子。
 -> DONE
 
 === zh_0803 ===
@@ -4190,11 +4068,93 @@ Aurora 的其他通讯
 -> DONE
 
 === zh_0816 ===
-// source: "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
-一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。
+// source: "The Crystal God, left as a shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+晶石神，作为一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。
 -> DONE
 
 === zh_0817 ===
 // source: "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise."
 夜民祝愿离去的人一切安好。同一个符号被一次次留下，整个城市的人便都能认出这份祝愿。
+-> DONE
+
+=== zh_0818 ===
+// source: "Next, make a rubbing of the figure on the small marker. That will record the tombstone in your notebook."
+接下来拓印小碑上的人形，笔记本就会把整座碑登记下来。
+-> DONE
+
+=== zh_0819 ===
+// source: "Why does the Crystal God look like this crystal?"
+晶石神为什么和这块晶石长得一样？
+-> DONE
+
+
+
+=== zh_0822 ===
+// source: "It is what they dug from the dark and came to trust. A figure made of that stone is faith, and it is also a blessing: “May the wishes of crystal remain with you.”"
+那是他们从黑暗里挖出来、并且逐渐信赖的东西。用这块石头做成的形象既是信仰，也是祝福：「愿晶石的祝愿与你同在。」
+-> DONE
+
+=== zh_0823 ===
+// source: "The Crystal God Beside the Mother"
+母亲碑旁的晶石神
+-> DONE
+
+=== zh_0824 ===
+// source: "Low on the mother's stone, beside her carved figures, is the image of the Crystal God. It matches the sign on the altar and on the father's stone."
+母亲碑下方、她的雕像旁边，刻着晶石神的图案，与祭坛和父亲碑上的符号一致。
+-> DONE
+
+=== zh_0825 ===
+// source: "The Crystal God Is the Crystal"
+晶石神就是晶石
+-> DONE
+
+=== zh_0826 ===
+// source: "The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal."
+祭坛和旁边两块碑上的晶石神，与晶石本身有着相同的切面轮廓。夜城没有把自己的神想象成人，他们刻的就是晶石。
+-> DONE
+
+=== zh_0827 ===
+// source: "The crystal itself"
+晶石本身
+-> DONE
+
+=== zh_0828 ===
+// source: "(You look from the carving to the crystal in the scene. The outline is the same, and for a moment the sign seems less carved than set down.)"
+（你的目光从碑上的刻痕移到场景里的晶石上。轮廓完全一致，那个符号仿佛不是刻上去的，而是被放在那里的。）
+-> DONE
+
+=== zh_0829 ===
+// source: "Set the stone beside the carving: the same facets, the same point at the top. The Nightfolk did not picture their god as a person. They carved the crystal itself."
+把石头放在刻痕旁边：同样的切面，同样朝上的尖顶。夜民没有把自己的神想象成人，他们刻的就是晶石本身。
+-> DONE
+
+=== zh_0830 ===
+// source: "What does the unending path symbol mean?"
+没有尽头的路这个符号是什么意思？
+-> DONE
+
+=== zh_0831 ===
+// source: "Does the blessing explain the unending path?"
+祝福里说的旅程，就是这条没有尽头的路吗？
+-> DONE
+
+=== zh_0832 ===
+// source: "A path that does not end and does not return."
+一条没有尽头、也回不来的路。
+-> DONE
+
+=== zh_0833 ===
+// source: "I have heard that idea before, in one of the translations I gave you: a journey without end. Look back through my words, and bring me the one that says it."
+我在之前给你的某次翻译里听到过类似的说法：一场没有尽头的旅程。翻翻我说过的话，把说到这句的那一条拿来。
+-> DONE
+
+=== zh_0834 ===
+// source: "That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that <link=\"disappearance\">disappearance</link>."
+就是这个。「一场没有尽头的旅程」：祝福和这条路说的是同一件事。有人离开，再没有回来，夜民把这叫做<link="disappearance">消失</link>。
+-> DONE
+
+=== zh_0835 ===
+// source: "That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that disappearance."
+就是这个。「一场没有尽头的旅程」：祝福和这条路说的是同一件事。有人离开，再没有回来，夜民把这叫做消失。
 -> DONE

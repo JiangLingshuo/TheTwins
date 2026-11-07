@@ -2,7 +2,7 @@ extends Control
 ## Rubbing tool: a button on the right edge of the screen.
 ## Click it to pick up the charcoal, then drag over a tombstone: carved symbols
 ## (RubbingSymbol nodes) appear where you brush. Click the button again to put
-## the charcoal down.
+## the charcoal down. Only the stone zoomed in on (SceneZoom) can be rubbed.
 
 ## Emitted when the tool is picked up / put down.
 signal state_changed(is_active: bool)
@@ -84,6 +84,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_drawing = event.pressed
 		if not _drawing: _wipe_stop()
 		if _drawing:
+			_hint_zoom_in()
 			_last_point = event.global_position
 			_brush(_last_point, _last_point)
 		get_viewport().set_input_as_handled()
@@ -113,8 +114,25 @@ func _wipe_stop() -> void:
 
 func _brush(from_point: Vector2, to_point: Vector2) -> void:
 	for symbol in get_tree().get_nodes_in_group("rubbing_symbols"):
-		if symbol.is_visible_in_tree():
+		if symbol.is_visible_in_tree() and can_rub(symbol):
 			symbol.brush(from_point, to_point)
+
+
+## Rubbings are taken up close: only symbols on the stone the view is zoomed in
+## on can be rubbed (SceneZoom; a scene without one allows every symbol).
+func can_rub(symbol: Control) -> bool:
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	if scene_zoom == null:
+		return true
+	var stone: Control = scene_zoom.get_zoomed()
+	return stone != null and stone.is_ancestor_of(symbol)
+
+
+func _hint_zoom_in() -> void:
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	var toast := get_parent().get_node_or_null("Toast")
+	if scene_zoom and not scene_zoom.is_zoomed() and toast:
+		toast.show_message("Use a marker's magnifier to look closer before making a rubbing.", true)
 
 
 func _connect_symbol(symbol: RubbingSymbol) -> void:
