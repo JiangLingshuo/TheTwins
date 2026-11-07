@@ -206,7 +206,7 @@ func _add_investigation_targets() -> void:
 	# Source dates come from evidence metadata; positions are editable layout placeholders.
 	var target_script = load("res://scripts/historical_target.gd")
 	var layout: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/searchlight_placeholders.json"))
-	var max_year := 50.0
+	var max_year: float = _flashlight_tool.flashlight.focus_min
 	for spec in layout["records"]:
 		var target = TextureRect.new()
 		target.set_script(target_script)
@@ -244,6 +244,8 @@ func _add_investigation_targets() -> void:
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_min"][0]))
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
 		max_year = maxf(max_year, target.years_ago)
+		for year: float in target.scan_years:
+			max_year = maxf(max_year, year)
 		(_day_cemetery if spec["city"] == "day" else _night_cemetery).add_child(target)
 	_flashlight_tool.flashlight.focus_max = max_year
-	_flashlight_tool.get_node("FocusScale").max_value = max_year
+	_flashlight_tool.get_node("FocusScale").set_year_range(_flashlight_tool.flashlight.focus_min, max_year)

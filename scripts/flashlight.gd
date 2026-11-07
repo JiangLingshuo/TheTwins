@@ -18,7 +18,15 @@ signal focus_changed(years_ago: float)
 
 @export_group("Focus")
 @export var focus_min: float = 0.0
-@export var focus_max: float = 50.0
+@export var focus_max: float = 250.0
+
+const YEAR_STOPS: Array[float] = [0.0, 45.0, 50.0, 60.0, 250.0]
+
+static func snap_year(year: float) -> float:
+	var nearest := YEAR_STOPS[0]
+	for stop in YEAR_STOPS:
+		if absf(stop - year) < absf(nearest - year): nearest = stop
+	return nearest
 ## Distance from a clue's year that still counts as perfectly sharp.
 @export var perfect_tolerance: float = 1.0
 ## Distance from a clue's year at which it is fully blurred / faded.
@@ -47,10 +55,10 @@ var active: bool = false:
 			_lens.visible = active
 		active_changed.emit(active)
 
-## Current year setting, in years ago (eases towards the target set with set_target_focus()).
+## Current fixed year setting, in years ago.
 var focus: float = 0.0:
 	set(value):
-		value = clampf(value, focus_min, focus_max)
+		value = snap_year(clampf(value, focus_min, focus_max))
 		if is_equal_approx(value, focus):
 			return
 		focus = value
@@ -84,11 +92,6 @@ func _process(delta: float) -> void:
 		_material.set_shader_parameter("center_px", _beam_center)
 		_material.set_shader_parameter("rect_size", _lens.size)
 
-	# Ease the focus towards its target so focusing feels smooth.
-	if focus != _target_focus:
-		var next := lerpf(focus, _target_focus, 1.0 - exp(-12.0 * delta))
-		focus = _target_focus if absf(next - _target_focus) < 0.01 else next
-
 	for target_node in get_tree().get_nodes_in_group("flashlight_targets"):
 		target_node.apply_flashlight(self)
 
@@ -103,9 +106,10 @@ func turn_on_at(global_point: Vector2, lock_position: bool = false) -> void:
 	active = true
 
 
-## Set the year the flashlight should focus on (it eases there smoothly).
+## Select a fixed year without scanning intervening years.
 func set_target_focus(value: float) -> void:
-	_target_focus = clampf(value, focus_min, focus_max)
+	_target_focus = snap_year(clampf(value, focus_min, focus_max))
+	focus = _target_focus
 
 
 func get_beam_global_position() -> Vector2:

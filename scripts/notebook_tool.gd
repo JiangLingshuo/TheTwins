@@ -43,6 +43,8 @@ func _ready() -> void:
 	# Built straight away: the start screen's book is still showing in this spot.
 	_icon = book.make_icon()
 	_button.add_child(_icon)
+	# Same soft, grainy finish as the other tool buttons.
+	SoftIcon.apply_tree(_icon.get_child(0))
 	var offset := _icon.position  # make_icon() centres the copy on (0, 0)
 	_button.resized.connect(func() -> void: _icon.position = offset + _button.size / 2.0)
 	_icon.position = offset + _button.size / 2.0

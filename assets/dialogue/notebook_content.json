@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "a7fe8da943151c23df322c17e8971ccc1763568a129cde0fd096bf4ee56ae38b",
-    "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "e45178efb23bdd1ca50bae15304bde569779ef77bc3049d8c422a8e66749a47a"
+    "evidence_master.ink": "ed073d7f14e9d089ddbd7ebdb26f6756f31438ad9e70606c91f56560fb527f73",
+    "tombstone_master.ink": "fde52350ca032956b7f62c51cee42f768cf9fd84b54bd0707545a69363a11468",
+    "telecomm_master.ink": "f37fa89eef85b492e04c501162d63496348c52c5a7b222608e93c312c1ce924b"
   },
   "gravestones": {
     "baby_tomb": {
@@ -19,7 +19,7 @@
       "source_id": "scholar",
       "title": "The Crystal Monument",
       "location": "day_cemetery",
-      "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.",
+      "description": "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.\nAround forty-five years ago, the fragment may still have been clear enough to make out the drawing. Compare the foot of the monument as it is now with how it looked about forty-five years ago. Look for any trace of a later visit.",
       "sketch": "res://assets/Art/day/草稿/scholar.png"
     },
     "sun_tomb": {
@@ -27,7 +27,7 @@
       "source_id": "sun",
       "title": "The Sun-Shaped Monument",
       "location": "day_cemetery",
-      "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.",
+      "description": "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.\nThe wishing pool nearby may still have held an offering around sixty years ago when it's still in use. It might be worth looking into the basin. Someone may have left something here when the civilization was still alive and the conflict was just starting.",
       "sketch": "res://assets/Art/day/草稿/the rich.png"
     },
     "altar_tomb": {
@@ -35,7 +35,7 @@
       "source_id": "altar",
       "title": "The White Infant Altar",
       "location": "night_cemetery",
-      "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.",
+      "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.\nThe recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time.",
       "sketch": "res://assets/Art/tombstone/single/alter_now_single.png"
     },
     "mother_tomb": {
@@ -43,7 +43,7 @@
       "source_id": "mother",
       "title": "The Small Stone Beside the Altar",
       "location": "night_cemetery",
-      "description": "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.",
+      "description": "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.\nCompare the ground beside the stone today with the same spot about forty-five years ago. Did anyone return to leave something there? A stain on the face of the stone might have been brighter when she's alive.",
       "sketch": "res://assets/Art/tombstone/single/mother_single.png"
     },
     "father_tomb": {
@@ -51,7 +51,7 @@
       "source_id": "father",
       "title": "The Other Stone Beside the Altar",
       "location": "night_cemetery",
-      "description": "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.",
+      "description": "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.\nAbout fifty years ago, someone may have left a small offering beside the stone.",
       "sketch": "res://assets/Art/tombstone/single/father_single.png"
     },
     "girl_tomb": {
@@ -59,7 +59,7 @@
       "source_id": "girl",
       "title": "The Solitary Human-Shaped Marker",
       "location": "cemetery_edge",
-      "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.",
+      "description": "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.\nThe paint on the stone may also have been easier to see then.",
       "sketch": "res://assets/Art/day/草稿/girl.png"
     }
   },
@@ -937,8 +937,8 @@
       ],
       "id": "twin_beast_account",
       "title": "An Account of the Twin-Bodied Creature",
-      "body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.",
-      "interactive_body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.",
+      "body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.\n\nThe oldest account places the creature here 250 years ago. If it ever walked these grounds, a trace of it might still be found under the searchlight.",
+      "interactive_body": "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.\n\nThe oldest account places the creature here <date>250</date> years ago. If it ever walked these grounds, a trace of it might still be found under the searchlight.",
       "category": "manuscript",
       "gravestone": "sun_tomb",
       "metadata": {
@@ -1119,10 +1119,10 @@
         "altar_tomb"
       ],
       "id": "altar_blessing_glyph",
-      "title": "An Unfamiliar Glyph on the Altar",
-      "body": "An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.",
-      "interactive_body": "An unfamiliar symbol is carved into the altar. It does not resemble a passage of written text.",
-      "category": "rubbing",
+      "title": "A Repeated Sign on Three Night City Graves",
+      "body": "The same unfamiliar sign appears on three separate graves: the infant altar and the two stones beside it. The camera records all three occurrences. Its meaning is still unknown.",
+      "interactive_body": "The same unfamiliar sign appears on three separate graves: the infant altar and the two stones beside it. The camera records all three occurrences. Its meaning is still unknown.",
+      "category": "observation",
       "gravestone": "altar_tomb",
       "metadata": {
         "type": [
@@ -1132,18 +1132,19 @@
           "altar_blessing_glyph"
         ],
         "title": [
-          "An Unfamiliar Glyph on the Altar"
+          "A Repeated Sign on Three Night City Graves"
         ],
         "category": [
-          "rubbing"
+          "observation"
         ],
         "location": [
           "night_cemetery"
         ],
+        "tool": [
+          "camera"
+        ],
         "evidence_tag": [
-          "night_blessing_glyph",
-          "night_symbol_translation",
-          "aurora_translation_knowledge"
+          "night_blessing_glyph"
         ]
       },
       "source_knot": "ev_altar_blessing_glyph"
@@ -3239,7 +3240,7 @@
       "lines": [
         {
           "speaker": "Aurora",
-          "content": "Record the symbol with your rubbing tool first. Then I can read it for you."
+          "content": "Photograph the same sign on all three graves first. Bring me that record, and I can read it for you."
         }
       ]
     },
@@ -3836,6 +3837,21 @@
         {
           "speaker": "Aurora",
           "content": "I'm confused."
+        }
+      ]
+    },
+    "test_answer_repeated_blessing_tail": {
+      "id": "test_answer_repeated_blessing_tail",
+      "source_knot": "test_answer_repeated_blessing",
+      "preview_only": true,
+      "lines": [
+        {
+          "speaker": "Aurora",
+          "content": "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+        },
+        {
+          "speaker": "Aurora",
+          "content": "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise."
         }
       ]
     }

@@ -11,7 +11,7 @@ extends Control
 ## starts the drag. The sun and moon drag as on the Rise & Set page. Both are handled by the notebook
 ## tool's RubbingDrag (group "rubbing_drag"), shared by all entries.
 
-const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 ## Width of the symbol column.
 const SYMBOL_COLUMN := 96.0
 ## Largest size a symbol is drawn at (it keeps its proportions).

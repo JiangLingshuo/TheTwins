@@ -25,9 +25,9 @@ func _run() -> void:
 	var tool = scene.get_node("FlashlightTool")
 	tool._on_button_pressed()
 	check("tool enters aiming", tool.state == tool.State.AIMING)
-	tool._scale.value = 20
+	tool._scale.value = 45
 	tool._on_catcher_input(mouse(MOUSE_BUTTON_WHEEL_UP, Vector2(300, 300)))
-	check("wheel before selecting does not alter year", tool._scale.value == 20)
+	check("wheel before selecting does not alter year", tool._scale.value == 45)
 	tool._on_catcher_input(mouse(MOUSE_BUTTON_LEFT, Vector2(300, 300)))
 	var point: Vector2 = tool.flashlight.get_beam_global_position()
 	check("scene click locks the beam", tool.state == tool.State.ON and tool.flashlight.beam_locked)
@@ -38,14 +38,21 @@ func _run() -> void:
 	tool.flashlight._process(0.2)
 	check("moving mouse leaves beam fixed", tool.flashlight.get_beam_global_position().is_equal_approx(point))
 	tool._on_catcher_input(mouse(MOUSE_BUTTON_WHEEL_UP, Vector2(300, 300)))
-	check("wheel up increases years ago", tool._scale.value == 21)
+	check("wheel up increases years ago", tool._scale.value == 50)
 	tool._on_catcher_input(mouse(MOUSE_BUTTON_WHEEL_DOWN, Vector2(300, 300)))
-	check("wheel down decreases years ago", tool._scale.value == 20)
-	tool._scale._gui_input(mouse(MOUSE_BUTTON_WHEEL_UP, Vector2(50, 100)))
-	check("scale still adjusts the same focus", tool._scale.value == 21)
+	check("wheel down decreases years ago", tool._scale.value == 45)
+	tool._scale.adjust_with_wheel(mouse(MOUSE_BUTTON_WHEEL_UP, Vector2(50, 100)))
+	check("scale still adjusts the same focus", tool._scale.value == 50)
 	tool.flashlight._process(0.5)
 	check("scale adjustment keeps beam fixed", tool.flashlight.get_beam_global_position().is_equal_approx(point))
-	check("focus follows the selected year", absf(tool.flashlight.focus - 21) < 0.1)
+	check("focus follows the selected year", absf(tool.flashlight.focus - 50) < 0.1)
+	for index in tool.flashlight.YEAR_STOPS.size():
+		var point_on_ring: Vector2 = tool._scale.size * 0.5 + Vector2.from_angle(tool._scale.START_ANGLE + tool._scale.SWEEP * index / 4.0) * tool._scale._radius()
+		tool._scale._set_year_at(point_on_ring)
+		check("ring selects fixed year " + str(tool.flashlight.YEAR_STOPS[index]), tool._scale.value == tool.flashlight.YEAR_STOPS[index])
+	for candidate in [12.0, 46.0, 53.0, 100.0, 249.0]:
+		tool.flashlight.set_target_focus(candidate)
+		check("beam snaps external setting " + str(candidate), tool.flashlight.focus in tool.flashlight.YEAR_STOPS)
 	tool._scale.value = tool._scale.max_value
 	tool._on_catcher_input(mouse(MOUSE_BUTTON_WHEEL_UP, Vector2(300, 300)))
 	check("upper year limit clamped", tool._scale.value == tool._scale.max_value)

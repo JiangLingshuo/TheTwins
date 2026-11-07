@@ -4083,3 +4083,118 @@ Aurora 的其他通讯
 // source: "Credits"
 演职员表
 -> DONE
+
+=== zh_0798 ===
+// source: "My student visited me with urgency. She showed me a photo of the actual appearance of the infant. I was stunned as I never saw a dayfolk that was born like this. She asked me to design the tombstone with his real appearance, so that he can truly be remembered. I rejected her, as I have having a commission from the infant's parents, not her. She left with disappointment, and perhaps, a little bit of anger.\n\nIf the stone itself has kept nothing of his likeness, perhaps the ground behind it has. I would look back to when the little marker was first made, about fifty years ago."
+我的学生急急忙忙来找我，给我看了一张婴儿真实相貌的照片。我吃了一惊，从没见过生下来是这个样子的昼民。她要我照着孩子原来的模样做墓碑，好让人真的记得他。我拒绝了。委托我的是婴儿的父母，不是她。她失望地走了，也许还有一点生气。
+
+如果碑上没有留下他的样貌，碑后的地面或许还记得。可以把探照灯调到小碑初立的时候，大约五十年前。
+-> DONE
+
+=== zh_0799 ===
+// source: "Legend tells of a twin-bodied creature that lived here before Day City was founded. Its two halves looked entirely different: one was covered in fur, with narrow eyes; the other was smooth, with clearly visible eyes.\n\nThen, in a single night, they disappeared.\n\nThe oldest account places the creature here <date>250</date> years ago. If it ever walked these grounds, a trace of it might still be found under the searchlight."
+据传，昼城建立前，这里生活着一种双头兽。它的两半长得全然不同。一半长满毛发，眼睛细窄；另一半皮肤光滑，双眼清晰可见。
+
+后来，它一夜之间消失了。
+
+最早的记载说，那头兽在<date>250</date>年前就已在此出没。如果它曾走过这片土地，探照灯或许还能照见它的痕迹。
+-> DONE
+
+=== zh_0800 ===
+// source: "The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.\nAround forty-five years ago, the fragment may still have been clear enough to make out the drawing. Compare the foot of the monument as it is now with how it looked about forty-five years ago. Look for any trace of a later visit."
+黑白两色的晶石映出一点微光。兽形雕刻下封着一片薄薄的东西，上面似乎画了什么。
+大约四十五年前，那块薄片上的画也许还清晰可辨。对比现在和约四十五年前的碑脚，看看这期间有没有人来过。
+-> DONE
+
+=== zh_0801 ===
+// source: "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.\nThe wishing pool nearby may still have held an offering around sixty years ago. It might be worth looking into the basin. There may have been something laid at the foot of the monument around fifty years ago."
+放射状尖角围着一只小兽。小兽的两半截然不同。碑下的石座向两旁延伸，连到另外两座碑。
+约六十年前，旁边的许愿池里也许还留着一件供物。可以照照池底。约五十年前，或许有人在这座碑的碑脚放过什么。
+-> DONE
+
+=== zh_0802 ===
+// source: "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.\nThe recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time."
+狭窄的地下墓园里，一座房屋形的大祭坛格外醒目。婴儿躺在白石台面上。柱子上刻着一条没有尽头的路，下方空龛只剩几块晶石碎片。台面另有一个含义不明的符号。
+五十年前，壁龛里也许还摆着什么。可以照照那时的壁龛。同一时期，石台附近或许也留下过祭品的痕迹。
+-> DONE
+
+=== zh_0803 ===
+// source: "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.\nCompare the ground beside the stone today with the same spot about forty-five years ago. Did anyone return to leave something there? A stain on the face of the stone might have been brighter around forty-five years ago."
+大祭坛旁是一块不起眼的石碑，碑面刻着几何图案。上方是抱着孩子的人，下方两个人向彼此伸手，四周是裂纹般的边饰。
+对比现在和约四十五年前的碑旁地面。后来有人回来留下过什么吗？碑面上有一处淡淡的颜色，约四十五年前或许还看得清。
+-> DONE
+
+=== zh_0804 ===
+// source: "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.\nAbout fifty years ago, someone may have left a small offering beside the stone."
+祭坛另一边也有一块朴素的小碑。上面的人背着孩子，下方是晶石般的像。沿着边缘，一个小人正在往上走。
+约五十年前，或许有人在碑旁留下过一件小祭品。
+-> DONE
+
+=== zh_0805 ===
+// source: "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.\nAround forty-five years ago, there may have been a small figure beside the stone. Look at the foot of the marker in that same year. Something left by a visitor may still be there. The paint on the stone may also have been easier to see then."
+浅色石框里立着另一个人形，看起来比小碑上的孩子年长。框上刻着双头兽和无尽的路。碑嵌得太深，无法测量厚度。
+约四十五年前，碑旁也许摆过一座小塑像。再看看同一年的碑脚，那里或许还留着访客放下的东西。那时碑上的颜料或许也比现在更容易辨认。
+-> DONE
+
+=== zh_0806 ===
+// source: "Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.\nThe wishing pool nearby may still have held an offering around sixty years ago when it's still in use. It might be worth looking into the basin. Someone may have left something here when the civilization was still alive and the conflict was just starting."
+放射状尖角围着一只小兽。小兽的两半截然不同。碑下的石座向两旁延伸，连到另外两座碑。
+约六十年前，旁边的许愿池还在使用，池里也许还留着一件供物。可以照照池底。当这个文明尚未消亡、冲突刚刚开始的时候，或许有人在这里留下过什么。
+-> DONE
+
+=== zh_0807 ===
+// source: "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.\nCompare the ground beside the stone today with the same spot about forty-five years ago. Did anyone return to leave something there? A stain on the face of the stone might have been brighter when she's alive."
+大祭坛旁是一块不起眼的石碑，碑面刻着几何图案。上方是抱着孩子的人，下方两个人向彼此伸手，四周是裂纹般的边饰。
+对比现在和约四十五年前的碑旁地面。后来有人回来留下过什么吗？碑面上那处淡淡的颜色，在她还活着的时候或许更鲜亮。
+-> DONE
+
+=== zh_0808 ===
+// source: "Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.\nThe paint on the stone may also have been easier to see then."
+浅色石框里立着另一个人形，看起来比小碑上的孩子年长。框上刻着双头兽和无尽的路。碑嵌得太深，无法测量厚度。
+那时碑上的颜料或许也比现在更容易辨认。
+-> DONE
+
+=== zh_0809 ===
+// source: "Scroll the mouse wheel to the 50-years-ago setting (2000). Each scroll moves one setting."
+滚动鼠标滚轮，切换到50年前（2000年）的档位。每滚一格，切换一个档位。
+-> DONE
+
+=== zh_0810 ===
+// source: "Select a spot, then scroll or drag the year ring. Fixed settings: 0, 45, 50, 60, 250 years ago. Esc: put away."
+选定位置后，滚动滚轮或拖动年份圆环。固定档位为0、45、50、60、250年前。按Esc收起。
+-> DONE
+
+=== zh_0811 ===
+// source: "A Repeated Sign on Three Night City Graves"
+夜城三座碑上重复出现的符号
+-> DONE
+
+=== zh_0812 ===
+// source: "The same unfamiliar sign appears on three separate graves: the infant altar and the two stones beside it. The camera records all three occurrences. Its meaning is still unknown."
+同一个陌生符号出现在三座不同的墓碑上：婴儿祭坛，以及旁边的两座石碑。相机记录下了三处重复图案，它的含义仍然未知。
+-> DONE
+
+=== zh_0813 ===
+// source: "What does this repeated symbol mean?"
+这个反复出现的符号是什么意思？
+-> DONE
+
+=== zh_0814 ===
+// source: "Why does the same blessing appear on all three graves?"
+为什么三座碑上都有同样的祝福符号？
+-> DONE
+
+=== zh_0815 ===
+// source: "Photograph the same sign on all three graves first. Bring me that record, and I can read it for you."
+先用相机记录三座碑上相同的符号。带着那份记录来，我就能为你解读。
+-> DONE
+
+=== zh_0816 ===
+// source: "A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person."
+一种共同的祝福。不同人的碑上都能见到它，因为它属于一种习俗。
+-> DONE
+
+=== zh_0817 ===
+// source: "The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise."
+夜民祝愿离去的人一切安好。同一个符号被一次次留下，整个城市的人便都能认出这份祝愿。
+-> DONE

@@ -1720,7 +1720,7 @@ What would you like to ask?
 # ui:radio_questions
 -> test_menu_feedback ->
 What would you like to ask?
-+ {1 == 1} [There is a symbol on the platform. What does it mean?] -> test_answer_altar_8
++ {submitted_id == "altar_blessing_glyph"} [What does this repeated symbol mean?] -> test_answer_altar_8
 + {(links ? Relation.baby_pair)} [Is this the child from the small marker?] -> test_answer_altar_12
 + {1 == 1} [Are the moon-shaped stones coins?] -> test_answer_altar_16
 + {1 == 1} [What was removed from the empty recess?] -> test_answer_altar_20
@@ -1732,6 +1732,7 @@ What would you like to ask?
 + {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
     ~ glyph_return = "altar"
     -> query_night_crystal_god
++ {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
 + [Collect a word from this call] -> test_radio_terms_altar
 + [End this call] -> test_end_call
 
@@ -1747,6 +1748,8 @@ What would you like to ask?
     ~ glyph_return = "mother"
     -> query_night_dry_river
 + {owned_evidence ? EvidenceId.night_mother_flower} [What does the painted flower mean?] -> test_answer_mother_flower
++ {submitted_id == "altar_blessing_glyph"} [What does this repeated symbol mean?] -> test_answer_altar_8
++ {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
 + [Collect a word from this call] -> test_radio_terms_mother
 + [End this call] -> test_end_call
 
@@ -1765,6 +1768,8 @@ What would you like to ask?
 + {(owned_evidence ? EvidenceId.crystal_god_rubbing) || (owned_evidence ? EvidenceId.night_father_god_rubbing)} [What does the angular figure represent?]
     ~ glyph_return = "father"
     -> query_night_crystal_god
++ {submitted_id == "altar_blessing_glyph"} [What does this repeated symbol mean?] -> test_answer_altar_8
++ {(submitted_id == "altar_blessing_glyph") && (read_answers ? AnswerId.altar_8_supported_10)} [Why does the same blessing appear on all three graves?] -> test_answer_repeated_blessing
 + [Collect a word from this call] -> test_radio_terms_father
 + [End this call] -> test_end_call
 
@@ -2603,22 +2608,24 @@ Someone was still there after the others were gone. I wonder whether the family 
 === test_answer_altar_8 ===
 # question_id:altar_8
 ~ temp supported = false
-{(owned_evidence ? EvidenceId.altar_blessing_glyph) || has_tag(EvidenceTag.night_blessing_glyph):
+{submitted_id == "altar_blessing_glyph":
 It is a blessing: “To disappear is to set out on a journey without end. May the wishes of crystal remain with you.” It wishes the departed well. #aurora
 ~ queried_night_glyphs += NightGlyph.blessing
 # event:night_symbol_queried:blessing
 ~ read_answers += AnswerId.altar_8_supported_10
 ~ supported = true
-~ feedback_kind = "linked"
+~ feedback_kind = "hidden"
 ~ owned_evidence += EvidenceId.altar_blessing_translation
 ~ known_tags += (EvidenceTag.night_blessing_glyph, EvidenceTag.night_symbol_translation, EvidenceTag.endless_path_motif, EvidenceTag.aurora_translation_knowledge)
 # event:grant_evidence:altar_blessing_translation
 }
 {not supported:
-Record the symbol with your rubbing tool first. Then I can read it for you. #aurora
+Photograph the same sign on all three graves first. Bring me that record, and I can read it for you. #aurora
 ~ read_answers += AnswerId.altar_8_normal_9
 ~ feedback_kind = "unmatched"
 }
+{active_tomb == "mother": -> test_radio_mother}
+{active_tomb == "father": -> test_radio_father}
 -> test_radio_altar
 
 === test_answer_altar_12 ===
@@ -3242,3 +3249,12 @@ Of course. Have a safe journey home. #aurora
 (For a while the radio could still reach her. You leave it beside you and watch the Twins recede. First time you really see the planet from far, in a nicely divided black and white. You are in awe of that spectacular scene.) #narrator
 (Years from now, you may remember that you once knew someone named Aurora. You may even remember that she was waiting for something, but that's it. By then, the world she carried will have slipped as far into your memory as it now slips into the dark, wild universe.) #narrator
 -> END
+
+=== test_answer_repeated_blessing ===
+# question_id:repeated_blessing
+A shared blessing. It appears on graves of different people because it belongs to a custom, not to one person. #aurora
+The Nightfolk wish the departed well. The same sign, left again and again, makes that wish something the whole city can recognise. #aurora
+~ feedback_kind = "hidden"
+{active_tomb == "mother": -> test_radio_mother}
+{active_tomb == "father": -> test_radio_father}
+-> test_radio_altar

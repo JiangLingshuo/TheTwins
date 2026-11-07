@@ -7,7 +7,7 @@ D=ROOT/'assets/dialogue'
 ALIASES={'baby':'baby_tomb','scholar':'scholar_tomb','sun':'sun_tomb','altar':'altar_tomb','mother':'mother_tomb','father':'father_tomb','girl':'girl_tomb'}
 SKETCH={'baby':'day/baby_single.png','scholar':'day/草稿/scholar.png','sun':'day/草稿/the rich.png','altar':'tombstone/single/alter_now_single.png','mother':'tombstone/single/mother_single.png','father':'tombstone/single/father_single.png','girl':'day/草稿/girl.png'}
 def plain(s):
-    return re.sub(r'<link="[^"]+">(.*?)</link>',r'\1',s).replace('{player_name}','#PLAYER#')
+    return re.sub(r'<link="[^"]+">(.*?)</link>',r'\1',s).replace('<date>', '').replace('</date>', '').replace('{player_name}','#PLAYER#')
 def knots(text):
     return list(re.finditer(r'^=== (\w+) ===\n(.*?)(?=^===|\Z)',text,re.M|re.S))
 def metadata(block):

@@ -6,7 +6,7 @@ extends Control
 
 signal tab_pressed(section: int)
 
-const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 
 ## Tab colours, one per section id (provisional, from the art palette).
 @export var colors: Array[Color] = [

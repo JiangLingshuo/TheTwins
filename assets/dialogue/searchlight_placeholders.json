@@ -157,21 +157,6 @@
       "date_status": "timeline_suggestion"
     },
     {
-      "node": "FamilyStatuette",
-      "evidence_id": "family_statuette",
-      "city": "day",
-      "position": [
-        1580,
-        760
-      ],
-      "caption": "Girl marker: four-person statuette",
-      "target_id": "family_statuette",
-      "meaning": "Girl marker: four-person statuette",
-      "years_ago": 45.0,
-      "date_status": "timeline_suggestion",
-      "required_grave": "girl_tomb"
-    },
-    {
       "node": "ScholarNoTraces",
       "evidence_id": "scholar_no_traces",
       "city": "day",

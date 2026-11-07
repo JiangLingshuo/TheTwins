@@ -20,9 +20,9 @@ const SPEAKER := "⁣"
 static func gravestone_entries() -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	for stone in GameState.radio_history_gravestones():
-		entries.append({"id": stone, "title": str(GameState.get_gravestone_info(stone).get("title", stone))})
+		entries.append({"id": stone, "gravestone": stone, "title": str(GameState.get_gravestone_info(stone).get("title", stone))})
 	if not GameState.radio_other_transmissions().is_empty():
-		entries.append({"id": OTHER, "title": OTHER_TITLE})
+		entries.append({"id": OTHER, "gravestone": OTHER, "title": OTHER_TITLE})
 	return entries
 
 

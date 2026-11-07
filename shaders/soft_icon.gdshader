@@ -11,6 +11,8 @@ uniform float grain_size : hint_range(1.0, 6.0) = 1.7;       // px per grain
 uniform float fibre_strength : hint_range(0.0, 1.0) = 0.5;   // share of broader, cloudy mottling
 uniform float edge_rough : hint_range(0.0, 1.0) = 0.12;       // grain eaten into the soft edge
 
+uniform bool screen_space = false; // blur and grain measured in screen pixels (for scaled-down drawn art)
+
 varying vec4 vmod;
 
 float hash(vec2 p) {
@@ -32,7 +34,8 @@ void vertex() {
 }
 
 void fragment() {
-	vec2 px = TEXTURE_PIXEL_SIZE * soften;
+	vec2 per_screen_px = fwidth(UV);
+	vec2 px = (screen_space ? per_screen_px : TEXTURE_PIXEL_SIZE) * soften;
 	// 3x3 gaussian on premultiplied colour, so the rim never gains a dark fringe.
 	vec4 sum = vec4(0.0);
 	float total = 0.0;
@@ -49,7 +52,7 @@ void fragment() {
 	vec3 rgb = sum.rgb / max(a, 1e-4);
 
 	// Static grain, tied to the picture's own pixels.
-	vec2 p = UV / TEXTURE_PIXEL_SIZE;
+	vec2 p = screen_space ? FRAGCOORD.xy : UV / TEXTURE_PIXEL_SIZE;
 	float fine = hash(floor(p / grain_size)) - 0.5;
 	float cloud = vnoise(p / (grain_size * 4.0)) - 0.5;
 	float g = mix(fine, cloud, fibre_strength * 0.6) * 2.0;

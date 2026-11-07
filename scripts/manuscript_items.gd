@@ -1,6 +1,8 @@
 extends Control
 signal document_requested(id: String)
 signal list_requested
+## A gravestone chip of the manuscript filter was pressed ("" = All).
+signal filter_requested(stone_id: String)
 ## A notebook page of folded entries (manuscripts, clues or radio logs), one
 ## card per entry showing its title. Clicking a card opens its full text.
 
@@ -20,6 +22,44 @@ var _empty_text := "No documents received yet."
 var _heading := ""
 var _back_text := ""
 var _card_font_size := 23
+## Manuscript cards: a gravestone thumbnail, a small title and a one-line subtitle,
+## plus (on the left page) a row of gravestone chips that filters the list.
+var _rich := false
+## "manuscript" (gravestone thumbnails + subtitles) or "clue" (thumbnail of the tool that found it).
+var _kind := "manuscript"
+var _filter_stones: Array = []
+var _filter_selected := ""
+## 0 = no filter row, 1 = the row, 2 = blank space where the row is (keeps both pages' cards level).
+var _filter_row_mode := 0
+static var _thumbnails := {}
+
+const TOOL_ICONS := {
+	"rubbing": preload("res://assets/Art/symbols/rubbing_off.svg"),
+	"searchlight": preload("res://assets/Art/symbols/flashlight_off.svg"),
+	"camera": preload("res://assets/Art/symbols/camera.svg"),
+	"finding": preload("res://assets/Art/symbols/finding.svg"),
+}
+const TOOL_NAMES := {
+	"rubbing": "Rubbing",
+	"searchlight": "Searchlight",
+	"camera": "Camera",
+	"finding": "Worked out in the notebook",
+}
+
+const SUBTITLES := {
+	"designer_manuscript": "Designer's statement · infant's marker",
+	"designer_journal": "Designer's journal · a student's plea",
+	"infant_medical_record": "Day City medical file · the infant",
+	"disappearance_inquiry": "Scholar's notes · dawn disappearances",
+	"profession_record": "Day City record · the Scholar's work",
+	"one_way_passage_order": "Day City order · the one-way passage",
+	"twin_beast_account": "Legend · the twin-bodied creature",
+	"crystal_god_prophecy": "Night City legend · Divine Messenger",
+	"natural_collapse_record": "Old record · how the road was sealed",
+	"skyway_history": "Night City account · the climb up",
+	"day_city_history": "Banned book · Dayfolk and Nightfolk",
+	"girl_diary": "Diary page · a carver's doubts",
+}
 
 ## Heading and back button ("" = none) shown above the cards, and the cards'
 ## title size. The node is shared by several sections: set it before each setup().
@@ -27,6 +67,97 @@ func set_list_header(heading: String = "", back_text: String = "", card_font_siz
 	_heading = heading
 	_back_text = back_text
 	_card_font_size = card_font_size
+	_rich = false
+	_filter_row_mode = 0
+
+## Turn on the manuscript card style. `stone_ids` are the gravestones that have
+## manuscripts; `row_mode` says what to put in the filter row's place (see _filter_row_mode).
+func set_manuscript_extras(stone_ids: Array, selected: String, row_mode: int, kind: String = "manuscript") -> void:
+	_rich = true
+	_kind = kind
+	_filter_stones = stone_ids
+	_filter_selected = selected
+	_filter_row_mode = row_mode
+
+## The gravestone's sketch cut down to its visible part, shared by all cards.
+static func stone_thumbnail(stone_id: String) -> Texture2D:
+	if _thumbnails.has(stone_id):
+		return _thumbnails[stone_id]
+	var path: String = "res://assets/Art/figure/aurora.png" if stone_id == "__other" else GameState.get_gravestone_info(stone_id).get("sketch", "")
+	var atlas: AtlasTexture = null
+	var texture := load(path) as Texture2D if not path.is_empty() and ResourceLoader.exists(path, "Texture2D") else null
+	if texture:
+		var image := texture.get_image()
+		if image:
+			if image.is_compressed():
+				image.decompress()
+			atlas = AtlasTexture.new()
+			atlas.atlas = texture
+			atlas.region = Rect2(image.get_used_rect())
+	_thumbnails[stone_id] = atlas
+	return atlas
+
+## The key a card or chip is filed under: the gravestone (manuscripts) or the tool (clues).
+func _entry_key(entry: Dictionary) -> String:
+	return GameState.clue_tool(entry) if _kind == "clue" else str(entry.get("gravestone", ""))
+
+func _thumbnail_rect(key: String) -> TextureRect:
+	var rect := TextureRect.new()
+	if _kind == "clue":
+		rect.texture = TOOL_ICONS.get(key)
+		# Same soft, grainy finish as the tool buttons.
+		SoftIcon.apply_tree(rect)
+	else:
+		rect.texture = stone_thumbnail(key)
+		if key == "__other" and _ink.get_luminance() > 0.5:
+			var invert := ShaderMaterial.new()
+			invert.shader = preload("res://shaders/portrait_invert.gdshader")
+			invert.set_shader_parameter("invert", 1.0)
+			rect.material = invert
+	rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return rect
+
+func _chip(stone_id: String) -> Button:
+	var chip := Button.new()
+	chip.name = "Filter_" + (stone_id if not stone_id.is_empty() else "all")
+	chip.custom_minimum_size = Vector2(40, 40)
+	chip.disabled = not _interactive
+	chip.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	var selected := stone_id == _filter_selected
+	var frame := StyleBoxFlat.new()
+	frame.bg_color = Color(_ink, 0.16 if selected else 0.035)
+	frame.border_color = Color(_ink, 0.9 if selected else 0.35)
+	frame.set_border_width_all(2 if selected else 1)
+	frame.set_corner_radius_all(3)
+	chip.add_theme_stylebox_override("normal", frame)
+	var hover := frame.duplicate() as StyleBoxFlat
+	hover.bg_color = Color(_ink, 0.2)
+	chip.add_theme_stylebox_override("hover", hover)
+	chip.add_theme_stylebox_override("focus", hover)
+	chip.add_theme_stylebox_override("disabled", frame)
+	if stone_id.is_empty():
+		chip.text = "All"
+		chip.add_theme_font_override("font", _font)
+		chip.add_theme_font_size_override("font_size", 17)
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
+			chip.add_theme_color_override(state, _ink)
+		chip.tooltip_text = GameState.zh_text("All tools" if _kind == "clue" else "All gravestones")
+	else:
+		if _kind == "clue":
+			chip.tooltip_text = GameState.zh_text(TOOL_NAMES.get(stone_id, ""))
+		else:
+			chip.tooltip_text = GameState.fill_placeholders(str(GameState.get_gravestone_info(stone_id).get("title", "")))
+		var thumbnail := _thumbnail_rect(stone_id)
+		chip.add_child(thumbnail)
+		thumbnail.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+		for side in [SIDE_LEFT, SIDE_TOP]:
+			thumbnail.set_offset(side, 4)
+		for side in [SIDE_RIGHT, SIDE_BOTTOM]:
+			thumbnail.set_offset(side, -4)
+	chip.pressed.connect(func() -> void: filter_requested.emit(stone_id))
+	return chip
 
 func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool, manuscript: bool = true, empty_text: String = "No documents received yet.") -> void:
 	_manuscript = manuscript
@@ -77,6 +208,15 @@ func _rebuild() -> void:
 		_stack.add_child(_label(_heading, 22))
 	if _entries.is_empty() and not _empty_text.is_empty():
 		_stack.add_child(_label(_empty_text, 21))
+	if _rich and _filter_row_mode != 0:
+		var row := HBoxContainer.new()
+		row.name = "StoneFilter"
+		row.custom_minimum_size = Vector2(0, 40)
+		row.add_theme_constant_override("separation", 6)
+		_stack.add_child(row)
+		if _filter_row_mode == 1:
+			for stone_id in [""] + _filter_stones:
+				row.add_child(_chip(stone_id))
 	for entry in _entries:
 		var button := Button.new()
 		button.name = entry["id"]
@@ -95,7 +235,50 @@ func _rebuild() -> void:
 		button.add_theme_stylebox_override("hover", hover)
 		button.add_theme_stylebox_override("focus", hover)
 		_stack.add_child(button)
-		var title := _label(entry["title"], _card_font_size)
+		var title := _label(entry["title"], 18 if _rich else _card_font_size)
+		if _rich:
+			# Thumbnail of the gravestone this manuscript belongs to, then title over subtitle.
+			var thumbnail := _thumbnail_rect(_entry_key(entry))
+			thumbnail.name = "StoneThumbnail"
+			button.add_child(thumbnail)
+			thumbnail.set_anchors_and_offsets_preset(Control.PRESET_LEFT_WIDE)
+			thumbnail.offset_left = 10
+			thumbnail.offset_right = 62
+			thumbnail.offset_top = 8
+			thumbnail.offset_bottom = -8
+			var text_box := VBoxContainer.new()
+			text_box.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			text_box.alignment = BoxContainer.ALIGNMENT_CENTER
+			text_box.add_theme_constant_override("separation", 1)
+			button.add_child(text_box)
+			text_box.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			text_box.offset_left = 72
+			text_box.offset_right = -10
+			text_box.offset_top = 6
+			text_box.offset_bottom = -6
+			text_box.add_child(title)
+			if _kind == "manuscript":
+				var subtitle := _label(GameState.zh_text(SUBTITLES.get(entry["id"], "")), 13)
+				subtitle.name = "Subtitle"
+				subtitle.autowrap_mode = TextServer.AUTOWRAP_OFF
+				subtitle.clip_text = true
+				subtitle.add_theme_color_override("font_color", Color(_ink, 0.68))
+				text_box.add_child(subtitle)
+			# An unread clue shows NEW in its top-right corner until it has been read.
+			if _kind == "clue" and GameState.is_clue_unread(str(entry["id"])):
+				text_box.offset_right = -58
+				var badge := _label("NEW", 15)
+				badge.name = "NewBadge"
+				badge.add_theme_color_override("font_color", NEW_COLOR)
+				badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+				button.add_child(badge)
+				badge.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+				badge.offset_left = -60
+				badge.offset_right = -8
+				badge.offset_top = 4
+				badge.offset_bottom = 24
+			button.pressed.connect(show_document.bind(entry["id"]))
+			continue
 		button.add_child(title)
 		title.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 		title.offset_left = 12

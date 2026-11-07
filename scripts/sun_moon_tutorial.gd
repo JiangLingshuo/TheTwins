@@ -666,7 +666,7 @@ func _guide_searchlight() -> void:
 	elif tool.state == 1:
 		_set_step(Step.DONE, "Click the figure or base of the small marker to lock the light there. The beam stays fixed while you adjust the year.", _human)
 	elif absf(tool.flashlight.focus - 50.0) > tool.flashlight.perfect_tolerance:
-		_set_step(Step.DONE, "Scroll the mouse wheel to 50 years ago (2000). Shift + scroll moves 10 years at a time.", tool.get_node("FocusScale"))
+		_set_step(Step.DONE, "Scroll the mouse wheel to the 50-years-ago setting (2000). Each scroll moves one setting.", tool.get_node("FocusScale"))
 	else:
 		_set_step(Step.DONE, "Keep the light on the small marker for a moment. If nothing appears, click its figure or base to re-aim.", _human)
 

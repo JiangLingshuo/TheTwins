@@ -28,7 +28,7 @@ signal already_noted(rubbing_id: String, target: Control)
 ## (`target` is the object under it, or null).
 signal mismatched(rubbing_id: String, target: Control)
 
-const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 
 @export var hint_text: String = "Drag this symbol onto an object in the scene to uncover its meaning or a new clue. You can also ask Aurora about it over the radio."
 ## Largest size of the dragged symbol, in screen pixels.

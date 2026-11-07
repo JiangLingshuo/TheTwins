@@ -263,8 +263,7 @@ func _show_shortcuts() -> void:
 		["Tab / N", "Open or close notebook", "打开或合上笔记本"],
 		["Space / Enter", "Finish or advance dialogue", "显示整句或继续对白"],
 		["Esc", "Put away searchlight or photo, end idle radio, or cancel drag", "收起探照灯或照片、退出无线电菜单，或取消拖拽"],
-		["Mouse wheel", "Adjust the locked searchlight by one year", "锁定探照灯后，每格调一年"],
-		["Shift + mouse wheel", "Adjust the searchlight by ten years", "每格调十年"],
+		["Mouse wheel", "Move the locked searchlight by one fixed year setting", "锁定探照灯后，每格切换一个年份档位"],
 		["Drag year ring", "Set the searchlight year directly", "拖动圆环刻度直接调年份"],
 		["F1", "Debug: switch between Day and Night", "调试：切换昼夜"],
 		["F2", "Debug: toggle the developer overlay", "调试：开关开发面板"],
@@ -511,13 +510,28 @@ func get_gravestone_info(id: String) -> Dictionary:
 	return info
 
 
-func notebook_entries(section: int) -> Array[Dictionary]:
+## Gravestone whose manuscripts the Manuscripts section is limited to ("" = all).
+var manuscript_filter := ""
+## Tool ("rubbing", "searchlight", "camera" or "finding") the Clues section is limited to ("" = all).
+var clue_filter := ""
+
+## How a clue was obtained: the tool named in its metadata, else "finding"
+## (something worked out in the notebook or handed over).
+func clue_tool(entry: Dictionary) -> String:
+	var tool: String = str(entry.get("metadata", {}).get("tool", [""])[0])
+	return tool if tool in ["rubbing", "searchlight", "camera"] else "finding"
+
+func notebook_entries(section: int, apply_filter: bool = true) -> Array[Dictionary]:
 	if section == 4:
 		return radio_logs.duplicate(true)
 	var entries: Array[Dictionary] = []
 	for id in evidence_ids:
 		var entry := get_evidence(id)
 		var category: String = entry.get("category", "")
+		if section == 3 and category == "manuscript" and apply_filter and not manuscript_filter.is_empty() and entry.get("gravestone", "") != manuscript_filter:
+			continue
+		if section == 2 and category not in ["manuscript", "rubbing"] and apply_filter and not clue_filter.is_empty() and clue_tool(entry) != clue_filter:
+			continue
 		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"]):
 			entries.append(entry)
 	return entries

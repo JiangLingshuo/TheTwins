@@ -29,7 +29,7 @@ func _ready() -> void:
 	_scale.value_changed.connect(flashlight.set_target_focus)
 	_button.pressed.connect(_on_button_pressed)
 	_catcher.gui_input.connect(_on_catcher_input)
-	_button.tooltip_text = "Select a spot, then scroll or drag the year ring. Click another spot to re-aim. Shift + scroll: 10 years. Esc: put away."
+	_button.tooltip_text = "Select a spot, then scroll or drag the year ring. Fixed settings: 0, 45, 50, 60, 250 years ago. Esc: put away."
 	_set_state(State.OFF)
 
 

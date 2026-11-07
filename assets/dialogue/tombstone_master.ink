@@ -18,6 +18,7 @@ A small human-shaped marker, as thin as a page of stone. A curved decoration is 
 # location:day_cemetery
 # title:The Crystal Monument
 The black-and-white crystal catches a faint light. Beneath a carved creature, a thin fragment is sealed inside. Something seems to be drawn on it.
+Around forty-five years ago, the fragment may still have been clear enough to make out the drawing. Compare the foot of the monument as it is now with how it looked about forty-five years ago. Look for any trace of a later visit.
 ->->
 
 === tombstone_sun ===
@@ -27,6 +28,7 @@ The black-and-white crystal catches a faint light. Beneath a carved creature, a 
 # location:day_cemetery
 # title:The Sun-Shaped Monument
 Radiating points surround a small creature whose two halves look entirely different. The stone base beneath it extends to join two other markers.
+The wishing pool nearby may still have held an offering around sixty years ago when it's still in use. It might be worth looking into the basin. Someone may have left something here when the civilization was still alive and the conflict was just starting.
 ->->
 
 === tombstone_altar ===
@@ -36,6 +38,7 @@ Radiating points surround a small creature whose two halves look entirely differ
 # location:night_cemetery
 # title:The White Infant Altar
 A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.
+The recess may not have been empty fifty years ago. Try looking at it as it was then. There may also be traces of offerings near the platform from around the same time.
 ->->
 
 === tombstone_mother ===
@@ -45,6 +48,7 @@ A grand, house-shaped memorial draws the eye in the cramped underground cemetery
 # location:night_cemetery
 # title:The Small Stone Beside the Altar
 An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.
+Compare the ground beside the stone today with the same spot about forty-five years ago. Did anyone return to leave something there? A stain on the face of the stone might have been brighter when she's alive.
 ->->
 
 === tombstone_father ===
@@ -54,6 +58,7 @@ An unassuming stone stands beside the great altar. Geometric pictures cover its 
 # location:night_cemetery
 # title:The Other Stone Beside the Altar
 Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.
+About fifty years ago, someone may have left a small offering beside the stone.
 ->->
 
 === tombstone_girl ===
@@ -63,4 +68,5 @@ Another modest stone stands on the other side of the altar. A figure carries a c
 # location:cemetery_edge
 # title:The Solitary Human-Shaped Marker
 Another human figure stands within a frame of pale stone. She seems older than the child on the small marker. A two-part creature and an unending path decorate the frame. The stone is embedded too deeply to measure its thickness.
+The paint on the stone may also have been easier to see then.
 ->->

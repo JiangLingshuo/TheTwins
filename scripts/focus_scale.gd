@@ -5,8 +5,7 @@ extends Control
 signal value_changed(value: float)
 
 @export var min_value: float = 0.0
-@export var max_value: float = 50.0
-@export var wheel_step: float = 1.0
+@export var max_value: float = 250.0
 @export var font: Font
 @export var number_font: Font
 @export var caption := "years ago"
@@ -20,7 +19,7 @@ var _dragging := false
 
 var value: float = 0.0:
 	set(v):
-		v = clampf(v, min_value, max_value)
+		v = Flashlight.snap_year(clampf(v, min_value, max_value))
 		if is_equal_approx(v, value):
 			return
 		value = v
@@ -63,24 +62,25 @@ func _set_year_at(point: Vector2) -> void:
 	var angle := fposmod((point - size * 0.5).angle() - START_ANGLE, TAU)
 	if angle > SWEEP:
 		angle = 0.0 if angle > (SWEEP + TAU) * 0.5 else SWEEP
-	value = roundf(lerpf(min_value, max_value, angle / SWEEP))
+	var index := roundi(angle / SWEEP * (Flashlight.YEAR_STOPS.size() - 1))
+	value = Flashlight.YEAR_STOPS[index]
 
 func adjust_with_wheel(event: InputEventMouseButton) -> void:
-	var direction := 1.0 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1.0
-	value += direction * wheel_step * (10.0 if event.shift_pressed else 1.0) * maxf(event.factor, 1.0)
+	var direction := 1 if event.button_index == MOUSE_BUTTON_WHEEL_UP else -1
+	var index := Flashlight.YEAR_STOPS.find(value)
+	value = Flashlight.YEAR_STOPS[clampi(index + direction, 0, Flashlight.YEAR_STOPS.size() - 1)]
 
 func _draw() -> void:
 	var center := size * 0.5
 	var radius := _radius()
-	var ratio := inverse_lerp(min_value, maxf(min_value + 1.0, max_value), value)
+	var ratio := float(Flashlight.YEAR_STOPS.find(value)) / (Flashlight.YEAR_STOPS.size() - 1)
 	var end := START_ANGLE + SWEEP * ratio
 	draw_arc(center, radius, START_ANGLE, START_ANGLE + SWEEP, 64, Color(0.13, 0.10, 0.07, 0.85), 5.0, true)
 	if ratio > 0.0:
 		draw_arc(center, radius, START_ANGLE, end, 64, GOLD, 2.5, true)
-	for i in range(31):
-		var direction := Vector2.from_angle(START_ANGLE + SWEEP * i / 30.0)
-		var length := 6.0 if i % 5 == 0 else 3.0
-		draw_line(center + direction * (radius - length), center + direction * radius, INK, 1.0, true)
+	for i in Flashlight.YEAR_STOPS.size():
+		var direction := Vector2.from_angle(START_ANGLE + SWEEP * i / (Flashlight.YEAR_STOPS.size() - 1))
+		draw_line(center + direction * (radius - 7.0), center + direction * radius, INK, 1.5, true)
 	var handle := center + Vector2.from_angle(end) * radius
 	draw_circle(handle, 7.0, Color(0.13, 0.10, 0.07), true, -1.0, true)
 	draw_circle(handle, 5.0, GOLD, true, -1.0, true)

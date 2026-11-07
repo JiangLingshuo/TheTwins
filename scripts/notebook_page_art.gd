@@ -3,7 +3,7 @@ extends Control
 ## The book keeps one on each page and one on the turning sheet, so the drawing
 ## turns with the paper the same way the page text does.
 
-const FONT: Font = preload("res://assets/fonts/CormorantGaramond-Regular.ttf")
+const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 const INK := Color(0.17, 0.14, 0.12)
 const FADED_ALPHA := 0.45
 ## Size of the gravestone silhouette.

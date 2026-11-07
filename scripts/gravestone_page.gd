@@ -13,6 +13,7 @@ extends Control
 
 ## Emitted when a collected rubbing in a slot is clicked.
 signal rubbing_pressed(rubbing_id: String)
+signal clue_pressed(clue_id: String)
 
 @export var body_font: Font
 @export var heading_font: Font
@@ -20,7 +21,6 @@ signal rubbing_pressed(rubbing_id: String)
 @export var heading_size: int = 17
 ## Number of reference slots shown under Rubbings and Clues.
 @export var rubbing_slots: int = 3
-@export var clue_slots: int = 3
 ## Size of one rubbing slot.
 @export var rubbing_slot_size: Vector2 = Vector2(44, 44)
 ## Opacity of the faint parts (slot frames, empty slots, divider).
@@ -62,10 +62,6 @@ func _ready() -> void:
 		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		slot.gui_input.connect(_on_slot_input.bind(i))
 		rubbings_row.add_child(slot)
-	for i in clue_slots:
-		var line := Label.new()
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		clues_list.add_child(line)
 	_pen = AudioStreamPlayer.new()
 	_pen.stream = WRITING_SOUND
 	_pen.volume_db = 6.0
@@ -97,7 +93,7 @@ func setup(id: String, info: Dictionary) -> void:
 	sketch.texture = _sketch(info.get("sketch", ""))
 	var text: String = info.get("description", "")
 	description.text = text if not text.is_empty() else DESCRIPTION_PLACEHOLDER
-	_fill_slots(info.get("rubbings", []), info.get("clues", []))
+	_fill_slots(info.get("clues", []))
 	var report: Dictionary = GameState.gravestone_reports.get(id, {})
 	_filling = true
 	_refresh_options()
@@ -116,8 +112,7 @@ func setup_unknown() -> void:
 	_filling = true
 	_refresh_options()
 	_filling = false
-	for line: Label in clues_list.get_children():
-		line.text = ""
+	_fill_slots([])
 	_update_inputs()
 	queue_redraw()
 
@@ -136,6 +131,11 @@ func _update_inputs() -> void:
 		input.disabled = not value
 		input.focus_mode = Control.FOCUS_ALL if value else Control.FOCUS_NONE
 		input.mouse_filter = Control.MOUSE_FILTER_STOP if value else Control.MOUSE_FILTER_IGNORE
+		input.queue_redraw()
+	for clue: Button in clues_list.get_children():
+		clue.disabled = not value or clue.get_meta("clue_id", "").is_empty()
+		clue.focus_mode = Control.FOCUS_NONE if clue.disabled else Control.FOCUS_ALL
+		clue.mouse_filter = Control.MOUSE_FILTER_IGNORE if clue.disabled else Control.MOUSE_FILTER_STOP
 	# Only slots holding a rubbing can be clicked.
 	var count := 0 if _unknown else GameState.get_gravestone_rubbings(gravestone_id).size()
 	var slots := rubbings_row.get_children()
@@ -164,14 +164,32 @@ func set_ink(ink: Color) -> void:
 	for label: Label in find_children("*", "Label", true, false):
 		if label.get_parent() is OptionButton:
 			continue  # Answer labels are styled separately from page text.
-		var heading := label.name.ends_with("Heading")
+		var heading := label.name.ends_with("Heading") or label.name in [&"IdentityLabel", &"DeathLabel"]
 		label.add_theme_font_override("font", heading_font if heading else body_font)
 		label.add_theme_font_size_override("font_size", heading_size if heading else body_size)
 		label.add_theme_color_override("font_color", ink)
-	for line: Label in clues_list.get_children():
-		line.add_theme_color_override("font_color", ink if line.text != EMPTY_CLUE else faded)
+	var clue_frame := StyleBoxFlat.new()
+	clue_frame.draw_center = false
+	clue_frame.set_border_width_all(1)
+	clue_frame.border_color = faded
+	clue_frame.set_content_margin_all(6)
+	var clue_hover := clue_frame.duplicate() as StyleBoxFlat
+	clue_hover.draw_center = true
+	clue_hover.bg_color = Color(ink, 0.12)
+	for clue: Button in clues_list.get_children():
+		clue.add_theme_font_override("font", heading_font)
+		clue.add_theme_font_size_override("font_size", body_size)
+		clue.add_theme_color_override("font_color", ink)
+		clue.add_theme_color_override("font_disabled_color", faded)
+		clue.add_theme_color_override("font_hover_color", ink)
+		clue.add_theme_stylebox_override("normal", clue_frame)
+		clue.add_theme_stylebox_override("disabled", clue_frame)
+		clue.add_theme_stylebox_override("hover", clue_hover)
+		clue.add_theme_stylebox_override("pressed", clue_hover)
+		clue.add_theme_stylebox_override("focus", clue_frame)
 	for input: OptionButton in [identity_input, death_input]:
-		input.add_theme_font_override("font", body_font)
+		input.add_theme_font_override("font", heading_font)
+		input.get_popup().add_theme_font_override("font", heading_font)
 		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
 			input.add_theme_color_override(state, Color.TRANSPARENT)
 		if _answer_art.has(input):
@@ -276,22 +294,31 @@ func _draw_dashed(points: PackedVector2Array, color: Color, dash := 8.0, gap := 
 				left = dash if drawing else gap
 
 
-## Clue lines. The rubbing slots are drawn from GameState in _draw_rubbings().
-func _fill_slots(_rubbings: Array, clues: Array) -> void:
+## A title-only slot opens the same reader as the Clues tab.
+func _fill_slots(clues: Array) -> void:
 	for child in clues_list.get_children():
 		clues_list.remove_child(child)
 		child.queue_free()
 	for entry in clues:
-		var line := Label.new()
-		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-		line.text = str(entry.get("title", "")) + "\n" + str(entry.get("body", "")) if entry is Dictionary else str(entry)
-		clues_list.add_child(line)
-	if clues.is_empty():
-		var line := Label.new()
-		line.text = EMPTY_CLUE
-		clues_list.add_child(line)
+		if entry is Dictionary and not str(entry.get("id", "")).is_empty():
+			_add_clue_slot(entry["id"], entry["title"])
+	if clues_list.get_child_count() == 0 and not _unknown:
+		_add_clue_slot("", EMPTY_CLUE)
 	set_ink(_ink)
 
+
+func _add_clue_slot(id: String, title: String) -> void:
+	var slot := Button.new()
+	slot.text = title
+	slot.tooltip_text = title if not id.is_empty() else ""
+	slot.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	slot.clip_text = true
+	slot.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	slot.set_meta("clue_id", id)
+	if not id.is_empty():
+		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+		slot.pressed.connect(func() -> void: clue_pressed.emit(id))
+	clues_list.add_child(slot)
 
 func _refresh_options() -> void:
 	if not is_node_ready(): return
@@ -300,7 +327,6 @@ func _refresh_options() -> void:
 		var input: OptionButton = pair[0]
 		input.clip_text = true
 		input.fit_to_longest_item = false
-		input.custom_minimum_size = Vector2(0, 30)
 		input.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		input.clear()
 		input.add_item(GameState.zh_text("Select…"))
@@ -319,8 +345,8 @@ func _prepare_answer_input(input: OptionButton, field: String) -> void:
 	_pencil_material.shader = PENCIL_SHADER
 	var label := Label.new()
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	label.clip_text = true
-	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	label.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
 	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	label.add_theme_color_override("font_color", _ink)
 	input.add_child(label)
@@ -334,7 +360,37 @@ func _prepare_answer_input(input: OptionButton, field: String) -> void:
 	strike.hide()
 	label.add_child(strike)
 	_answer_art[input] = {"label": label, "strike": strike, "stone": "", "tween": null}
+	var blank := StyleBoxEmpty.new()
+	for state in ["normal", "hover", "pressed", "disabled", "focus"]:
+		input.add_theme_stylebox_override(state, blank)
+	# Native text and arrow are transparent. The field draws its own editing hints.
+	input.add_theme_constant_override("modulate_arrow", 1)
+	input.draw.connect(_draw_answer_hints.bind(input))
+	input.mouse_entered.connect(input.queue_redraw)
+	input.mouse_exited.connect(input.queue_redraw)
+	input.get_popup().about_to_popup.connect(input.queue_redraw)
+	input.get_popup().popup_hide.connect(input.queue_redraw)
+	input.resized.connect(_resize_answer.bind(input, label))
 	input.item_selected.connect(_write_answer.bind(input, field))
+
+
+func _draw_answer_hints(input: OptionButton) -> void:
+	if input.disabled or (input.selected > 0 and not input.is_hovered() and not input.get_popup().visible):
+		return
+	var ink := Color(_ink, 0.65)
+	var bottom := input.size.y - 1.0
+	input.draw_line(Vector2(0, bottom), Vector2(input.size.x, bottom), ink)
+	var tip := Vector2(input.size.x - 9.0, input.size.y * 0.5)
+	input.draw_polyline(PackedVector2Array([tip + Vector2(-4, -2), tip + Vector2(0, 2), tip + Vector2(4, -2)]), ink, 1.5, true)
+
+
+func _resize_answer(input: OptionButton, label: Label) -> void:
+	var paragraph := TextParagraph.new()
+	paragraph.break_flags = TextServer.BREAK_MANDATORY | TextServer.BREAK_WORD_BOUND | TextServer.BREAK_ADAPTIVE
+	paragraph.add_string(label.text, label.get_theme_font("font"), label.get_theme_font_size("font_size"))
+	paragraph.width = maxf(1.0, input.size.x + label.offset_right - label.offset_left)
+	input.custom_minimum_size.y = maxf(30.0, ceilf(paragraph.get_size().y) + 6.0)
+	input.queue_redraw()
 
 func _sync_answer_art(input: OptionButton) -> void:
 	var art: Dictionary = _answer_art[input]
@@ -354,10 +410,11 @@ func _sync_answer_art(input: OptionButton) -> void:
 	_style_answer(label, input.selected > 0)
 
 func _style_answer(label: Label, handwritten: bool) -> void:
-	var face := HANDWRITING if handwritten and not GameState.chinese_playtest else body_font
+	var face := HANDWRITING if handwritten and not GameState.chinese_playtest else heading_font
 	if face: label.add_theme_font_override("font", face)
 	label.add_theme_font_size_override("font_size", 21 if handwritten else 16)
 	label.material = _pencil_material if handwritten else null
+	_resize_answer(label.get_parent(), label)
 
 func _write_answer(index: int, input: OptionButton, field: String) -> void:
 	var art: Dictionary = _answer_art[input]
