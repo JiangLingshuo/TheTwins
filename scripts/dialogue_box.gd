@@ -60,9 +60,19 @@ var _feedback_kind := ""
 var _term_notice: Label
 var _term_notice_tween: Tween
 var _portrait_tween: Tween
+var _radio_noise: AudioStreamPlayer
 
 
 func _ready() -> void:
+	if GameState.chinese_playtest:
+		speaker_label.add_theme_font_override("font", GameState.playtest_font(speaker_label.get_theme_font("font")))
+		content_label.add_theme_font_override("normal_font", GameState.playtest_font(content_label.get_theme_font("normal_font")))
+	var noise: AudioStreamMP3 = preload("res://assets/audio/雪花噪音.mp3").duplicate()
+	noise.loop = true
+	_radio_noise = AudioStreamPlayer.new()
+	_radio_noise.stream = noise
+	_radio_noise.volume_db = -12.0
+	add_child(_radio_noise)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	continue_indicator.visible = false
@@ -172,7 +182,10 @@ func _next_line() -> void:
 	GameState.append_radio_line(_log_session, log_line)
 	speaker_label.text = GameState.fill_placeholders(speaker)
 	speaker_label.visible = not speaker.is_empty()
-	_show_portrait(speaker.strip_edges().to_lower() == portrait_speaker.to_lower())
+	var aurora_speaking := speaker.strip_edges().to_lower() == portrait_speaker.to_lower()
+	_show_portrait(aurora_speaking)
+	if aurora_speaking and not _radio_noise.playing:
+		_radio_noise.play()
 	_hovered_meta = ""
 	content_label.text = _rich_content(GameState.fill_placeholders(content))
 	content_label.visible_characters = 0
@@ -198,6 +211,7 @@ func _close() -> void:
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_active = false
+	_radio_noise.stop()
 	GameState.end_radio_exchange(_log_session)
 	finished.emit()
 
@@ -294,6 +308,7 @@ func _apply_static_intensity() -> void:
 ## Use the same panel, margins, dimmer and fonts for interactive radio menus.
 ## Menu controls handle their own input; this is not a playing dialogue line.
 func show_menu() -> void:
+	_radio_noise.stop()
 	_active = false
 	_accept_input = false
 	_typing = false

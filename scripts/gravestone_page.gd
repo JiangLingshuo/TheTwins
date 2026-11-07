@@ -28,6 +28,13 @@ signal rubbing_pressed(rubbing_id: String)
 
 const DESCRIPTION_PLACEHOLDER := "Not yet described."
 const EMPTY_CLUE := "—"
+const HANDWRITING := preload("res://assets/fonts/Kalam-Regular.ttf")
+const PENCIL_SHADER := preload("res://shaders/notebook_pencil.gdshader")
+const WRITING_SOUND := preload("res://assets/audio/写字声.wav")
+var _answer_art: Dictionary = {}
+var _pencil_material := ShaderMaterial.new()
+var _pen: AudioStreamPlayer
+var _pen_tween: Tween
 
 ## Sketches cut down to the visible part of their texture, by texture path.
 static var _sketch_cache: Dictionary = {}
@@ -59,8 +66,12 @@ func _ready() -> void:
 		var line := Label.new()
 		line.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 		clues_list.add_child(line)
-	identity_input.item_selected.connect(func(index: int) -> void: GameState.set_report_choice(gravestone_id, "identity", str(identity_input.get_item_metadata(index))))
-	death_input.item_selected.connect(func(index: int) -> void: GameState.set_report_choice(gravestone_id, "death", str(death_input.get_item_metadata(index))))
+	_pen = AudioStreamPlayer.new()
+	_pen.stream = WRITING_SOUND
+	_pen.volume_db = 6.0
+	add_child(_pen)
+	_prepare_answer_input(identity_input, "identity")
+	_prepare_answer_input(death_input, "death")
 	GameState.notebook_changed.connect(_refresh_options)
 	rubbings_row.sort_children.connect(queue_redraw)  # symbols are drawn over the slots
 	# The narrow information column needs scrolling for descriptions and clue text.
@@ -151,6 +162,8 @@ func set_ink(ink: Color) -> void:
 	_ink = ink
 	var faded := Color(ink, faded_alpha)
 	for label: Label in find_children("*", "Label", true, false):
+		if label.get_parent() is OptionButton:
+			continue  # Answer labels are styled separately from page text.
 		var heading := label.name.ends_with("Heading")
 		label.add_theme_font_override("font", heading_font if heading else body_font)
 		label.add_theme_font_size_override("font_size", heading_size if heading else body_size)
@@ -159,9 +172,11 @@ func set_ink(ink: Color) -> void:
 		line.add_theme_color_override("font_color", ink if line.text != EMPTY_CLUE else faded)
 	for input: OptionButton in [identity_input, death_input]:
 		input.add_theme_font_override("font", body_font)
-		input.add_theme_color_override("font_color", ink)
-		input.add_theme_color_override("font_hover_color", ink)
-		input.add_theme_color_override("font_pressed_color", ink)
+		for state in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color", "font_disabled_color"]:
+			input.add_theme_color_override(state, Color.TRANSPARENT)
+		if _answer_art.has(input):
+			_answer_art[input]["label"].add_theme_color_override("font_color", ink)
+			_answer_art[input]["strike"].color = ink
 		input.add_theme_font_size_override("font_size", 16)
 	var frame := StyleBoxFlat.new()
 	frame.draw_center = false
@@ -296,7 +311,105 @@ func _refresh_options() -> void:
 			var index := input.item_count - 1
 			input.set_item_metadata(index, value)
 			if report.get(pair[2], "") == value: input.selected = index
+		_sync_answer_art(input)
 		input.tooltip_text = (pair[3].get(report.get(pair[2], ""), "Select a collected term") as String) + "\nCollect underlined terms from records and radio replies. Identities can only be assigned once."
+
+
+func _prepare_answer_input(input: OptionButton, field: String) -> void:
+	_pencil_material.shader = PENCIL_SHADER
+	var label := Label.new()
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	label.clip_text = true
+	label.text_overrun_behavior = TextServer.OVERRUN_TRIM_ELLIPSIS
+	label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	label.add_theme_color_override("font_color", _ink)
+	input.add_child(label)
+	label.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	label.offset_left = 4
+	label.offset_right = -22
+	var strike := ColorRect.new()
+	strike.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	strike.color = _ink
+	strike.material = _pencil_material
+	strike.hide()
+	label.add_child(strike)
+	_answer_art[input] = {"label": label, "strike": strike, "stone": "", "tween": null}
+	input.item_selected.connect(_write_answer.bind(input, field))
+
+func _sync_answer_art(input: OptionButton) -> void:
+	var art: Dictionary = _answer_art[input]
+	var tween: Tween = art["tween"]
+	if tween and tween.is_running() and art["stone"] == gravestone_id:
+		return
+	if tween and tween.is_valid():
+		tween.kill()
+		_stop_pen(tween)
+	art["tween"] = null
+	art["stone"] = gravestone_id
+	art["strike"].hide()
+	var label: Label = art["label"]
+	label.modulate.a = 1.0
+	label.visible_characters = -1
+	label.text = input.get_item_text(input.selected) if input.selected >= 0 else ""
+	_style_answer(label, input.selected > 0)
+
+func _style_answer(label: Label, handwritten: bool) -> void:
+	var face := HANDWRITING if handwritten and not GameState.chinese_playtest else body_font
+	if face: label.add_theme_font_override("font", face)
+	label.add_theme_font_size_override("font_size", 21 if handwritten else 16)
+	label.material = _pencil_material if handwritten else null
+
+func _write_answer(index: int, input: OptionButton, field: String) -> void:
+	var art: Dictionary = _answer_art[input]
+	var label: Label = art["label"]
+	var previous: String = GameState.gravestone_reports.get(gravestone_id, {}).get(field, "")
+	var next := str(input.get_item_metadata(index))
+	if previous == next or not GameState.set_report_choice(gravestone_id, field, next):
+		return
+	var options: Dictionary = GameState.IDENTITY_LABELS if field == "identity" else GameState.CAUSE_LABELS
+	var final_text := input.get_item_text(input.selected)
+	var old_tween: Tween = art["tween"]
+	if old_tween and old_tween.is_valid():
+		old_tween.kill()
+		_stop_pen(old_tween)
+	var strike: ColorRect = art["strike"]
+	var tween := create_tween()
+	art["tween"] = tween
+	art["stone"] = gravestone_id
+	if not previous.is_empty():
+		label.text = GameState.zh_text(options.get(previous, previous))
+		label.visible_characters = -1
+		label.modulate.a = 1.0
+		_style_answer(label, true)
+		strike.position = Vector2(0, label.size.y * 0.54)
+		strike.size = Vector2(0, 1.5)
+		strike.show()
+		var width := label.get_theme_font("font").get_string_size(label.text, HORIZONTAL_ALIGNMENT_LEFT, -1, 21).x
+		tween.tween_callback(_play_pen.bind(tween))
+		tween.tween_property(strike, "size:x", minf(width, label.size.x), 0.26)
+		tween.tween_callback(_stop_pen.bind(tween))
+		tween.tween_property(label, "modulate:a", 0.0, 0.18)
+	tween.tween_callback(func() -> void:
+		strike.hide()
+		label.modulate.a = 1.0
+		label.text = final_text
+		label.visible_characters = -1 if next.is_empty() else 0
+		_style_answer(label, not next.is_empty())
+		if not next.is_empty(): _play_pen(tween))
+	if not next.is_empty():
+		tween.tween_property(label, "visible_characters", final_text.length(), clampf(final_text.length() * 0.11, 0.35, 2.4))
+		tween.tween_callback(_stop_pen.bind(tween))
+	tween.tween_callback(func() -> void: label.visible_characters = -1)
+
+func _play_pen(tween: Tween) -> void:
+	_pen_tween = tween
+	_pen.play()
+
+
+func _stop_pen(tween: Tween) -> void:
+	if _pen_tween == tween:
+		_pen.stop()
+		_pen_tween = null
 
 
 ## The texture cut down to its visible (non-transparent) part, so a stone drawn
@@ -305,8 +418,10 @@ func _sketch(path: String) -> Texture2D:
 	if path.is_empty():
 		return null
 	if not _sketch_cache.has(path):
-		var texture: Texture2D = load(path)
+		var texture := load(path) as Texture2D if ResourceLoader.exists(path, "Texture2D") else null
+		if not texture: return null
 		var image := texture.get_image()
+		if not image: return null
 		if image.is_compressed():
 			image.decompress()
 		var atlas := AtlasTexture.new()

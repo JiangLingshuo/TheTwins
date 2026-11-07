@@ -34,8 +34,10 @@ signal debug_overlay_changed(shown: bool)
 ## searchlight placeholder cards. Hidden by default; F2 toggles it.
 var debug_overlay := false
 var _dev_menu: PanelContainer
+var _shortcut_menu: AcceptDialog
 var chinese_playtest := false
 var _chinese_text: Dictionary = {}
+var _chinese_font: SystemFont
 var _chinese_translation: Translation
 var _previous_locale := ""
 var ending_true := false
@@ -215,11 +217,11 @@ func _toggle_playtest_language() -> void:
 			_chinese_translation.locale = "zh_CN"
 			for message in _chinese_text:
 				_chinese_translation.add_message(message, _chinese_text[message])
-			var fallback := SystemFont.new()
-			fallback.font_names = ["Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", "WenQuanYi Zen Hei"]
+			_chinese_font = SystemFont.new()
+			_chinese_font.font_names = ["Microsoft YaHei", "Noto Sans CJK SC", "PingFang SC", "WenQuanYi Zen Hei"]
 			for font in [preload("res://assets/fonts/CormorantGaramond-Regular.ttf"), preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf"), preload("res://assets/fonts/CormorantGaramond-Italic.ttf")]:
 				var fonts: Array[Font] = font.fallbacks.duplicate()
-				fonts.append(fallback)
+				fonts.append(_chinese_font)
 				font.fallbacks = fonts
 		TranslationServer.add_translation(_chinese_translation)
 		_previous_locale = TranslationServer.get_locale()
@@ -235,6 +237,10 @@ func _toggle_playtest_language() -> void:
 	_set_debug_overlay(false)
 	get_tree().reload_current_scene.call_deferred()
 
+func playtest_font(default_font: Font) -> Font:
+	return _chinese_font if chinese_playtest and _chinese_font else default_font
+
+
 func zh_text(text: String) -> String:
 	return _chinese_text.get(text, text) if chinese_playtest else text
 
@@ -242,10 +248,46 @@ func is_dev_menu_click(event: InputEvent) -> bool:
 	return is_instance_valid(_dev_menu) and _dev_menu.visible and event is InputEventMouseButton and _dev_menu.get_global_rect().has_point(event.position)
 
 
+func _show_shortcuts() -> void:
+	if is_instance_valid(_shortcut_menu):
+		_shortcut_menu.free()
+	_shortcut_menu = AcceptDialog.new()
+	_shortcut_menu.title = "快捷键" if chinese_playtest else "Controls"
+	_shortcut_menu.ok_button_text = "关闭" if chinese_playtest else "Close"
+	var table := GridContainer.new()
+	table.columns = 2
+	table.add_theme_constant_override("h_separation", 26)
+	table.add_theme_constant_override("v_separation", 7)
+	var rows := [
+		["Ctrl + T", "Show controls", "查看快捷键"],
+		["Tab / N", "Open or close notebook", "打开或合上笔记本"],
+		["Space / Enter", "Finish or advance dialogue", "显示整句或继续对白"],
+		["Esc", "Put away searchlight or photo, end idle radio, or cancel drag", "收起探照灯或照片、退出无线电菜单，或取消拖拽"],
+		["Mouse wheel", "Adjust the locked searchlight by one year", "锁定探照灯后，每格调一年"],
+		["Shift + mouse wheel", "Adjust the searchlight by ten years", "每格调十年"],
+		["Drag year ring", "Set the searchlight year directly", "拖动圆环刻度直接调年份"],
+		["F1", "Debug: switch between Day and Night", "调试：切换昼夜"],
+		["F2", "Debug: toggle the developer overlay", "调试：开关开发面板"],
+	]
+	if OS.is_debug_build():
+		rows.append(["F3", "Debug: switch Chinese / English", "调试：切换中英文"])
+		rows.append(["F8", "Debug: unlock notebook preview", "调试：解锁笔记本预览"])
+	for row in rows:
+		for text in [row[0], row[2] if chinese_playtest else row[1]]:
+			var label := Label.new()
+			label.text = text
+			table.add_child(label)
+	_shortcut_menu.add_child(table)
+	add_child(_shortcut_menu)
+	_shortcut_menu.popup_centered()
+
 func _input(event: InputEvent) -> void:
-	# Read before the GUI; the tutorial's input gate lets F2 through.
+	# Read before the GUI, including during the tutorial.
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
-		if event.keycode == KEY_F2:
+		if event.keycode == KEY_T and event.ctrl_pressed:
+			_show_shortcuts()
+			get_viewport().set_input_as_handled()
+		elif event.keycode == KEY_F2:
 			_set_debug_overlay(not debug_overlay)
 			get_viewport().set_input_as_handled()
 		elif event.keycode == KEY_F3 and OS.is_debug_build():
@@ -292,6 +334,8 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 
 ## Confirmed meaning of a rubbing, or "" while it is undeciphered.
 func get_rubbing_meaning(rubbing_id: String) -> String:
+	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
+		return "Dayfolk"
 	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
 
 
@@ -301,7 +345,11 @@ func get_rubbing_target(rubbing_id: String) -> String:
 
 
 ## Texture path of a rubbing's symbol ("" if unknown).
+const SUN_RUBBING_TEXTURE := "res://assets/Art/symbol/coin&sun.png"
+
 func get_rubbing_texture(rubbing_id: String) -> String:
+	if rubbing_id == "sky_sun_rubbing" and rubbings.has(rubbing_id):
+		return SUN_RUBBING_TEXTURE
 	return rubbing_records.get(rubbing_id, {}).get("texture", "")
 
 
@@ -790,7 +838,7 @@ func collect_term(id: String) -> void:
 
 func deliver_day_manuscripts() -> void:
 	for id in content_catalog().get("evidence", {}):
-		if id == "infant_medical_record": continue # Delivered after both Night City parents' graves are recorded.
+		if id in ["infant_medical_record", "girl_diary"]: continue # Delivered at their own gravestone milestones.
 		var entry := get_evidence(id)
 		if entry.get("category", "") != "manuscript": continue
 		var places: Array = entry.get("metadata", {}).get("related_location", [])

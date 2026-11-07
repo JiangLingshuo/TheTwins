@@ -2319,13 +2319,15 @@ Across the checked period after the burial, the searchlight reveals no readable 
 
 === test_answer_baby_8 ===
 # question_id:baby_8
-{has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance)):
+{has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference):
 Yes, it does look like a moon. I suppose sleep is the closest rehearsal the living have for death. When night falls, the Dayfolk slip into slumber. On this marker, the moon stands for <link="natural">natural death</link>. #aurora
 ~ read_answers += AnswerId.baby_8_normal_9
 ~ feedback_kind = "linked"
 - else:
+{not ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance)):
 The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk. #aurora
 ~ feedback_kind = "unmatched"
+}
 }
 {has_tag(EvidenceTag.infant_actual_appearance):
 # feedback:gold

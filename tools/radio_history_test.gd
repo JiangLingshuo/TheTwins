@@ -100,7 +100,8 @@ func _run() -> void:
 	# 4/5. Same question + same evidence, different dialogue (depends on read_answers).
 	var before := ask(moon_q, group("infant_graffiti"), session)  # hint + appended hidden text
 	ask(moon_q, group("infant_moon_rubbing"), session)  # moon answer (baby_8_normal_9)
-	var after := ask(moon_q, group("infant_graffiti"), session)  # moon answer + appended hidden text
+	var after := ask(moon_q, group("infant_graffiti"), session)  # only the new reply
+	check("follow-up skips the moon answer and generic hint", not joined(after).contains("natural death") and not joined(after).contains("starting point") and joined(after).contains("unexplained circumstances"))
 	var graffiti := records(moon_q, "infant_graffiti")
 	check("same question/evidence, different dialogue -> two records", graffiti.size() == 2 and graffiti[0]["lines"] != graffiti[1]["lines"])
 	check("appended (additional) dialogue is kept", joined(before).contains("peaceful ending") and joined(after).contains("peaceful ending") \

@@ -52,17 +52,52 @@ func _show_save_menu() -> void:
 	var buttons := VBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 12)
 	_save_menu.add_child(buttons)
-	var resume := Button.new()
-	resume.text = "继续调查" if GameState.chinese_playtest else "Continue"
-	resume.custom_minimum_size = Vector2(220, 48)
-	resume.pressed.connect(_continue_game)
+	var resume := _make_choice_button("继续调查" if GameState.chinese_playtest else "Continue", _continue_game)
 	buttons.add_child(resume)
-	var restart := Button.new()
-	restart.text = "开始新调查" if GameState.chinese_playtest else "New Game"
-	restart.custom_minimum_size = resume.custom_minimum_size
-	restart.pressed.connect(_start_game)
+	var restart := _make_choice_button("开始新调查" if GameState.chinese_playtest else "New Game", _start_game)
 	buttons.add_child(restart)
 	resume.grab_focus()
+
+
+## Same soft-edged, grainy choice box as the dialogue choices (see ending.gd),
+## but a white box with black text so it stands out against the black background.
+func _make_choice_button(text: String, action: Callable) -> Button:
+	var button := Button.new()
+	button.text = text
+	button.custom_minimum_size = Vector2(320, 70)
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_size_override("font_size", 23)
+	var panel := StyleBoxEmpty.new()
+	panel.set_content_margin_all(13.0)
+	var backdrop := ColorRect.new()
+	backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	backdrop.show_behind_parent = true
+	var material := ShaderMaterial.new()
+	material.shader = preload("res://shaders/radio_static.gdshader")
+	material.set_shader_parameter("choice_panel", true)
+	material.set_shader_parameter("choice_art", preload("res://assets/Art/dialog/dialog box.png"))
+	var normal_color := Color(0.96, 0.96, 0.95)
+	var hover_color := Color(0.78, 0.78, 0.77)
+	material.set_shader_parameter("base_color", normal_color)
+	material.set_shader_parameter("body_alpha", 1.0)
+	material.set_shader_parameter("bottom_alpha", 1.0)
+	# Dark grain on the white box (the default grain is light, invisible on white).
+	material.set_shader_parameter("noise_color", Color(0.25, 0.25, 0.25))
+	button.mouse_entered.connect(func() -> void: material.set_shader_parameter("base_color", hover_color))
+	button.mouse_exited.connect(func() -> void: material.set_shader_parameter("base_color", normal_color))
+	button.focus_entered.connect(func() -> void: material.set_shader_parameter("base_color", hover_color))
+	button.focus_exited.connect(func() -> void: material.set_shader_parameter("base_color", normal_color))
+	backdrop.material = material
+	button.add_child(backdrop)
+	backdrop.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	backdrop.resized.connect(func() -> void: material.set_shader_parameter("panel_size", backdrop.size))
+	material.set_shader_parameter("panel_size", backdrop.size)
+	for color_name in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+		button.add_theme_color_override(color_name, Color.BLACK)
+	for style_name in ["normal", "hover", "pressed", "focus"]:
+		button.add_theme_stylebox_override(style_name, panel)
+	button.pressed.connect(action)
+	return button
 
 func _continue_game() -> void:
 	if _started: return

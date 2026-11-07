@@ -7,7 +7,7 @@ enum Step { TOOL, MOON, AURORA, BOOK, TAB, DRAG, AWAIT_STEP_4, DONE }
 const GATED := [Step.TOOL, Step.BOOK, Step.TAB, Step.DRAG]
 ## Shown once Aurora's Step 1 line ends and the moon and sun are in the notebook.
 @export var step1_notebook_message := "Notebook updated: the moon is recorded in Rise & Set."
-const SKY_SUN_TEXTURE := "res://assets/Art/symbols/sky_sun.svg"
+const SKY_SUN_TEXTURE := GameState.SUN_RUBBING_TEXTURE
 ## Least time the rubbed crescent blinks on the marker before the notebook opens.
 @export var moon_blink_time: float = 2.5
 ## Seconds for the crescent to drop from the marker onto the notebook, then to grow.
@@ -114,7 +114,7 @@ func _input(event: InputEvent) -> void:
 		return
 	if GameState.is_dev_menu_click(event):
 		return
-	if event is InputEventKey and event.keycode in [KEY_F2, KEY_F3]:
+	if event is InputEventKey and (event.keycode in [KEY_F2, KEY_F3] or (event.keycode == KEY_T and event.ctrl_pressed)):
 		return  # the development overlay toggle (GameState) always works
 	if _delivering:
 		if not (event is InputEventMouseMotion):

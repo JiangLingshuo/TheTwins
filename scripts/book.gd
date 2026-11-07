@@ -77,7 +77,7 @@ const GRAVESTONE_SLOT_IDS: PackedStringArray = ["baby_tomb", "altar_tomb", "scho
 ## Loudness of the page turn sound, in decibels (0 = original level).
 @export_range(-40.0, 6.0, 0.5) var flip_volume_db: float = 0.0
 ## Loudness of the writing sound, in decibels (0 = original level).
-@export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 0.0
+@export_range(-40.0, 6.0, 0.5) var write_volume_db: float = 6.0
 
 @export_group("Day/Night pages")
 ## Sections (indices into SECTION_TITLES) whose spreads show a Day page on the

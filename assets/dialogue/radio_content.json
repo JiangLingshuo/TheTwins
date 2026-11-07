@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "46152c6427296d7affd3452d788622a836a7c07824fe1f75cc6073a90d60e585",
+  "source_sha256": "a7659aef790fc7771fb4a5f5c9223f0607ca1b836548df7e1c6e1f74fcc90c28",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -1398,7 +1398,7 @@
       },
       {
         "op": "if",
-        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference) || ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+        "condition": "has_tag(EvidenceTag.moon_motif) || has_tag(EvidenceTag.moon_reference)",
         "then": [
           {
             "op": "line",
@@ -1416,13 +1416,20 @@
         ],
         "else": [
           {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
+            "op": "if",
+            "condition": "not ((read_answers ? AnswerId.baby_8_normal_9) && has_tag(EvidenceTag.infant_actual_appearance))",
+            "then": [
+              {
+                "op": "line",
+                "speaker": "Aurora",
+                "text": "The outline is a starting point. Show me your comparison with the moon, and we can ask what it meant to the Dayfolk."
+              },
+              {
+                "op": "set",
+                "code": "feedback_kind = \"unmatched\""
+              }
+            ],
+            "else": []
           }
         ]
       },

@@ -49,7 +49,7 @@ func _draw() -> void:
 	# after its rubbing, the sun once the moon has replaced it in the sky.
 	if not GameState.cycle_hint_heard or not GameState.rubbings.has(rubbing_id):
 		return
-	var path := "res://assets/Art/symbols/sky_sun.svg" if rubbing_id == "sky_sun_rubbing" else "res://assets/Art/symbol/moon.png"
+	var path := GameState.SUN_RUBBING_TEXTURE if rubbing_id == "sky_sun_rubbing" else "res://assets/Art/symbol/moon.png"
 	# Keep the texture referenced: drawing only stores its RID, and an icon nothing
 	# else uses (the sky sun) would otherwise be freed and draw as a solid square.
 	if _texture == null or _texture.resource_path != path:

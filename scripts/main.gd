@@ -46,14 +46,24 @@ var is_day: bool = true:
 			return
 		is_day = value
 		_fade_backgrounds()
+		if is_node_ready():
+			# The bell rings A#. Going to night it drops a semitone to A; going back to
+			# day it rises two semitones to C (the music sits in D minor: A, F, C, D).
+			_church_bell.pitch_scale = pow(2.0, (2.0 if is_day else -1.0) / 12.0)
+			_church_bell.play()
 		GameState.current_city_day = is_day
 		time_changed.emit(is_day)
 
 var _fade: Tween
+## Church bell that tolls whenever day and night swap.
+var _church_bell := AudioStreamPlayer.new()
 var _submit_report: Button
 
 
 func _ready() -> void:
+	_church_bell.stream = preload("res://assets/audio/教堂钟声.wav")
+	_church_bell.volume_db = -22.0
+	add_child(_church_bell)
 	is_day = GameState.current_city_day if GameState.resume_saved_city else start_time == 0
 	GameState.resume_saved_city = false
 	GameState.current_city_day = is_day
@@ -93,8 +103,7 @@ func _ready() -> void:
 	_add_report_submission()
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
-		gravestone.recorded.connect(func(id: String) -> void:
-			_notebook_tool.show_gravestone_next(id)
+		gravestone.recorded.connect(func(_id: String) -> void:
 			_toast.show_message(gravestone_recorded_message))
 
 

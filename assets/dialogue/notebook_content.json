@@ -3,7 +3,7 @@
   "sources": {
     "evidence_master.ink": "a7fe8da943151c23df322c17e8971ccc1763568a129cde0fd096bf4ee56ae38b",
     "tombstone_master.ink": "f8522959b1da54cd3664f146a45307acb8c6ceea3f23687becc5045ad9e2ed44",
-    "telecomm_master.ink": "f7482039d3fc854b223ba9a8c63fe34da309c2a500ca8d6092068713fe0e06a6"
+    "telecomm_master.ink": "e45178efb23bdd1ca50bae15304bde569779ef77bc3049d8c422a8e66749a47a"
   },
   "gravestones": {
     "baby_tomb": {
@@ -36,7 +36,7 @@
       "title": "The White Infant Altar",
       "location": "night_cemetery",
       "description": "A grand, house-shaped memorial draws the eye in the cramped underground cemetery. An infant rests upon its white stone platform. An unending path runs along its pillars; a recess below stands empty, with only a few crystal fragments remaining. It bears a symbol whose meaning remains obscure.",
-      "sketch": "res://assets/Art/night/alter.png"
+      "sketch": "res://assets/Art/tombstone/single/alter_now_single.png"
     },
     "mother_tomb": {
       "id": "mother_tomb",
@@ -44,7 +44,7 @@
       "title": "The Small Stone Beside the Altar",
       "location": "night_cemetery",
       "description": "An unassuming stone stands beside the great altar. Geometric pictures cover its face: a figure with a child above, two figures reaching toward each other below, and cracked lines around the edge.",
-      "sketch": "res://assets/Art/night/mother.png"
+      "sketch": "res://assets/Art/tombstone/single/mother_single.png"
     },
     "father_tomb": {
       "id": "father_tomb",
@@ -52,7 +52,7 @@
       "title": "The Other Stone Beside the Altar",
       "location": "night_cemetery",
       "description": "Another modest stone stands on the other side of the altar. A figure carries a child above a crystal-like figure. Along the border, a smaller figure climbs an upward path.",
-      "sketch": "res://assets/Art/night/father.png"
+      "sketch": "res://assets/Art/tombstone/single/father_single.png"
     },
     "girl_tomb": {
       "id": "girl_tomb",

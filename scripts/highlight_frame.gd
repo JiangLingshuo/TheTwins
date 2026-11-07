@@ -20,6 +20,7 @@ signal finished
 
 var _target: Control
 var _tween: Tween
+var _inside_scroll_view := true
 
 
 func _ready() -> void:
@@ -69,12 +70,28 @@ func _follow_target() -> void:
 	if not is_instance_valid(_target) or not _target.is_visible_in_tree():
 		dismiss()
 		return
-	var rect := _target.get_global_rect().grow(padding)
-	global_position = rect.position
-	size = rect.size
+	var target_rect := _target.get_global_rect()
+	var rect := target_rect.grow(padding)
+	var inside := true
+	var ancestor := _target.get_parent()
+	while ancestor:
+		if ancestor is ScrollContainer:
+			var scroll_rect: Rect2 = ancestor.get_global_rect()
+			# The frame draws above the radio overlay, outside the list's normal clipping.
+			inside = inside and scroll_rect.grow(0.5).encloses(target_rect)
+			rect = rect.intersection(scroll_rect)
+		ancestor = ancestor.get_parent()
+	if inside != _inside_scroll_view:
+		_inside_scroll_view = inside
+		queue_redraw()
+	if inside:
+		global_position = rect.position
+		size = rect.size
 
 
 func _draw() -> void:
+	if not _inside_scroll_view:
+		return
 	var box := StyleBoxFlat.new()
 	box.draw_center = false
 	box.set_border_width_all(int(line_width))
