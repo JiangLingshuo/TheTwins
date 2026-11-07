@@ -86,14 +86,19 @@
       "evidence_id": "family_photo",
       "city": "day",
       "position": [
-        300,
-        880
+        1176,
+        658
       ],
       "caption": "Four-person photograph before sun marker",
       "target_id": "family_photo",
       "meaning": "Four-person photograph before sun marker",
       "years_ago": 50.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "size": [
+        64,
+        87
+      ],
+      "texture": "res://assets/Art/figure/family_photo.png"
     },
     {
       "node": "CrystalGod",
