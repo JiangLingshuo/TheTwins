@@ -12,6 +12,9 @@ signal cover_comparison_ready
 var _cover_holding := false
 var _cover_ready := false
 var _cover_releasing := false
+var _cover_session := 0
+var _cover_deadline_msec := 0
+const COVER_COMPARISON_SECONDS := 2.0
 
 ## Keys that open and close the notebook. Set to KEY_NONE to disable.
 @export var toggle_key: Key = KEY_TAB
@@ -157,10 +160,16 @@ func hold_cover_for_comparison() -> void:
 	if _cover_holding or _cover_releasing or book._busy or not is_open(): return
 	_cover_holding = true
 	_cover_ready = false
+	_cover_session += 1
+	var session := _cover_session
 	await book.close_to_icon(true)
 	_cover_ready = true
+	_cover_deadline_msec = Time.get_ticks_msec() + int(COVER_COMPARISON_SECONDS * 1000)
 	cover_comparison_ready.emit()
 	if not rubbing_drag.is_dragging(): release_cover_comparison()
+	await get_tree().create_timer(COVER_COMPARISON_SECONDS).timeout
+	if session == _cover_session and _cover_holding and not _cover_releasing:
+		release_cover_comparison()
 
 func release_cover_comparison() -> void:
 	if not _cover_holding or _cover_releasing: return
@@ -168,7 +177,8 @@ func release_cover_comparison() -> void:
 	if not _cover_ready: await cover_comparison_ready
 	# Give the player a moment to see the completed match before the book leaves.
 	if GameState.evidence_ids.has("girl_cover_correspondence"):
-		await get_tree().create_timer(0.7).timeout
+		var remaining := maxf(0.0, (_cover_deadline_msec - Time.get_ticks_msec()) / 1000.0)
+		if remaining > 0.0: await get_tree().create_timer(minf(0.7, remaining)).timeout
 	_cover_ready = false
 	await book.stow_closed_cover()
 	_cover_holding = false

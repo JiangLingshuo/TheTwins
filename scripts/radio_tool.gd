@@ -2,7 +2,7 @@ extends Control
 ## Temporary radio UI for the tutorial branch. Styling can be replaced independently.
 const FONT := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 var model = preload("res://scripts/radio_model.gd").new()
-const HANGUP_SOUND := preload("res://assets/audio/挂断.wav")
+const HANGUP_SOUND := preload("res://assets/audio/无线电挂断.wav")
 ## Aurora's goodbyes when the player ends a call. Daylight Aurora is warm and
 ## polite; Night Aurora is brief, and only rarely shows any concern.
 const FAREWELLS_DAY: Array[String] = [
@@ -79,6 +79,7 @@ func _ready() -> void:
 	_fit_selection_panel()
 	_menu_host = _overlay.get_node("Panel/Margin/VBox")
 	GameState.notebook_changed.connect(_queue_render)
+	GameState.story_mode_changed.connect(func(_enabled: bool) -> void: _queue_render())
 	resized.connect(_reposition_button)
 	_reply_box = preload("res://scenes/dialogue_box.tscn").instantiate()
 	_reply_box.name = "RadioDialogueBox"
@@ -261,6 +262,9 @@ func _render() -> void:
 	var status := _label(_status if not _status.is_empty() else "Choose a question, or place evidence to reveal a hidden question.", 18)
 	if _feedback == "hidden": status.add_theme_color_override("font_color", Color(1, 0.8, 0.35))
 	_layout.add_child(status)
+	if GameState.story_mode_enabled():
+		var legend := _label("剧情模式：青绿 = 正确证据；紫色 ◇ = 可显示隐藏问题" if GameState.chinese_playtest else "STORY MODE: teal = correct evidence; violet ◇ = reveals a hidden question", 17)
+		_layout.add_child(legend)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 22)
@@ -336,6 +340,14 @@ func _render() -> void:
 		if id == _slot: label = "✓ " + label
 		var record_button := _action(label, _set_slot.bind(id), not unlocked or not _followups.is_empty())
 		if unlocked: record_button.tooltip_text = GameState.get_evidence(model.group_member(id)).get("body", "")
+		if GameState.story_mode_enabled() and unlocked:
+			var hint: Dictionary = model.story_evidence_hint(_tomb, id, _question)
+			if hint["correct"] or hint["hidden"]:
+				_story_highlight(record_button, Color(0.35, 0.94, 0.78) if hint["correct"] else Color(0.8, 0.58, 1.0))
+				if hint["hidden"]:
+					var caption := record_button.get_child(0) as Label
+					caption.text = "◇ " + caption.text
+					record_button.tooltip_text += "\n" + ("这份证据可显示隐藏问题。" if GameState.chinese_playtest else "This record reveals a hidden question.")
 		records.add_child(record_button)
 		if id == sketch_group: tutorial_controls["sketch"] = record_button
 	tutorial_controls["evidence"] = records.get_parent()
@@ -349,6 +361,16 @@ func _render() -> void:
 		actions.add_child(_action("Back", _clear_question))
 
 	_commit_layout()
+
+func _story_highlight(button: Button, color: Color) -> void:
+	for state in ["normal", "hover", "focus", "pressed"]:
+		var frame := button.get_theme_stylebox("normal").duplicate() as StyleBoxFlat
+		frame.bg_color = Color(color.r * 0.16, color.g * 0.16, color.b * 0.16, 0.96)
+		frame.border_color = color
+		frame.set_border_width_all(2)
+		button.add_theme_stylebox_override(state, frame)
+	var caption := button.get_child(0) as Label
+	caption.add_theme_color_override("font_color", color)
 
 func _commit_layout() -> void:
 	_menu_host.add_child(_layout)

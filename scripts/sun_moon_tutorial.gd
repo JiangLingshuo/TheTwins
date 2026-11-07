@@ -21,6 +21,7 @@ var _delivering := false
 var _icon_blink: Tween
 var _skipping := false
 var _highlight_target: Control
+var _guide_backdrop: ColorRect
 var _panel: PanelContainer
 var _text: Label
 var _highlight: HighlightFrame
@@ -68,6 +69,11 @@ func _ready() -> void:
 	refresh()
 
 func _process(_delta: float) -> void:
+	if is_instance_valid(_guide_backdrop):
+		_guide_backdrop.global_position = _panel.global_position
+		_guide_backdrop.size = _panel.size
+		_guide_backdrop.z_index = _panel.z_index - 1
+		_guide_backdrop.material.set_shader_parameter("panel_size", _panel.size)
 	if _notebook == null: # _ready() is still waiting a frame
 		return
 	if _dialogue_is_playing():
@@ -437,16 +443,38 @@ func _build_guide() -> void:
 	_panel.custom_minimum_size = Vector2(570, 0)
 	_panel.z_index = 60
 	var paper := StyleBoxFlat.new()
-	paper.bg_color = Color(0.1, 0.13, 0.17, 0.92)
+	paper.bg_color = Color(0, 0, 0, 0)
 	paper.set_content_margin_all(12)
-	paper.set_corner_radius_all(5)
+	paper.set_corner_radius_all(0)
 	_panel.add_theme_stylebox_override("panel", paper)
+	_guide_backdrop = ColorRect.new()
+	_guide_backdrop.name = "TutorialStatic"
+	_guide_backdrop.top_level = true
+	_guide_backdrop.z_as_relative = false
+	_guide_backdrop.z_index = 59
+	_guide_backdrop.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var grain := ShaderMaterial.new()
+	grain.shader = preload("res://shaders/radio_static.gdshader")
+	grain.set_shader_parameter("choice_panel", true)
+	grain.set_shader_parameter("choice_art", preload("res://assets/Art/dialog/dialog box.png"))
+	grain.set_shader_parameter("choice_feather", 10.0)
+	grain.set_shader_parameter("base_color", Color(0.09, 0.07, 0.035, 1.0))
+	grain.set_shader_parameter("body_alpha", 0.94)
+	grain.set_shader_parameter("bottom_alpha", 0.95)
+	grain.set_shader_parameter("noise_color", Color(0.88, 0.75, 0.47, 1.0))
+	grain.set_shader_parameter("intensity", 0.45)
+	grain.set_shader_parameter("grain_strength", 0.055)
+	grain.set_shader_parameter("speck_strength", 0.12)
+	_guide_backdrop.material = grain
+	_panel.add_child(_guide_backdrop)
 	var stack := VBoxContainer.new()
 	_panel.add_child(stack)
 	_text = Label.new()
 	_text.custom_minimum_size.x = 540
 	_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_text.add_theme_font_size_override("font_size", 18)
+	_text.add_theme_font_override("font", GameState.playtest_font(preload("res://assets/fonts/IMFellEnglish-Regular.ttf")))
+	_text.add_theme_color_override("font_color", Color("f0d598"))
+	_text.add_theme_font_size_override("font_size", 20)
 	stack.add_child(_text)
 	_skip_button = Button.new()
 	_skip_button.text = "DEV — skip tutorial"

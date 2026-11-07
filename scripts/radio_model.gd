@@ -246,6 +246,8 @@ func _nodes(nodes: Array, result: Dictionary, source: String) -> bool:
 				if tag.begins_with("event:") and not preview_only: GameState.apply_notebook_event(tag)
 				if tag == "city:night": result["city"] = "night"
 				if tag == "radio:hang_up": result["hang_up"] = true
+				if (tag.begins_with("sfx:") or tag.begins_with("sfx_after:")) and not result["lines"].is_empty():
+					result["lines"][-1][tag.get_slice(":", 0)] = tag.get_slice(":", 1)
 			"if":
 				var branch: Array = instruction["then"] if condition(instruction["condition"]) else instruction["else"]
 				if _nodes(branch, result, source): return true
@@ -319,6 +321,26 @@ func directly_from_marker(group_id: String, tomb_id: String) -> bool:
 
 ## Compare a read-only simulation with actually delivered log text. New state
 ## or new follow-ups can put a previously exhausted record back in the picker.
+## Read-only help: use exactly the same conditions and reply program as submission.
+func story_evidence_hint(tomb_id: String, group_id: String, question: Dictionary = {}) -> Dictionary:
+	var hint := {"hidden": false, "correct": false}
+	if not group_unlocked(group_id): return hint
+	var probe = get_script().new(data)
+	probe.preview_only = true
+	probe.progress = progress.duplicate(true)
+	var baseline: Array = probe.questions_for(tomb_id, "")
+	var baseline_ids: Array = []
+	for item in baseline: baseline_ids.append(item["id"])
+	for item in probe.questions_for(tomb_id, group_id):
+		if item.get("hidden", false) and item.get("available", false) and item["id"] not in baseline_ids:
+			hint["hidden"] = true
+	if not question.is_empty():
+		# Restore the snapshot after question discovery, keeping previews isolated.
+		probe.progress = progress.duplicate(true)
+		var reply: Dictionary = probe.send(question, group_id)
+		hint["correct"] = not reply.has("error") and reply.get("feedback", "") in ["linked", "hidden"]
+	return hint
+
 func has_unheard_reply(tomb_id: String, group_id: String) -> bool:
 	var submitted := group_member(group_id)
 	if submitted.is_empty(): return false

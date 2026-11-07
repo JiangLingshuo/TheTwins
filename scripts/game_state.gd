@@ -30,9 +30,19 @@ const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}", "{player_name}"]
 
 ## Emitted when F2 shows or hides the development overlay.
 signal debug_overlay_changed(shown: bool)
-## Development overlay: the tutorial hint box (with its skip button) and the
-## searchlight placeholder cards. Hidden by default; F2 toggles it.
+## Development menu and tutorial skip button. F2 toggles them.
 var debug_overlay := false
+## Session-only developer assistance. Never stored in investigation autosaves.
+signal story_mode_changed(enabled: bool)
+var story_mode := false
+
+func story_mode_enabled() -> bool:
+	return OS.is_debug_build() and story_mode
+
+func set_story_mode(enabled: bool) -> void:
+	story_mode = enabled and OS.is_debug_build()
+	story_mode_changed.emit(story_mode)
+
 var _dev_menu: PanelContainer
 var _shortcut_menu: AcceptDialog
 var chinese_playtest := false
@@ -60,6 +70,7 @@ var _autosave_path := "user://investigation.autosave"
 var _new_run_defaults: Dictionary
 var _autosave_enabled := false
 var resume_saved_city := false
+var opening_cemetery_visible := false
 
 func _ready() -> void:
 	_new_run_defaults = _checkpoint_state()
@@ -221,6 +232,12 @@ func _build_dev_menu() -> void:
 	var title := Label.new()
 	title.text = "DEV / Scene shortcuts"
 	stack.add_child(title)
+	var story := CheckButton.new()
+	story.text = "剧情模式 / Story mode"
+	story.button_pressed = story_mode_enabled()
+	story.tooltip_text = "Dev only: show rubbing targets, hidden-question records and correct evidence."
+	story.toggled.connect(set_story_mode)
+	stack.add_child(story)
 	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]

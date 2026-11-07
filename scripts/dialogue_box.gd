@@ -7,6 +7,7 @@ extends Control
 ##   - while text is typing: show the whole line at once
 ##   - when the line is finished: go to the next line
 
+signal line_started(line: Dictionary)
 signal finished
 signal term_selected(term_id: String)
 
@@ -61,6 +62,14 @@ var _term_notice: Label
 var _term_notice_tween: Tween
 var _portrait_tween: Tween
 var _radio_noise: AudioStreamPlayer
+## One-shot sounds a line can ask for: "sfx" as it starts, "sfx_after" when the
+## player moves past it (or the dialogue closes). Authored in the dialogue text.
+const CUES := {
+	"busy": {"stream": preload("res://assets/audio/忙音.wav"), "volume_db": -4.0},
+	"wind": {"stream": preload("res://assets/audio/风声.wav"), "volume_db": -8.0},
+	"hangup": {"stream": preload("res://assets/audio/无线电挂断.wav"), "volume_db": 0.0},
+}
+var _cue_player: AudioStreamPlayer
 
 
 func _ready() -> void:
@@ -73,6 +82,8 @@ func _ready() -> void:
 	_radio_noise.stream = noise
 	_radio_noise.volume_db = -12.0
 	add_child(_radio_noise)
+	_cue_player = AudioStreamPlayer.new()
+	add_child(_cue_player)
 	visible = false
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	continue_indicator.visible = false
@@ -168,16 +179,30 @@ func _advance() -> void:
 		_next_line()
 
 
+func _play_cue(cue: String) -> void:
+	if not CUES.has(cue):
+		return
+	_cue_player.stream = CUES[cue]["stream"]
+	_cue_player.volume_db = CUES[cue]["volume_db"]
+	_cue_player.play()
+
+
 func _next_line() -> void:
+	if _index >= 0 and _index < _lines.size() and _lines[_index].has("sfx_after"):
+		_play_cue(_lines[_index]["sfx_after"])
 	_index += 1
 	if _index >= _lines.size():
 		_close()
 		return
 
 	var line := _lines[_index]
+	if line.has("sfx"):
+		_play_cue(line["sfx"])
 	var speaker: String = line["speaker"]
 	var content: String = line["content"]
 	var log_line: Dictionary = line.duplicate()
+	log_line.erase("sfx")
+	log_line.erase("sfx_after")
 	log_line["content"] = RegEx.create_from_string('<link="[^"]+">([^<]+)</link>').sub(content, "$1", true)
 	GameState.append_radio_line(_log_session, log_line)
 	speaker_label.text = GameState.fill_placeholders(speaker)
@@ -193,6 +218,7 @@ func _next_line() -> void:
 	_stop_indicator()
 	_char_timer = 0.0
 	_typing = true
+	line_started.emit(line)
 
 
 func _finish_line() -> void:

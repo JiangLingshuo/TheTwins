@@ -135,8 +135,6 @@ func take_photo(guided: bool = false) -> void:
 	var hidden: Array[CanvasItem] = []
 	for item in [get_parent().get_node("Toolbox"), get_parent().get_node("NotebookTool"), get_parent().get_node("RadioTool"), get_parent().get_node("Toast")]:
 		if item.visible: hidden.append(item); item.hide()
-	for target in get_tree().get_nodes_in_group("flashlight_targets"):
-		if is_instance_valid(target.marker) and target.marker.visible: hidden.append(target.marker); target.marker.hide()
 	var picture: Image
 	if DisplayServer.get_name() == "headless":
 		picture = Image.create(1280, 720, false, Image.FORMAT_RGBA8)

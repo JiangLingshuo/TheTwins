@@ -13,7 +13,6 @@ func _ready() -> void:
 				child.hide()
 	_add_girl()
 	super._ready()
-	GameState.record_evidence("notebook_cover")
 	_confront = Button.new()
 	_confront.text = "Contact Aurora about the notebook"
 	_confront.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)

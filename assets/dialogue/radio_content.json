@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "5c0171d2b6162bc22cfee4c87725ff524ecc3aff5c1a2281e7df3fd9cbb03c26",
+  "source_sha256": "1de02fe92a2e77567ff899ac5277ca0e2b6bd1c8616137a252ff18c4df25cd63",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -837,6 +837,10 @@
         "op": "line",
         "speaker": "",
         "text": "(You wait for her to say she’ll speak to you again. The radio clicks. You put it away.)"
+      },
+      {
+        "op": "tag",
+        "value": "sfx:busy"
       },
       {
         "op": "line",
@@ -4175,6 +4179,10 @@
         "text": "(For a while, she says nothing. You hear only the buzzing sound mixing with the wind.)"
       },
       {
+        "op": "tag",
+        "value": "sfx:wind"
+      },
+      {
         "op": "line",
         "speaker": "",
         "text": "(The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.)"
@@ -4183,6 +4191,10 @@
         "op": "line",
         "speaker": "",
         "text": "(She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.)"
+      },
+      {
+        "op": "tag",
+        "value": "sfx:busy"
       },
       {
         "op": "line",

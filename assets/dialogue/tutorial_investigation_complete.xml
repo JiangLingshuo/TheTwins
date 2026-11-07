@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <dialogue>
   <line speaker="#PLAYER#">I think I've figured out how the infant died.</line>
-  <line speaker="Aurora">Keep that answer in mind, and don't be afraid to change your provisional answers. That's what abductive reasoning is about: finding the best explanation for what you've observed. I've translated more documents that may help with your next investigation. Good luck.</line>
+  <line speaker="Aurora" sfx_after="busy">Keep that answer in mind, and don't be afraid to change your provisional answers. That's what abductive reasoning is about: finding the best explanation for what you've observed. I've translated more documents that may help with your next investigation. Good luck.</line>
 </dialogue>

@@ -2231,8 +2231,10 @@ For years I've been anticipating another dream. Yet what I got were nights of co
 === test_ending_day_goodbye ===
 (You feel that tremor in your limbs again, with fear and a little bit of anticipation for her response.) #narrator
 (For a while, she says nothing. You hear only the buzzing sound mixing with the wind.) #narrator
+# sfx:wind
 (The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.) #narrator
 (She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.) #narrator
+# sfx:busy
 (You sit until the moon rises, randomly thinking about your decisions if you were in their situation.) #narrator
 (You suppose you know the answers. But as always, they remain assumptions that change nothing. You call again.) #narrator
 + [Call again.] -> test_ending_night_start
@@ -3242,6 +3244,7 @@ Just the way back. #player
 (She gives a little laugh. You recognize the sound. She made it the first time you told her you’d landed safely.) #narrator
 Of course. Have a safe journey home. #aurora
 (You wait for her to say she’ll speak to you again. The radio clicks. You put it away.) #narrator
+# sfx:busy
 (You walk the same way you came. Your footprints are still there. You find it reassuring that there is something here you can recognize at a glance.) #narrator
 (A few steps later, you hear her question again. Did you find anything? There was a small lift in her voice on the last word. You had mistaken it for the courtesy of someone letting you finish.) #narrator
 (You recognize that sound now. Someone has spent a long time imagining the answer. You wonder what she had hoped you would say.) #narrator

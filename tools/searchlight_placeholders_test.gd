@@ -30,7 +30,7 @@ func _run() -> void:
 	check("thirteen searchlight targets placed", targets.size() == 13)
 	check("dial reaches ancient beast year", lamp.focus_max == 250 and main.get_node("FlashlightTool/FocusScale").max_value == 250)
 	for target in targets:
-		check("text card exists: " + target.evidence_id, target.marker.is_inside_tree() and not target.label.text.is_empty())
+		check("no debug placeholder card: " + target.evidence_id, target.get_parent().get_node_or_null(str(target.name) + "Placeholder") == null)
 		var meta: Dictionary = catalog[target.evidence_id]["metadata"]
 		check("only authored searchlight evidence", "searchlight" in meta.get("tool", []))
 		if not target.scan_years.is_empty(): continue

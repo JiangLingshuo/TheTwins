@@ -47,6 +47,7 @@ var _texture: Texture2D
 var _pointer := Vector2.ZERO
 var _left_book := false
 var _hint: PanelContainer
+var _story_texture_bounds: Dictionary = {}
 
 @onready var _tool: Control = get_parent()
 
@@ -207,7 +208,45 @@ func _over_book(pointer: Vector2) -> bool:
 	return book.left_page.get_global_rect().merge(book.right_page.get_global_rect()).has_point(pointer)
 
 
+func _process(_delta: float) -> void:
+	if is_dragging(): queue_redraw()
+
+## Only outline currently usable scene targets; never reveal undiscovered traces.
+func _draw_story_targets() -> void:
+	if not GameState.story_mode_enabled() or not is_dragging(): return
+	for target in get_tree().get_nodes_in_group("decipher_targets"):
+		if not target.is_visible_in_tree(): continue
+		if target.has_method("_unlocked") and not target.discovered: continue
+		var target_id: String = target.target_id
+		var matches := false
+		if _cycle_drag:
+			matches = (rubbing_id == "infant_moon_rubbing" and target_id == "sky_sun") or (rubbing_id == "sky_sun_rubbing" and target_id == "moon" and GameState.cycle_tutorial_completed)
+		else:
+			matches = target_id == GameState.get_rubbing_target(rubbing_id) or not GameState.find_rubbing_reveal(rubbing_id, target_id).is_empty()
+		if not matches: continue
+		var global_rect: Rect2 = target.get_global_rect()
+		if target is TextureRect and target.texture:
+			var key: int = target.texture.get_instance_id()
+			if not _story_texture_bounds.has(key):
+				var image: Image = target.texture.get_image()
+				if image and image.is_compressed(): image.decompress()
+				_story_texture_bounds[key] = Rect2(image.get_used_rect()) if image else Rect2(Vector2.ZERO, target.texture.get_size())
+			var used: Rect2 = _story_texture_bounds[key]
+			var ratio: Vector2 = global_rect.size / Vector2(target.texture.get_size())
+			global_rect = Rect2(global_rect.position + used.position * ratio, used.size * ratio)
+		if target_id == "notebook_cover":
+			var cover: Control = target.get_parent().book.cover
+			global_rect = Rect2(cover.global_position + cover.size * Vector2(0.12, 0.25), cover.size * Vector2(0.76, 0.56))
+			if not target.contains_point(global_rect.get_center()): continue
+		var inverse := get_global_transform().affine_inverse()
+		var rect := Rect2(inverse * global_rect.position, inverse * global_rect.end - inverse * global_rect.position).grow(6)
+		var color := Color(0.35, 0.94, 0.78)
+		draw_rect(rect, Color(color, 0.13), true)
+		draw_rect(rect, color, false, 3.0)
+		draw_string(GameState.playtest_font(FONT), rect.position + Vector2(0, -8), "拖到这里" if GameState.chinese_playtest else "Drop here", HORIZONTAL_ALIGNMENT_LEFT, -1, 18, color)
+
 func _draw() -> void:
+	_draw_story_targets()
 	if not is_dragging() or _texture == null:
 		return
 	var fit := minf(symbol_size.x / _texture.get_width(), symbol_size.y / _texture.get_height())

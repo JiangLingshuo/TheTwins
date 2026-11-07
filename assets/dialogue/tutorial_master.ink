@@ -58,6 +58,7 @@ We don’t have much transmission time left. I have to go. Talk to you later. #a
 (You feel a tremor in your limbs.) #narrator
 // line_id:chat_start:018
 (You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.) #narrator
+// sfx:wind
 // line_id:chat_start:019
 (You’re here to gather their memories. Your steps grow steadier.) #narrator
 // line_id:chat_start:020
@@ -172,6 +173,7 @@ Let the sketch change the question. Place it in the evidence slot before you cho
 I think I've figured out how the infant died. #player
 // line_id:chat_tutorial_investigation_complete:002
 Keep that answer in mind, and don't be afraid to change your provisional answers. That's what abductive reasoning is about: finding the best explanation for what you've observed. I've translated more documents that may help with your next investigation. Good luck. #aurora
+// sfx_after:busy
 -> END
 
 === chat_tutorial_camera_intro ===

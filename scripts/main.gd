@@ -112,6 +112,9 @@ func _ready() -> void:
 ## Fade in from black, all but the notebook button: it shows the book the start
 ## screen just put away in that same spot, so it stays in view throughout.
 func _fade_in_from_black() -> void:
+	if GameState.opening_cemetery_visible:
+		GameState.opening_cemetery_visible = false
+		return
 	var black := ColorRect.new()
 	black.color = Color.BLACK
 	black.mouse_filter = Control.MOUSE_FILTER_IGNORE
