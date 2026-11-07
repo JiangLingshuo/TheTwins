@@ -1,0 +1,7 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/tombstones/girl_tomb.tscn" id="1_day"]
+[ext_resource type="Texture2D" path="res://assets/Art/tombstone/girl_night_scene.png" id="2_art"]
+
+[node name="GirlTombNight" instance=ExtResource("1_day")]
+texture = ExtResource("2_art")

@@ -197,8 +197,8 @@
       "evidence_id": "girl_teddy_bear",
       "city": "day",
       "position": [
-        1480,
-        900
+        1000,
+        690
       ],
       "caption": "Mother leaving a teddy bear at the girl marker",
       "target_id": "girl_teddy_bear",
@@ -237,15 +237,19 @@
       "evidence_id": "girl_painted_flower",
       "city": "day",
       "position": [
-        1580,
-        610
+        880,
+        585
       ],
       "caption": "Solitary marker: a painted flower",
       "target_id": "girl_painted_flower",
       "meaning": "Compare the painted flower with the Holy Mother’s stone",
       "years_ago": 45.0,
       "date_status": "timeline_suggestion",
-      "required_grave": "girl_tomb"
+      "required_grave": "girl_tomb",
+      "size": [
+        130,
+        110
+      ]
     }
   ]
 }
