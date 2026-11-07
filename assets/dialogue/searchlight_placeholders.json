@@ -139,8 +139,8 @@
       "evidence_id": "night_mother_no_traces",
       "city": "night",
       "position": [
-        620,
-        820
+        520,
+        800
       ],
       "caption": "Mother marker: no later visitor traces",
       "target_id": "night_mother_no_traces",
@@ -150,6 +150,10 @@
       "scan_years": [
         0.0,
         45.0
+      ],
+      "size": [
+        230,
+        90
       ]
     },
     {
@@ -157,14 +161,18 @@
       "evidence_id": "night_father_moon_stone",
       "city": "night",
       "position": [
-        1330,
-        650
+        1205,
+        770
       ],
       "caption": "Father marker: moon-shaped offering",
       "target_id": "night_father_moon_stone",
       "meaning": "Father marker: moon-shaped offering",
       "years_ago": 50.0,
-      "date_status": "timeline_suggestion"
+      "date_status": "timeline_suggestion",
+      "size": [
+        190,
+        80
+      ]
     },
     {
       "node": "FamilyStatuette",
@@ -225,15 +233,19 @@
       "evidence_id": "night_mother_flower",
       "city": "night",
       "position": [
-        850,
-        820
+        556,
+        620
       ],
       "caption": "Faded paint on mother marker: a large flower",
       "target_id": "night_mother_flower",
       "meaning": "A painted flower: ask Aurora about its private meaning",
       "years_ago": 45.0,
       "date_status": "timeline_suggestion",
-      "required_grave": "mother_tomb"
+      "required_grave": "mother_tomb",
+      "size": [
+        150,
+        110
+      ]
     },
     {
       "node": "GirlPaintedFlower",
