@@ -127,6 +127,7 @@ var _write_player: AudioStreamPlayer
 var section_spreads: PackedInt32Array = [3, 1, 1, 1, 1, 1]
 ## A rubbing changed during a page turn: refill the pages when it finishes.
 var _refresh_pending := false
+var _conclude: ConcludeButton
 var _day_material: ShaderMaterial
 var _night_material: ShaderMaterial
 var _normal_ink: Color
@@ -155,6 +156,19 @@ func _ready() -> void:
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
 		GameState.notebook_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
 		GameState.radio_history_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
+	if use_sections:
+		# "Conclude Investigation" across the spine of the Gravestones pages, once all six reports are filled.
+		_conclude = ConcludeButton.new()
+		_conclude.name = "ConcludeButton"
+		_conclude.day_paper = day_paper
+		_conclude.day_ink = day_ink
+		_conclude.night_paper = night_paper
+		_conclude.night_ink = night_ink
+		_conclude.font = GameState.playtest_font(preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf"))
+		add_child(_conclude)
+		_conclude.position = Vector2(420.0 - _conclude.custom_minimum_size.x / 2.0, 496.0)
+		_conclude.visible = false
+		_conclude.pressed.connect(_on_conclude_pressed)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -374,7 +388,7 @@ func _turn_backward(to: int = -1) -> void:
 
 ## Close the cover over the current spread, then shrink the book into the
 ## bottom-right corner, where it stays as an icon.
-func close_to_icon() -> void:
+func close_to_icon(hold_cover: bool = false) -> void:
 	_busy = true
 	_release_page_focus()
 	_set_corners_visible(false)
@@ -403,6 +417,15 @@ func close_to_icon() -> void:
 	await t.finished
 	right_page.visible = false
 
+	if hold_cover:
+		_busy = false
+		return
+	await stow_closed_cover()
+
+
+## Finish putting away a closed book after a cover comparison.
+func stow_closed_cover() -> void:
+	_busy = true
 	# Shrink into the corner.
 	var s := create_tween().set_parallel(true)
 	s.tween_property(self, "position", _icon_position(), stow_time) \
@@ -439,6 +462,18 @@ func close() -> void:
 	if _busy or _stowed or not visible:
 		return
 	await close_to_icon()
+
+
+## The Conclude Investigation button shows on the Gravestones pages once every report is filled.
+func _process(_delta: float) -> void:
+	if _conclude:
+		var on_gravestones := use_sections and is_open() and not _busy and get_section() == 0 and _reading_document.is_empty()
+		var reports_in := GameState.investigation_tutorial_completed and not GameState.final_marker_phase and GameState.ending_report_complete()
+		_conclude.visible = on_gravestones and reports_in
+
+
+func _on_conclude_pressed() -> void:
+	GameState.conclude_investigation()
 
 
 ## True while the book is out and open (not stowed as an icon).
@@ -908,6 +943,11 @@ func _set_list_filter(key: String) -> void:
 	_on_rubbings_changed()
 
 
+func _set_clue_source_filter(key: String) -> void:
+	GameState.clue_source_filter = key
+	_spread = _section_start(2)
+	_on_rubbings_changed()
+
 func _fill_manuscript_items(text_label: Label, page_index: int, section: int) -> void:
 	var page := text_label.get_parent()
 	var items: Control = page.get_node_or_null("ManuscriptItems")
@@ -921,6 +961,7 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		items.document_requested.connect(_open_reading_document, CONNECT_DEFERRED)
 		items.list_requested.connect(_close_reading_document, CONNECT_DEFERRED)
 		items.filter_requested.connect(_set_list_filter, CONNECT_DEFERRED)
+		items.source_filter_requested.connect(_set_clue_source_filter, CONNECT_DEFERRED)
 	items.visible = (section in [2, 3] and (_reading_document.is_empty() or section != _reading_section)) \
 		or (section == 4 and not _radio_reading())
 	if not items.visible: return
@@ -930,7 +971,7 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 		return
 	var entries := GameState.notebook_entries(section)
 	var first := (page_index - _section_start(section) * 2) * 4
-	var empty_text := "No clues recorded yet." if section == 2 else "No documents received yet."
+	var empty_text := ("No clues recorded yet." if section == 2 else "No documents received yet.") if entries.is_empty() and page_index % 2 == 0 else ""
 	items.set_list_header()
 	# Filter chips on the left page only (the right page keeps blank space so both
 	# pages' cards line up): manuscripts by gravestone, clues by the tool that found them.
@@ -942,7 +983,13 @@ func _fill_manuscript_items(text_label: Label, page_index: int, section: int) ->
 			keys.append(key)
 	if section == 2:
 		keys.sort_custom(func(a: String, b: String) -> bool: return tool_order.find(a) < tool_order.find(b))
-	items.set_manuscript_extras(keys, GameState.clue_filter if section == 2 else GameState.manuscript_filter, 0 if keys.size() < 2 else (1 if page_index % 2 == 0 else 2), "clue" if section == 2 else "manuscript")
+	items.set_manuscript_extras(keys, GameState.clue_filter if section == 2 else GameState.manuscript_filter, (1 if page_index % 2 == 0 else 2) if section == 2 else (0 if keys.size() < 2 else (1 if page_index % 2 == 0 else 2)), "clue" if section == 2 else "manuscript")
+	if section == 2:
+		items.source_filter_keys = []
+		for entry in GameState.notebook_entries(2, false):
+			for key: String in GameState.clue_sources(entry):
+				if key not in items.source_filter_keys: items.source_filter_keys.append(key)
+		items.source_filter_selected = GameState.clue_source_filter
 	items.setup(entries.slice(first, first + 4), page_index, text_label.label_settings.font, text_label.label_settings.font_color, page != flip_sheet, section == 3, empty_text)
 
 
@@ -1052,10 +1099,52 @@ func _step_reading(delta: int) -> void:
 
 func _reading_keyword(id: String) -> void:
 	if get_section() == 3:
+		_show_keyword_recorded(id)
 		var notes: Array = GameState.radio_progress.get("manuscript_keywords", [])
 		if not notes.has(id): notes.append(id)
 		GameState.radio_progress["manuscript_keywords"] = notes
 	GameState.collect_term(id)
+
+## A small acknowledgement lives on the book, so refreshing the reader after
+## collecting a term cannot delete the feedback before the player sees it.
+var _keyword_notice: Label
+var _keyword_notice_tween: Tween
+
+func _show_keyword_recorded(id: String) -> void:
+	var word := id.replace("_", " ")
+	var raw := GameState.fill_placeholders(str(GameState.get_evidence(_reading_document).get("body", "")))
+	for item in RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').search_all(raw):
+		if item.get_string(1) == id:
+			word = item.get_string(2)
+			break
+	if not is_instance_valid(_keyword_notice):
+		_keyword_notice = Label.new()
+		_keyword_notice.name = "KeywordRecordedNotice"
+		_keyword_notice.top_level = true
+		_keyword_notice.z_as_relative = false
+		_keyword_notice.z_index = 110
+		_keyword_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_keyword_notice.add_theme_font_override("font", GameState.playtest_font(SpreadReader.BODY_FONT))
+		_keyword_notice.add_theme_font_size_override("font_size", 17)
+		_keyword_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_keyword_notice.custom_minimum_size.x = 240
+		add_child(_keyword_notice)
+	_keyword_notice.text = ("已记录：%s" if GameState.chinese_playtest else "%s recorded") % word
+	_keyword_notice.add_theme_color_override("font_color", Color("765044") if left_text.label_settings.font_color.get_luminance() < 0.5 else Color("ddbd88"))
+	_keyword_notice.size = Vector2(240, 0)
+	_keyword_notice.reset_size()
+	var at := get_global_mouse_position() + Vector2(12, 22)
+	var screen := get_viewport_rect().size
+	at.x = clampf(at.x, 10, maxf(10, screen.x - _keyword_notice.size.x - 10))
+	at.y = clampf(at.y, 10, maxf(10, screen.y - _keyword_notice.size.y - 10))
+	_keyword_notice.global_position = at
+	_keyword_notice.modulate.a = 0.9
+	_keyword_notice.show()
+	if _keyword_notice_tween: _keyword_notice_tween.kill()
+	_keyword_notice_tween = create_tween()
+	_keyword_notice_tween.tween_interval(1.6)
+	_keyword_notice_tween.tween_property(_keyword_notice, "modulate:a", 0.0, 0.45)
+	_keyword_notice_tween.tween_callback(_keyword_notice.hide)
 
 ## True while the spread shows a text in the reader (a radio log or an opened entry).
 func _is_reading() -> bool:

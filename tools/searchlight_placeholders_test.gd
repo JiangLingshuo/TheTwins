@@ -30,7 +30,7 @@ func _run() -> void:
 	check("thirteen searchlight targets placed", targets.size() == 13)
 	check("dial reaches ancient beast year", lamp.focus_max == 250 and main.get_node("FlashlightTool/FocusScale").max_value == 250)
 	for target in targets:
-		check("text card exists: " + target.evidence_id, target.marker.is_inside_tree() and not target.label.text.is_empty())
+		check("no debug placeholder card: " + target.evidence_id, target.get_parent().get_node_or_null(str(target.name) + "Placeholder") == null)
 		var meta: Dictionary = catalog[target.evidence_id]["metadata"]
 		check("only authored searchlight evidence", "searchlight" in meta.get("tool", []))
 		if not target.scan_years.is_empty(): continue
@@ -56,7 +56,12 @@ func _run() -> void:
 		aim(target, 45)
 		check("same endpoint does not count twice", state.searchlight_scan_progress[target.evidence_id].size() == 1)
 		aim(target, 0)
-		check("both endpoints record range observation", target.discovered and state.evidence_ids.has(target.evidence_id))
+		if target.evidence_id in ["scholar_no_traces", "night_mother_no_traces"]:
+			check("%s needs more than two endpoints" % target.evidence_id, not target.discovered)
+			aim(target, 50)
+			check("%s still needs the fourth setting" % target.evidence_id, not target.discovered)
+			aim(target, 60)
+		check("all required settings record range observation", target.discovered and state.evidence_ids.has(target.evidence_id))
 		check("negative scan is not a symbol match target", not target.contains_point(target.get_global_rect().get_center()))
 	main.set_day()
 	if OS.get_cmdline_user_args().has("--shots"):

@@ -34,4 +34,5 @@ texture = ExtResource("5_path")
 expand_mode = 1
 script = ExtResource("4_godsym")
 rubbing_id = "night_father_path_rubbing"
+matching_target_id = "skyway_reference"
 brush_radius = 14.0

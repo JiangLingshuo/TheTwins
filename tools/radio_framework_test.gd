@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 	state = root.get_node("GameState")
 	model = load("res://scripts/radio_model.gd").new()
-	check("all questions exported", model.data["questions"].size() == 59)
+	check("all questions exported", model.data["questions"].size() == 58)
 	for q in model.data["questions"]:
 		check("three unique candidates: " + q["id"], q["candidates"].size() == 3 and q["candidates"][0] != q["candidates"][1] and q["candidates"][1] != q["candidates"][2] and q["candidates"][0] != q["candidates"][2])
 	var repetition_target := "test_answer_repeated_beast"
@@ -35,6 +35,32 @@ func _run() -> void:
 		check("camera evidence reveals repetition question: " + tomb_id, model.questions_for(tomb_id, group("repeated_beast_motifs")).any(func(q: Dictionary) -> bool: return q["target"] == repetition_target))
 		var perspective_reply: Dictionary = model.send(perspective, group("repeated_beast_motifs"))
 		check("perspective answer points to Night City: " + tomb_id, joined(perspective_reply).contains("Night City") and perspective_reply.get("feedback") == "hidden")
+	var crystal_q: Dictionary = {}
+	for candidate in model.questions_for("scholar_tomb"):
+		if candidate["target"] == "test_answer_scholar_8": crystal_q = candidate
+	check("crystal question locked before the camera comparison", not crystal_q.is_empty() and not crystal_q["available"])
+	state.record_evidence("crystal_marker_correspondence")
+	crystal_q = {}
+	for candidate in model.questions_for("scholar_tomb"):
+		if candidate["target"] == "test_answer_scholar_8": crystal_q = candidate
+	check("camera crystal comparison unlocks the crystal question", not crystal_q.is_empty() and crystal_q["available"])
+	var was_day: bool = state.current_city_day
+	state.current_city_day = false  # the parents' stones are in Night City
+	for pair in [["mother_tomb", "test_answer_mother_8"], ["father_tomb", "test_answer_father_8"]]:
+		state.record_gravestone(pair[0])
+		var parent_q: Dictionary = {}
+		for candidate in model.questions_for(pair[0]):
+			if candidate["target"] == pair[1]: parent_q = candidate
+		check("parent question locked before the child repetition: " + pair[0], not parent_q.is_empty() and not parent_q["available"])
+	state.record_evidence("repeated_child_figures")
+	for pair in [["mother_tomb", "test_answer_mother_8"], ["father_tomb", "test_answer_father_8"]]:
+		var parent_q: Dictionary = {}
+		for candidate in model.questions_for(pair[0]):
+			if candidate["target"] == pair[1]: parent_q = candidate
+		check("child repetition unlocks the parent question: " + pair[0], not parent_q.is_empty() and parent_q["available"])
+		var parent_reply: Dictionary = model.send(parent_q, group("repeated_child_figures"))
+		check("child repetition answers who the parent is: " + pair[0], joined(parent_reply).contains("Night City") and parent_reply.get("feedback") == "linked")
+	state.current_city_day = was_day
 	check("repetition question excluded from infant marker", question(repetition_target, "baby_tomb").is_empty())
 	check("perspective answer does not award disappearance", not state.radio_progress.get("causes", []).has("disappearance"))
 	state.record_gravestone("baby_tomb")

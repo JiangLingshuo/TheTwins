@@ -4158,3 +4158,123 @@ Aurora 的其他通讯
 // source: "That is it. “A journey without end”: the blessing and this path say the same thing. Someone left and did not return, and the Nightfolk call that disappearance."
 就是这个。「一场没有尽头的旅程」：祝福和这条路说的是同一件事。有人离开，再没有回来，夜民把这叫做消失。
 -> DONE
+
+=== zh_836 ===
+// source: "A Crystal Shaped into a Memorial"
+被塑成纪念碑的晶石
+-> DONE
+
+=== zh_837 ===
+// source: "The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates."
+晶石纪念碑与悬灯中的晶石都有尖顶和多面轮廓。这种相似清晰可见，但仅凭形状还不能确定纪念碑纪念的是谁。
+-> DONE
+
+=== zh_838 ===
+// source: "Shape correspondence"
+形状对应
+-> DONE
+
+=== zh_839 ===
+// source: "Day City · general"
+昼城通用线索
+-> DONE
+
+=== zh_840 ===
+// source: "Night City · general"
+夜城通用线索
+-> DONE
+
+=== zh_841 ===
+// source: "The Sun, the Coin and the Monument"
+太阳、钱币与纪念碑
+-> DONE
+
+=== zh_842 ===
+// source: "The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun."
+昼城上空的太阳、从许愿池中发现的钱币尖缘，以及太阳形纪念碑，都有相似的放射状轮廓。纪念碑的形状既可以被看作太阳，也可以被看作钱币。
+-> DONE
+
+=== zh_843 ===
+// source: "Coin and Sun"
+钱币与太阳
+-> DONE
+
+=== zh_0844 ===
+// source: "Have a nice day ahead. I hope your investigation goes well."
+祝你今天一切顺利，也希望调查进展顺利。
+-> DONE
+
+=== zh_0845 ===
+// source: "The Twins can be windy at this time of year. Please take good care of yourself."
+这个季节双子城风很大，请好好照顾自己。
+-> DONE
+
+=== zh_0846 ===
+// source: "Thank you for the update. Be careful out there, and call whenever you like."
+谢谢你告诉我这些。外面请小心，想联系我随时都可以。
+-> DONE
+
+=== zh_0847 ===
+// source: "Don't forget to rest and drink some water. Talk to you soon."
+别忘了休息，也记得喝点水。回头再聊。
+-> DONE
+
+=== zh_0848 ===
+// source: "I hope the light stays kind to you today. Until next time."
+希望今天的光对你温柔一些。下次再见。
+-> DONE
+
+=== zh_0849 ===
+// source: "Please look after yourself, #PLAYER#. I'll be here whenever you need me."
+请照顾好自己，#PLAYER#。你需要我的时候，我都在。
+-> DONE
+
+=== zh_0850 ===
+// source: "Bye. Talk to you later."
+再见，回头聊。
+-> DONE
+
+=== zh_0851 ===
+// source: "I still have work. I have to drop."
+我还有事要忙，先挂了。
+-> DONE
+
+=== zh_0852 ===
+// source: "That's all for now. Later."
+先到这里，回头见。
+-> DONE
+
+=== zh_0853 ===
+// source: "Got it. Call me when you have more."
+知道了，有新的再联系我。
+-> DONE
+
+=== zh_0854 ===
+// source: "Mm. Bye."
+嗯，再见。
+-> DONE
+
+=== zh_0855 ===
+// source: "Watch your step down there."
+脚下小心。
+-> DONE
+
+=== zh_0856 ===
+// source: "Mind yourself. Don't wander off the path."
+照顾好自己，别走出小路。
+-> DONE
+
+=== zh_0857 ===
+// source: "This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?"
+这和日城的那块石碑很像。这是否说明，她们是文明陨落前的最后见证者？
+-> DONE
+
+=== zh_0858 ===
+// source: "The Same Child on Three Stones"
+三块碑上的同一个孩子
+-> DONE
+
+=== zh_0859 ===
+// source: "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named."
+祭坛上的孩子，又出现在小碑上那个人影的怀里，也出现在另一块碑上那个人影的背上。相机把这三处都标了出来。抱着他的是谁，还没有说法。
+-> DONE

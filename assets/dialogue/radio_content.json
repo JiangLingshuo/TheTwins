@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "5c0171d2b6162bc22cfee4c87725ff524ecc3aff5c1a2281e7df3fd9cbb03c26",
+  "source_sha256": "3c39ad1ee40d5cdb0795523bf63c7f95042bbd97c253b427c4eee6047baafb9c",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -69,7 +69,7 @@
       "id": "scholar:test_answer_scholar_8",
       "tomb": "scholar_tomb",
       "label": "Why is the monument shaped like a crystal?",
-      "condition": "(links ? Relation.crystal)",
+      "condition": "((links ? Relation.crystal) || (owned_evidence ? EvidenceId.crystal_marker_correspondence))",
       "target": "test_answer_scholar_8",
       "hidden": false,
       "candidates": [
@@ -433,11 +433,11 @@
       "id": "mother:test_answer_mother_8",
       "tomb": "mother_tomb",
       "label": "Who is the figure holding the child?",
-      "condition": "(links ? Relation.mother_child)",
+      "condition": "((links ? Relation.mother_child) || (owned_evidence ? EvidenceId.repeated_child_figures))",
       "target": "test_answer_mother_8",
       "hidden": false,
       "candidates": [
-        "night_mother_child_rubbing",
+        "repeated_child_figures",
         "altar_infant_rubbing",
         "family_photo"
       ]
@@ -550,11 +550,11 @@
       "id": "father:test_answer_father_8",
       "tomb": "father_tomb",
       "label": "Who is carrying the child?",
-      "condition": "(links ? Relation.father_child)",
+      "condition": "((links ? Relation.father_child) || (owned_evidence ? EvidenceId.repeated_child_figures))",
       "target": "test_answer_father_8",
       "hidden": false,
       "candidates": [
-        "night_father_child_rubbing",
+        "repeated_child_figures",
         "altar_infant_rubbing",
         "family_photo"
       ]
@@ -716,19 +716,6 @@
       ]
     },
     {
-      "id": "girl:test_answer_girl_16",
-      "tomb": "girl_tomb",
-      "label": "Do the family sculpture and the photograph belong together?",
-      "condition": "(links ? Relation.family)",
-      "target": "test_answer_girl_16",
-      "hidden": false,
-      "candidates": [
-        "family_statuette",
-        "shared_family_base",
-        "girl_figure_rubbing"
-      ]
-    },
-    {
       "id": "girl:test_answer_girl_20",
       "tomb": "girl_tomb",
       "label": "Does disappearance always mean death?",
@@ -837,6 +824,10 @@
         "op": "line",
         "speaker": "",
         "text": "(You wait for her to say she’ll speak to you again. The radio clicks. You put it away.)"
+      },
+      {
+        "op": "tag",
+        "value": "sfx:busy"
       },
       {
         "op": "line",
@@ -2050,64 +2041,6 @@
           {
             "op": "set",
             "code": "read_answers += AnswerId.girl_12_normal_13"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "goto",
-        "target": "test_radio_girl"
-      }
-    ],
-    "test_answer_girl_16": [
-      {
-        "op": "tag",
-        "value": "question_id:girl_16"
-      },
-      {
-        "op": "set",
-        "code": "temp supported = false"
-      },
-      {
-        "op": "if",
-        "condition": "has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family)",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.girl_16_supported_18"
-          },
-          {
-            "op": "set",
-            "code": "supported = true"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"linked\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "if",
-        "condition": "not supported",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.girl_16_normal_17"
           },
           {
             "op": "set",
@@ -3448,6 +3381,10 @@
         "text": "(The wind echoes through the city no one has returned to. It might be your imagination, but it feels colder now.)"
       },
       {
+        "op": "tag",
+        "value": "sfx:wind_strong"
+      },
+      {
         "op": "line",
         "speaker": "",
         "text": "(You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.)"
@@ -3943,7 +3880,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to that I felt the emptiness in that solitary silence."
+        "text": "For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to... that I felt the emptiness in that solitary silence."
       },
       {
         "op": "choices",
@@ -4175,6 +4112,10 @@
         "text": "(For a while, she says nothing. You hear only the buzzing sound mixing with the wind.)"
       },
       {
+        "op": "tag",
+        "value": "sfx:wind"
+      },
+      {
         "op": "line",
         "speaker": "",
         "text": "(The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.)"
@@ -4183,6 +4124,10 @@
         "op": "line",
         "speaker": "",
         "text": "(She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.)"
+      },
+      {
+        "op": "tag",
+        "value": "sfx:busy"
       },
       {
         "op": "line",
@@ -4895,6 +4840,59 @@
         "op": "goto",
         "target": "test_radio_scholar"
       }
+    ],
+    "test_walk": [
+      {
+        "op": "tag",
+        "value": "ui:notebook_cover"
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You close the investigation pages and plan your journey back. For a while, you look at the black-and-white cover."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "All this time, the girl has been standing quietly inside her frame."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "You carry the book with you as you walk. You witnessed the stones and the people they recorded, but you would never know how they truly lived."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "Nothing can be changed. But something can be remembered."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "That way feels longer than the way you came. You came with nothing, but now you are leaving with a civilization's weight."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "The path extends to a single stone. Cold and lonely. Like one standing beside the street for a delayed bus to come."
+      },
+      {
+        "op": "line",
+        "speaker": "",
+        "text": "It's a standing monument that belongs to neither the Day nor the Night."
+      },
+      {
+        "op": "set",
+        "code": "girl_revealed = true"
+      },
+      {
+        "op": "tag",
+        "value": "event:reveal_girl_marker"
+      },
+      {
+        "op": "goto",
+        "target": "test_desc_girl"
+      }
     ]
   },
   "groups": {
@@ -5047,9 +5045,10 @@
     },
     "day_city_coin": {
       "id": "day_city_coin",
-      "title": "A Coin from the Wishing Pool",
+      "title": "Sun shape records",
       "members": [
-        "day_city_coin"
+        "day_city_coin",
+        "sun_coin_correspondence"
       ],
       "signature": "tags:day_city_currency,sun_motif,sun_shape"
     },
@@ -5256,6 +5255,14 @@
       ],
       "signature": "id:crystal_god_crystal_correspondence"
     },
+    "repeated_child_figures": {
+      "id": "repeated_child_figures",
+      "title": "The Same Child on Three Stones",
+      "members": [
+        "repeated_child_figures"
+      ],
+      "signature": "tags:night_infant_reference,parent_child_image,repeated_child_motif"
+    },
     "natural_collapse_record": {
       "id": "natural_collapse_record",
       "title": "The Collapse That Sealed the Road",
@@ -5431,6 +5438,14 @@
         "scholar_no_traces"
       ],
       "signature": "tags:absence_of_readable_traces,last_survivor_question,scholar_no_visitors"
+    },
+    "crystal_marker_correspondence": {
+      "id": "crystal_marker_correspondence",
+      "title": "A Crystal Shaped into a Memorial",
+      "members": [
+        "crystal_marker_correspondence"
+      ],
+      "signature": "tags:crystal_shape_observation"
     }
   },
   "evidence_groups": {
@@ -5482,6 +5497,7 @@
     "night_father_path_rubbing": "night_father_path_rubbing",
     "night_father_god_rubbing": "crystal_god_rubbing",
     "crystal_god_crystal_correspondence": "crystal_god_crystal_correspondence",
+    "repeated_child_figures": "repeated_child_figures",
     "night_father_moon_stone": "altar_moon_stone",
     "natural_collapse_record": "natural_collapse_record",
     "skyway_history": "skyway_history",
@@ -5505,7 +5521,9 @@
     "notebook_cover": "notebook_cover",
     "four_person_family_finding": "four_person_family_finding",
     "girl_cover_correspondence": "girl_cover_correspondence",
-    "scholar_no_traces": "scholar_no_traces"
+    "scholar_no_traces": "scholar_no_traces",
+    "crystal_marker_correspondence": "crystal_marker_correspondence",
+    "sun_coin_correspondence": "day_city_coin"
   },
   "defaults": {
     "owned_evidence": [],

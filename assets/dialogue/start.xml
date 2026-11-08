@@ -17,7 +17,7 @@
   <line speaker="Aurora">We don’t have much transmission time left. I have to go. Talk to you later.</line>
   <line speaker="">(Now it’s just you, your handbook, and the faint breath of the planet.)</line>
   <line speaker="">(You feel a tremor in your limbs.)</line>
-  <line speaker="">(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)</line>
+  <line speaker="" sfx="wind">(You stand up. The faint breeze brushing past your ears feels much like the wind back home. Perhaps the people who once lived here weren’t so different from you, either.)</line>
   <line speaker="">(You’re here to gather their memories. Your steps grow steadier.)</line>
   <line speaker="">(Then you see it: the place where an entire civilization rests.)</line>
 </dialogue>

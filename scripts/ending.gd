@@ -2,7 +2,7 @@ extends Control
 
 const DAY := preload("res://assets/Art/day/BG_day.png")
 const NIGHT := preload("res://assets/Art/night/BG_night.png")
-const STONE := preload("res://assets/Art/tombstone/single/girl_day_single.png")
+const STONE := preload("res://assets/Art/tombstone/girl_day_scene.png")
 const COVER := preload("res://assets/Art/note/notebook_cover.png")
 const CHOICE_ART := preload("res://assets/Art/dialog/dialog box.png")
 const RADIO_STATIC := preload("res://shaders/radio_static.gdshader")
@@ -30,11 +30,8 @@ func _ready() -> void:
 	_stone.tooltip_text = "Inspect the solitary marker"
 	_stone.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	add_child(_stone)
-	_stone.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_stone.offset_left = -128
-	_stone.offset_right = 128
-	_stone.offset_top = -150
-	_stone.offset_bottom = 145
+	# Use the same full-scene art layer and placement as the solitary investigation.
+	_stone.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_stone.hide()
 
 	_dialogue = DIALOGUE.instantiate()
@@ -48,7 +45,9 @@ func _ready() -> void:
 	_choices.add_child(_options)
 	_choices.hide()
 
-	if GameState.ending_true:
+	if GameState.solitary_report_preview:
+		_discover_marker.call_deferred()
+	elif GameState.ending_true:
 		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
 			_stone.show()
 			_stone.disabled = true
@@ -70,8 +69,13 @@ func _background(texture: Texture2D) -> TextureRect:
 
 func _discover_marker() -> void:
 	var cover := TextureRect.new()
-	cover.texture = COVER
 	cover.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	var art := AtlasTexture.new()
+	art.atlas = COVER
+	var image := COVER.get_image()
+	if image.is_compressed(): image.decompress()
+	art.region = Rect2(image.get_used_rect())
+	cover.texture = art
 	cover.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	cover.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(cover)
@@ -85,21 +89,57 @@ func _discover_marker() -> void:
 		{"speaker": "", "content": "(The report is on its way. You close the notebook and look at the figure on its cover.)"},
 		{"speaker": "", "content": "(You take the path back through the cemetery. Just off it, a stone stands alone. There is something familiar about the way the figure is framed.)"}
 	]
-	_dialogue.play(intro)
-	await _dialogue.finished
+	if GameState.solitary_report_preview:
+		intro.assign(_model.begin_report_walk().get("lines", []))
+	var reveal_at := -1
+	if GameState.solitary_report_preview:
+		for i in intro.size():
+			if str(intro[i].get("content", "")).to_lower().contains("extends to a single"):
+				reveal_at = i
+				break
+	if reveal_at > 0:
+		# Finish the reflection on the book, then reveal the marker before its line.
+		var before: Array[Dictionary] = []
+		before.assign(intro.slice(0, reveal_at))
+		_dialogue.play(before)
+		await _dialogue.finished
+		await _reveal_marker_scene(cover)
+		var after: Array[Dictionary] = []
+		after.assign(intro.slice(reveal_at))
+		_dialogue.play(after)
+		await _dialogue.finished
+	else:
+		_dialogue.play(intro)
+		await _dialogue.finished
+		await _reveal_marker_scene(cover)
 	cover.queue_free()
-	_stone.show()
-	_stone.modulate.a = 0
-	await create_tween().tween_property(_stone, "modulate:a", 1.0, 0.6).finished
+	_stone.disabled = false
 	_stone.grab_focus()
 	await _stone.pressed
 	_stone.disabled = true
+	if GameState.solitary_report_preview:
+		# The real route finds the marker for good before investigating it.
+		if not GameState.ending_preview:
+			GameState.record_gravestone("girl_tomb")
+		GameState.open_solitary_investigation(false, not GameState.ending_preview)
+		return
 	if not GameState.ending_preview:
 		GameState.record_gravestone("girl_tomb")
 	var discovery: Array[Dictionary] = [{"speaker": "", "content": "(The figure on the cover. You turn the notebook over in your hands. Aurora gave it to you before you ever set foot here.)"}]
 	_dialogue.play(discovery)
 	await _dialogue.finished
 	_play_result(_model.begin_ending(true, GameState.ending_preview))
+
+func _reveal_marker_scene(cover: Control) -> void:
+	_stone.disabled = true
+	_stone.modulate.a = 0.0
+	_stone.show()
+	var transition := create_tween().set_parallel(true)
+	transition.tween_property(cover, "modulate:a", 0.0, 0.45).set_trans(Tween.TRANS_SINE)
+	transition.tween_property(cover, "position:y", cover.position.y + 28.0, 0.45).set_trans(Tween.TRANS_SINE)
+	transition.tween_property(_stone, "modulate:a", 1.0, 0.85).set_delay(0.2).set_trans(Tween.TRANS_SINE)
+	await transition.finished
+	cover.hide()
 
 func _play_result(result: Dictionary) -> void:
 	_choices.hide()
@@ -171,6 +211,7 @@ func _add_choice(text: String, action: Callable) -> void:
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.custom_minimum_size = Vector2(minf(680.0, get_viewport_rect().size.x * 0.76), 70)
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override("font", GameState.playtest_font(preload("res://assets/fonts/IMFellEnglish-Regular.ttf")))
 	button.add_theme_font_size_override("font_size", 23)
 	var panel := StyleBoxEmpty.new()
 	panel.set_content_margin_all(13.0)

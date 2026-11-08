@@ -1,0 +1,5 @@
+风声.mp3 — "Wind in Tall Grass" by Joseph Sardin (BigSoundBank)
+Source: https://bigsoundbank.com/detail-0908-wind-in-tall-grass.html
+License: CC0 (public domain), free for commercial use, no attribution required.
+Original: 1:26 field recording of wind moving through tall grass.
+In the game only the first ~14 seconds are used, faded out (see scripts/dialogue_box.gd, CUES["wind"]).

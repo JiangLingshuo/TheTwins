@@ -13,6 +13,8 @@ extends TextureRect
 ## Only drops on visible pixels count (otherwise the whole rect counts).
 @export var hit_by_alpha: bool = false
 @export_range(0.0, 1.0, 0.05) var hit_alpha: float = 0.5
+## Local-pixel tolerance around narrow painted target lines.
+@export var hit_padding: float = 0.0
 
 var _image: Image
 
@@ -47,4 +49,12 @@ func contains_point(global_point: Vector2) -> bool:
 		return true
 	var pixel := Vector2i(local / size * Vector2(_image.get_size()))
 	pixel = pixel.clamp(Vector2i.ZERO, _image.get_size() - Vector2i.ONE)
-	return _image.get_pixelv(pixel).a >= hit_alpha
+	if _image.get_pixelv(pixel).a >= hit_alpha: return true
+	var radius := int(ceil(hit_padding * _image.get_width() / maxf(1.0, size.x)))
+	for y in range(-radius, radius + 1):
+		for x in range(-radius, radius + 1):
+			if x * x + y * y > radius * radius: continue
+			var nearby := pixel + Vector2i(x, y)
+			if nearby.x < 0 or nearby.y < 0 or nearby.x >= _image.get_width() or nearby.y >= _image.get_height(): continue
+			if _image.get_pixelv(nearby).a >= hit_alpha: return true
+	return false

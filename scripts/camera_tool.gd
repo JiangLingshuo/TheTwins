@@ -18,7 +18,7 @@ var _running := false
 var _completing := false
 var _capturing := false
 var _elapsed := 0.0
-const GROUPS := {"base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}}
+const GROUPS := {"sun_coin": {"ids": ["shape_sky_sun", "shape_sun_marker", "shape_pool_coin"], "evidence": "sun_coin_correspondence", "label": "Shape correspondence"}, "crystal": {"ids": ["crystal_marker", "crystal_lamp"], "evidence": "crystal_marker_correspondence", "label": "Shape correspondence"}, "base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}, "child": {"ids": ["child_altar", "child_mother", "child_father"], "evidence": "repeated_child_figures", "label": "Local repetition"}}
 
 func _ready() -> void:
 	z_index = 110
@@ -110,6 +110,8 @@ func play_tutorial() -> void:
 	_dialogue.play_file("res://assets/dialogue/tutorial_camera_intro.xml")
 	await _dialogue.finished
 	await take_photo(true)
+	# The photograph is taken: the second stage of the investigation begins.
+	Music.enter_stage_two()
 	_dialogue.play_file("res://assets/dialogue/tutorial_camera_connections.xml")
 	await _dialogue.finished
 	_caption.text = "Click the three blue-lit base segments · 0 / 3"
@@ -135,8 +137,6 @@ func take_photo(guided: bool = false) -> void:
 	var hidden: Array[CanvasItem] = []
 	for item in [get_parent().get_node("Toolbox"), get_parent().get_node("NotebookTool"), get_parent().get_node("RadioTool"), get_parent().get_node("Toast")]:
 		if item.visible: hidden.append(item); item.hide()
-	for target in get_tree().get_nodes_in_group("flashlight_targets"):
-		if is_instance_valid(target.marker) and target.marker.visible: hidden.append(target.marker); target.marker.hide()
 	var picture: Image
 	if DisplayServer.get_name() == "headless":
 		picture = Image.create(1280, 720, false, Image.FORMAT_RGBA8)
@@ -170,6 +170,18 @@ func _build_spots() -> void:
 		if is_instance_valid(spot["button"]): spot["button"].queue_free()
 	_spots.clear()
 	var specs: Array = [["base_scholar", "base", Rect2(440, 735, 285, 60)], ["base_infant", "base", Rect2(725, 735, 290, 60)], ["base_sun", "base", Rect2(1015, 735, 270, 60)], ["beast_a", "beast", Rect2(550, 680, 85, 70)], ["beast_b", "beast", Rect2(1100, 680, 85, 70)], ["beast_c", "beast", Rect2(1420, 550, 85, 70)]] if _photo_day else [["blessing_altar", "blessing", Rect2(895, 372, 76, 66)], ["blessing_mother", "blessing", Rect2(563, 713, 40, 40)], ["blessing_father", "blessing", Rect2(1172, 735, 50, 50)]]
+	if not _photo_day:
+		# The child on the altar, in the mother's arms and on the father's back.
+		specs.append(["child_altar", "child", Rect2(860, 515, 150, 185)])
+		specs.append(["child_mother", "child", Rect2(566, 598, 95, 88)])
+		specs.append(["child_father", "child", Rect2(1188, 551, 92, 78)])
+	if _photo_day:
+		specs.append(["crystal_marker", "crystal", Rect2(470, 370, 260, 280)])
+		specs.append(["crystal_lamp", "crystal", Rect2(128, 300, 144, 351)])
+		specs.append(["shape_sky_sun", "sun_coin", Rect2(1423, 78, 144, 161)])
+		specs.append(["shape_sun_marker", "sun_coin", Rect2(975, 360, 365, 300)])
+		if GameState.evidence_ids.has("day_city_coin"):
+			specs.append(["shape_pool_coin", "sun_coin", Rect2(1580, 487, 70, 67)])
 	var cemetery: Control = get_parent().get_node("DayCemetery" if _photo_day else "NightCemetery")
 	var image_rect := _image_rect()
 	var screen_size := get_viewport_rect().size

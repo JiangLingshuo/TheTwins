@@ -39,6 +39,30 @@
       "title": "The Crystal God Is the Crystal",
       "object_texture": "res://assets/Art/night/spar_crop.png",
       "text": ""
+    },
+    {
+      "rubbing": "night_father_path_rubbing",
+      "target": "skyway_reference",
+      "clue": "skyway_reference",
+      "title": "The Path to the Surface",
+      "object_texture": "res://assets/Art/night/ladder.png",
+      "text": ""
+    },
+    {
+      "rubbing": "infant_figure_rubbing",
+      "target": "altar_infant_reference",
+      "clue": "infant_memorial_correspondence",
+      "title": "Two Memorials to an Infant",
+      "object_texture": "res://assets/Art/tombstone/alter_scene.png",
+      "text": ""
+    },
+    {
+      "rubbing": "night_mother_river_rubbing",
+      "target": "dry_underground_river",
+      "clue": "dry_underground_river",
+      "title": "The Underground Riverbed",
+      "object_texture": "res://assets/Art/night/river.png",
+      "text": ""
     }
   ]
 }

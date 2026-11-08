@@ -1,5 +1,5 @@
 extends "res://scripts/decipher_target.gd"
-## Text layout proxy. Acquisition still requires the lamp, the correct year and a stable aim.
+## A historical trace found with the lamp, the correct year and a stable aim.
 ## Historical objects persist after discovery so notebook drag/drop can reach them.
 @export var evidence_id := ""
 @export var years_ago := 50.0
@@ -8,64 +8,46 @@ extends "res://scripts/decipher_target.gd"
 @export var required_grave := ""
 @export var date_status := ""
 @export var extra_aim_rect := Rect2()
+## Once found, hovering shows a magnifier that zooms the view in on it, the
+## same camera move as for a tombstone (SceneZoom; its zoom-out magnifier
+## brings the scene back).
+@export var inspectable := false
+## Height on screen when zoomed in, as a share of the screen height. Small
+## finds stay small (about 20%); each one sets its own ("zoom_height" in
+## searchlight_placeholders.json), roughly by its size.
+@export_range(0.05, 1.0, 0.01) var zoom_height_ratio: float = 0.2
+## Small objects need a closer camera than a tombstone.
+@export var zoom_max_zoom: float = 12.0
+## True while the view is zoomed in on this object (set by SceneZoom).
+var zoomed := false
 var discovered := false
 var exposure := 0.0
 var _sample := -1
-var label: Label
-var marker: PanelContainer
+var _inspect_button: Button
+var _last_hover_msec := -100000
+var _hovered := false
 
 func _ready() -> void:
 	super._ready()
 	add_to_group("flashlight_targets")
-	marker = PanelContainer.new()
-	marker.name = name + "Placeholder"
-	marker.position = position
-	marker.size = Vector2(310, 110)
-	marker.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var frame := StyleBoxFlat.new()
-	frame.bg_color = Color(0.04, 0.09, 0.12, 0.84)
-	frame.border_color = Color(0.65, 0.76, 0.73, 0.8)
-	frame.set_border_width_all(1)
-	frame.set_content_margin_all(8)
-	marker.add_theme_stylebox_override("panel", frame)
-	get_parent().add_child.call_deferred(marker)
-	# The cards are a development overlay (F2).
-	marker.visible = GameState.debug_overlay
-	GameState.debug_overlay_changed.connect(func(shown: bool) -> void: marker.visible = shown)
-	label = Label.new()
-	label.custom_minimum_size.x = 294
-	label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	label.add_theme_font_size_override("font_size", 24)
-	label.add_theme_color_override("font_color", Color(0.96, 0.94, 0.83))
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	marker.add_child(label)
 	discovered = GameState.evidence_ids.has(evidence_id)
 	visible = discovered
 	modulate.a = 0.8
-	_update_label()
+	if inspectable:
+		_inspect_button = _magnifier_button(44)
+		_inspect_button.tooltip_text = "Look closer"
+		_inspect_button.pressed.connect(func() -> void: get_tree().call_group("scene_zoom", "zoom_to", self))
+		_inspect_button.visible = false
+		add_child(_inspect_button)
 
 func _unlocked() -> bool:
 	return required_grave.is_empty() or required_grave in GameState.gravestones
 
-func _update_label() -> void:
-	if not is_instance_valid(label): return
-	var date := GameState.zh_text("%d · %d years ago") % [int(2050 - years_ago), int(years_ago)]
-	if not scan_years.is_empty():
-		date = GameState.zh_text("2005–2050 · scan 45 and 0 years ago")
-	if date_status == "provisional_ancient_date": date += " · " + GameState.zh_text("provisional")
-	var status := "Recorded" if discovered else "Searchlight placeholder"
-	if not _unlocked(): status = "Locked: record the girl's marker first"
-	elif not scan_years.is_empty() and not discovered:
-		var checked: Array = GameState.searchlight_scan_progress.get(evidence_id, [])
-		status = GameState.zh_text("Scan endpoints: %d/%d") % [checked.size(), scan_years.size()]
-	label.text = GameState.zh_text(caption) + "\n" + date + "\n" + GameState.zh_text(status)
-
 func apply_flashlight(lamp: Flashlight) -> void:
-	_update_label()
 	if discovered: return
 	var point := lamp._locked_global_point if lamp.beam_locked else get_global_mouse_position()
 	var illuminated: bool = lamp.active and get_parent().is_visible_in_tree() and _unlocked()
-	# Use the text card's area as the aim target so adjacent same-year cards do not auto-collect.
+	# Aim at the trace's scene rectangle so adjacent same-year traces do not auto-collect.
 	var local_point: Vector2 = get_parent().get_global_transform().affine_inverse() * point
 	illuminated = illuminated and (get_global_rect().grow(16).has_point(point) or (extra_aim_rect.has_area() and extra_aim_rect.has_point(local_point)))
 	var sample := -1
@@ -90,15 +72,14 @@ func apply_flashlight(lamp: Flashlight) -> void:
 		if not checked.has(sample):
 			checked.append(sample)
 			GameState.searchlight_scan_progress[evidence_id] = checked
+			GameState.write_autosave()
 			_toast(GameState.zh_text("Scan endpoint checked: %d") % int(2050 - scan_years[sample]))
 		if checked.size() < scan_years.size():
-			_update_label()
 			return
 	discovered = true
 	modulate.a = 1.0
 	if GameState.record_evidence(evidence_id):
 		GameState.write_autosave()
-	_update_label()
 	_toast(GameState.zh_text("Recorded: %s") % GameState.zh_text(caption))
 
 func _toast(message: String) -> void:
@@ -107,3 +88,66 @@ func _toast(message: String) -> void:
 
 func contains_point(point: Vector2) -> bool:
 	return discovered and scan_years.is_empty() and super.contains_point(point)
+
+
+func _input(event: InputEvent) -> void:
+	if _inspect_button and event is InputEventMouseMotion:
+		var hovered := get_viewport().gui_get_hovered_control()
+		var over_button := _inspect_button.visible and _inspect_button.get_global_rect().has_point(event.position)
+		var over_me := get_global_rect().has_point(event.position) and (hovered == null or hovered == _inspect_button)
+		_hovered = discovered and is_visible_in_tree() and (over_me or over_button)
+		if _hovered:
+			_last_hover_msec = Time.get_ticks_msec()
+
+
+func _process(_delta: float) -> void:
+	if _inspect_button == null:
+		return
+	var lingering := _hovered or Time.get_ticks_msec() - _last_hover_msec < 400
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	var scene_zoomed: bool = scene_zoom != null and scene_zoom.is_zoomed()
+	_inspect_button.visible = discovered and is_visible_in_tree() and lingering and not scene_zoomed
+	if _inspect_button.visible:
+		var rect := get_global_rect()
+		var screen := get_viewport_rect().size
+		# To the left of the find (a stone's own magnifier sits to the right of its head,
+		# so a find drawn on a stone no longer collides with it); right side if no room.
+		var at := Vector2(rect.position.x - _inspect_button.size.x - 6.0, rect.position.y - 6.0)
+		if at.x < 8.0:
+			at.x = rect.end.x + 6.0
+		at.x = clampf(at.x, 8.0, screen.x - _inspect_button.size.x - 8.0)
+		at.y = clampf(at.y, 8.0, screen.y - _inspect_button.size.y - 8.0)
+		_inspect_button.global_position = at
+
+
+## What SceneZoom frames: the drawing's rect on screen.
+func get_stone_global_rect() -> Rect2:
+	return get_global_rect()
+
+
+## A round + magnifier like the tombstones', but in cool teal: a tombstone's magnifier
+## is gold, so a stone's button and a find's button are never mistaken for each other.
+func _magnifier_button(diameter: int) -> Button:
+	var button := Button.new()
+	button.top_level = true  # beside the trace, screen-sized whatever the zoom
+	button.size = Vector2(diameter, diameter)
+	button.custom_minimum_size = button.size
+	button.focus_mode = Control.FOCUS_NONE
+	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	for state in ["normal", "hover", "pressed"]:
+		var style := StyleBoxFlat.new()
+		style.bg_color = Color(0.06, 0.1, 0.12, 0.9 if state == "normal" else 0.97)
+		style.border_color = Color(0.72, 0.96, 1.0) if state == "hover" else Color(0.42, 0.78, 0.86)
+		style.set_border_width_all(2)
+		style.set_corner_radius_all(diameter / 2)
+		button.add_theme_stylebox_override(state, style)
+	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	var k := diameter / 44.0
+	button.draw.connect(func() -> void:
+		var ink := Color(0.84, 0.97, 1.0)
+		var lens := Vector2(19, 19) * k
+		button.draw_arc(lens, 9.5 * k, 0, TAU, 32, ink, 2.5 * k, true)
+		button.draw_line(lens + Vector2(7, 7) * k, Vector2(33, 33) * k, ink, 4.0 * k, true)
+		button.draw_line(lens - Vector2(4.5 * k, 0), lens + Vector2(4.5 * k, 0), ink, 2.0 * k, true)
+		button.draw_line(lens - Vector2(0, 4.5 * k), lens + Vector2(0, 4.5 * k), ink, 2.0 * k, true))
+	return button

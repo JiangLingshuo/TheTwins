@@ -135,7 +135,7 @@ texture = SubResource("AtlasTexture_sun")
 expand_mode = 1
 script = ExtResource("14_target")
 target_id = "sky_sun"
-meaning = "sky_sun"
+meaning = "Sun"
 
 [node name="NightCemetery" type="Control" parent="."]
 visible = false
@@ -152,6 +152,11 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("25_ladder")
+script = ExtResource("14_target")
+target_id = "skyway_reference"
+meaning = "The Skyway / path to the surface"
+hit_by_alpha = true
+hit_padding = 12.0
 
 [node name="River" type="TextureRect" parent="NightCemetery"]
 layout_mode = 0
@@ -159,6 +164,11 @@ offset_right = 1920.0
 offset_bottom = 1080.0
 mouse_filter = 2
 texture = ExtResource("26_river")
+script = ExtResource("14_target")
+target_id = "dry_underground_river"
+meaning = "A river that has run dry"
+hit_by_alpha = true
+hit_padding = 12.0
 
 [node name="Road" type="TextureRect" parent="NightCemetery"]
 layout_mode = 0

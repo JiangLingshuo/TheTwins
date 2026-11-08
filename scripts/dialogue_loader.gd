@@ -5,6 +5,8 @@ extends RefCounted
 ## Expected format:
 ##   <dialogue>
 ##       <line speaker="Name">What they say.</line>
+##   A line may carry a sound cue: sfx="wind" plays as the line starts,
+##   sfx_after="busy" plays when the player moves past it (see dialogue_box.gd).
 ##   </dialogue>
 
 
@@ -19,6 +21,7 @@ static func load_xml(path: String) -> Array[Dictionary]:
 	var in_line := false
 	var speaker := ""
 	var content := ""
+	var cues := {}
 
 	while parser.read() == OK:
 		match parser.get_node_type():
@@ -27,8 +30,12 @@ static func load_xml(path: String) -> Array[Dictionary]:
 				if tag == "line":
 					speaker = parser.get_named_attribute_value_safe("speaker")
 					content = ""
+					cues = {}
+					for cue in ["sfx", "sfx_after"]:
+						if parser.has_attribute(cue):
+							cues[cue] = parser.get_named_attribute_value(cue)
 					if parser.is_empty():
-						lines.append(_make_line(speaker, content))
+						lines.append(_make_line(speaker, content, cues))
 					else:
 						in_line = true
 				elif tag == "br" and in_line:
@@ -38,22 +45,24 @@ static func load_xml(path: String) -> Array[Dictionary]:
 					content += _collapse_whitespace(parser.get_node_data())
 			XMLParser.NODE_ELEMENT_END:
 				if parser.get_node_name() == "line" and in_line:
-					lines.append(_make_line(speaker, content))
+					lines.append(_make_line(speaker, content, cues))
 					in_line = false
 
 	return lines
 
 
-static func _make_line(speaker: String, content: String) -> Dictionary:
+static func _make_line(speaker: String, content: String, cues: Dictionary = {}) -> Dictionary:
 	var cleaned := content.xml_unescape()
 	# Trim spaces around manual line breaks and at both ends.
 	var parts := cleaned.split("\n")
 	for i in parts.size():
 		parts[i] = parts[i].strip_edges()
-	return {
+	var line := {
 		"speaker": speaker.xml_unescape().strip_edges(),
 		"content": "\n".join(parts).strip_edges(),
 	}
+	line.merge(cues)
+	return line
 
 
 static func _collapse_whitespace(text: String) -> String:

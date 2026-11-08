@@ -68,8 +68,8 @@ for tomb in ['baby','scholar','sun','altar','mother','father','girl']:
         condition=m[1] or 'true'
         questions.append({'id':tomb+':'+target,'tomb':tomb+'_tomb','label':m[2],'condition':condition,'target':target,'hidden': 'has_tag(' in condition or 'submitted_id' in condition or target=='test_answer_altar_24'})
         needed.add(target)
-stop_prefixes=('END','test_radio_','test_hub','test_end_call','return_night_glyph','test_disappearance_return')
-needed.update(['test_confrontation','ending_false'])
+stop_prefixes=('END','test_radio_','test_hub','test_end_call','return_night_glyph','test_disappearance_return','test_desc_girl')
+needed.update(['test_confrontation','ending_false','test_walk'])
 programs={}
 while needed:
     name=needed.pop()

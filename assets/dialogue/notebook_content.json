@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "391fd23b78f709ea3c67b36548cfc849e0107eb6cff8ab467f9f0c119a24516e",
+    "evidence_master.ink": "c4a0b23f29e60d91c11406b2b8f9f610c960d87dc538d1554edb73b0c99768e8",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
-    "telecomm_master.ink": "b83814f2ac8452fa3d82b67dd20bda36b6eb0f188431cf2878338eeacc384c01"
+    "telecomm_master.ink": "895402f2cdb7990e1c78eac244345f749adc836bd047a8981380be0e5cb7b55e"
   },
   "gravestones": {
     "baby_tomb": {
@@ -386,7 +386,9 @@
     },
     "shared_family_base": {
       "gravestones": [
-        "baby_tomb"
+        "baby_tomb",
+        "scholar_tomb",
+        "sun_tomb"
       ],
       "id": "shared_family_base",
       "title": "One Base, Three Tombs",
@@ -1613,6 +1615,15 @@
         "tool": [
           "searchlight"
         ],
+        "discovery_reflection": [
+          "This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?"
+        ],
+        "searchlight_scan_years_ago": [
+          "0",
+          "45",
+          "50",
+          "60"
+        ],
         "searchlight_scan_start_year": [
           "2005"
         ],
@@ -1803,6 +1814,41 @@
         ]
       },
       "source_knot": "ev_crystal_god_crystal_correspondence"
+    },
+    "repeated_child_figures": {
+      "gravestones": [],
+      "id": "repeated_child_figures",
+      "title": "The Same Child on Three Stones",
+      "body": "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.",
+      "interactive_body": "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "repeated_child_figures"
+        ],
+        "title": [
+          "The Same Child on Three Stones"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "night_infant_reference",
+          "parent_child_image",
+          "repeated_child_motif"
+        ]
+      },
+      "source_knot": "ev_repeated_child_figures"
     },
     "night_father_moon_stone": {
       "gravestones": [
@@ -2669,6 +2715,15 @@
         "id": [
           "scholar_no_traces"
         ],
+        "discovery_reflection": [
+          "No one has visited the Scholar’s grave, despite her fame and reputation. It is not only what remains that leaves a trace; absence, too, tells a history. I should look into this again in Night City."
+        ],
+        "searchlight_scan_years_ago": [
+          "0",
+          "45",
+          "50",
+          "60"
+        ],
         "title": [
           "No Later Visitors at the Crystal Monument"
         ],
@@ -2733,6 +2788,78 @@
         ]
       },
       "source_knot": "ev_sky_sun_rubbing"
+    },
+    "crystal_marker_correspondence": {
+      "gravestones": [
+        "scholar_tomb"
+      ],
+      "id": "crystal_marker_correspondence",
+      "title": "A Crystal Shaped into a Memorial",
+      "body": "The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.",
+      "interactive_body": "The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.",
+      "category": "observation",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "crystal_marker_correspondence"
+        ],
+        "title": [
+          "A Crystal Shaped into a Memorial"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "crystal_shape_observation"
+        ]
+      },
+      "source_knot": "ev_crystal_marker_correspondence"
+    },
+    "sun_coin_correspondence": {
+      "gravestones": [
+        "sun_tomb"
+      ],
+      "id": "sun_coin_correspondence",
+      "title": "The Sun, the Coin and the Monument",
+      "body": "The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.",
+      "interactive_body": "The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.",
+      "category": "observation",
+      "gravestone": "girl_tomb",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "sun_coin_correspondence"
+        ],
+        "title": [
+          "The Sun, the Coin and the Monument"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "day_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "sun_shape",
+          "day_city_currency",
+          "sun_motif"
+        ]
+      },
+      "source_knot": "ev_sun_coin_correspondence"
     }
   },
   "radio_answers": {
@@ -3622,26 +3749,6 @@
         {
           "speaker": "Aurora",
           "content": "A human shape can stand for many lives. Her work may have left a clearer signature in the diary."
-        }
-      ]
-    },
-    "girl_16_supported_18": {
-      "id": "girl_16_supported_18",
-      "source_knot": "test_answer_girl_16",
-      "lines": [
-        {
-          "speaker": "Aurora",
-          "content": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
-        }
-      ]
-    },
-    "girl_16_normal_17": {
-      "id": "girl_16_normal_17",
-      "source_knot": "test_answer_girl_16",
-      "lines": [
-        {
-          "speaker": "Aurora",
-          "content": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
         }
       ]
     },

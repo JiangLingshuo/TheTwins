@@ -2,6 +2,31 @@ extends Control
 ## Temporary radio UI for the tutorial branch. Styling can be replaced independently.
 const FONT := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 var model = preload("res://scripts/radio_model.gd").new()
+const HANGUP_SOUND := preload("res://assets/audio/无线电挂断.wav")
+## Aurora's goodbyes when the player ends a call. Daylight Aurora is warm and
+## polite; Night Aurora is brief, and only rarely shows any concern.
+const FAREWELLS_DAY: Array[String] = [
+	"Have a nice day ahead. I hope your investigation goes well.",
+	"The Twins can be windy at this time of year. Please take good care of yourself.",
+	"Thank you for the update. Be careful out there, and call whenever you like.",
+	"Don't forget to rest and drink some water. Talk to you soon.",
+	"I hope the light stays kind to you today. Until next time.",
+	"Please look after yourself, #PLAYER#. I'll be here whenever you need me.",
+]
+const FAREWELLS_NIGHT: Array[String] = [
+	"Bye. Talk to you later.",
+	"I still have work. I have to drop.",
+	"That's all for now. Later.",
+	"Got it. Call me when you have more.",
+	"Mm. Bye.",
+]
+const FAREWELLS_NIGHT_CARE: Array[String] = [
+	"Watch your step down there.",
+	"Mind yourself. Don't wander off the path.",
+]
+## Share of Night farewells that show concern.
+const NIGHT_CARE_CHANCE := 0.15
+var _hangup: AudioStreamPlayer
 var _button: TextureButton
 var _overlay: Control
 var _menu_host: VBoxContainer
@@ -13,6 +38,7 @@ var _candidate_order: Array[int] = [0, 1, 2]
 var _slot := ""
 var _filter := 0
 var _direct_only := false
+var _question_states: Dictionary = {}
 var _last_lines: Array = []
 var _followups: Array = []
 var _status := ""
@@ -24,6 +50,7 @@ var _tutorial_hint: Label
 var tutorial_controls: Dictionary = {}
 var _reply_box: Control
 var _reply_playing := false
+var _tutorial_paused := false
 var _heard_reply := false
 var _previous_layout: VBoxContainer
 ## Radio history context of the last question sent; follow-ups chosen from its
@@ -54,12 +81,17 @@ func _ready() -> void:
 	_fit_selection_panel()
 	_menu_host = _overlay.get_node("Panel/Margin/VBox")
 	GameState.notebook_changed.connect(_queue_render)
+	GameState.story_mode_changed.connect(func(_enabled: bool) -> void: _queue_render())
 	resized.connect(_reposition_button)
 	_reply_box = preload("res://scenes/dialogue_box.tscn").instantiate()
 	_reply_box.name = "RadioDialogueBox"
 	_reply_box.z_index = 10
 	add_child(_reply_box)
 	_reply_box.term_selected.connect(_collect_term)
+	_hangup = AudioStreamPlayer.new()
+	_hangup.stream = HANGUP_SOUND
+	_hangup.volume_db = 6.0
+	add_child(_hangup)
 
 func _exit_tree() -> void:
 	GameState.radio_modal_open = false
@@ -73,12 +105,12 @@ func _process(_delta: float) -> void:
 	_button.tooltip_text = "Contact Aurora" if _can_open() else "Read the manuscripts, then use the searchlight to inspect the marker 50 years ago."
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if is_open() and not _reply_playing and event.is_action_pressed("ui_cancel"):
+	if is_open() and not _reply_playing and not _tutorial_paused and event.is_action_pressed("ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
 
 func is_open() -> bool:
-	return _overlay != null and (_overlay.visible or _reply_playing)
+	return _overlay != null and (_overlay.visible or _reply_playing or _tutorial_paused)
 
 func open() -> void:
 	if is_open() or not _can_open():
@@ -94,19 +126,58 @@ func open() -> void:
 	_status = ""
 	_render()
 
-func close() -> void:
+## The player ends the call: Aurora says a short goodbye, then the line drops.
+func _end_call() -> void:
 	if _reply_playing: return
-	if _heard_reply:
+	_feedback = ""
+	await _play_reply([{"speaker": "Aurora", "content": GameState.zh_text(_farewell())}], "")
+	close()
+
+## A random goodbye, in the voice of whichever Aurora the player is talking to.
+func _farewell() -> String:
+	if GameState.current_city_day:
+		return FAREWELLS_DAY.pick_random()
+	if randf() < NIGHT_CARE_CHANCE:
+		return FAREWELLS_NIGHT_CARE.pick_random()
+	return FAREWELLS_NIGHT.pick_random()
+
+func close(play_hangup: bool = true) -> void:
+	if _reply_playing: return
+	_tutorial_paused = false
+	if GameState.radio_modal_open and play_hangup:
+		_hangup.play()
+	# Every call is a checkpoint, even one that taught nothing new.
+	if GameState.radio_modal_open:
 		GameState.write_autosave()
-		_heard_reply = false
+	_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
 	_question = {}
 	_followups = []
 	_slot = ""
 
+## A tutorial aside is part of this call, not a hang-up or a new session.
+func pause_for_tutorial() -> void:
+	if _reply_playing: return
+	_tutorial_paused = true
+	_overlay.hide()
+
+func resume_after_tutorial() -> void:
+	_tutorial_paused = false
+	_question = {}
+	_slot = ""
+	_followups = []
+	_filter = 0
+	_direct_only = false
+	_status = ""
+	_feedback = ""
+	GameState.radio_modal_open = true
+	_overlay.show_menu()
+	if _tomb.is_empty(): _start_call("baby_tomb")
+	_render()
+
 func _queue_render() -> void:
-	if not is_open() or _reply_playing or _render_pending:
+	if not is_open() or _reply_playing or _tutorial_paused or _render_pending:
 		return
 	_render_pending = true
 	_render.call_deferred()
@@ -163,6 +234,20 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if disabled: title.modulate.a = 0.45
+	# A line wider than the button shrinks the text to fit instead of being cut off.
+	if title.autowrap_mode == TextServer.AUTOWRAP_OFF:
+		var fit := func() -> void:
+			var available := button.size.x - 20.0
+			var widest := 0.0
+			for line in wrapped.split("
+"):
+				widest = maxf(widest, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x)
+			var font_size := 20
+			if widest > available and available > 0.0:
+				font_size = clampi(floori(20.0 * available / widest), 12, 20)
+			title.add_theme_font_size_override("font_size", font_size)
+		button.resized.connect(fit)
+		fit.call_deferred()
 	button.pressed.connect(callback)
 	return button
 
@@ -181,7 +266,8 @@ func _scroll_stack(parent: Control, minimum_height: float) -> VBoxContainer:
 
 func _render() -> void:
 	_render_pending = false
-	if not is_open() or _reply_playing: return
+	if not is_open() or _reply_playing or _tutorial_paused: return
+	_update_question_activity()
 	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
 	_previous_layout = _layout
 	tutorial_controls.clear()
@@ -195,7 +281,7 @@ func _render() -> void:
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	header.add_child(title)
 	if not _tomb.is_empty(): header.add_child(_action("Change stone", _change_tomb))
-	header.add_child(_action("End call", close))
+	header.add_child(_action("End call", _end_call))
 	_tutorial_hint = _label("", 18)
 	_tutorial_hint.add_theme_color_override("font_color", Color(0.94, 0.8, 0.5))
 	_tutorial_hint.visible = GameState.debug_overlay  # tutorial hints are on the F2 overlay
@@ -208,6 +294,18 @@ func _render() -> void:
 			var info := GameState.get_gravestone_info(id)
 			var stone := _action(info.get("title", id), _start_call.bind(id))
 			list.add_child(stone)
+			if _marker_has_reopened_questions(id):
+				var dot := _label("●", 16)
+				dot.name = "NewRepliesDot"
+				dot.add_theme_color_override("font_color", Color("cf6068"))
+				dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				stone.add_child(dot)
+				dot.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+				dot.offset_left = -25
+				dot.offset_right = -7
+				dot.offset_top = 5
+				dot.offset_bottom = 27
+				stone.get_child(0).offset_right = -30
 			if id == "baby_tomb": tutorial_controls["stone"] = stone
 		if list.get_child_count() == 0: list.add_child(_label("No recorded gravestones in this city yet. Return to Day City to continue the small marker investigation." if not GameState.current_city_day else "Record a Day City gravestone in your notebook first."))
 		_commit_layout()
@@ -215,13 +313,16 @@ func _render() -> void:
 	var status := _label(_status if not _status.is_empty() else "Choose a question, or place evidence to reveal a hidden question.", 18)
 	if _feedback == "hidden": status.add_theme_color_override("font_color", Color(1, 0.8, 0.35))
 	_layout.add_child(status)
+	if GameState.story_mode_enabled():
+		var legend := _label("剧情模式：青绿 = 正确证据；紫色 ◇ = 可显示隐藏问题" if GameState.chinese_playtest else "STORY MODE: teal = correct evidence; violet ◇ = reveals a hidden question", 17)
+		_layout.add_child(legend)
 	var columns := HBoxContainer.new()
 	columns.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	columns.add_theme_constant_override("separation", 22)
 	_layout.add_child(columns)
 	var left := VBoxContainer.new()
 	left.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	left.size_flags_stretch_ratio = 1.4
+	left.size_flags_stretch_ratio = 1.8
 	columns.add_child(left)
 	if not _last_lines.is_empty():
 		var replay := _action("Read last reply", _replay_reply)
@@ -232,7 +333,7 @@ func _render() -> void:
 	if not _followups.is_empty():
 		for choice in _followups: questions.add_child(_action(choice["label"], _follow.bind(choice)))
 	else:
-		for question in model.questions_for(_tomb, _slot):
+		for question in _visible_questions():
 			if not _lesson_allows(question): continue
 			var text := GameState.zh_text(question["label"])
 			if question["hidden"]: text = "◇ " + text
@@ -242,8 +343,10 @@ func _render() -> void:
 			var question_button := _action(text, _select_question.bind(question), not question["available"])
 			questions.add_child(question_button)
 			tutorial_controls[question["target"]] = question_button
+	if questions.get_child_count() == 0:
+		questions.add_child(_label("当前可问的内容已全部听过。发现新线索后可能有新的回复。" if GameState.chinese_playtest else "You have heard all currently available replies. New findings may open further questions.", 18))
 	var right := VBoxContainer.new()
-	right.custom_minimum_size.x = 440
+	right.custom_minimum_size.x = 360
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	columns.add_child(right)
 	right.add_child(_label("Evidence · one record", 20))
@@ -290,6 +393,14 @@ func _render() -> void:
 		if id == _slot: label = "✓ " + label
 		var record_button := _action(label, _set_slot.bind(id), not unlocked or not _followups.is_empty())
 		if unlocked: record_button.tooltip_text = GameState.get_evidence(model.group_member(id)).get("body", "")
+		if GameState.story_mode_enabled() and unlocked:
+			var hint: Dictionary = model.story_evidence_hint(_tomb, id, _question)
+			if hint["correct"] or hint["hidden"]:
+				_story_highlight(record_button, Color(0.35, 0.94, 0.78) if hint["correct"] else Color(0.8, 0.58, 1.0))
+				if hint["hidden"]:
+					var caption := record_button.get_child(0) as Label
+					caption.text = "◇ " + caption.text
+					record_button.tooltip_text += "\n" + ("这份证据可显示隐藏问题。" if GameState.chinese_playtest else "This record reveals a hidden question.")
 		records.add_child(record_button)
 		if id == sketch_group: tutorial_controls["sketch"] = record_button
 	tutorial_controls["evidence"] = records.get_parent()
@@ -304,6 +415,16 @@ func _render() -> void:
 
 	_commit_layout()
 
+func _story_highlight(button: Button, color: Color) -> void:
+	for state in ["normal", "hover", "focus", "pressed"]:
+		var frame := button.get_theme_stylebox("normal").duplicate() as StyleBoxFlat
+		frame.bg_color = Color(color.r * 0.16, color.g * 0.16, color.b * 0.16, 0.96)
+		frame.border_color = color
+		frame.set_border_width_all(2)
+		button.add_theme_stylebox_override(state, frame)
+	var caption := button.get_child(0) as Label
+	caption.add_theme_color_override("font_color", color)
+
 func _commit_layout() -> void:
 	_menu_host.add_child(_layout)
 	if is_instance_valid(_previous_layout):
@@ -316,9 +437,49 @@ func _commit_layout() -> void:
 	_overlay.set_feedback(_feedback)
 	_fit_selection_panel()
 
+## Only formal investigation uses exhaustion; tutorial questions stay available
+## for the scripted sequence and collecting missed underlined terms.
+func _update_question_activity() -> void:
+	_question_states.clear()
+	if not GameState.investigation_tutorial_completed: return
+	var exhausted: Array = model.progress.get("exhausted_questions", [])
+	var pending: Array = model.progress.get("reopened_questions", [])
+	for question in model.data.get("questions", []):
+		if question["tomb"] not in GameState.gravestones or not model.city_allows(question["tomb"]): continue
+		var state: Dictionary = model.question_reply_state(question)
+		_question_states[question["id"]] = state
+		if not state["available"]: continue
+		if not state["unheard"]:
+			if question["id"] not in exhausted: exhausted.append(question["id"])
+			pending.erase(question["id"])
+		elif question["id"] in exhausted:
+			exhausted.erase(question["id"])
+			if question["id"] not in pending: pending.append(question["id"])
+	model.progress["exhausted_questions"] = exhausted
+	model.progress["reopened_questions"] = pending
+
+func _marker_has_reopened_questions(stone: String) -> bool:
+	for question in model.data.get("questions", []):
+		if question["tomb"] == stone and question["id"] in model.progress.get("reopened_questions", []): return true
+	return false
+
+func _visible_questions() -> Array:
+	var hidden: Array = []
+	var ordinary: Array = []
+	for question in model.questions_for(_tomb, _slot):
+		var state: Dictionary = _question_states.get(question["id"], {})
+		if question["available"] and state.get("available", false) and not state.get("unheard", true): continue
+		if question.get("hidden", false): hidden.append(question)
+		else: ordinary.append(question)
+	return hidden + ordinary
+
 func _start_call(id: String) -> void:
 	if _reply_playing: return
 	_tomb = id
+	var pending: Array = model.progress.get("reopened_questions", [])
+	for item in model.data.get("questions", []):
+		if item["tomb"] == id: pending.erase(item["id"])
+	model.progress["reopened_questions"] = pending
 	_direct_only = false
 	_question = {}
 	_slot = ""
@@ -425,6 +586,12 @@ func _send() -> void:
 
 func _follow(choice: Dictionary) -> void:
 	if _reply_playing: return
+	# The final confrontation belongs to the ending scene, not the radio menu.
+	for instruction in choice.get("body", []):
+		if instruction.get("op", "") == "goto" and instruction.get("target", "") == "test_confrontation":
+			close(false)
+			GameState.open_ending(true, GameState.ending_preview, true)
+			return
 	var result: Dictionary = model.choose(choice)
 	if not result.has("error"):
 		GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": choice["label"]})
@@ -495,12 +662,11 @@ func _can_open() -> bool:
 
 
 func _fit_selection_panel() -> void:
-	_panel.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	_panel.offset_left = 20
-	_panel.offset_right = -20
-	_panel.offset_top = 20
-	_panel.offset_bottom = -20
-	# The dialogue shader normally fades above a bottom panel; the menu fills the screen.
+	_panel.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_WIDE)
+	_panel.offset_left = 80
+	_panel.offset_right = -80
+	_panel.offset_top = -450
+	_panel.offset_bottom = -48
 	var grain: ColorRect = _overlay.get_node("Panel/RadioStatic")
-	grain.material.set_shader_parameter("top_fade_height", 0.0)
-	grain.material.set_shader_parameter("top_fade_inset", 0.0)
+	grain.material.set_shader_parameter("top_fade_height", 220.0)
+	grain.material.set_shader_parameter("top_fade_inset", 30.0)

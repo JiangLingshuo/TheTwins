@@ -25,6 +25,9 @@ extends Control
 
 var _started := false
 var _dialogue_played := false
+var _cemetery_reveal_started := false
+var _cemetery_reveal_finished := false
+var _scene_changing := false
 var _fade_in: Tween
 var _pulse: Tween
 var _save_menu: CenterContainer
@@ -39,6 +42,7 @@ func _ready() -> void:
 	_fade_in.finished.connect(_start_pulse)
 	book.page_changed.connect(_on_page_changed)
 	book.closed.connect(_on_book_closed)
+	dialogue_box.line_started.connect(_on_opening_line)
 	# Stow the book where the game's notebook button is, so the next scene picks up from it.
 	var screen := get_viewport_rect().size
 	book.icon_margin = screen - preload("res://scripts/notebook_tool.gd").button_center(screen)
@@ -160,17 +164,23 @@ func _on_page_changed(spread: int) -> void:
 
 
 func _on_book_closed() -> void:
+	if _cemetery_reveal_started: return
 	if dialogue_page == -1:
 		await _play_dialogue()
 	_go_to_next_scene()
 
 
 func _go_to_next_scene() -> void:
-	if scene_after_close.is_empty():
+	if scene_after_close.is_empty() or _scene_changing:
 		return
+	_scene_changing = true
 	# The notebook continues in the next scene with the same pages.
 	GameState.notebook_pages = book.pages
 	GameState.notebook_spread = book.get_spread()
+	if _cemetery_reveal_finished:
+		GameState.opening_cemetery_visible = true
+		get_tree().change_scene_to_file.call_deferred(scene_after_close)
+		return
 	# Everything fades except the stowed book: the next scene's notebook button
 	# sits in the same spot and looks the same, so it carries straight over.
 	var fade := create_tween().set_parallel(true)
@@ -189,4 +199,46 @@ func _play_dialogue() -> void:
 	await get_tree().create_timer(dialogue_delay).timeout
 	dialogue_box.play_file(dialogue_file)
 	await dialogue_box.finished
-	book.set_locked(false)
+	if _cemetery_reveal_started:
+		while not _cemetery_reveal_finished: await get_tree().process_frame
+		_go_to_next_scene()
+	else:
+		book.set_locked(false)
+
+
+func _on_opening_line(line: Dictionary) -> void:
+	if _cemetery_reveal_started or not str(line.get("content", "")).to_lower().contains("then you see it:"): return
+	_cemetery_reveal_started = true
+	var landscape := TextureRect.new()
+	landscape.name = "OpeningCemetery"
+	landscape.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	landscape.texture = preload("res://assets/Art/day/BG_day.png")
+	landscape.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
+	landscape.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	add_child(landscape)
+	move_child(landscape, get_node("Background").get_index() + 1)
+	landscape.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	# Mirror the next scene's static art only; its tutorial starts after this line.
+	var template := preload("res://scenes/main.tscn").instantiate()
+	var cemetery: Control = template.get_node("DayCemetery")
+	var graves := Control.new()
+	graves.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	graves.size = cemetery.size
+	graves.scale = cemetery.scale
+	landscape.add_child(graves)
+	for original in cemetery.get_children():
+		if original is TextureRect:
+			var drawing := TextureRect.new()
+			drawing.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			drawing.texture = original.texture
+			drawing.position = original.position
+			drawing.size = original.size
+			drawing.scale = original.scale
+			drawing.stretch_mode = original.stretch_mode
+			drawing.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			graves.add_child(drawing)
+	template.free()
+	landscape.modulate.a = 0.0
+	create_tween().tween_property(landscape, "modulate:a", 1.0, 0.9).set_trans(Tween.TRANS_SINE)
+	await book.close_to_icon()
+	_cemetery_reveal_finished = true

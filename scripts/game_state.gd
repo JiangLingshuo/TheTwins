@@ -30,9 +30,19 @@ const NAME_PLACEHOLDERS := ["#PLAYER#", "{name}", "{player_name}"]
 
 ## Emitted when F2 shows or hides the development overlay.
 signal debug_overlay_changed(shown: bool)
-## Development overlay: the tutorial hint box (with its skip button) and the
-## searchlight placeholder cards. Hidden by default; F2 toggles it.
+## Development menu and tutorial skip button. F2 toggles them.
 var debug_overlay := false
+## Session-only developer assistance. Never stored in investigation autosaves.
+signal story_mode_changed(enabled: bool)
+var story_mode := false
+
+func story_mode_enabled() -> bool:
+	return OS.is_debug_build() and story_mode
+
+func set_story_mode(enabled: bool) -> void:
+	story_mode = enabled and OS.is_debug_build()
+	story_mode_changed.emit(story_mode)
+
 var _dev_menu: PanelContainer
 var _shortcut_menu: AcceptDialog
 var chinese_playtest := false
@@ -60,6 +70,7 @@ var _autosave_path := "user://investigation.autosave"
 var _new_run_defaults: Dictionary
 var _autosave_enabled := false
 var resume_saved_city := false
+var opening_cemetery_visible := false
 
 func _ready() -> void:
 	_new_run_defaults = _checkpoint_state()
@@ -86,6 +97,21 @@ func start_new_investigation() -> void:
 	ending_true = false
 	resume_saved_city = false
 	_autosave_enabled = true
+
+## Save at the end of this frame. Many changes in one frame (a batch of manuscripts,
+## say) share a single write. Every clue, manuscript, keyword, rubbing comparison
+## and radio call is a checkpoint.
+var _autosave_queued := false
+
+func queue_autosave() -> void:
+	if _autosave_queued:
+		return
+	_autosave_queued = true
+	_flush_queued_autosave.call_deferred()
+
+func _flush_queued_autosave() -> void:
+	_autosave_queued = false
+	write_autosave()
 
 func write_autosave() -> bool:
 	if not _autosave_enabled or notebook_preview or ending_preview:
@@ -163,9 +189,26 @@ func ending_report_passed() -> bool:
 	return correct * 100 >= ENDING_REPORT_ANSWERS.size() * 2 * 80
 
 var ending_marker_investigated := false
+var solitary_report_preview := false
+## True while the player is investigating the final marker (its own scene).
+var final_marker_phase := false
+
+## Hand in the six reports. Below the pass mark the quiet ending plays at once; at or
+## above it the notebook closes, the solitary marker is found and investigated, and
+## only after its answer is submitted does the confrontation with Aurora begin.
+func conclude_investigation() -> void:
+	if not ending_report_complete():
+		return
+	if ending_report_passed():
+		open_ending(true, false)
+		solitary_report_preview = true  # the report walk, then the marker's own investigation
+	else:
+		open_ending(false)
 
 func open_ending(is_true: bool, preview := false, marker_investigated := false) -> void:
+	final_marker_phase = false
 	ending_marker_investigated = marker_investigated
+	solitary_report_preview = false
 	ending_true = is_true
 	ending_preview = preview
 	radio_modal_open = false
@@ -173,15 +216,24 @@ func open_ending(is_true: bool, preview := false, marker_investigated := false) 
 	_set_debug_overlay(false)
 	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
 
-func open_solitary_investigation() -> void:
-	# Developer preview: keep testing progress out of the local autosave.
-	ending_preview = true
-	cycle_tutorial_completed = true
-	investigation_tutorial_completed = true
-	camera_tutorial_completed = true
-	camera_tutorial_pending = false
-	current_city_day = true
-	resume_saved_city = false
+## `keep_progress` is the real route: the player arrives with their own investigation.
+## Otherwise this is the developer preview, which fakes the earlier progress.
+func open_solitary_investigation(from_report_submission: bool = false, keep_progress: bool = false) -> void:
+	if from_report_submission:
+		open_ending(true, true)
+		solitary_report_preview = true
+		return
+	solitary_report_preview = false
+	if not keep_progress:
+		# Developer preview: keep testing progress out of the local autosave.
+		ending_preview = true
+		cycle_tutorial_completed = true
+		investigation_tutorial_completed = true
+		camera_tutorial_completed = true
+		camera_tutorial_pending = false
+		current_city_day = true
+		resume_saved_city = false
+	final_marker_phase = true
 	radio_modal_open = false
 	camera_modal_open = false
 	_set_debug_overlay(false)
@@ -214,7 +266,13 @@ func _build_dev_menu() -> void:
 	var title := Label.new()
 	title.text = "DEV / Scene shortcuts"
 	stack.add_child(title)
-	for item in [["Solitary marker investigation", open_solitary_investigation], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+	var story := CheckButton.new()
+	story.text = "剧情模式 / Story mode"
+	story.button_pressed = story_mode_enabled()
+	story.tooltip_text = "Dev only: show rubbing targets, hidden-question records and correct evidence."
+	story.toggled.connect(set_story_mode)
+	stack.add_child(story)
+	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]
 		button.custom_minimum_size.y = 36
@@ -340,6 +398,7 @@ func confirm_rubbing_meaning(rubbing_id: String, meaning: String) -> bool:
 		record["meaning"] = meaning
 		rubbing_records[rubbing_id] = record
 		rubbings_changed.emit()
+		queue_autosave()
 	return true
 
 
@@ -350,6 +409,11 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 
 ## Confirmed meaning of a rubbing, or "" while it is undeciphered.
 func get_rubbing_meaning(rubbing_id: String) -> String:
+	if rubbing_id == "sky_sun_rubbing" and rubbings.has(rubbing_id):
+		var coin: Dictionary = rubbing_records.get("sun_shaped_marker_rubbing", {})
+		return "Coin and Sun" if evidence_ids.has("sun_coin_correspondence") or (coin.get("target", "") == "day_city_coin" and str(coin.get("meaning", "")).to_lower().contains("coin")) else "Sun"
+	if rubbing_id == "sun_shaped_marker_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("sun_coin_correspondence"):
+		return "Coin and Sun"
 	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
 		return "Dayfolk"
 	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
@@ -357,6 +421,9 @@ func get_rubbing_meaning(rubbing_id: String) -> String:
 
 ## target_id of the scene object that deciphers a rubbing ("" if none).
 func get_rubbing_target(rubbing_id: String) -> String:
+	# Also repairs path rubbings already collected before the target was wired.
+	if rubbing_id == "night_father_path_rubbing" and rubbings.has(rubbing_id): return "skyway_reference"
+	if rubbing_id == "night_mother_river_rubbing" and rubbings.has(rubbing_id): return "dry_underground_river"
 	return rubbing_records.get(rubbing_id, {}).get("target", "")
 
 
@@ -440,6 +507,7 @@ func record_evidence(id: String) -> bool:
 		clue_states[id] = "unread"
 	evidence_recorded.emit(id)
 	notebook_changed.emit()
+	queue_autosave()
 	return true
 
 
@@ -531,6 +599,19 @@ func get_gravestone_info(id: String) -> Dictionary:
 var manuscript_filter := ""
 ## Tool ("rubbing", "searchlight", "camera" or "finding") the Clues section is limited to ("" = all).
 var clue_filter := ""
+var clue_source_filter := ""
+
+func clue_sources(entry: Dictionary) -> Array:
+	var sources: Array = entry.get("gravestones", []).duplicate()
+	if sources.is_empty() and not str(entry.get("gravestone", "")).is_empty():
+		sources.append(entry["gravestone"])
+	if sources.is_empty():
+		var metadata: Dictionary = entry.get("metadata", {})
+		var places: Array = metadata.get("location", []) + metadata.get("related_location", [])
+		if "day_cemetery" in places: sources.append("__day")
+		if "night_cemetery" in places: sources.append("__night")
+	return sources
+
 
 ## How a clue was obtained: the tool named in its metadata, else "finding"
 ## (something worked out in the notebook or handed over).
@@ -548,6 +629,8 @@ func notebook_entries(section: int, apply_filter: bool = true) -> Array[Dictiona
 		if section == 3 and category == "manuscript" and apply_filter and not manuscript_filter.is_empty() and entry.get("gravestone", "") != manuscript_filter:
 			continue
 		if section == 2 and category not in ["manuscript", "rubbing"] and apply_filter and not clue_filter.is_empty() and clue_tool(entry) != clue_filter:
+			continue
+		if section == 2 and apply_filter and not clue_source_filter.is_empty() and clue_source_filter not in clue_sources(entry):
 			continue
 		if (section == 3 and category == "manuscript") or (section == 2 and category not in ["manuscript", "rubbing"]):
 			entries.append(entry)
@@ -874,6 +957,7 @@ func collect_term(id: String) -> void:
 	# Signals let the tutorial respond without hard-coding the source UI.
 	term_collected.emit(id)
 	notebook_changed.emit()
+	queue_autosave()
 
 func deliver_day_manuscripts() -> void:
 	for id in content_catalog().get("evidence", {}):

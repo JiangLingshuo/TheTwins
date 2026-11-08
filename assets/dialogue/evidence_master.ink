@@ -701,6 +701,11 @@ Low on the mother's stone, beside her carved figures, is the image of the Crysta
 # category:observation
 # location:night_cemetery
 # tool:searchlight
+# discovery_reflection:This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?
+# searchlight_scan_years_ago:0
+# searchlight_scan_years_ago:45
+# searchlight_scan_years_ago:50
+# searchlight_scan_years_ago:60
 # searchlight_scan_start_year:2005
 # searchlight_scan_end_year:2050
 # searchlight_scan_years_ago_min:0
@@ -779,6 +784,20 @@ The lower part of the stone bears the image of the Crystal God. It resembles the
 # evidence_tag:night_city_belief
 // Award after a Crystal God rubbing from ANY Night City stone is matched to the crystal in the scene.
 The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal.
+-> DONE
+
+=== ev_repeated_child_figures ===
+# type:evidence
+# id:repeated_child_figures
+# title:The Same Child on Three Stones
+# category:observation
+# location:night_cemetery
+# tool:camera
+# evidence_tag:night_infant_reference
+# evidence_tag:parent_child_image
+# evidence_tag:repeated_child_motif
+// Acquired only after marking the same child on the altar, the mother's stone and the father's stone in the camera photograph.
+The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.
 -> DONE
 
 === ev_night_father_moon_stone ===
@@ -1145,6 +1164,11 @@ The complete girl-and-coffin composition on the solitary marker corresponds to t
 === ev_scholar_no_traces ===
 # type:evidence
 # id:scholar_no_traces
+# discovery_reflection:No one has visited the Scholar’s grave, despite her fame and reputation. It is not only what remains that leaves a trace; absence, too, tells a history. I should look into this again in Night City.
+# searchlight_scan_years_ago:0
+# searchlight_scan_years_ago:45
+# searchlight_scan_years_ago:50
+# searchlight_scan_years_ago:60
 # title:No Later Visitors at the Crystal Monument
 # category:observation
 # location:day_cemetery
@@ -1175,4 +1199,28 @@ Across the checked period after the burial, the searchlight reveals no readable 
 # location:day_cemetery
 # evidence_tag:sun_motif
 The outline of the sun above the cemetery. It shares a notebook spread with the moon copied from the small marker.
+-> DONE
+
+=== ev_crystal_marker_correspondence ===
+# type:evidence
+# id:crystal_marker_correspondence
+# title:A Crystal Shaped into a Memorial
+# category:observation
+# location:day_cemetery
+# tool:camera
+# evidence_tag:crystal_shape_observation
+The crystal monument and the crystal in the hanging lamp share the same pointed, faceted shape. The resemblance is clear, though it does not by itself explain who the memorial commemorates.
+-> DONE
+
+=== ev_sun_coin_correspondence ===
+# type:evidence
+# id:sun_coin_correspondence
+# title:The Sun, the Coin and the Monument
+# category:observation
+# location:day_cemetery
+# tool:camera
+# evidence_tag:sun_shape
+# evidence_tag:day_city_currency
+# evidence_tag:sun_motif
+The sun above Day City, the pointed rim of the coin recovered from the wishing pool, and the sun-shaped monument share the same radiating outline. The monument's form can be read as a coin as well as a sun.
 -> DONE

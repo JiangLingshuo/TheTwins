@@ -30,15 +30,16 @@ for block in re.finditer(r'^=== (\w+) ===\n(.*?)(?=^===|\Z)',source,re.M|re.S):
  knot,body=block.groups()
  xml=re.search(r'^# runtime_xml:([a-z0-9_]+\.xml)$',body,re.M)
  records=[]
- for line in re.finditer(r'^// line_id:([^\n]+)\n(.*?) #(player|aurora|narrator|\?\?)$',body,re.M):
-  ident,text,role=line.groups()
+ for line in re.finditer(r'^// line_id:([^\n]+)\n(.*?) #(player|aurora|narrator|\?\?)$((?:\n// sfx(?:_after)?:\w+)*)',body,re.M):
+  ident,text,role,cue_text=line.groups()
+  cues=dict(re.findall(r'// (sfx(?:_after)?):(\w+)',cue_text))
   assert ident in old, 'Unknown stable line ID: '+ident
   record=dict(old[ident]);record.update(text=text,role={'player':'玩家','aurora':'Aurora','narrator':'旁白','??':'未知声音'}[role] if knot!='chat_guide_prompts' else '界面提示')
-  rows.append(record);records.append((role,text))
+  rows.append(record);records.append((role,text,cues))
  if xml:
   root=ET.Element('dialogue')
-  for role,text in records:
-   item=ET.SubElement(root,'line',speaker={'player':'#PLAYER#','aurora':'Aurora','??':'??','narrator':''}[role]);item.text=text.replace('{player_name}','#PLAYER#')
+  for role,text,cues in records:
+   item=ET.SubElement(root,'line',speaker={'player':'#PLAYER#','aurora':'Aurora','??':'??','narrator':''}[role],**cues);item.text=text.replace('{player_name}','#PLAYER#')
   ET.indent(root,space='  ')
   ET.ElementTree(root).write(D/xml[1],encoding='utf-8',xml_declaration=True)
 # Editable guide prompt text is patched by its previous exact literal, preserving control logic.

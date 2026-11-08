@@ -12,6 +12,16 @@ var _depth := 0
 var preview_only := false
 var _ending_preview_evidence: Array[String] = []
 
+func begin_report_walk() -> Dictionary:
+	# A dev preview must not grant evidence or modify the live investigation.
+	progress = progress.duplicate(true)
+	preview_only = true
+	_context = {}
+	_depth = 0
+	var result := {"lines": [], "choices": []}
+	_program("test_walk", result)
+	return result
+
 func begin_ending(true_ending: bool, preview: bool) -> Dictionary:
 	if preview:
 		progress = progress.duplicate(true)
@@ -75,9 +85,13 @@ func _membership(pool: String, value: String) -> bool:
 	if pool == "owned_evidence":
 		return owns(value)
 	if pool == "links":
+		if value == "baby_pair" and GameState.evidence_ids.has("infant_memorial_correspondence"):
+			return true
+		if value == "sun" and GameState.evidence_ids.has("sun_coin_correspondence"):
+			return true
 		if value == "moon" and GameState.cycle_tutorial_completed:
 			return true # tutorial established which shape is the moon, not its death meaning
-		var rubbing_relations := {"human": "infant_figure_rubbing", "crystal": "crystal_marker_rubbing", "sun": "sun_shaped_marker_rubbing", "beast": "scholar_beast_rubbing", "river": "night_mother_river_rubbing", "father_path": "night_father_path_rubbing"}
+		var rubbing_relations := {"human": "infant_figure_rubbing", "crystal": "crystal_marker_rubbing", "sun": "sun_shaped_marker_rubbing", "beast": "scholar_beast_rubbing", "river": "night_mother_river_rubbing", "father_path": "night_father_path_rubbing", "skin": "night_mother_hands_rubbing"}
 		if rubbing_relations.has(value) and GameState.is_rubbing_deciphered(rubbing_relations[value]):
 			return true
 	return value in progress.get(pool, [])
@@ -234,6 +248,8 @@ func _nodes(nodes: Array, result: Dictionary, source: String) -> bool:
 				if tag.begins_with("event:") and not preview_only: GameState.apply_notebook_event(tag)
 				if tag == "city:night": result["city"] = "night"
 				if tag == "radio:hang_up": result["hang_up"] = true
+				if (tag.begins_with("sfx:") or tag.begins_with("sfx_after:")) and not result["lines"].is_empty():
+					result["lines"][-1][tag.get_slice(":", 0)] = tag.get_slice(":", 1)
 			"if":
 				var branch: Array = instruction["then"] if condition(instruction["condition"]) else instruction["else"]
 				if _nodes(branch, result, source): return true
@@ -307,6 +323,26 @@ func directly_from_marker(group_id: String, tomb_id: String) -> bool:
 
 ## Compare a read-only simulation with actually delivered log text. New state
 ## or new follow-ups can put a previously exhausted record back in the picker.
+## Read-only help: use exactly the same conditions and reply program as submission.
+func story_evidence_hint(tomb_id: String, group_id: String, question: Dictionary = {}) -> Dictionary:
+	var hint := {"hidden": false, "correct": false}
+	if not group_unlocked(group_id): return hint
+	var probe = get_script().new(data)
+	probe.preview_only = true
+	probe.progress = progress.duplicate(true)
+	var baseline: Array = probe.questions_for(tomb_id, "")
+	var baseline_ids: Array = []
+	for item in baseline: baseline_ids.append(item["id"])
+	for item in probe.questions_for(tomb_id, group_id):
+		if item.get("hidden", false) and item.get("available", false) and item["id"] not in baseline_ids:
+			hint["hidden"] = true
+	if not question.is_empty():
+		# Restore the snapshot after question discovery, keeping previews isolated.
+		probe.progress = progress.duplicate(true)
+		var reply: Dictionary = probe.send(question, group_id)
+		hint["correct"] = not reply.has("error") and reply.get("feedback", "") in ["linked", "hidden"]
+	return hint
+
 func has_unheard_reply(tomb_id: String, group_id: String) -> bool:
 	var submitted := group_member(group_id)
 	if submitted.is_empty(): return false
@@ -343,3 +379,40 @@ func _reply_has_new_text(probe: RefCounted, reply: Dictionary, heard: Dictionary
 		branch.tomb = probe.tomb
 		if _reply_has_new_text(branch, branch.choose(choice), heard, plain, visited + [key]): return true
 	return false
+
+
+## Does this question have a currently reachable, unheard substantive reply?
+## Ignore wrong-record nudges once supporting evidence is available. Preview
+## branches use isolated state and never grant clues, terms or answer flags.
+func question_reply_state(question: Dictionary) -> Dictionary:
+	var plain := RegEx.create_from_string('<link="[^\"]+">([^<]+)</link>')
+	var heard: Dictionary = {}
+	for record in GameState.radio_history_records(question["tomb"], question["id"]):
+		for line in record.get("lines", []): heard[GameState.fill_placeholders(plain.sub(str(line.get("content", "")), "$1", true))] = true
+	var probe = get_script().new(data)
+	probe.preview_only = true
+	probe.progress = progress.duplicate(true)
+	var groups: Array = probe.candidates(question).duplicate()
+	if question.get("hidden", false):
+		for group in data.get("groups", {}):
+			if group not in groups and group_unlocked(group): groups.append(group)
+	var meaningful: Array = []
+	for group in groups:
+		if not group_unlocked(group): continue
+		probe = get_script().new(data)
+		probe.preview_only = true
+		probe.progress = progress.duplicate(true)
+		var reply: Dictionary = probe.send(question, group)
+		if reply.has("error"): continue
+		if reply.get("feedback", "") in ["linked", "hidden"] or question.get("hidden", false):
+			meaningful.append([probe, reply])
+	if meaningful.is_empty():
+		probe = get_script().new(data)
+		probe.preview_only = true
+		probe.progress = progress.duplicate(true)
+		var initial: Dictionary = probe.send(question, "")
+		if not initial.has("error"): meaningful.append([probe, initial])
+	for pair in meaningful:
+		if _reply_has_new_text(pair[0], pair[1], heard, plain, []):
+			return {"available": true, "unheard": true}
+	return {"available": not meaningful.is_empty(), "unheard": false}

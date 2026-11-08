@@ -8,7 +8,7 @@
 INCLUDE evidence_master.ink
 INCLUDE tombstone_master.ink
 
-LIST EvidenceId = infant_medical_record, girl_painted_flower, girl_teddy_bear, night_mother_flower, mother_daughter_flower_meaning, dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces, night_mother_god_rubbing, crystal_god_crystal_correspondence
+LIST EvidenceId = infant_medical_record, girl_painted_flower, girl_teddy_bear, night_mother_flower, mother_daughter_flower_meaning, dayfolk_appearance, moon_reference, infant_figure_rubbing, infant_moon_rubbing, designer_manuscript, designer_journal, infant_graffiti, infant_death_doubt, shared_family_base, crystal_marker_rubbing, scholar_beast_rubbing, night_city_crystal, skin_picture, disappearance_inquiry, profession_record, one_way_passage_order, sun_reference, sun_shaped_marker_rubbing, sun_shaped_beast_rubbing, day_city_coin, ram_spirit_emblem, giant_footprint, twin_beast_trace, twin_beast_account, repeated_beast_motifs, family_photo, altar_infant_rubbing, altar_path_rubbing, altar_blessing_glyph, altar_blessing_translation, crystal_god_rubbing, removed_crystal_god, altar_moon_stone, crystal_god_prophecy, moon_stone_blessing, infant_memorial_correspondence, night_mother_child_rubbing, night_mother_hands_rubbing, night_mother_river_rubbing, dry_underground_river, night_mother_no_traces, night_mother_death_finding, night_father_child_rubbing, night_father_path_rubbing, night_father_god_rubbing, night_father_moon_stone, natural_collapse_record, skyway_history, skyway_reference, night_father_death, paired_skin_pictures, girl_figure_rubbing, girl_coffin_rubbing, girl_beast_rubbing, girl_path_rubbing, girl_signature_rubbing, family_statuette, day_city_history, history_coffin_illustration, girl_diary, diary_cover, notebook_cover, four_person_family_finding, girl_cover_correspondence, scholar_no_traces, night_mother_god_rubbing, crystal_god_crystal_correspondence, crystal_marker_correspondence, repeated_child_figures
 
 LIST EvidenceTag = infant_euthanasia, girl_painted_flower_trace, girl_teddy_bear_trace, night_mother_flower_trace, mother_daughter_flower_meaning, absence_of_readable_traces, ancient_creature_trace, ancient_disappearance, ascending_path_motif, aurora_identity_reference, aurora_provided_object, aurora_translation_knowledge, author_identity_reference, contradictory_death_accounts, contrasting_halves, crystal_extraction_reference, crystal_god_motif, crystal_research_reference, crystal_shape, dawn_disappearances, day_city_belief, day_city_bias, day_city_currency, day_night_handholding, dayfolk_appearance, death_by_hunger_and_thirst, deliberate_departure, different_exchange_customs, disappearance_symbol_reference, dry_river_motif, endless_path_motif, family_image_reference, family_mausoleum_custom, family_requested_depiction, four_person_family, funerary_artist_reference, girl_coffin_motif, girl_memorial, human_figure_reference, husband_disappearance, infant_actual_appearance, infant_appearance_mismatch, infant_death_unresolved, infant_identity, infant_memorial, intercity_resource_exchange, last_survivor_question, missed_sleeping_deadline, missing_family_member_reference, moon_motif, moon_reference, moon_stone_offering, natural_collapse, night_blessing_glyph, night_blessing_reference, night_city_belief, night_city_mineral_origin, night_city_supply_blockade, night_departure_reference, night_father_final_journey, night_father_past, night_infant_reference, night_mother_death_reference, night_mother_future, night_mother_past, night_symbol_translation, occupation_marker_custom, one_way_passage, original_separation, paired_day_night_death, paired_day_night_memorials, parent_child_image, population_decline, ram_spirit_motif, removed_crystal_offering, repeated_local_symbol, resentment_toward_mother, scholar_identity, scholar_no_visitors, scholar_tycoon_marriage, shared_body_reference, shared_day_night_history, shared_family_plot, skin_as_message_medium, skyway_not_steep, sleep_coffin_required, smooth_skinned_child, sun_motif, sun_shape, three_family_markers, twin_beast_motif, twin_beast_reference, two_mothers_dilemma, tycoon_identity, unexplained_waking_wounds, upright_coffin_motif, water_source_lost, well_preserved_diary
 
@@ -1685,7 +1685,7 @@ DEV: frozen evidence={submitted_id == "":none|{submitted_id}}.
 -> test_menu_feedback ->
 What would you like to ask?
 + {submitted_id == "repeated_beast_motifs"} [What does it mean when the same symbol keeps appearing?] -> test_answer_repeated_beast
-+ {(links ? Relation.crystal)} [Why is the monument shaped like a crystal?] -> test_answer_scholar_8
++ {((links ? Relation.crystal) || (owned_evidence ? EvidenceId.crystal_marker_correspondence))} [Why is the monument shaped like a crystal?] -> test_answer_scholar_8
 + {((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))} [What does the two-part creature mean?] -> test_answer_scholar_12
 + {1 == 1} [Did the cities ever cooperate?] -> test_answer_scholar_17
 + {submitted_id == "one_way_passage_order"} [Why can I go between the cities? Shouldn’t the gate have closed?] -> test_answer_scholar_passage_gate
@@ -1744,7 +1744,7 @@ What would you like to ask?
 # ui:radio_questions
 -> test_menu_feedback ->
 What would you like to ask?
-+ {(links ? Relation.mother_child)} [Who is the figure holding the child?] -> test_answer_mother_8
++ {((links ? Relation.mother_child) || (owned_evidence ? EvidenceId.repeated_child_figures))} [Who is the figure holding the child?] -> test_answer_mother_8
 + {((links ? Relation.river) || (queried_night_glyphs ? NightGlyph.dry_river))} [What does the dry river border tell us about her death?] -> test_answer_mother_12
 + {(links ? Relation.skin)} [Why does the handholding picture resemble the Scholar's?] -> test_answer_mother_17
 + {1 == 1} [Does the lack of offerings mean she was the last survivor?] -> test_answer_mother_21
@@ -1762,7 +1762,7 @@ What would you like to ask?
 # ui:radio_questions
 -> test_menu_feedback ->
 What would you like to ask?
-+ {(links ? Relation.father_child)} [Who is carrying the child?] -> test_answer_father_8
++ {((links ? Relation.father_child) || (owned_evidence ? EvidenceId.repeated_child_figures))} [Who is carrying the child?] -> test_answer_father_8
 + {((links ? Relation.father_path) || (queried_night_glyphs ? NightGlyph.ascending_path))} [Did he die because the Skyway was dangerous?] -> test_answer_father_12
 + {has_tag(EvidenceTag.paired_day_night_death) || has_tag(EvidenceTag.husband_disappearance)} [Could his death be linked to the Scholar's husband?] -> test_answer_father_16
 + {1 == 1} [What does the moon-shaped offering mean?] -> test_answer_father_20
@@ -1786,7 +1786,6 @@ What would you like to ask?
 + {submitted_id == "repeated_beast_motifs"} [What does it mean when the same symbol keeps appearing?] -> test_answer_repeated_beast
 + {(links ? Relation.coffin)} [What is the upright frame around her?] -> test_answer_girl_8
 + {1 == 1} [Who made this marker?] -> test_answer_girl_12
-+ {(links ? Relation.family)} [Do the family sculpture and the photograph belong together?] -> test_answer_girl_16
 + {1 == 1} [Does disappearance always mean death?] -> test_answer_girl_20
 + {(1 == 1) && (has_tag(EvidenceTag.aurora_provided_object) || has_tag(EvidenceTag.aurora_identity_reference)) && ((links ? Relation.cover) || (owned_evidence ? EvidenceId.girl_cover_correspondence))} [Aurora, why is this girl on the notebook you gave me?] -> test_answer_girl_24
 + {(owned_evidence ? EvidenceId.girl_teddy_bear) && (owned_evidence ? EvidenceId.family_photo)} [Why is the toy bear in front of the solitary marker?] -> test_answer_girl_bear_preview
@@ -2090,6 +2089,7 @@ It's a standing monument that belongs to neither the Day nor the Night.
 === test_confrontation ===
 # feedback:gold
 (The wind echoes through the city no one has returned to. It might be your imagination, but it feels colder now.) #narrator
+# sfx:wind_strong
 (You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.) #narrator
 “We feel, and all that we have felt is swept away in the bright tumult of the world.” #narrator
 (You first read Goethe's poem An Lottchen from Zweig's The World of Yesterday, where he recounts the beautiful world before the war that strips us of our humanity.) #narrator
@@ -2214,7 +2214,7 @@ She was younger than the woman I had in mind. The night was so dark that it blur
 I said hi. Not sure if she responded. Perhaps deep in my consciousness I still had her voice, but I cannot frame it into a sound that I could match with her—the Scholar, or rather, my mother. #aurora
 She passed me the toy, smiling. She didn’t smile that much. She always looked worried. Day City is a place where everyone uses something to exchange for another, like my parents' marriage, like her education to me. That time she gave me a toy. First gift ever, not again. #aurora
 I woke up the next morning with tears on my cheeks. It's the first and last time that I understood what it means to have a dream. #aurora
-For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to that I felt the emptiness in that solitary silence. #aurora
+For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to... that I felt the emptiness in that solitary silence. #aurora
 + [You missed her.] -> test_ending_day_empathy
 + [You loved her.] -> test_ending_day_empathy
 
@@ -2231,8 +2231,10 @@ For years I've been anticipating another dream. Yet what I got were nights of co
 === test_ending_day_goodbye ===
 (You feel that tremor in your limbs again, with fear and a little bit of anticipation for her response.) #narrator
 (For a while, she says nothing. You hear only the buzzing sound mixing with the wind.) #narrator
+# sfx:wind
 (The wind gets stronger. The night is about to come. Then you hear sobbing on the other side.) #narrator
 (She hangs up without a goodbye. You keep the receiver to your ear. That beeping sound speaks for her struggles.) #narrator
+# sfx:busy
 (You sit until the moon rises, randomly thinking about your decisions if you were in their situation.) #narrator
 (You suppose you know the answers. But as always, they remain assumptions that change nothing. You call again.) #narrator
 + [Call again.] -> test_ending_night_start
@@ -2912,22 +2914,6 @@ A human shape can stand for many lives. Her work may have left a clearer signatu
 }
 -> test_radio_girl
 
-=== test_answer_girl_16 ===
-# question_id:girl_16
-~ temp supported = false
-{has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family):
-The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites. #aurora
-~ read_answers += AnswerId.girl_16_supported_18
-~ supported = true
-~ feedback_kind = "linked"
-}
-{not supported:
-Let us put the four little figures beside the four faces. We should know the family before we name its missing place. #aurora
-~ read_answers += AnswerId.girl_16_normal_17
-~ feedback_kind = "unmatched"
-}
--> test_radio_girl
-
 === test_answer_girl_20 ===
 # question_id:girl_20
 ~ temp supported = false
@@ -3242,6 +3228,7 @@ Just the way back. #player
 (She gives a little laugh. You recognize the sound. She made it the first time you told her you’d landed safely.) #narrator
 Of course. Have a safe journey home. #aurora
 (You wait for her to say she’ll speak to you again. The radio clicks. You put it away.) #narrator
+# sfx:busy
 (You walk the same way you came. Your footprints are still there. You find it reassuring that there is something here you can recognize at a glance.) #narrator
 (A few steps later, you hear her question again. Did you find anything? There was a small lift in her voice on the last word. You had mistaken it for the courtesy of someone letting you finish.) #narrator
 (You recognize that sound now. Someone has spent a long time imagining the answer. You wonder what she had hoped you would say.) #narrator
