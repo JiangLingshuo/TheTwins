@@ -9,6 +9,7 @@ const RADIO_STATIC := preload("res://shaders/radio_static.gdshader")
 const DIALOGUE := preload("res://scenes/dialogue_box.tscn")
 
 @export_multiline var credits_text := ""
+const DEFAULT_CREDITS := preload("res://assets/fonts/IMFellEnglish-Regular.ttf")
 
 var _model = preload("res://scripts/radio_model.gd").new()
 var _night: TextureRect
@@ -17,11 +18,22 @@ var _dialogue: Control
 var _choices: CenterContainer
 var _options: VBoxContainer
 var _is_night := false
+var _ending_light: ColorRect
 
 func _ready() -> void:
 	_background(DAY)
 	_night = _background(NIGHT)
 	_night.modulate.a = 0.0
+
+	_ending_light = ColorRect.new()
+	_ending_light.name = "EndingDawnLight"
+	_ending_light.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var light_material := ShaderMaterial.new()
+	light_material.shader = preload("res://shaders/ending_light.gdshader")
+	_ending_light.material = light_material
+	_ending_light.modulate.a = 0.0
+	add_child(_ending_light)
+	_ending_light.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 
 	_stone = TextureButton.new()
 	_stone.texture_normal = STONE
@@ -36,6 +48,7 @@ func _ready() -> void:
 
 	_dialogue = DIALOGUE.instantiate()
 	add_child(_dialogue)
+	_dialogue.line_started.connect(_on_ending_line)
 	_choices = CenterContainer.new()
 	_choices.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(_choices)
@@ -45,7 +58,12 @@ func _ready() -> void:
 	_choices.add_child(_options)
 	_choices.hide()
 
-	if GameState.solitary_report_preview:
+	if GameState.get_meta("preview_ending_light", false):
+		GameState.remove_meta("preview_ending_light")
+		_stone.show()
+		_stone.disabled = true
+		_preview_light_scene.call_deferred()
+	elif GameState.solitary_report_preview:
 		_discover_marker.call_deferred()
 	elif GameState.ending_true:
 		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
@@ -175,18 +193,24 @@ func _play_credits() -> void:
 	heading.text = GameState.zh_text("Credits")
 	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	heading.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	heading.add_theme_font_override("font", GameState.playtest_font(DEFAULT_CREDITS))
 	heading.add_theme_font_size_override("font_size", 36)
 	heading.modulate.a = 0.0
 	curtain.add_child(heading)
 	heading.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	await create_tween().tween_property(heading, "modulate:a", 1.0, 0.65).finished
-	if credits_text.strip_edges().is_empty():
-		return
+	var roll_text := credits_text.strip_edges()
+	if roll_text.is_empty():
+		roll_text = preload("res://assets/dialogue/credits.gd").TEXT.strip_edges()
 
 	await get_tree().create_timer(1.2).timeout
 	await create_tween().tween_property(heading, "modulate:a", 0.0, 0.5).finished
 	var names := Label.new()
-	names.text = credits_text
+	names.name = "CreditsRoll"
+	names.text = roll_text
+	names.add_theme_font_override("font", GameState.playtest_font(DEFAULT_CREDITS))
+	names.add_theme_constant_override("line_spacing", 9)
+	names.add_theme_color_override("font_color", Color("#f4ead6"))
 	names.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	names.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	names.add_theme_font_size_override("font_size", 27)
@@ -197,7 +221,7 @@ func _play_credits() -> void:
 	names.position.y = curtain.size.y
 	await get_tree().process_frame
 	var distance := curtain.size.y + names.size.y
-	await create_tween().tween_property(names, "position:y", -names.size.y, distance / 50.0).finished
+	await create_tween().tween_property(names, "position:y", -names.size.y, distance / 38.0).finished
 	names.hide()
 
 func _clear_choices() -> void:
@@ -244,3 +268,18 @@ func _add_choice(text: String, action: Callable) -> void:
 	button.add_theme_stylebox_override("focus", panel)
 	button.pressed.connect(action)
 	_options.add_child(button)
+
+func _on_ending_line(line: Dictionary) -> void:
+	if "beautiful light shine from the back of the solitary stone" not in str(line.get("content", "")):
+		return
+	# Dawn belongs to this final line; keep the shaft behind the carved stone.
+	create_tween().tween_property(_ending_light, "modulate:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
+	create_tween().tween_property(_stone, "self_modulate", Color(1.16, 1.10, 0.98), 2.0).set_trans(Tween.TRANS_SINE)
+func _preview_light_scene() -> void:
+	_is_night = true
+	_night.modulate.a = 1.0
+	_model.progress = _model.progress.duplicate(true)
+	_model.preview_only = true
+	var result := {"lines": [], "choices": []}
+	_model._program("test_open_ending", result)
+	_play_result(result)

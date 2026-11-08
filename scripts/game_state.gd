@@ -272,7 +272,7 @@ func _build_dev_menu() -> void:
 	story.tooltip_text = "Dev only: show rubbing targets, hidden-question records and correct evidence."
 	story.toggled.connect(set_story_mode)
 	stack.add_child(story)
-	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["TEMP — Beautiful light preview", _preview_ending_light], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]
 		button.custom_minimum_size.y = 36
@@ -993,3 +993,8 @@ var camera_tutorial_pending := false
 var camera_tutorial_completed := false
 var formal_investigation_started := false
 var camera_observations: Dictionary = {}
+
+## Temporary F2 preview; deliberately not part of saved game state.
+func _preview_ending_light() -> void:
+	set_meta("preview_ending_light", true)
+	open_ending(true, true, true)
