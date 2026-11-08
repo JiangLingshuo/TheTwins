@@ -3216,7 +3216,7 @@ I'm confused. #aurora
 -> test_radio_girl
 
 === ending_false ===
-// Source: dialogue backfill workbook, 假结局.
+// Source: 假结局回填表.xlsx (tools/false_ending_sheet.py).
 (You close the notebook. For a moment your thumb rests in the seam between the black and the white.) #narrator
 (You have the odd feeling that you have been to this city before. This is like all the cities that you've encountered before. Nothing less. Nothing more.) #narrator
 (You picked up Aurora's call.) #narrator

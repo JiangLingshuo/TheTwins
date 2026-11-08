@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "3c39ad1ee40d5cdb0795523bf63c7f95042bbd97c253b427c4eee6047baafb9c",
+  "source_sha256": "cfe5d132574fb2dd494cd3c56435a96f343c823b1f0d1137c32ea1e15ecd3a3d",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",

@@ -205,10 +205,13 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 			row = word
 		else: row += (" " if not row.is_empty() else "") + word
 	wrapped += row
-	button.custom_minimum_size.y = maxf(34, wrapped.split("\n").size() * 22 + 10)
+	# A label only draws the lines that fit its height, so size the button from the font's
+	# real line height (a Chinese system font is taller than the Latin one).
+	var line_height := ceilf(font.get_height(20))
+	button.custom_minimum_size.y = maxf(34.0, wrapped.split("\n").size() * line_height + 12.0)
 	if GameState.chinese_playtest:
 		var rows := ceilf(font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x / 280.0)
-		button.custom_minimum_size.y = maxf(34.0, rows * 24.0 + 10.0)
+		button.custom_minimum_size.y = maxf(34.0, rows * line_height + 12.0)
 	button.size = Vector2(360, button.custom_minimum_size.y)
 	button.disabled = disabled
 	var frame := StyleBoxFlat.new()

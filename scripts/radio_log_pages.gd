@@ -108,8 +108,8 @@ static func reader_entry(stone: String, question_id: String) -> Dictionary:
 			var evidence := str(record["evidence_name"])
 			if evidence.is_empty():
 				evidence = str(GameState.get_evidence(record["evidence_id"]).get("title", record["evidence_id"]))
-			heading += " · Submitted: " + evidence
-		var follow_up := "Follow-up: " + str(record["follow_up"]) if not str(record["follow_up"]).is_empty() else ""
+			heading += " · " + GameState.zh_text("Submitted: ") + GameState.zh_text(evidence)
+		var follow_up := GameState.zh_text("Follow-up: ") + GameState.zh_text(str(record["follow_up"])) if not str(record["follow_up"]).is_empty() else ""
 		blocks.append(_block(heading, follow_up, record["lines"]))
 	return {"id": "q:" + stone + ":" + question_id, "title": title, "body": "\n\n".join(blocks)}
 
@@ -127,5 +127,6 @@ static func _block(heading: String, subheading: String, lines: Array) -> String:
 		rows.append(HEADING + subheading)
 	for line in lines:
 		var speaker := str(line["speaker"])
-		rows.append((speaker + SPEAKER + ": " if not speaker.is_empty() else "") + str(line["content"]))
+		# The log keeps the English; the Chinese playtest shows its translation.
+		rows.append((GameState.zh_text(speaker) + SPEAKER + ": " if not speaker.is_empty() else "") + GameState.zh_text(str(line["content"])))
 	return "\n".join(rows)
