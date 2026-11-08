@@ -63,7 +63,7 @@ func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_button = TextureButton.new()
 	_button.name = "RadioButton"
-	_button.texture_normal = preload("res://assets/Art/symbols/radio_tool.svg")
+	_button.texture_normal = preload("res://assets/Art/ui/radio.png")
 	_button.ignore_texture_size = true
 	_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	SoftIcon.apply(_button)

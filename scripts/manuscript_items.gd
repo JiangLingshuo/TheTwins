@@ -39,7 +39,7 @@ static var _thumbnails := {}
 
 const TOOL_ICONS := {
 	"rubbing": preload("res://assets/Art/ui/rubbing_off.png"),
-	"searchlight": preload("res://assets/Art/ui/flashlight.png"),
+	"searchlight": preload("res://assets/Art/ui/flashlight_off.png"),
 	"camera": preload("res://assets/Art/ui/camera.png"),
 	"finding": preload("res://assets/Art/symbols/finding.svg"),
 }

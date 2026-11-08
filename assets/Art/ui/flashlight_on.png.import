@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c10ke7f143hwq"
-path="res://.godot/imported/radio_tool.svg-17531e677d00cc8a5e39ccbba00d0d85.ctex"
+uid="uid://d2m57f2880s73"
+path="res://.godot/imported/flashlight_on.png-6a6e82a3236967988fb793bc9acc6a75.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/radio_tool.svg"
-dest_files=["res://.godot/imported/radio_tool.svg-17531e677d00cc8a5e39ccbba00d0d85.ctex"]
+source_file="res://assets/Art/ui/flashlight_on.png"
+dest_files=["res://.godot/imported/flashlight_on.png-6a6e82a3236967988fb793bc9acc6a75.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
