@@ -21,6 +21,9 @@ var _is_night := false
 var _ending_light: ColorRect
 
 func _ready() -> void:
+	if not GameState.ending_true:
+		# A report below 80% returns to the opening investigation theme.
+		Music.play_bgm(Music.BGM_MAIN)
 	_background(DAY)
 	_night = _background(NIGHT)
 	_night.modulate.a = 0.0
@@ -58,12 +61,9 @@ func _ready() -> void:
 	_choices.add_child(_options)
 	_choices.hide()
 
-	if GameState.get_meta("preview_ending_light", false):
-		GameState.remove_meta("preview_ending_light")
-		_stone.show()
-		_stone.disabled = true
-		_preview_light_scene.call_deferred()
-	elif GameState.solitary_report_preview:
+	if GameState.clip_mode:
+		return  # a developer trailer clip drives this scene (TrailerClips.start)
+	if GameState.solitary_report_preview:
 		_discover_marker.call_deferred()
 	elif GameState.ending_true:
 		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
@@ -275,11 +275,3 @@ func _on_ending_line(line: Dictionary) -> void:
 	# Dawn belongs to this final line; keep the shaft behind the carved stone.
 	create_tween().tween_property(_ending_light, "modulate:a", 1.0, 2.0).set_trans(Tween.TRANS_SINE)
 	create_tween().tween_property(_stone, "self_modulate", Color(1.16, 1.10, 0.98), 2.0).set_trans(Tween.TRANS_SINE)
-func _preview_light_scene() -> void:
-	_is_night = true
-	_night.modulate.a = 1.0
-	_model.progress = _model.progress.duplicate(true)
-	_model.preview_only = true
-	var result := {"lines": [], "choices": []}
-	_model._program("test_open_ending", result)
-	_play_result(result)

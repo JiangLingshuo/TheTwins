@@ -48,7 +48,7 @@ var is_day: bool = true:
 			return
 		is_day = value
 		_fade_backgrounds()
-		if is_node_ready():
+		if is_node_ready() and not _quiet_switch:
 			# The bell rings A#. Going to night it drops a semitone to A; going back to
 			# day it rises two semitones to C (the music sits in D minor: A, F, C, D).
 			_church_bell.pitch_scale = pow(2.0, (2.0 if is_day else -1.0) / 12.0)
@@ -169,6 +169,15 @@ func _unhandled_key_input(event: InputEvent) -> void:
 			and (event as InputEventKey).keycode == toggle_key:
 		toggle_time()
 		get_viewport().set_input_as_handled()
+
+
+## Switch city without the bell, for capturing footage (developer trailer clips).
+var _quiet_switch := false
+
+func set_time_for_clip(day: bool) -> void:
+	_quiet_switch = true
+	is_day = day
+	_quiet_switch = false
 
 
 func set_day() -> void:

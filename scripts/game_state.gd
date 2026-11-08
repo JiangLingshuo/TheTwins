@@ -192,6 +192,8 @@ var ending_marker_investigated := false
 var solitary_report_preview := false
 ## True while the player is investigating the final marker (its own scene).
 var final_marker_phase := false
+## Set while a developer trailer clip loads its scene, so the scene does not run its own sequence.
+var clip_mode := false
 
 ## Hand in the six reports. Below the pass mark the quiet ending plays at once; at or
 ## above it the notebook closes, the solitary marker is found and investigated, and
@@ -272,13 +274,12 @@ func _build_dev_menu() -> void:
 	story.tooltip_text = "Dev only: show rubbing targets, hidden-question records and correct evidence."
 	story.toggled.connect(set_story_mode)
 	stack.add_child(story)
-	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["TEMP — Beautiful light preview", _preview_ending_light], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
+	for item in [["Solitary marker — from report submission", open_solitary_investigation.bind(true)], ["True ending", open_ending.bind(true, true)], ["False ending", open_ending.bind(false, true)], ["Close", _set_debug_overlay.bind(false)]]:
 		var button := Button.new()
 		button.text = item[0]
 		button.custom_minimum_size.y = 36
 		button.pressed.connect(item[1])
 		stack.add_child(button)
-
 func _toggle_playtest_language() -> void:
 	if not OS.is_debug_build(): return
 	if not chinese_playtest:
@@ -993,8 +994,3 @@ var camera_tutorial_pending := false
 var camera_tutorial_completed := false
 var formal_investigation_started := false
 var camera_observations: Dictionary = {}
-
-## Temporary F2 preview; deliberately not part of saved game state.
-func _preview_ending_light() -> void:
-	set_meta("preview_ending_light", true)
-	open_ending(true, true, true)

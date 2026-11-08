@@ -40,6 +40,15 @@ BigSoundBank — CC0
 https://bigsoundbank.com/detail-0908-wind-in-tall-grass.html
 
 
+LITERARY REFERENCES
+Stefan Zweig
+The World of Yesterday
+Opening epigraph: excerpt from the 1943 English edition.
+
+Johann Wolfgang von Goethe
+An Lottchen
+English rendering prepared for this game.
+
 Nothing can be changed.
 But something can be remembered.
 
