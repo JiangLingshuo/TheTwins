@@ -126,6 +126,10 @@ func _check_notebook_flow() -> void:
 	while box.is_playing():
 		box._advance()
 		await _wait(0.05)
+	# The start dialogue reveals the cemetery and stows the book again.
+	while start._cemetery_reveal_started and not start._cemetery_reveal_finished:
+		await _wait(0.1)
+	await _wait(0.2)
 
 	var click := InputEventMouseButton.new()
 	click.button_index = MOUSE_BUTTON_LEFT
@@ -229,7 +233,7 @@ func _check_notebook_sections(notebook_tool: Node) -> void:
 	_expect("next from Radio Logs closes the notebook", not notebook_tool.is_open() and not notebook.visible)
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("reopens on Rise & Set, not where it was closed", notebook.get_spread() == 0 and notebook.get_section() == notebook.RISE_AND_SET and notebook.tabs.visible)
+	_expect("reopens where it was closed (Radio Logs)", notebook.get_spread() == 7 and notebook.get_section() == 4 and notebook.tabs.visible)
 	notebook.jump_to_section(0)
 	await _wait(0.8)
 	_expect("left corner shows on the first spread", notebook.left_corner.visible)
@@ -273,6 +277,9 @@ func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
 	await _wait(0.1)
 	_expect("clicks while rubbing do not record the tomb", not game_state.gravestones.has("baby_tomb"))
 	rubbing_tool.set_active(false)
+	# Rubbing from afar shows the "use the magnifier" hint; let it finish first.
+	while main.get_node("Toast").visible:
+		await _wait(0.1)
 	_click(off_stone)
 	await _wait(0.1)
 	_expect("clicking beside the stone does not record it", not game_state.gravestones.has("baby_tomb"))
@@ -296,7 +303,10 @@ func _check_gravestone_record(main: Node, notebook_tool: Node) -> void:
 	var notebook = notebook_tool.book
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("the notebook opens on the newly recorded gravestone's page", notebook.get_spread() == notebook.get_gravestone_spread("baby_tomb"))
+	# Recording no longer turns the notebook to the new page; it opens where it was left.
+	notebook.jump_to_section(0)
+	await _wait(1.0)
+	_expect("the Gravestones tab shows the recorded gravestone's spread", notebook.get_spread() == notebook.get_gravestone_spread("baby_tomb"))
 	var left_entry = notebook.left_page.get_node("Gravestone")
 	_expect("baby tomb page is on the left page of Gravestones 1/3", notebook.get_section() == 0 and notebook.get_section_spread() == 0 \
 		and left_entry.visible and left_entry.gravestone_id == "baby_tomb")
@@ -407,7 +417,8 @@ func _check_rubbing(main: Node) -> void:
 	_expect("rubbing needs the stone zoomed in on", symbol.get_touched() == 0.0)
 	_zoom(main, main.get_node("DayCemetery/BabyTomb"))
 	rect = symbol.get_global_rect()
-	rubbing_tool._brush(rect.position + Vector2(2, rect.size.y / 2), rect.position + Vector2(8, rect.size.y / 2))
+	# A short stroke through the middle (the crescent art leaves its edges empty).
+	rubbing_tool._brush(rect.get_center() - Vector2(3, 0), rect.get_center() + Vector2(3, 0))
 	_expect("one short stroke only reveals part of the symbol", symbol.get_touched() > 0.0 and not symbol.is_rubbed)
 	_scribble(symbol, rect)
 	_expect("brushing over the symbol rubs it", symbol.is_rubbed)
@@ -558,7 +569,9 @@ func _check_rubbing_drag(main: Node) -> void:
 	await _wait(1.0)
 	notebook_tool.open()
 	await _wait(3.0)
-	_expect("the notebook reopens on Rise & Set", notebook.get_section() == notebook.RISE_AND_SET)
+	notebook.jump_to_section(notebook.RISE_AND_SET)  # it reopens where it was left
+	await _wait(0.8)
+	_expect("the Rise & Set section is reachable", notebook.get_section() == notebook.RISE_AND_SET)
 	notebook.jump_to_section(1)
 	await _wait(1.0)
 	_press(row.call(2), true)
@@ -572,8 +585,8 @@ func _check_rubbing_drag(main: Node) -> void:
 	await _wait(3.0)
 
 	# Night: the crescent in the notebook is the sky icon. Its meaning comes from
-	# the tutorial / Aurora; dragged onto the Moon it switches nothing and
-	# deciphers nothing (only moon-onto-sun replaces the sky).
+	# the tutorial / Aurora; dragged onto the Moon it is only acknowledged ("You
+	# know that's a moon."): it switches and deciphers nothing.
 	notebook_tool.open()
 	await _wait(3.0)
 	notebook.jump_to_section(1)
@@ -586,7 +599,7 @@ func _check_rubbing_drag(main: Node) -> void:
 	_press(moon_centre, false)
 	await _wait(0.1)
 	_expect("the crescent dropped on the Moon does not decipher it", game_state.get_rubbing_meaning("infant_moon_rubbing") == "" \
-		and label.text == "This symbol doesn't seem connected to that." and toast.visible)
+		and label.text == "You know that’s a moon." and toast.visible)
 	_expect("the notebook stays closed after the drop", not notebook_tool.is_open() and not drag.is_dragging())
 	_expect("the drop adds no entries", game_state.rubbings.count("infant_moon_rubbing") == 1 and game_state.rubbings[0] == "infant_moon_rubbing")
 	await _wait(3.0)
@@ -650,8 +663,10 @@ func _zoom(main: Node, stone: Control) -> void:
 ## Brush back and forth across `rect` a few times through the rubbing tool.
 func _scribble(symbol: RubbingSymbol, rect: Rect2) -> void:
 	var tool = symbol.get_tree().current_scene.get_node("RubbingTool")
-	for row in 6:
-		var y := rect.position.y + rect.size.y * (row + 0.5) / 6.0
+	# Rows close enough for the brush to cover large symbols seen up close.
+	var rows := maxi(6, ceili(rect.size.y / 14.0))
+	for row in rows:
+		var y := rect.position.y + rect.size.y * (row + 0.5) / rows
 		for _pass in 2:
 			if tool.active:
 				tool._brush(Vector2(rect.position.x - 10, y), Vector2(rect.end.x + 10, y))

@@ -62,12 +62,30 @@ func _run() -> void:
 	radio._collect_term("natural")
 	check("natural death unlocks global dropdown", state.report_options("causes", "baby_tomb").has("natural"))
 	radio.close()
-	state.record_rubbing("infant_figure_rubbing", "baby_tomb", "res://assets/Art/symbols/human.png")
+	# Current tutorial order: manuscripts -> searchlight -> radio (docs/tutorial-searchlight-first.md).
+	state.record_rubbing("infant_figure_rubbing", "baby_tomb", "res://assets/Art/symbol/day.png")
+	state.record_evidence("dayfolk_appearance")
+	state.record_evidence("designer_manuscript")
+	state.record_evidence("designer_journal")
 	state.radio_progress["read_manuscripts"] = ["designer_manuscript", "designer_journal"]
+	state.radio_progress["finished_manuscripts"] = ["designer_manuscript", "designer_journal"]
 	state.radio_progress["manuscript_keywords"] = ["infant"]
+	state.tutorial_searchlight_intro_heard = true
+	var lamp = main.get_node("FlashlightTool/Flashlight")
+	var sketch = main.get_node("DayCemetery/InfantSketch")
+	lamp.focus = 50.0
+	lamp._target_focus = 50.0
+	lamp.turn_on_at(sketch.get_global_rect().get_center(), true)
+	await wait(1.0)
+	check("searchlight discovers sketch at 2000", state.evidence_ids.has("infant_graffiti"))
+	main.get_node("FlashlightTool").turn_off()
+	tutorial.refresh()
+	await drain(tutorial._dialogue)
 	radio.open()
 	radio._start_call("baby_tomb")
-	state.record_evidence("dayfolk_appearance")
+	await send("test_answer_baby_8", "infant_graffiti")
+	check("searchlight sketch supplies the follow-up answer", state.radio_progress.get("read_answers", []).has("baby_8_additional_10") and state.evidence_ids.has("infant_death_doubt"))
+	radio._collect_term("unexplained death")
 	await send("test_answer_baby_17", "dayfolk_appearance")
 	await send("test_answer_baby_17", "designer_manuscript")
 	check("infant is explicitly clickable in supported reply", radio._last_lines.any(func(line: Dictionary) -> bool: return line.get("content", "").contains('<link="infant">')))
@@ -76,13 +94,7 @@ func _run() -> void:
 		radio._follow(radio._followups[0])
 		await drain(radio._reply_box)
 	radio.close()
-	var lamp = main.get_node("FlashlightTool/Flashlight")
-	var sketch = main.get_node("DayCemetery/InfantSketch")
-	lamp.focus = 50.0
-	lamp._target_focus = 50.0
-	lamp.turn_on_at(sketch.get_global_rect().get_center(), true)
-	await wait(1.0)
-	check("searchlight discovers sketch at 2000", state.evidence_ids.has("infant_graffiti"))
+	tutorial.refresh()
 	await drain(tutorial._dialogue)
 	check("hidden question explanation plays once", state.tutorial_hidden_heard)
 	radio.open()
@@ -91,9 +103,7 @@ func _run() -> void:
 	radio._set_slot(radio.model.data["evidence_groups"]["infant_graffiti"])
 	check("slot reveals hidden question", radio.model.questions_for("baby_tomb", radio._slot).any(func(item: Dictionary) -> bool: return item["target"] == "test_answer_baby_21"))
 	await send("test_answer_baby_21", "infant_graffiti")
-	await send("test_answer_baby_8", "infant_graffiti")
-	check("searchlight sketch supplies gold hidden answer", radio._feedback == "hidden" and state.evidence_ids.has("infant_death_doubt"))
-	radio._collect_term("unexplained death")
+	check("searchlight sketch answers the hidden question", state.radio_progress.get("read_answers", []).has("baby_21_hidden_23"))
 	await shot("radio_guidance")
 	radio.close()
 	check("report rejects uncollected identity", not state.set_report_choice("baby_tomb", "identity", "tycoon"))
@@ -103,8 +113,9 @@ func _run() -> void:
 	check("current stone retains selected identity", state.report_options("identities", "baby_tomb").has("infant"))
 	check("death cause is reusable", state.set_report_choice("scholar_tomb", "death", "natural"))
 	state.set_report_choice("baby_tomb", "death", "unexplained")
-	tutorial.refresh()
-	await drain(tutorial._dialogue)
+	for i in 3:  # the report-intro milestone, then the closing lines
+		tutorial.refresh()
+		await drain(tutorial._dialogue)
 	check("tutorial reaches completed report", state.investigation_tutorial_completed)
 	var notebook = main.get_node("NotebookTool")
 	await notebook.open()
@@ -133,7 +144,7 @@ func _run() -> void:
 	check("coin rubbing starts drag", drag.begin("sun_shaped_marker_rubbing", Vector2(700, 300)))
 	drag._left_book = true
 	drag._drop(coin.get_global_rect().get_center())
-	check("historical coin matches rubbing", state.get_rubbing_meaning("sun_shaped_marker_rubbing") == "Wishing-pool coin")
+	check("historical coin matches rubbing", state.get_rubbing_meaning("sun_shaped_marker_rubbing") == "Coin and Sun")
 	await shot("historical_coin")
 	state.set_report_choice("baby_tomb", "identity", "")
 	check("clearing identity releases it globally", state.report_options("identities", "scholar_tomb").has("infant"))
