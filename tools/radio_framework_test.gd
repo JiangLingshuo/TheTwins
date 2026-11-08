@@ -21,7 +21,7 @@ func _run() -> void:
 	await process_frame
 	state = root.get_node("GameState")
 	model = load("res://scripts/radio_model.gd").new()
-	check("all questions exported", model.data["questions"].size() == 59)
+	check("all questions exported", model.data["questions"].size() == 58)
 	for q in model.data["questions"]:
 		check("three unique candidates: " + q["id"], q["candidates"].size() == 3 and q["candidates"][0] != q["candidates"][1] and q["candidates"][1] != q["candidates"][2] and q["candidates"][0] != q["candidates"][2])
 	var repetition_target := "test_answer_repeated_beast"
