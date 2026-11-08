@@ -44,7 +44,7 @@ func _run() -> void:
 	main = current_scene
 	radio = main.get_node("RadioTool")
 	var tutorial = main.get_node("SunMoonTutorial")
-	state.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbols/sky_sun.svg")
+	state.record_rubbing("sky_sun_rubbing", "", "res://assets/Art/symbol/coin&sun.png")
 	state.record_rubbing("infant_moon_rubbing", "baby_tomb", "res://assets/Art/symbol/moon.png", "moon")
 	await drain(tutorial._dialogue)
 	state.cycle_hint_heard = true
@@ -128,7 +128,7 @@ func _run() -> void:
 	lamp.active = false
 	await process_frame
 	check("discovered coin stays a comparison target without lamp", coin.contains_point(coin.get_global_rect().get_center()))
-	state.record_rubbing("sun_shaped_marker_rubbing", "sun_tomb", "res://assets/Art/symbols/sky_sun.svg", "day_city_coin")
+	state.record_rubbing("sun_shaped_marker_rubbing", "sun_tomb", "res://assets/Art/symbol/coin&sun.png", "day_city_coin")
 	var drag = notebook.rubbing_drag
 	check("coin rubbing starts drag", drag.begin("sun_shaped_marker_rubbing", Vector2(700, 300)))
 	drag._left_book = true
