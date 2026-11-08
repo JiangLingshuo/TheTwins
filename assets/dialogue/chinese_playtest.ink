@@ -4263,3 +4263,8 @@ Aurora 的其他通讯
 // source: "Mind yourself. Don't wander off the path."
 照顾好自己，别走出小路。
 -> DONE
+
+=== zh_0857 ===
+// source: "This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?"
+这和日城的那块石碑很像。这是否说明，她们是文明陨落前的最后见证者？
+-> DONE

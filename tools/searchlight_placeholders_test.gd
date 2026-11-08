@@ -56,7 +56,12 @@ func _run() -> void:
 		aim(target, 45)
 		check("same endpoint does not count twice", state.searchlight_scan_progress[target.evidence_id].size() == 1)
 		aim(target, 0)
-		check("both endpoints record range observation", target.discovered and state.evidence_ids.has(target.evidence_id))
+		if target.evidence_id in ["scholar_no_traces", "night_mother_no_traces"]:
+			check("%s needs more than two endpoints" % target.evidence_id, not target.discovered)
+			aim(target, 50)
+			check("%s still needs the fourth setting" % target.evidence_id, not target.discovered)
+			aim(target, 60)
+		check("all required settings record range observation", target.discovered and state.evidence_ids.has(target.evidence_id))
 		check("negative scan is not a symbol match target", not target.contains_point(target.get_global_rect().get_center()))
 	main.set_day()
 	if OS.get_cmdline_user_args().has("--shots"):

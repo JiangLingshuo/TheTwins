@@ -701,6 +701,11 @@ Low on the mother's stone, beside her carved figures, is the image of the Crysta
 # category:observation
 # location:night_cemetery
 # tool:searchlight
+# discovery_reflection:This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?
+# searchlight_scan_years_ago:0
+# searchlight_scan_years_ago:45
+# searchlight_scan_years_ago:50
+# searchlight_scan_years_ago:60
 # searchlight_scan_start_year:2005
 # searchlight_scan_end_year:2050
 # searchlight_scan_years_ago_min:0
@@ -1145,6 +1150,11 @@ The complete girl-and-coffin composition on the solitary marker corresponds to t
 === ev_scholar_no_traces ===
 # type:evidence
 # id:scholar_no_traces
+# discovery_reflection:No one has visited the Scholar’s grave, despite her fame and reputation. It is not only what remains that leaves a trace; absence, too, tells a history. I should look into this again in Night City.
+# searchlight_scan_years_ago:0
+# searchlight_scan_years_ago:45
+# searchlight_scan_years_ago:50
+# searchlight_scan_years_ago:60
 # title:No Later Visitors at the Crystal Monument
 # category:observation
 # location:day_cemetery

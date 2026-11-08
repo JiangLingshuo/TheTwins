@@ -110,6 +110,8 @@ func play_tutorial() -> void:
 	_dialogue.play_file("res://assets/dialogue/tutorial_camera_intro.xml")
 	await _dialogue.finished
 	await take_photo(true)
+	# The photograph is taken: the second stage of the investigation begins.
+	Music.enter_stage_two()
 	_dialogue.play_file("res://assets/dialogue/tutorial_camera_connections.xml")
 	await _dialogue.finished
 	_caption.text = "Click the three blue-lit base segments · 0 / 3"

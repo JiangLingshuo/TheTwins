@@ -85,11 +85,13 @@ func _membership(pool: String, value: String) -> bool:
 	if pool == "owned_evidence":
 		return owns(value)
 	if pool == "links":
+		if value == "baby_pair" and GameState.evidence_ids.has("infant_memorial_correspondence"):
+			return true
 		if value == "sun" and GameState.evidence_ids.has("sun_coin_correspondence"):
 			return true
 		if value == "moon" and GameState.cycle_tutorial_completed:
 			return true # tutorial established which shape is the moon, not its death meaning
-		var rubbing_relations := {"human": "infant_figure_rubbing", "crystal": "crystal_marker_rubbing", "sun": "sun_shaped_marker_rubbing", "beast": "scholar_beast_rubbing", "river": "night_mother_river_rubbing", "father_path": "night_father_path_rubbing"}
+		var rubbing_relations := {"human": "infant_figure_rubbing", "crystal": "crystal_marker_rubbing", "sun": "sun_shaped_marker_rubbing", "beast": "scholar_beast_rubbing", "river": "night_mother_river_rubbing", "father_path": "night_father_path_rubbing", "skin": "night_mother_hands_rubbing"}
 		if rubbing_relations.has(value) and GameState.is_rubbing_deciphered(rubbing_relations[value]):
 			return true
 	return value in progress.get(pool, [])
@@ -377,3 +379,40 @@ func _reply_has_new_text(probe: RefCounted, reply: Dictionary, heard: Dictionary
 		branch.tomb = probe.tomb
 		if _reply_has_new_text(branch, branch.choose(choice), heard, plain, visited + [key]): return true
 	return false
+
+
+## Does this question have a currently reachable, unheard substantive reply?
+## Ignore wrong-record nudges once supporting evidence is available. Preview
+## branches use isolated state and never grant clues, terms or answer flags.
+func question_reply_state(question: Dictionary) -> Dictionary:
+	var plain := RegEx.create_from_string('<link="[^\"]+">([^<]+)</link>')
+	var heard: Dictionary = {}
+	for record in GameState.radio_history_records(question["tomb"], question["id"]):
+		for line in record.get("lines", []): heard[GameState.fill_placeholders(plain.sub(str(line.get("content", "")), "$1", true))] = true
+	var probe = get_script().new(data)
+	probe.preview_only = true
+	probe.progress = progress.duplicate(true)
+	var groups: Array = probe.candidates(question).duplicate()
+	if question.get("hidden", false):
+		for group in data.get("groups", {}):
+			if group not in groups and group_unlocked(group): groups.append(group)
+	var meaningful: Array = []
+	for group in groups:
+		if not group_unlocked(group): continue
+		probe = get_script().new(data)
+		probe.preview_only = true
+		probe.progress = progress.duplicate(true)
+		var reply: Dictionary = probe.send(question, group)
+		if reply.has("error"): continue
+		if reply.get("feedback", "") in ["linked", "hidden"] or question.get("hidden", false):
+			meaningful.append([probe, reply])
+	if meaningful.is_empty():
+		probe = get_script().new(data)
+		probe.preview_only = true
+		probe.progress = progress.duplicate(true)
+		var initial: Dictionary = probe.send(question, "")
+		if not initial.has("error"): meaningful.append([probe, initial])
+	for pair in meaningful:
+		if _reply_has_new_text(pair[0], pair[1], heard, plain, []):
+			return {"available": true, "unheard": true}
+	return {"available": not meaningful.is_empty(), "unheard": false}

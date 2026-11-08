@@ -108,7 +108,7 @@
       ],
       "texture": "res://assets/Art/figure/family_photo.png",
       "inspect": true,
-      "zoom_height": 0.22
+      "zoom_height": 0.5
     },
     {
       "node": "CrystalGod",
@@ -166,7 +166,9 @@
       "date_status": "timeline_suggestion",
       "scan_years": [
         0.0,
-        45.0
+        45.0,
+        50.0,
+        60.0
       ],
       "size": [
         230,
@@ -206,7 +208,9 @@
       "date_status": "timeline_suggestion",
       "scan_years": [
         0.0,
-        45.0
+        45.0,
+        50.0,
+        60.0
       ]
     },
     {

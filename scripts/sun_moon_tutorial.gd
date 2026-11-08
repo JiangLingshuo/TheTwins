@@ -664,7 +664,10 @@ func _play_milestone(file: String, flag: String) -> void:
 	var radio := _main.get_node("RadioTool")
 	if radio._reply_playing: return
 	_speaking = true
-	if radio.is_open(): radio.close()
+	var continue_call := file == "tutorial_hidden_question"
+	if continue_call:
+		radio.pause_for_tutorial()
+	elif radio.is_open(): radio.close(false)
 	_rubbing.turn_off()
 	_main.get_node("FlashlightTool").turn_off()
 	_panel.hide()
@@ -673,6 +676,7 @@ func _play_milestone(file: String, flag: String) -> void:
 	_dialogue.play_file("res://assets/dialogue/" + file + ".xml")
 	await _dialogue.finished
 	GameState.set(flag, true)
+	if continue_call: radio.resume_after_tutorial()
 	GameState.notebook_changed.emit()
 	_speaking = false
 	refresh()
@@ -718,7 +722,7 @@ func _finish_investigation() -> void:
 	var radio := _main.get_node("RadioTool")
 	if radio._reply_playing: return
 	_speaking = true
-	if radio.is_open(): radio.close()
+	if radio.is_open(): radio.close(false)
 	_panel.hide()
 	_highlight.dismiss(false)
 	_highlight_target = null

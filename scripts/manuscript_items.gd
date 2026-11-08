@@ -165,12 +165,41 @@ func _chip(stone_id: String, source: bool = false) -> Button:
 			thumbnail.set_offset(side, 4)
 		for side in [SIDE_RIGHT, SIDE_BOTTOM]:
 			thumbnail.set_offset(side, -4)
+	if _kind == "manuscript" and not source and has_unread(stone_id):
+		_add_unread_dot(chip)
 	if source:
 		chip.tooltip_text = GameState.zh_text("Day City · general" if stone_id == "__day" else ("Night City · general" if stone_id == "__night" else ("All sources" if stone_id.is_empty() else chip.tooltip_text)))
 		chip.pressed.connect(func() -> void: source_filter_requested.emit(stone_id))
 	else:
 		chip.pressed.connect(func() -> void: filter_requested.emit(stone_id))
 	return chip
+
+## True if any delivered manuscript of `stone_id` ("" = any stone) has not been
+## opened yet. Opening a manuscript marks it read (show_document).
+static func has_unread(stone_id: String) -> bool:
+	var read: Array = GameState.radio_progress.get("read_manuscripts", [])
+	for entry in GameState.notebook_entries(3, false):
+		if (stone_id.is_empty() or str(entry.get("gravestone", "")) == stone_id) and not read.has(entry["id"]):
+			return true
+	return false
+
+## A small red dot in the top-right corner of a filter chip: something new inside.
+func _add_unread_dot(chip: Button) -> void:
+	var dot := Panel.new()
+	dot.name = "UnreadDot"
+	dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.88, 0.2, 0.18)
+	style.border_color = Color(1.0, 0.96, 0.9, 0.9)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(6)
+	dot.add_theme_stylebox_override("panel", style)
+	chip.add_child(dot)
+	dot.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	dot.offset_left = -13.0
+	dot.offset_right = -1.0
+	dot.offset_top = 1.0
+	dot.offset_bottom = 13.0
 
 func setup(entries: Array[Dictionary], page_key: int, font: Font, ink: Color, interactive: bool, manuscript: bool = true, empty_text: String = "No documents received yet.") -> void:
 	_manuscript = manuscript

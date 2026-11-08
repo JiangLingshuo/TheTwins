@@ -376,7 +376,7 @@ func is_rubbing_deciphered(rubbing_id: String) -> bool:
 func get_rubbing_meaning(rubbing_id: String) -> String:
 	if rubbing_id == "sky_sun_rubbing" and rubbings.has(rubbing_id):
 		var coin: Dictionary = rubbing_records.get("sun_shaped_marker_rubbing", {})
-		return "Coin and Sun" if evidence_ids.has("sun_coin_correspondence") or (coin.get("target", "") == "day_city_coin" and not str(coin.get("meaning", "")).is_empty()) else "Sun"
+		return "Coin and Sun" if evidence_ids.has("sun_coin_correspondence") or (coin.get("target", "") == "day_city_coin" and str(coin.get("meaning", "")).to_lower().contains("coin")) else "Sun"
 	if rubbing_id == "sun_shaped_marker_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("sun_coin_correspondence"):
 		return "Coin and Sun"
 	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
@@ -386,6 +386,9 @@ func get_rubbing_meaning(rubbing_id: String) -> String:
 
 ## target_id of the scene object that deciphers a rubbing ("" if none).
 func get_rubbing_target(rubbing_id: String) -> String:
+	# Also repairs path rubbings already collected before the target was wired.
+	if rubbing_id == "night_father_path_rubbing" and rubbings.has(rubbing_id): return "skyway_reference"
+	if rubbing_id == "night_mother_river_rubbing" and rubbings.has(rubbing_id): return "dry_underground_river"
 	return rubbing_records.get(rubbing_id, {}).get("target", "")
 
 

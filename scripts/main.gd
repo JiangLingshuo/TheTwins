@@ -98,6 +98,8 @@ func _ready() -> void:
 		_toast.show_message(rubbing_deciphered_message))
 	_notebook_tool.rubbing_drag.mismatched.connect(func(_id: String, _target: Control) -> void:
 		_toast.show_message(rubbing_mismatch_message))
+	_notebook_tool.rubbing_drag.acknowledged.connect(func(_id: String, _target: Control, message: String) -> void:
+		_toast.show_message(GameState.zh_text(message)))
 	_notebook_tool.rubbing_drag.already_noted.connect(func(_id: String, _target: Control) -> void:
 		_toast.show_message(already_noted_message))
 	# Every new clue is announced (a revealed one too), queued after other messages.
@@ -153,11 +155,31 @@ func _update_report_submission() -> void:
 
 
 func _on_evidence_recorded(id: String) -> void:
+	if id in ["scholar_no_traces", "night_mother_no_traces"] and not GameState.notebook_preview:
+		_absence_reflection.call_deferred(id)
 	if id == "infant_medical_record" and not GameState.notebook_preview:
 		_toast.show_message("New manuscript received from Aurora: Day City Medical Record.")
 	elif GameState.is_clue(id) and not GameState.notebook_preview:
 		_toast.show_message(GameState.zh_text(clue_recorded_message) % GameState.fill_placeholders(GameState.get_evidence(id).get("title", id)))
 
+
+## The player's thought after a negative scan has checked every time (the evidence's
+## `discovery_reflection` lines).
+func _absence_reflection(id: String) -> void:
+	while GameState.radio_modal_open or GameState.camera_modal_open:
+		await get_tree().process_frame
+	_flashlight_tool.turn_off()
+	var box := preload("res://scenes/dialogue_box.tscn").instantiate()
+	box.name = "AbsenceReflection"
+	box.z_index = 90
+	add_child(box)
+	var reflections: Array = GameState.get_evidence(id).get("metadata", {}).get("discovery_reflection", [])
+	var lines: Array[Dictionary] = []
+	for text in reflections: lines.append({"speaker": "#PLAYER#", "content": str(text)})
+	box.play(lines, "scholar_absence_reflection" if id == "scholar_no_traces" else id + "_reflection")
+	await box.finished
+	box.queue_free()
+	GameState.write_autosave()
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if GameState.radio_modal_open or GameState.camera_modal_open:
@@ -243,13 +265,17 @@ func _add_investigation_targets() -> void:
 		if spec.has("size"):
 			target.size = Vector2(spec["size"][0], spec["size"][1])
 		if spec["evidence_id"] == "infant_graffiti": target.extra_aim_rect = Rect2(790, 480, 220, 300)  # the infant marker (art moved 30 px right)
+		if spec["evidence_id"] == "scholar_no_traces":
+			target.extra_aim_rect = _day_cemetery.get_node("ScholarTomb").zoom_rect
 		target.inspectable = spec.get("inspect", false)
 		target.zoom_height_ratio = spec.get("zoom_height", target.zoom_height_ratio)
 		target.caption = spec["caption"]
 		target.meaning = spec["meaning"]
 		target.required_grave = spec.get("required_grave", "")
 		target.date_status = metadata.get("searchlight_date_status", [spec.get("date_status", "")])[0]
-		if metadata.has("searchlight_scan_years_ago_min"):
+		if metadata.has("searchlight_scan_years_ago"):
+			for year in metadata["searchlight_scan_years_ago"]: target.scan_years.append(float(year))
+		elif metadata.has("searchlight_scan_years_ago_min"):
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_min"][0]))
 			target.scan_years.append(float(metadata["searchlight_scan_years_ago_max"][0]))
 		max_year = maxf(max_year, target.years_ago)

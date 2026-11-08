@@ -72,6 +72,7 @@ func apply_flashlight(lamp: Flashlight) -> void:
 		if not checked.has(sample):
 			checked.append(sample)
 			GameState.searchlight_scan_progress[evidence_id] = checked
+			GameState.write_autosave()
 			_toast(GameState.zh_text("Scan endpoint checked: %d") % int(2050 - scan_years[sample]))
 		if checked.size() < scan_years.size():
 			return
@@ -109,7 +110,11 @@ func _process(_delta: float) -> void:
 	if _inspect_button.visible:
 		var rect := get_global_rect()
 		var screen := get_viewport_rect().size
-		var at := Vector2(rect.end.x + 6.0, rect.position.y - 6.0)
+		# To the left of the find (a stone's own magnifier sits to the right of its head,
+		# so a find drawn on a stone no longer collides with it); right side if no room.
+		var at := Vector2(rect.position.x - _inspect_button.size.x - 6.0, rect.position.y - 6.0)
+		if at.x < 8.0:
+			at.x = rect.end.x + 6.0
 		at.x = clampf(at.x, 8.0, screen.x - _inspect_button.size.x - 8.0)
 		at.y = clampf(at.y, 8.0, screen.y - _inspect_button.size.y - 8.0)
 		_inspect_button.global_position = at
@@ -120,7 +125,8 @@ func get_stone_global_rect() -> Rect2:
 	return get_global_rect()
 
 
-## A round + magnifier like the tombstones'.
+## A round + magnifier like the tombstones', but in cool teal: a tombstone's magnifier
+## is gold, so a stone's button and a find's button are never mistaken for each other.
 func _magnifier_button(diameter: int) -> Button:
 	var button := Button.new()
 	button.top_level = true  # beside the trace, screen-sized whatever the zoom
@@ -130,15 +136,15 @@ func _magnifier_button(diameter: int) -> Button:
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	for state in ["normal", "hover", "pressed"]:
 		var style := StyleBoxFlat.new()
-		style.bg_color = Color(0.1, 0.09, 0.08, 0.9 if state == "normal" else 0.97)
-		style.border_color = Color(1.0, 0.9, 0.66) if state == "hover" else Color(0.86, 0.73, 0.46)
+		style.bg_color = Color(0.06, 0.1, 0.12, 0.9 if state == "normal" else 0.97)
+		style.border_color = Color(0.72, 0.96, 1.0) if state == "hover" else Color(0.42, 0.78, 0.86)
 		style.set_border_width_all(2)
 		style.set_corner_radius_all(diameter / 2)
 		button.add_theme_stylebox_override(state, style)
 	button.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 	var k := diameter / 44.0
 	button.draw.connect(func() -> void:
-		var ink := Color(0.98, 0.94, 0.84)
+		var ink := Color(0.84, 0.97, 1.0)
 		var lens := Vector2(19, 19) * k
 		button.draw_arc(lens, 9.5 * k, 0, TAU, 32, ink, 2.5 * k, true)
 		button.draw_line(lens + Vector2(7, 7) * k, Vector2(33, 33) * k, ink, 4.0 * k, true)

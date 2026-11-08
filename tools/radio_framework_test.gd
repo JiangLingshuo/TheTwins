@@ -35,6 +35,15 @@ func _run() -> void:
 		check("camera evidence reveals repetition question: " + tomb_id, model.questions_for(tomb_id, group("repeated_beast_motifs")).any(func(q: Dictionary) -> bool: return q["target"] == repetition_target))
 		var perspective_reply: Dictionary = model.send(perspective, group("repeated_beast_motifs"))
 		check("perspective answer points to Night City: " + tomb_id, joined(perspective_reply).contains("Night City") and perspective_reply.get("feedback") == "hidden")
+	var crystal_q: Dictionary = {}
+	for candidate in model.questions_for("scholar_tomb"):
+		if candidate["target"] == "test_answer_scholar_8": crystal_q = candidate
+	check("crystal question locked before the camera comparison", not crystal_q.is_empty() and not crystal_q["available"])
+	state.record_evidence("crystal_marker_correspondence")
+	crystal_q = {}
+	for candidate in model.questions_for("scholar_tomb"):
+		if candidate["target"] == "test_answer_scholar_8": crystal_q = candidate
+	check("camera crystal comparison unlocks the crystal question", not crystal_q.is_empty() and crystal_q["available"])
 	check("repetition question excluded from infant marker", question(repetition_target, "baby_tomb").is_empty())
 	check("perspective answer does not award disappearance", not state.radio_progress.get("causes", []).has("disappearance"))
 	state.record_gravestone("baby_tomb")

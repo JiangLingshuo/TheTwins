@@ -48,4 +48,5 @@ texture = ExtResource("6_river")
 expand_mode = 1
 script = ExtResource("4_godsym")
 rubbing_id = "night_mother_river_rubbing"
+matching_target_id = "dry_underground_river"
 brush_radius = 14.0

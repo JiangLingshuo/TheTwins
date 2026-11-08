@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "dd04bb0b548bcab604cdd72a25f24dc1f9b7dd1d67de0efdf3bb0ee3980c3f01",
+    "evidence_master.ink": "4c0e422a22f40b1bc74f465ce5a9d41cd9ba21f2da9c1054ea4c39e2b66a349d",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
-    "telecomm_master.ink": "b83814f2ac8452fa3d82b67dd20bda36b6eb0f188431cf2878338eeacc384c01"
+    "telecomm_master.ink": "e5e9743290697c7bb0ec561bd6139fcb2d7b368226daf1986b7af8143f260ed8"
   },
   "gravestones": {
     "baby_tomb": {
@@ -1615,6 +1615,15 @@
         "tool": [
           "searchlight"
         ],
+        "discovery_reflection": [
+          "This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?"
+        ],
+        "searchlight_scan_years_ago": [
+          "0",
+          "45",
+          "50",
+          "60"
+        ],
         "searchlight_scan_start_year": [
           "2005"
         ],
@@ -2670,6 +2679,15 @@
         ],
         "id": [
           "scholar_no_traces"
+        ],
+        "discovery_reflection": [
+          "No one has visited the Scholar’s grave, despite her fame and reputation. It is not only what remains that leaves a trace; absence, too, tells a history. I should look into this again in Night City."
+        ],
+        "searchlight_scan_years_ago": [
+          "0",
+          "45",
+          "50",
+          "60"
         ],
         "title": [
           "No Later Visitors at the Crystal Monument"

@@ -27,6 +27,8 @@ signal already_noted(rubbing_id: String, target: Control)
 ## Emitted when a rubbing was dropped on the scene but not on its object
 ## (`target` is the object under it, or null).
 signal mismatched(rubbing_id: String, target: Control)
+## A valid but redundant comparison, e.g. the moon onto itself.
+signal acknowledged(rubbing_id: String, target: Control, message: String)
 
 const FONT: Font = preload("res://assets/fonts/ZhaohuaTypeWriter.ttf")
 
@@ -162,6 +164,9 @@ func _drop(pointer: Vector2) -> void:
 		return  # released inside the book or outside the window: just cancelled
 	var target := _target_at(pointer)
 	if cycle_drop:
+		if target and ((id == "infant_moon_rubbing" and target.target_id == "moon") or (id == "sky_sun_rubbing" and target.target_id == "sky_sun")):
+			acknowledged.emit(id, target, "You know that’s a moon." if id == "infant_moon_rubbing" else "You know that’s a sun.")
+			return
 		if target and ((id == "infant_moon_rubbing" and target.target_id == "sky_sun") or (id == "sky_sun_rubbing" and target.target_id == "moon" and GameState.cycle_tutorial_completed)):
 			sky_replaced.emit(id, target)
 		else:
@@ -170,9 +175,18 @@ func _drop(pointer: Vector2) -> void:
 	if target == null:
 		mismatched.emit(id, null)
 		return
+	if id == "sun_shaped_marker_rubbing" and target.target_id in ["sky_sun", "day_city_coin"]:
+		var desired := "Sun" if target.target_id == "sky_sun" else "Coin and Sun"
+		var previous := GameState.get_rubbing_meaning(id)
+		if previous == desired or (desired == "Sun" and previous.to_lower().contains("coin")):
+			already_noted.emit(id, target)
+		elif GameState.confirm_rubbing_meaning(id, desired):
+			deciphered.emit(id, target)
+		return
 	# 2. A match that reveals a clue.
 	var reveal := GameState.find_rubbing_reveal(id, target.target_id)
 	if not reveal.is_empty():
+		if id == "night_father_path_rubbing": GameState.confirm_rubbing_meaning(id, target.get_meaning())
 		var clue: String = reveal.get("clue", "")
 		if GameState.evidence_ids.has(clue):
 			already_noted.emit(id, target)
@@ -223,6 +237,7 @@ func _draw_story_targets() -> void:
 			matches = (rubbing_id == "infant_moon_rubbing" and target_id == "sky_sun") or (rubbing_id == "sky_sun_rubbing" and target_id == "moon" and GameState.cycle_tutorial_completed)
 		else:
 			matches = target_id == GameState.get_rubbing_target(rubbing_id) or not GameState.find_rubbing_reveal(rubbing_id, target_id).is_empty()
+		if rubbing_id == "sun_shaped_marker_rubbing" and target_id in ["sky_sun", "day_city_coin"]: matches = true
 		if not matches: continue
 		var global_rect: Rect2 = target.get_global_rect()
 		if target is TextureRect and target.texture:

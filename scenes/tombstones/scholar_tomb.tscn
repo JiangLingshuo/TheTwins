@@ -9,7 +9,7 @@
 [node name="ScholarTomb" instance=ExtResource("1_base")]
 texture = ExtResource("2_art")
 gravestone_id = "scholar_tomb"
-zoom_rect = Rect2(470, 370, 260, 380)
+zoom_rect = Rect2(470, 370, 260, 430)
 
 [node name="OutlineSymbol" type="TextureRect" parent="."]
 layout_mode = 0

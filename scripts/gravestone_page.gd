@@ -61,6 +61,8 @@ func _ready() -> void:
 		slot.mouse_filter = Control.MOUSE_FILTER_IGNORE
 		slot.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 		slot.gui_input.connect(_on_slot_input.bind(i))
+		slot.clip_contents = true
+		slot.draw.connect(_draw_rubbing_slot.bind(i, slot))
 		rubbings_row.add_child(slot)
 	_pen = AudioStreamPlayer.new()
 	_pen.stream = WRITING_SOUND
@@ -218,27 +220,26 @@ func _draw() -> void:
 ## The gravestone's collected rubbings in its slots, in collection order, with a
 ## tick on the deciphered ones (state from GameState, shared with the Rubbings tab).
 func _draw_rubbings() -> void:
+	for slot in rubbings_row.get_children(): slot.queue_redraw()
+
+## Draw in the slot's own canvas: layout, scroll and page-turn transforms then
+## move the image and frame together, without cached ancestor coordinates.
+func _draw_rubbing_slot(index: int, slot: Control) -> void:
+	if _unknown: return
 	var ids := GameState.get_gravestone_rubbings(gravestone_id)
-	var slots := rubbings_row.get_children()
-	var origin := get_global_transform().affine_inverse() * rubbings_row.global_position
-	for i in mini(ids.size(), slots.size()):
-		var full_box := Rect2(origin + slots[i].position, slots[i].size)
-		if not ($InfoReader as Control).get_rect().encloses(full_box):
-			continue
-		var box := full_box.grow(-5.0)
-		var path := GameState.get_rubbing_texture(ids[i])
-		if not path.is_empty() and ResourceLoader.exists(path):
-			var texture: Texture2D = load(path)
-			var fit := minf(box.size.x / texture.get_width(), box.size.y / texture.get_height())
-			var drawn := Vector2(texture.get_size()) * fit
-			# White symbol art, drawn in the page's ink.
-			draw_texture_rect(texture, Rect2(box.get_center() - drawn / 2.0, drawn), false, _ink)
-		if GameState.is_rubbing_deciphered(ids[i]):
-			_draw_tick(origin + slots[i].position + Vector2(slots[i].size.x - 13.0, 2.0), 11.0)
+	if index >= ids.size(): return
+	var box := Rect2(Vector2.ZERO, slot.size).grow(-4.0)
+	var texture := TrimmedTexture.of(GameState.get_rubbing_texture(ids[index]))
+	if texture:
+		var fit := minf(box.size.x / texture.get_width(), box.size.y / texture.get_height())
+		var drawn := Vector2(texture.get_size()) * fit
+		slot.draw_texture_rect(texture, Rect2(box.get_center() - drawn / 2.0, drawn), false, _ink)
+	if GameState.is_rubbing_deciphered(ids[index]):
+		_draw_tick(Vector2(slot.size.x - 13.0, 2.0), 11.0, slot)
 
 
 ## A small, slightly uneven hand-drawn tick (same as on the Rubbings pages).
-func _draw_tick(at: Vector2, length: float) -> void:
+func _draw_tick(at: Vector2, length: float, canvas: CanvasItem) -> void:
 	var points := PackedVector2Array([
 		at + Vector2(0.0, 0.52) * length,
 		at + Vector2(0.14, 0.64) * length,
@@ -246,9 +247,9 @@ func _draw_tick(at: Vector2, length: float) -> void:
 		at + Vector2(0.58, 0.48) * length,
 		at + Vector2(1.0, 0.02) * length,
 	])
-	draw_polyline(points, _ink, 2.0, true)
+	canvas.draw_polyline(points, _ink, 2.0, true)
 	var offset := Vector2(0.7, -0.4)
-	draw_polyline(PackedVector2Array([points[1] + offset, points[2] + offset, points[3] + offset]),
+	canvas.draw_polyline(PackedVector2Array([points[1] + offset, points[2] + offset, points[3] + offset]),
 		Color(_ink, 0.6), 1.1, true)
 
 

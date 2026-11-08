@@ -38,6 +38,7 @@ var _candidate_order: Array[int] = [0, 1, 2]
 var _slot := ""
 var _filter := 0
 var _direct_only := false
+var _question_states: Dictionary = {}
 var _last_lines: Array = []
 var _followups: Array = []
 var _status := ""
@@ -49,6 +50,7 @@ var _tutorial_hint: Label
 var tutorial_controls: Dictionary = {}
 var _reply_box: Control
 var _reply_playing := false
+var _tutorial_paused := false
 var _heard_reply := false
 var _previous_layout: VBoxContainer
 ## Radio history context of the last question sent; follow-ups chosen from its
@@ -103,12 +105,12 @@ func _process(_delta: float) -> void:
 	_button.tooltip_text = "Contact Aurora" if _can_open() else "Read the manuscripts, then use the searchlight to inspect the marker 50 years ago."
 
 func _unhandled_key_input(event: InputEvent) -> void:
-	if is_open() and not _reply_playing and event.is_action_pressed("ui_cancel"):
+	if is_open() and not _reply_playing and not _tutorial_paused and event.is_action_pressed("ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
 
 func is_open() -> bool:
-	return _overlay != null and (_overlay.visible or _reply_playing)
+	return _overlay != null and (_overlay.visible or _reply_playing or _tutorial_paused)
 
 func open() -> void:
 	if is_open() or not _can_open():
@@ -139,9 +141,10 @@ func _farewell() -> String:
 		return FAREWELLS_NIGHT_CARE.pick_random()
 	return FAREWELLS_NIGHT.pick_random()
 
-func close() -> void:
+func close(play_hangup: bool = true) -> void:
 	if _reply_playing: return
-	if GameState.radio_modal_open:
+	_tutorial_paused = false
+	if GameState.radio_modal_open and play_hangup:
 		_hangup.play()
 	if _heard_reply:
 		GameState.write_autosave()
@@ -152,8 +155,28 @@ func close() -> void:
 	_followups = []
 	_slot = ""
 
+## A tutorial aside is part of this call, not a hang-up or a new session.
+func pause_for_tutorial() -> void:
+	if _reply_playing: return
+	_tutorial_paused = true
+	_overlay.hide()
+
+func resume_after_tutorial() -> void:
+	_tutorial_paused = false
+	_question = {}
+	_slot = ""
+	_followups = []
+	_filter = 0
+	_direct_only = false
+	_status = ""
+	_feedback = ""
+	GameState.radio_modal_open = true
+	_overlay.show_menu()
+	if _tomb.is_empty(): _start_call("baby_tomb")
+	_render()
+
 func _queue_render() -> void:
-	if not is_open() or _reply_playing or _render_pending:
+	if not is_open() or _reply_playing or _tutorial_paused or _render_pending:
 		return
 	_render_pending = true
 	_render.call_deferred()
@@ -210,6 +233,20 @@ func _action(text: String, callback: Callable, disabled: bool = false) -> Button
 	title.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
 	title.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	if disabled: title.modulate.a = 0.45
+	# A line wider than the button shrinks the text to fit instead of being cut off.
+	if title.autowrap_mode == TextServer.AUTOWRAP_OFF:
+		var fit := func() -> void:
+			var available := button.size.x - 20.0
+			var widest := 0.0
+			for line in wrapped.split("
+"):
+				widest = maxf(widest, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 20).x)
+			var font_size := 20
+			if widest > available and available > 0.0:
+				font_size = clampi(floori(20.0 * available / widest), 12, 20)
+			title.add_theme_font_size_override("font_size", font_size)
+		button.resized.connect(fit)
+		fit.call_deferred()
 	button.pressed.connect(callback)
 	return button
 
@@ -228,7 +265,8 @@ func _scroll_stack(parent: Control, minimum_height: float) -> VBoxContainer:
 
 func _render() -> void:
 	_render_pending = false
-	if not is_open() or _reply_playing: return
+	if not is_open() or _reply_playing or _tutorial_paused: return
+	_update_question_activity()
 	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
 	_previous_layout = _layout
 	tutorial_controls.clear()
@@ -255,6 +293,18 @@ func _render() -> void:
 			var info := GameState.get_gravestone_info(id)
 			var stone := _action(info.get("title", id), _start_call.bind(id))
 			list.add_child(stone)
+			if _marker_has_reopened_questions(id):
+				var dot := _label("●", 16)
+				dot.name = "NewRepliesDot"
+				dot.add_theme_color_override("font_color", Color("cf6068"))
+				dot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+				stone.add_child(dot)
+				dot.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+				dot.offset_left = -25
+				dot.offset_right = -7
+				dot.offset_top = 5
+				dot.offset_bottom = 27
+				stone.get_child(0).offset_right = -30
 			if id == "baby_tomb": tutorial_controls["stone"] = stone
 		if list.get_child_count() == 0: list.add_child(_label("No recorded gravestones in this city yet. Return to Day City to continue the small marker investigation." if not GameState.current_city_day else "Record a Day City gravestone in your notebook first."))
 		_commit_layout()
@@ -282,7 +332,7 @@ func _render() -> void:
 	if not _followups.is_empty():
 		for choice in _followups: questions.add_child(_action(choice["label"], _follow.bind(choice)))
 	else:
-		for question in model.questions_for(_tomb, _slot):
+		for question in _visible_questions():
 			if not _lesson_allows(question): continue
 			var text := GameState.zh_text(question["label"])
 			if question["hidden"]: text = "◇ " + text
@@ -292,6 +342,8 @@ func _render() -> void:
 			var question_button := _action(text, _select_question.bind(question), not question["available"])
 			questions.add_child(question_button)
 			tutorial_controls[question["target"]] = question_button
+	if questions.get_child_count() == 0:
+		questions.add_child(_label("当前可问的内容已全部听过。发现新线索后可能有新的回复。" if GameState.chinese_playtest else "You have heard all currently available replies. New findings may open further questions.", 18))
 	var right := VBoxContainer.new()
 	right.custom_minimum_size.x = 360
 	right.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -384,9 +436,49 @@ func _commit_layout() -> void:
 	_overlay.set_feedback(_feedback)
 	_fit_selection_panel()
 
+## Only formal investigation uses exhaustion; tutorial questions stay available
+## for the scripted sequence and collecting missed underlined terms.
+func _update_question_activity() -> void:
+	_question_states.clear()
+	if not GameState.investigation_tutorial_completed: return
+	var exhausted: Array = model.progress.get("exhausted_questions", [])
+	var pending: Array = model.progress.get("reopened_questions", [])
+	for question in model.data.get("questions", []):
+		if question["tomb"] not in GameState.gravestones or not model.city_allows(question["tomb"]): continue
+		var state: Dictionary = model.question_reply_state(question)
+		_question_states[question["id"]] = state
+		if not state["available"]: continue
+		if not state["unheard"]:
+			if question["id"] not in exhausted: exhausted.append(question["id"])
+			pending.erase(question["id"])
+		elif question["id"] in exhausted:
+			exhausted.erase(question["id"])
+			if question["id"] not in pending: pending.append(question["id"])
+	model.progress["exhausted_questions"] = exhausted
+	model.progress["reopened_questions"] = pending
+
+func _marker_has_reopened_questions(stone: String) -> bool:
+	for question in model.data.get("questions", []):
+		if question["tomb"] == stone and question["id"] in model.progress.get("reopened_questions", []): return true
+	return false
+
+func _visible_questions() -> Array:
+	var hidden: Array = []
+	var ordinary: Array = []
+	for question in model.questions_for(_tomb, _slot):
+		var state: Dictionary = _question_states.get(question["id"], {})
+		if question["available"] and state.get("available", false) and not state.get("unheard", true): continue
+		if question.get("hidden", false): hidden.append(question)
+		else: ordinary.append(question)
+	return hidden + ordinary
+
 func _start_call(id: String) -> void:
 	if _reply_playing: return
 	_tomb = id
+	var pending: Array = model.progress.get("reopened_questions", [])
+	for item in model.data.get("questions", []):
+		if item["tomb"] == id: pending.erase(item["id"])
+	model.progress["reopened_questions"] = pending
 	_direct_only = false
 	_question = {}
 	_slot = ""

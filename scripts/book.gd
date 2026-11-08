@@ -1073,10 +1073,52 @@ func _step_reading(delta: int) -> void:
 
 func _reading_keyword(id: String) -> void:
 	if get_section() == 3:
+		_show_keyword_recorded(id)
 		var notes: Array = GameState.radio_progress.get("manuscript_keywords", [])
 		if not notes.has(id): notes.append(id)
 		GameState.radio_progress["manuscript_keywords"] = notes
 	GameState.collect_term(id)
+
+## A small acknowledgement lives on the book, so refreshing the reader after
+## collecting a term cannot delete the feedback before the player sees it.
+var _keyword_notice: Label
+var _keyword_notice_tween: Tween
+
+func _show_keyword_recorded(id: String) -> void:
+	var word := id.replace("_", " ")
+	var raw := GameState.fill_placeholders(str(GameState.get_evidence(_reading_document).get("body", "")))
+	for item in RegEx.create_from_string('<link="([^\"]+)">([^<]+)</link>').search_all(raw):
+		if item.get_string(1) == id:
+			word = item.get_string(2)
+			break
+	if not is_instance_valid(_keyword_notice):
+		_keyword_notice = Label.new()
+		_keyword_notice.name = "KeywordRecordedNotice"
+		_keyword_notice.top_level = true
+		_keyword_notice.z_as_relative = false
+		_keyword_notice.z_index = 110
+		_keyword_notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_keyword_notice.add_theme_font_override("font", GameState.playtest_font(SpreadReader.BODY_FONT))
+		_keyword_notice.add_theme_font_size_override("font_size", 17)
+		_keyword_notice.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_keyword_notice.custom_minimum_size.x = 240
+		add_child(_keyword_notice)
+	_keyword_notice.text = ("已记录：%s" if GameState.chinese_playtest else "%s recorded") % word
+	_keyword_notice.add_theme_color_override("font_color", Color("765044") if left_text.label_settings.font_color.get_luminance() < 0.5 else Color("ddbd88"))
+	_keyword_notice.size = Vector2(240, 0)
+	_keyword_notice.reset_size()
+	var at := get_global_mouse_position() + Vector2(12, 22)
+	var screen := get_viewport_rect().size
+	at.x = clampf(at.x, 10, maxf(10, screen.x - _keyword_notice.size.x - 10))
+	at.y = clampf(at.y, 10, maxf(10, screen.y - _keyword_notice.size.y - 10))
+	_keyword_notice.global_position = at
+	_keyword_notice.modulate.a = 0.9
+	_keyword_notice.show()
+	if _keyword_notice_tween: _keyword_notice_tween.kill()
+	_keyword_notice_tween = create_tween()
+	_keyword_notice_tween.tween_interval(1.6)
+	_keyword_notice_tween.tween_property(_keyword_notice, "modulate:a", 0.0, 0.45)
+	_keyword_notice_tween.tween_callback(_keyword_notice.hide)
 
 ## True while the spread shows a text in the reader (a radio log or an opened entry).
 func _is_reading() -> bool:

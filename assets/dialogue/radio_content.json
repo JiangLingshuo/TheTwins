@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "1de02fe92a2e77567ff899ac5277ca0e2b6bd1c8616137a252ff18c4df25cd63",
+  "source_sha256": "6cd89aa385dd45b8809d0e67c4928044b92d417d8873237b043901b7f65ea633",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -69,7 +69,7 @@
       "id": "scholar:test_answer_scholar_8",
       "tomb": "scholar_tomb",
       "label": "Why is the monument shaped like a crystal?",
-      "condition": "(links ? Relation.crystal)",
+      "condition": "((links ? Relation.crystal) || (owned_evidence ? EvidenceId.crystal_marker_correspondence))",
       "target": "test_answer_scholar_8",
       "hidden": false,
       "candidates": [

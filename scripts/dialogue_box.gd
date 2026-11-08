@@ -66,10 +66,12 @@ var _radio_noise: AudioStreamPlayer
 ## player moves past it (or the dialogue closes). Authored in the dialogue text.
 const CUES := {
 	"busy": {"stream": preload("res://assets/audio/忙音.wav"), "volume_db": -4.0},
-	"wind": {"stream": preload("res://assets/audio/风声.wav"), "volume_db": -8.0},
+	# A long quiet recording of wind in grass: only the start is used, faded out.
+	"wind": {"stream": preload("res://assets/audio/风声.mp3"), "volume_db": -17.0, "seconds": 14.0, "fade": 3.0},
 	"hangup": {"stream": preload("res://assets/audio/无线电挂断.wav"), "volume_db": 0.0},
 }
 var _cue_player: AudioStreamPlayer
+var _cue_tween: Tween
 
 
 func _ready() -> void:
@@ -80,7 +82,7 @@ func _ready() -> void:
 	noise.loop = true
 	_radio_noise = AudioStreamPlayer.new()
 	_radio_noise.stream = noise
-	_radio_noise.volume_db = -12.0
+	_radio_noise.volume_db = -20.0
 	add_child(_radio_noise)
 	_cue_player = AudioStreamPlayer.new()
 	add_child(_cue_player)
@@ -182,9 +184,18 @@ func _advance() -> void:
 func _play_cue(cue: String) -> void:
 	if not CUES.has(cue):
 		return
-	_cue_player.stream = CUES[cue]["stream"]
-	_cue_player.volume_db = CUES[cue]["volume_db"]
+	var spec: Dictionary = CUES[cue]
+	if _cue_tween:
+		_cue_tween.kill()
+	_cue_player.stream = spec["stream"]
+	_cue_player.volume_db = spec["volume_db"]
 	_cue_player.play()
+	if spec.has("seconds"):
+		var fade: float = spec.get("fade", 2.0)
+		_cue_tween = create_tween()
+		_cue_tween.tween_interval(maxf(0.0, spec["seconds"] - fade))
+		_cue_tween.tween_property(_cue_player, "volume_db", -60.0, fade)
+		_cue_tween.tween_callback(_cue_player.stop)
 
 
 func _next_line() -> void:
@@ -209,8 +220,11 @@ func _next_line() -> void:
 	speaker_label.visible = not speaker.is_empty()
 	var aurora_speaking := speaker.strip_edges().to_lower() == portrait_speaker.to_lower()
 	_show_portrait(aurora_speaking)
-	if aurora_speaking and not _radio_noise.playing:
-		_radio_noise.play()
+	if aurora_speaking:
+		if not _radio_noise.playing: _radio_noise.play()
+	else:
+		# Narration and player lines should not carry an endless static bed.
+		_radio_noise.stop()
 	_hovered_meta = ""
 	content_label.text = _rich_content(GameState.fill_placeholders(content))
 	content_label.visible_characters = 0
