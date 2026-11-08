@@ -67,7 +67,7 @@ func _run() -> void:
 	aim(target, lamp, point, 60)
 	check("fourth setting grants clue at actual scholar monument", state.evidence_ids.has("scholar_no_traces"))
 	await process_frame
-	var box = main.get_node_or_null("ScholarAbsenceReflection")
+	var box = main.get_node_or_null("AbsenceReflection")
 	check("first discovery plays inner monologue", box != null)
 	if box:
 		await create_timer(0.35).timeout
@@ -80,7 +80,7 @@ func _run() -> void:
 	await create_timer(0.4).timeout
 	aim(target, lamp, point, 60)
 	await process_frame
-	check("repeat scan does not replay reflection", main.get_node_or_null("ScholarAbsenceReflection") == null)
+	check("repeat scan does not replay reflection", main.get_node_or_null("AbsenceReflection") == null)
 	main.queue_free()
 	await process_frame
 	print("RADIO AVAILABILITY / SCHOLAR ABSENCE: %d failures" % failures)
