@@ -40,6 +40,19 @@ BigSoundBank — CC0
 https://bigsoundbank.com/detail-0908-wind-in-tall-grass.html
 
 
+TYPEFACES
+IM FELL English — Igino Marini
+SIL Open Font License 1.1
+
+Cormorant Garamond — The Cormorant Project Authors
+SIL Open Font License 1.1
+
+Zhaohua Typewriter / 朝华打字机 — TerryWang
+Used under the author's free commercial-use terms.
+
+Kalam — Indian Type Foundry
+SIL Open Font License 1.1
+
 LITERARY REFERENCES
 Stefan Zweig
 The World of Yesterday

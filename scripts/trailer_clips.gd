@@ -116,7 +116,12 @@ static func start(id: String, tree: SceneTree) -> void:
 		music.play_bgm(music.BGM_MAIN)
 	else:
 		music._player.stop()
-		music.play_bgm(music.BGM_STAGE_TWO)
+		if kind == "ending_false":
+			music.play_bgm(music.BGM_MAIN)  # the quiet ending returns to the opening theme
+		elif kind == "ending_true" and music.final_stream() != null:
+			music.play_bgm(music.final_stream())
+		else:
+			music.play_bgm(music.BGM_STAGE_TWO)
 	match kind:
 		"start":
 			scene._started = true

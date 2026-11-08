@@ -13,6 +13,7 @@ func _ready() -> void:
 				child.hide()
 	_add_girl()
 	super._ready()
+	Music.enter_final_stage()  # the final marker begins the last stage of the music
 	_confront = Button.new()
 	_confront.text = "Contact Aurora about the notebook"
 	_confront.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)

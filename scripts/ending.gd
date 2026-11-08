@@ -63,16 +63,24 @@ func _ready() -> void:
 
 	if GameState.clip_mode:
 		return  # a developer trailer clip drives this scene (TrailerClips.start)
+	# Continuing a saved true route: if the marker has not been investigated yet (its
+	# answer is the cover correspondence), the walk and the investigation come first.
+	var marker_done: bool = GameState.ending_marker_investigated or GameState.evidence_ids.has("girl_cover_correspondence")
+	if GameState.ending_true and not GameState.ending_preview and not marker_done:
+		GameState.solitary_report_preview = true
 	if GameState.solitary_report_preview:
 		_discover_marker.call_deferred()
 	elif GameState.ending_true:
-		if GameState.ending_marker_investigated or (not GameState.ending_preview and "girl_tomb" in GameState.gravestones):
+		if marker_done:
 			_stone.show()
 			_stone.disabled = true
+			Music.enter_final_stage()  # the confrontation belongs to the final stage
 			_play_result.call_deferred(_model.begin_ending(true, GameState.ending_preview))
 		else:
 			_discover_marker.call_deferred()
 	else:
+		# The quiet ending goes back to the opening investigation theme.
+		Music.crossfade_to(Music.BGM_MAIN)
 		_play_result.call_deferred(_model.begin_ending(false, GameState.ending_preview))
 
 func _background(texture: Texture2D) -> TextureRect:
@@ -161,6 +169,10 @@ func _reveal_marker_scene(cover: Control) -> void:
 
 func _play_result(result: Dictionary) -> void:
 	_choices.hide()
+	# However the true route got here (a played route, a continued save, a developer
+	# preview), its confrontation and everything after belong to the final stage.
+	if GameState.ending_true:
+		Music.enter_final_stage()
 	if result.get("city") == "night" and not _is_night:
 		_is_night = true
 		await create_tween().tween_property(_night, "modulate:a", 1.0, 0.75).finished

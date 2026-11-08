@@ -118,12 +118,19 @@ func write_autosave() -> bool:
 		return false
 	var scene := get_tree().current_scene
 	var at_solitary_marker := scene != null and scene.scene_file_path == "res://scenes/ending.tscn" and ending_true
+	# Where Continue picks up once the true route has begun: the marker's investigation
+	# or the ending scene (empty = the cemetery).
+	var resume_scene := ""
+	if at_solitary_marker:
+		resume_scene = "res://scenes/ending.tscn"
+	elif scene != null and scene.scene_file_path == "res://scenes/solitary_investigation.tscn" and final_marker_phase:
+		resume_scene = "res://scenes/solitary_investigation.tscn"
 	var temp := _autosave_path + ".tmp"
 	var file := FileAccess.open(temp, FileAccess.WRITE)
 	if file == null:
 		push_warning("Could not open local autosave.")
 		return false
-	file.store_var({"version": AUTOSAVE_VERSION, "solitary_marker": at_solitary_marker, "state": _checkpoint_state()})
+	file.store_var({"version": AUTOSAVE_VERSION, "solitary_marker": at_solitary_marker, "resume_scene": resume_scene, "state": _checkpoint_state()})
 	file.flush()
 	var error := file.get_error()
 	file.close()
@@ -158,9 +165,13 @@ func load_autosave() -> String:
 		return ""
 	_apply_checkpoint_state(saved["state"])
 	_autosave_enabled = true
-	ending_true = saved.get("solitary_marker", false)
-	resume_saved_city = not ending_true
-	return "res://scenes/ending.tscn" if ending_true else "res://scenes/main.tscn"
+	var resume: String = saved.get("resume_scene", "")
+	if resume.is_empty() and saved.get("solitary_marker", false):
+		resume = "res://scenes/ending.tscn"  # saved before resume_scene existed
+	ending_true = not resume.is_empty()
+	final_marker_phase = resume == "res://scenes/solitary_investigation.tscn"
+	resume_saved_city = resume.is_empty()
+	return resume if not resume.is_empty() else "res://scenes/main.tscn"
 
 # The solitary marker is discovered after this report and is not part of its score.
 const ENDING_REPORT_ANSWERS := {
@@ -378,7 +389,7 @@ func record_rubbing(rubbing_id: String, gravestone_id: String = "", texture_path
 		return false
 	rubbings.append(rubbing_id)
 	rubbing_records[rubbing_id] = {"gravestone": gravestone_id, "texture": texture_path,
-		"target": target_id, "meaning": ""}
+		"target": target_id, "meaning": _known_night_rubbing_meaning(rubbing_id)}
 	record_evidence(rubbing_id)
 	rubbings_changed.emit()
 	return true
@@ -417,7 +428,8 @@ func get_rubbing_meaning(rubbing_id: String) -> String:
 		return "Coin and Sun"
 	if rubbing_id == "infant_figure_rubbing" and rubbings.has(rubbing_id) and evidence_ids.has("dayfolk_appearance"):
 		return "Dayfolk"
-	return rubbing_records.get(rubbing_id, {}).get("meaning", "")
+	var meaning: String = rubbing_records.get(rubbing_id, {}).get("meaning", "")
+	return meaning if not meaning.is_empty() else _known_night_rubbing_meaning(rubbing_id)
 
 
 ## target_id of the scene object that deciphers a rubbing ("" if none).
@@ -861,14 +873,8 @@ func apply_notebook_event(tag: String) -> void:
 		record_evidence(tag.trim_prefix("event:grant_evidence:"))
 	if tag.begins_with("event:night_symbol_queried:"):
 		var glyph := tag.trim_prefix("event:night_symbol_queried:")
-		var translations := {
-			"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "The Crystal God's sign, left as a blessing for the departed"},
-			"unending_path": {"ids": ["altar_path_rubbing", "girl_path_rubbing"], "meaning": "An unending journey / disappearance"},
-			"dry_river": {"ids": ["night_mother_river_rubbing"], "meaning": "A river that has run dry"},
-			"ascending_path": {"ids": ["night_father_path_rubbing"], "meaning": "A path toward the surface"},
-			"crystal_god": {"ids": ["crystal_god_rubbing", "night_mother_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God, also left on graves as a blessing"},
-		}
-		var translation: Dictionary = translations.get(glyph, {})
+
+		var translation: Dictionary = NIGHT_GLYPH_MEANINGS.get(glyph, {})
 		for rubbing_id in translation.get("ids", []):
 			confirm_rubbing_meaning(rubbing_id, translation.get("meaning", ""))
 
@@ -994,3 +1000,21 @@ var camera_tutorial_pending := false
 var camera_tutorial_completed := false
 var formal_investigation_started := false
 var camera_observations: Dictionary = {}
+
+
+const NIGHT_GLYPH_MEANINGS := {
+	"blessing": {"ids": ["altar_blessing_glyph"], "meaning": "The Crystal God's sign, left as a blessing for the departed"},
+	"unending_path": {"ids": ["altar_path_rubbing", "girl_path_rubbing"], "meaning": "An unending journey / disappearance"},
+	"dry_river": {"ids": ["night_mother_river_rubbing"], "meaning": "A river that has run dry"},
+	"ascending_path": {"ids": ["night_father_path_rubbing"], "meaning": "A path toward the surface"},
+	"crystal_god": {"ids": ["crystal_god_rubbing", "night_mother_god_rubbing", "night_father_god_rubbing"], "meaning": "Faith in the Crystal God, also left on graves as a blessing"},
+}
+## Translation knowledge is shared across matching glyphs, including old saves.
+func _known_night_rubbing_meaning(rubbing_id: String) -> String:
+	if not rubbings.has(rubbing_id):
+		return ""
+	for glyph in radio_progress.get("queried_night_glyphs", []):
+		var translation: Dictionary = NIGHT_GLYPH_MEANINGS.get(glyph, {})
+		if rubbing_id in translation.get("ids", []):
+			return translation.get("meaning", "")
+	return ""
