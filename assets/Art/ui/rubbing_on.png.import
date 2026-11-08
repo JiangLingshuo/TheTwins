@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dse4a5y3ss6j8"
-path="res://.godot/imported/rubbing_on.svg-72c22af7330d200120ae8ff044105855.ctex"
+uid="uid://b4t8t4evrrajb"
+path="res://.godot/imported/rubbing_on.png-cad1fa456905d443380afd8c88fa80aa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/rubbing_on.svg"
-dest_files=["res://.godot/imported/rubbing_on.svg-72c22af7330d200120ae8ff044105855.ctex"]
+source_file="res://assets/Art/ui/rubbing_on.png"
+dest_files=["res://.godot/imported/rubbing_on.png-cad1fa456905d443380afd8c88fa80aa.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

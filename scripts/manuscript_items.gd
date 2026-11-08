@@ -38,7 +38,7 @@ var _filter_row_mode := 0
 static var _thumbnails := {}
 
 const TOOL_ICONS := {
-	"rubbing": preload("res://assets/Art/symbols/rubbing_off.svg"),
+	"rubbing": preload("res://assets/Art/ui/rubbing_off.png"),
 	"searchlight": preload("res://assets/Art/ui/flashlight.png"),
 	"camera": preload("res://assets/Art/ui/camera.png"),
 	"finding": preload("res://assets/Art/symbols/finding.svg"),
