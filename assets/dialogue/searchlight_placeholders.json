@@ -95,7 +95,7 @@
       "city": "day",
       "position": [
         1176,
-        658
+        660
       ],
       "caption": "Four-person photograph before sun marker",
       "target_id": "family_photo",
@@ -104,7 +104,7 @@
       "date_status": "timeline_suggestion",
       "size": [
         64,
-        87
+        85
       ],
       "texture": "res://assets/Art/figure/family_photo.png",
       "inspect": true,
