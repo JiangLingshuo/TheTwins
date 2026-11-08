@@ -14,7 +14,10 @@ func _run() -> void:
 	await process_frame
 	var state := root.get_node("GameState")
 	check("catalog has seven descriptions", state.content_catalog()["gravestones"].size() == 7)
-	check("catalog has 66 evidence records including navigation sun", state.content_catalog()["evidence"].size() == 66)
+	# Counts follow the exported content, so new evidence does not break the test.
+	var exported: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://assets/dialogue/notebook_content.json"))["evidence"]
+	var manuscript_count := exported.values().filter(func(e: Dictionary) -> bool: return e.get("category", "") == "manuscript").size()
+	check("catalog has every exported evidence record including navigation sun", state.content_catalog()["evidence"].size() == exported.size() and state.content_catalog()["evidence"].has("sky_sun_rubbing"))
 	check("no spoilers on startup", state.evidence_ids.is_empty() and state.radio_logs.is_empty())
 	state.record_gravestone("baby_tomb")
 	check("baby description populated", not state.get_gravestone_info("baby_tomb")["description"].is_empty())
@@ -58,7 +61,7 @@ func _run() -> void:
 	state.preview_notebook_content()
 	await process_frame
 	check("preview exposes all seven stones", state.gravestones.size() == 7 and book.section_spreads[0] == 4)
-	check("preview includes all manuscripts", state.notebook_entries(3).size() == 11)
+	check("preview includes all manuscripts", state.notebook_entries(3).size() == manuscript_count)
 	check("manuscript cards paginate eight per spread", book.section_spreads[3] == 2)
 	check("preview includes authored radio drafts", state.radio_logs.size() > 70)
 	book.queue_free()

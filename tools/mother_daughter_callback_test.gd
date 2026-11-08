@@ -66,6 +66,7 @@ func run() -> void:
 		if result.get("hang_up", false): break
 	check("daydream and Night reunion play in sequence", changed_to_night and transcript.contains("what it means to have a dream") and transcript.contains("I read her note"))
 	check("paired flowers unlock the Night callback", transcript.contains("I left it there") and transcript.contains("I thought escaping without her"))
-	check("open ending records the departure and closes the call", transcript.contains("Tomorrow the sun will rise") and model.progress.get("final_confronted", false) and result.get("hang_up", false))
+	# The final scene now ends on the open-ending event (no hang-up tag): the exchange simply runs out of choices.
+	check("open ending records the departure and closes the call", transcript.contains("Tomorrow the sun will rise") and model.progress.get("final_confronted", false) and result.get("choices", []).is_empty())
 	print("FINAL CONFRONTATION: " + ("ALL PASSED" if failures == 0 else str(failures) + " FAILED"))
 	quit(0 if failures == 0 else 1)
