@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "6cd89aa385dd45b8809d0e67c4928044b92d417d8873237b043901b7f65ea633",
+  "source_sha256": "3c39ad1ee40d5cdb0795523bf63c7f95042bbd97c253b427c4eee6047baafb9c",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -433,11 +433,11 @@
       "id": "mother:test_answer_mother_8",
       "tomb": "mother_tomb",
       "label": "Who is the figure holding the child?",
-      "condition": "(links ? Relation.mother_child)",
+      "condition": "((links ? Relation.mother_child) || (owned_evidence ? EvidenceId.repeated_child_figures))",
       "target": "test_answer_mother_8",
       "hidden": false,
       "candidates": [
-        "night_mother_child_rubbing",
+        "repeated_child_figures",
         "altar_infant_rubbing",
         "family_photo"
       ]
@@ -550,11 +550,11 @@
       "id": "father:test_answer_father_8",
       "tomb": "father_tomb",
       "label": "Who is carrying the child?",
-      "condition": "(links ? Relation.father_child)",
+      "condition": "((links ? Relation.father_child) || (owned_evidence ? EvidenceId.repeated_child_figures))",
       "target": "test_answer_father_8",
       "hidden": false,
       "candidates": [
-        "night_father_child_rubbing",
+        "repeated_child_figures",
         "altar_infant_rubbing",
         "family_photo"
       ]
@@ -713,19 +713,6 @@
         "girl_diary",
         "diary_cover",
         "girl_signature_rubbing"
-      ]
-    },
-    {
-      "id": "girl:test_answer_girl_16",
-      "tomb": "girl_tomb",
-      "label": "Do the family sculpture and the photograph belong together?",
-      "condition": "(links ? Relation.family)",
-      "target": "test_answer_girl_16",
-      "hidden": false,
-      "candidates": [
-        "family_statuette",
-        "shared_family_base",
-        "girl_figure_rubbing"
       ]
     },
     {
@@ -2067,64 +2054,6 @@
         "target": "test_radio_girl"
       }
     ],
-    "test_answer_girl_16": [
-      {
-        "op": "tag",
-        "value": "question_id:girl_16"
-      },
-      {
-        "op": "set",
-        "code": "temp supported = false"
-      },
-      {
-        "op": "if",
-        "condition": "has_tag(EvidenceTag.family_image_reference) || has_tag(EvidenceTag.four_person_family)",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.girl_16_supported_18"
-          },
-          {
-            "op": "set",
-            "code": "supported = true"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"linked\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "if",
-        "condition": "not supported",
-        "then": [
-          {
-            "op": "line",
-            "speaker": "Aurora",
-            "text": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
-          },
-          {
-            "op": "set",
-            "code": "read_answers += AnswerId.girl_16_normal_17"
-          },
-          {
-            "op": "set",
-            "code": "feedback_kind = \"unmatched\""
-          }
-        ],
-        "else": []
-      },
-      {
-        "op": "goto",
-        "target": "test_radio_girl"
-      }
-    ],
     "test_answer_girl_20": [
       {
         "op": "tag",
@@ -3452,6 +3381,10 @@
         "text": "(The wind echoes through the city no one has returned to. It might be your imagination, but it feels colder now.)"
       },
       {
+        "op": "tag",
+        "value": "sfx:wind_strong"
+      },
+      {
         "op": "line",
         "speaker": "",
         "text": "(You can't tell. We keep losing memories at every moment. Words said in the last moment, a warm smile that you pass by a minute ago, and those fleeting and private feelings attached to them.)"
@@ -3947,7 +3880,7 @@
       {
         "op": "line",
         "speaker": "Aurora",
-        "text": "For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to that I felt the emptiness in that solitary silence."
+        "text": "For years I've been anticipating another dream. Yet what I got were nights of complete silence. It was after the night I heard the whisper of the breeze on that remote star which I've never returned to... that I felt the emptiness in that solitary silence."
       },
       {
         "op": "choices",
@@ -5322,6 +5255,14 @@
       ],
       "signature": "id:crystal_god_crystal_correspondence"
     },
+    "repeated_child_figures": {
+      "id": "repeated_child_figures",
+      "title": "The Same Child on Three Stones",
+      "members": [
+        "repeated_child_figures"
+      ],
+      "signature": "tags:night_infant_reference,parent_child_image,repeated_child_motif"
+    },
     "natural_collapse_record": {
       "id": "natural_collapse_record",
       "title": "The Collapse That Sealed the Road",
@@ -5556,6 +5497,7 @@
     "night_father_path_rubbing": "night_father_path_rubbing",
     "night_father_god_rubbing": "crystal_god_rubbing",
     "crystal_god_crystal_correspondence": "crystal_god_crystal_correspondence",
+    "repeated_child_figures": "repeated_child_figures",
     "night_father_moon_stone": "altar_moon_stone",
     "natural_collapse_record": "natural_collapse_record",
     "skyway_history": "skyway_history",

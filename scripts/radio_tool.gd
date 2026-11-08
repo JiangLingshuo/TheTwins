@@ -146,9 +146,10 @@ func close(play_hangup: bool = true) -> void:
 	_tutorial_paused = false
 	if GameState.radio_modal_open and play_hangup:
 		_hangup.play()
-	if _heard_reply:
+	# Every call is a checkpoint, even one that taught nothing new.
+	if GameState.radio_modal_open:
 		GameState.write_autosave()
-		_heard_reply = false
+	_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
 	_question = {}
@@ -585,6 +586,12 @@ func _send() -> void:
 
 func _follow(choice: Dictionary) -> void:
 	if _reply_playing: return
+	# The final confrontation belongs to the ending scene, not the radio menu.
+	for instruction in choice.get("body", []):
+		if instruction.get("op", "") == "goto" and instruction.get("target", "") == "test_confrontation":
+			close(false)
+			GameState.open_ending(true, GameState.ending_preview, true)
+			return
 	var result: Dictionary = model.choose(choice)
 	if not result.has("error"):
 		GameState.append_radio_line(_session, {"speaker": "#PLAYER#", "content": choice["label"]})

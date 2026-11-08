@@ -25,10 +25,18 @@ static func of(path: String) -> Texture2D:
 				if image.is_compressed():
 					image.decompress()
 				var used := image.get_used_rect()
-				if used.size.x > 0 and used.size.y > 0 and used.size != image.get_size():
-					var atlas := AtlasTexture.new()
-					atlas.atlas = texture
-					atlas.region = Rect2(used)
-					result = atlas
+				if used.has_area():
+					# Rubbings are ink masks, not coloured artwork. Some source
+					# glyphs are black; multiplication alone cannot lighten them.
+					# Preserve their alpha and let each page's text colour tint RGB.
+					var mask := image.get_region(used)
+					mask.convert(Image.FORMAT_RGBA8)
+					var pixels := mask.get_data()
+					for pixel in range(0, pixels.size(), 4):
+						pixels[pixel] = 255
+						pixels[pixel + 1] = 255
+						pixels[pixel + 2] = 255
+					mask = Image.create_from_data(mask.get_width(), mask.get_height(), false, Image.FORMAT_RGBA8, pixels)
+					result = ImageTexture.create_from_image(mask)
 	_cache[path] = result
 	return result

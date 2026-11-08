@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "4c0e422a22f40b1bc74f465ce5a9d41cd9ba21f2da9c1054ea4c39e2b66a349d",
+    "evidence_master.ink": "c4a0b23f29e60d91c11406b2b8f9f610c960d87dc538d1554edb73b0c99768e8",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
-    "telecomm_master.ink": "e5e9743290697c7bb0ec561bd6139fcb2d7b368226daf1986b7af8143f260ed8"
+    "telecomm_master.ink": "895402f2cdb7990e1c78eac244345f749adc836bd047a8981380be0e5cb7b55e"
   },
   "gravestones": {
     "baby_tomb": {
@@ -1814,6 +1814,41 @@
         ]
       },
       "source_knot": "ev_crystal_god_crystal_correspondence"
+    },
+    "repeated_child_figures": {
+      "gravestones": [],
+      "id": "repeated_child_figures",
+      "title": "The Same Child on Three Stones",
+      "body": "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.",
+      "interactive_body": "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.",
+      "category": "observation",
+      "gravestone": "",
+      "metadata": {
+        "type": [
+          "evidence"
+        ],
+        "id": [
+          "repeated_child_figures"
+        ],
+        "title": [
+          "The Same Child on Three Stones"
+        ],
+        "category": [
+          "observation"
+        ],
+        "location": [
+          "night_cemetery"
+        ],
+        "tool": [
+          "camera"
+        ],
+        "evidence_tag": [
+          "night_infant_reference",
+          "parent_child_image",
+          "repeated_child_motif"
+        ]
+      },
+      "source_knot": "ev_repeated_child_figures"
     },
     "night_father_moon_stone": {
       "gravestones": [
@@ -3714,26 +3749,6 @@
         {
           "speaker": "Aurora",
           "content": "A human shape can stand for many lives. Her work may have left a clearer signature in the diary."
-        }
-      ]
-    },
-    "girl_16_supported_18": {
-      "id": "girl_16_supported_18",
-      "source_knot": "test_answer_girl_16",
-      "lines": [
-        {
-          "speaker": "Aurora",
-          "content": "The four figures match the family photograph. Three markers share a base; the girl’s marker stands apart. The sculpture and photograph let us identify the same family across the two sites."
-        }
-      ]
-    },
-    "girl_16_normal_17": {
-      "id": "girl_16_normal_17",
-      "source_knot": "test_answer_girl_16",
-      "lines": [
-        {
-          "speaker": "Aurora",
-          "content": "Let us put the four little figures beside the four faces. We should know the family before we name its missing place."
         }
       ]
     },

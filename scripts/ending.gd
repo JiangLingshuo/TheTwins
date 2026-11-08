@@ -2,7 +2,7 @@ extends Control
 
 const DAY := preload("res://assets/Art/day/BG_day.png")
 const NIGHT := preload("res://assets/Art/night/BG_night.png")
-const STONE := preload("res://assets/Art/tombstone/single/girl_day_single.png")
+const STONE := preload("res://assets/Art/tombstone/girl_day_scene.png")
 const COVER := preload("res://assets/Art/note/notebook_cover.png")
 const CHOICE_ART := preload("res://assets/Art/dialog/dialog box.png")
 const RADIO_STATIC := preload("res://shaders/radio_static.gdshader")
@@ -30,11 +30,8 @@ func _ready() -> void:
 	_stone.tooltip_text = "Inspect the solitary marker"
 	_stone.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	add_child(_stone)
-	_stone.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
-	_stone.offset_left = -128
-	_stone.offset_right = 128
-	_stone.offset_top = -150
-	_stone.offset_bottom = 145
+	# Use the same full-scene art layer and placement as the solitary investigation.
+	_stone.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_stone.hide()
 
 	_dialogue = DIALOGUE.instantiate()
@@ -121,7 +118,10 @@ func _discover_marker() -> void:
 	await _stone.pressed
 	_stone.disabled = true
 	if GameState.solitary_report_preview:
-		GameState.open_solitary_investigation()
+		# The real route finds the marker for good before investigating it.
+		if not GameState.ending_preview:
+			GameState.record_gravestone("girl_tomb")
+		GameState.open_solitary_investigation(false, not GameState.ending_preview)
 		return
 	if not GameState.ending_preview:
 		GameState.record_gravestone("girl_tomb")
@@ -132,10 +132,6 @@ func _discover_marker() -> void:
 
 func _reveal_marker_scene(cover: Control) -> void:
 	_stone.disabled = true
-	if GameState.solitary_report_preview:
-		# Match the following investigation scene's composition and scale.
-		_stone.texture_normal = preload("res://assets/Art/tombstone/girl_day_scene.png")
-		_stone.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	_stone.modulate.a = 0.0
 	_stone.show()
 	var transition := create_tween().set_parallel(true)
@@ -215,6 +211,7 @@ func _add_choice(text: String, action: Callable) -> void:
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	button.custom_minimum_size = Vector2(minf(680.0, get_viewport_rect().size.x * 0.76), 70)
 	button.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
+	button.add_theme_font_override("font", GameState.playtest_font(preload("res://assets/fonts/IMFellEnglish-Regular.ttf")))
 	button.add_theme_font_size_override("font_size", 23)
 	var panel := StyleBoxEmpty.new()
 	panel.set_content_margin_all(13.0)

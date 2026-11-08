@@ -4268,3 +4268,13 @@ Aurora 的其他通讯
 // source: "This is similar to that stone in the Day City. Does this tell us that they were the last witnesses before the civilization’s fall?"
 这和日城的那块石碑很像。这是否说明，她们是文明陨落前的最后见证者？
 -> DONE
+
+=== zh_0858 ===
+// source: "The Same Child on Three Stones"
+三块碑上的同一个孩子
+-> DONE
+
+=== zh_0859 ===
+// source: "The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named."
+祭坛上的孩子，又出现在小碑上那个人影的怀里，也出现在另一块碑上那个人影的背上。相机把这三处都标了出来。抱着他的是谁，还没有说法。
+-> DONE

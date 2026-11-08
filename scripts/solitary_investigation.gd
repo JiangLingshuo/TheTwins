@@ -22,7 +22,7 @@ func _ready() -> void:
 	_confront.offset_bottom = -24
 	add_child(_confront)
 	_confront.pressed.connect(func() -> void:
-		GameState.open_ending(true, true, true))
+		GameState.open_ending(true, GameState.ending_preview, true))
 	GameState.notebook_changed.connect(_refresh_final_step)
 	_refresh_final_step()
 	_toast.show_message("Drag the complete motif out of the notebook, then onto the figure on its cover.")
@@ -32,6 +32,7 @@ func _add_girl() -> void:
 	# and the same marker by night.
 	$DayCemetery.add_child(preload("res://scenes/tombstones/girl_tomb.tscn").instantiate())
 	$NightCemetery.add_child(preload("res://scenes/tombstones/girl_tomb_night.tscn").instantiate())
+
 
 func _refresh_final_step() -> void:
 	_confront.visible = GameState.evidence_ids.has("girl_cover_correspondence")

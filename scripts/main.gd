@@ -59,7 +59,6 @@ var is_day: bool = true:
 var _fade: Tween
 ## Church bell that tolls whenever day and night swap.
 var _church_bell := AudioStreamPlayer.new()
-var _submit_report: Button
 
 
 func _ready() -> void:
@@ -104,7 +103,6 @@ func _ready() -> void:
 		_toast.show_message(already_noted_message))
 	# Every new clue is announced (a revealed one too), queued after other messages.
 	GameState.evidence_recorded.connect(_on_evidence_recorded)
-	_add_report_submission()
 	# A gravestone emits `recorded` once, after it is collected.
 	for gravestone in get_tree().get_nodes_in_group("gravestones"):
 		gravestone.recorded.connect(func(_id: String) -> void:
@@ -130,28 +128,6 @@ func _fade_in_from_black() -> void:
 	t.tween_callback(func() -> void:
 		button.z_index = 0
 		black.queue_free())
-
-
-func _add_report_submission() -> void:
-	_submit_report = Button.new()
-	var submit := _submit_report
-	submit.text = "Submit investigation reports"
-	submit.add_theme_font_size_override("font_size", 22)
-	add_child(submit)
-	submit.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	submit.offset_left = 24
-	submit.offset_top = -66
-	submit.offset_right = 286
-	submit.offset_bottom = -24
-	submit.pressed.connect(func() -> void:
-		if GameState.ending_report_complete():
-			GameState.open_ending(GameState.ending_report_passed()))
-	GameState.notebook_changed.connect(_update_report_submission)
-	_update_report_submission()
-
-
-func _update_report_submission() -> void:
-	_submit_report.visible = GameState.investigation_tutorial_completed and GameState.ending_report_complete()
 
 
 func _on_evidence_recorded(id: String) -> void:

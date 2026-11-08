@@ -397,6 +397,7 @@ func show_document(id: String) -> void:
 	var read: Array = GameState.radio_progress.get("read_manuscripts", [])
 	if not read.has(id): read.append(id)
 	GameState.radio_progress["read_manuscripts"] = read
+	GameState.queue_autosave()
 	document_requested.emit(id)
 
 func show_list() -> void:

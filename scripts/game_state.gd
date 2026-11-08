@@ -98,6 +98,21 @@ func start_new_investigation() -> void:
 	resume_saved_city = false
 	_autosave_enabled = true
 
+## Save at the end of this frame. Many changes in one frame (a batch of manuscripts,
+## say) share a single write. Every clue, manuscript, keyword, rubbing comparison
+## and radio call is a checkpoint.
+var _autosave_queued := false
+
+func queue_autosave() -> void:
+	if _autosave_queued:
+		return
+	_autosave_queued = true
+	_flush_queued_autosave.call_deferred()
+
+func _flush_queued_autosave() -> void:
+	_autosave_queued = false
+	write_autosave()
+
 func write_autosave() -> bool:
 	if not _autosave_enabled or notebook_preview or ending_preview:
 		return false
@@ -175,8 +190,23 @@ func ending_report_passed() -> bool:
 
 var ending_marker_investigated := false
 var solitary_report_preview := false
+## True while the player is investigating the final marker (its own scene).
+var final_marker_phase := false
+
+## Hand in the six reports. Below the pass mark the quiet ending plays at once; at or
+## above it the notebook closes, the solitary marker is found and investigated, and
+## only after its answer is submitted does the confrontation with Aurora begin.
+func conclude_investigation() -> void:
+	if not ending_report_complete():
+		return
+	if ending_report_passed():
+		open_ending(true, false)
+		solitary_report_preview = true  # the report walk, then the marker's own investigation
+	else:
+		open_ending(false)
 
 func open_ending(is_true: bool, preview := false, marker_investigated := false) -> void:
+	final_marker_phase = false
 	ending_marker_investigated = marker_investigated
 	solitary_report_preview = false
 	ending_true = is_true
@@ -186,20 +216,24 @@ func open_ending(is_true: bool, preview := false, marker_investigated := false) 
 	_set_debug_overlay(false)
 	get_tree().change_scene_to_file.call_deferred("res://scenes/ending.tscn")
 
-func open_solitary_investigation(from_report_submission: bool = false) -> void:
+## `keep_progress` is the real route: the player arrives with their own investigation.
+## Otherwise this is the developer preview, which fakes the earlier progress.
+func open_solitary_investigation(from_report_submission: bool = false, keep_progress: bool = false) -> void:
 	if from_report_submission:
 		open_ending(true, true)
 		solitary_report_preview = true
 		return
 	solitary_report_preview = false
-	# Developer preview: keep testing progress out of the local autosave.
-	ending_preview = true
-	cycle_tutorial_completed = true
-	investigation_tutorial_completed = true
-	camera_tutorial_completed = true
-	camera_tutorial_pending = false
-	current_city_day = true
-	resume_saved_city = false
+	if not keep_progress:
+		# Developer preview: keep testing progress out of the local autosave.
+		ending_preview = true
+		cycle_tutorial_completed = true
+		investigation_tutorial_completed = true
+		camera_tutorial_completed = true
+		camera_tutorial_pending = false
+		current_city_day = true
+		resume_saved_city = false
+	final_marker_phase = true
 	radio_modal_open = false
 	camera_modal_open = false
 	_set_debug_overlay(false)
@@ -364,6 +398,7 @@ func confirm_rubbing_meaning(rubbing_id: String, meaning: String) -> bool:
 		record["meaning"] = meaning
 		rubbing_records[rubbing_id] = record
 		rubbings_changed.emit()
+		queue_autosave()
 	return true
 
 
@@ -472,6 +507,7 @@ func record_evidence(id: String) -> bool:
 		clue_states[id] = "unread"
 	evidence_recorded.emit(id)
 	notebook_changed.emit()
+	queue_autosave()
 	return true
 
 
@@ -921,6 +957,7 @@ func collect_term(id: String) -> void:
 	# Signals let the tutorial respond without hard-coding the source UI.
 	term_collected.emit(id)
 	notebook_changed.emit()
+	queue_autosave()
 
 func deliver_day_manuscripts() -> void:
 	for id in content_catalog().get("evidence", {}):

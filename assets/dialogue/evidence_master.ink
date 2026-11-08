@@ -786,6 +786,20 @@ The lower part of the stone bears the image of the Crystal God. It resembles the
 The Crystal God carved on the altar and on the two stones beside it has the same faceted outline as the crystal itself. Night City did not picture its god as a person. It carved the crystal.
 -> DONE
 
+=== ev_repeated_child_figures ===
+# type:evidence
+# id:repeated_child_figures
+# title:The Same Child on Three Stones
+# category:observation
+# location:night_cemetery
+# tool:camera
+# evidence_tag:night_infant_reference
+# evidence_tag:parent_child_image
+# evidence_tag:repeated_child_motif
+// Acquired only after marking the same child on the altar, the mother's stone and the father's stone in the camera photograph.
+The child on the altar appears again in the arms of the figure on the small stone, and on the back of the figure on the other stone. The camera marks all three. Who is holding him is not yet named.
+-> DONE
+
 === ev_night_father_moon_stone ===
 # type:evidence
 # id:night_father_moon_stone

@@ -100,7 +100,7 @@
     "altar_infant_rubbing"
   ],
   "mother:test_answer_mother_8": [
-    "night_mother_child_rubbing",
+    "repeated_child_figures",
     "altar_infant_rubbing",
     "family_photo"
   ],
@@ -120,7 +120,7 @@
     "one_way_passage_order"
   ],
   "father:test_answer_father_8": [
-    "night_father_child_rubbing",
+    "repeated_child_figures",
     "altar_infant_rubbing",
     "family_photo"
   ],
@@ -153,11 +153,6 @@
     "girl_diary",
     "diary_cover",
     "girl_signature_rubbing"
-  ],
-  "girl:test_answer_girl_16": [
-    "family_statuette",
-    "shared_family_base",
-    "girl_figure_rubbing"
   ],
   "girl:test_answer_girl_20": [
     "girl_diary",

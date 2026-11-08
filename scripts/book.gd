@@ -127,6 +127,7 @@ var _write_player: AudioStreamPlayer
 var section_spreads: PackedInt32Array = [3, 1, 1, 1, 1, 1]
 ## A rubbing changed during a page turn: refill the pages when it finishes.
 var _refresh_pending := false
+var _conclude: ConcludeButton
 var _day_material: ShaderMaterial
 var _night_material: ShaderMaterial
 var _normal_ink: Color
@@ -155,6 +156,19 @@ func _ready() -> void:
 		GameState.rubbings_changed.connect(_on_rubbings_changed)
 		GameState.notebook_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
 		GameState.radio_history_changed.connect(_on_rubbings_changed, CONNECT_DEFERRED)
+	if use_sections:
+		# "Conclude Investigation" across the spine of the Gravestones pages, once all six reports are filled.
+		_conclude = ConcludeButton.new()
+		_conclude.name = "ConcludeButton"
+		_conclude.day_paper = day_paper
+		_conclude.day_ink = day_ink
+		_conclude.night_paper = night_paper
+		_conclude.night_ink = night_ink
+		_conclude.font = GameState.playtest_font(preload("res://assets/fonts/CormorantGaramond-SemiBold.ttf"))
+		add_child(_conclude)
+		_conclude.position = Vector2(420.0 - _conclude.custom_minimum_size.x / 2.0, 496.0)
+		_conclude.visible = false
+		_conclude.pressed.connect(_on_conclude_pressed)
 	left_corner.pressed.connect(flip_backward)
 	right_corner.pressed.connect(flip_forward)
 	name_input.text_submitted.connect(_on_name_submitted)
@@ -448,6 +462,18 @@ func close() -> void:
 	if _busy or _stowed or not visible:
 		return
 	await close_to_icon()
+
+
+## The Conclude Investigation button shows on the Gravestones pages once every report is filled.
+func _process(_delta: float) -> void:
+	if _conclude:
+		var on_gravestones := use_sections and is_open() and not _busy and get_section() == 0 and _reading_document.is_empty()
+		var reports_in := GameState.investigation_tutorial_completed and not GameState.final_marker_phase and GameState.ending_report_complete()
+		_conclude.visible = on_gravestones and reports_in
+
+
+func _on_conclude_pressed() -> void:
+	GameState.conclude_investigation()
 
 
 ## True while the book is out and open (not stowed as an icon).

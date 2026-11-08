@@ -67,7 +67,8 @@ var _radio_noise: AudioStreamPlayer
 const CUES := {
 	"busy": {"stream": preload("res://assets/audio/忙音.wav"), "volume_db": -4.0},
 	# A long quiet recording of wind in grass: only the start is used, faded out.
-	"wind": {"stream": preload("res://assets/audio/风声.mp3"), "volume_db": -17.0, "seconds": 14.0, "fade": 3.0},
+	"wind": {"stream": preload("res://assets/audio/风声.mp3"), "volume_db": -5.0, "seconds": 14.0, "fade": 3.0},
+	"wind_strong": {"stream": preload("res://assets/audio/风声.mp3"), "volume_db": 0.0, "seconds": 14.0, "fade": 3.0},
 	"hangup": {"stream": preload("res://assets/audio/无线电挂断.wav"), "volume_db": 0.0},
 }
 var _cue_player: AudioStreamPlayer
