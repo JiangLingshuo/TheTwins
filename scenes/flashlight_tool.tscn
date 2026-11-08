@@ -3,8 +3,8 @@
 [ext_resource type="Script" path="res://scripts/flashlight_tool.gd" id="1_tool"]
 [ext_resource type="PackedScene" path="res://scenes/flashlight.tscn" id="2_flashlight"]
 [ext_resource type="Script" path="res://scripts/focus_scale.gd" id="3_scale"]
-[ext_resource type="Texture2D" path="res://assets/Art/symbols/flashlight_off.svg" id="4_off"]
-[ext_resource type="Texture2D" path="res://assets/Art/symbols/flashlight_on.svg" id="5_on"]
+[ext_resource type="Texture2D" path="res://assets/Art/ui/flashlight.png" id="4_off"]
+[ext_resource type="Texture2D" path="res://assets/Art/ui/flashlight.png" id="5_on"]
 [ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-Regular.ttf" id="7_font"]
 [ext_resource type="FontFile" path="res://assets/fonts/CormorantGaramond-SemiBold.ttf" id="8_number"]
 

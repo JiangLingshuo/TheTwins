@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cujmw2irmwqk5"
-path="res://.godot/imported/camera.svg-a62171aca7071bfa90f9be344dfe3227.ctex"
+uid="uid://bjhn4vtd5c0v7"
+path="res://.godot/imported/A4.jpg-969b7e4577e362797c13ad284a1b766c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/camera.svg"
-dest_files=["res://.godot/imported/camera.svg-a62171aca7071bfa90f9be344dfe3227.ctex"]
+source_file="res://assets/Art/visuals/A4.jpg"
+dest_files=["res://.godot/imported/A4.jpg-969b7e4577e362797c13ad284a1b766c.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false

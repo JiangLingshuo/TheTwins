@@ -10,7 +10,7 @@ signal tray_toggled(expanded: bool)
 
 ## Ring drawn around the active tool (collapsed button and tray entry).
 const ACTIVE_RING := Color(1.0, 0.86, 0.52, 0.95)
-const TOOLBOX_ICON := preload("res://assets/Art/symbols/toolbox.svg")
+const TOOLBOX_ICON := preload("res://assets/Art/ui/toolbox.png")
 
 var button: TextureButton
 var tray: PanelContainer

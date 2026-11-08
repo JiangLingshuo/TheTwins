@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cgx6ecw13176l"
-path="res://.godot/imported/flashlight_off.svg-609679306a3bf9e0534aa04224b4e412.ctex"
+uid="uid://r2f44vf1nb6k"
+path="res://.godot/imported/square.jpg-31211f399fbb2ac4f28d482b2b0739ab.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Art/symbols/flashlight_off.svg"
-dest_files=["res://.godot/imported/flashlight_off.svg-609679306a3bf9e0534aa04224b4e412.ctex"]
+source_file="res://assets/Art/visuals/square.jpg"
+dest_files=["res://.godot/imported/square.jpg-31211f399fbb2ac4f28d482b2b0739ab.ctex"]
 
 [params]
 
@@ -38,6 +38,3 @@ process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
 detect_3d/compress_to=1
-svg/scale=1.0
-editor/scale_with_editor_scale=false
-editor/convert_colors_with_editor_theme=false
