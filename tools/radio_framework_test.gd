@@ -162,6 +162,7 @@ func _run() -> void:
 	await process_frame
 	await process_frame
 	var radio = main.get_node("RadioTool")
+	radio._intro_calls = []  # intro calls are covered by radio_intro_test.gd; this checks the plain stone list
 	radio.open()
 	check("fourth radio icon stays inside viewport", radio.get_viewport_rect().has_point(radio._button.get_global_rect().get_center()))
 	check("radio opens with stone selection", radio.is_open() and radio._tomb.is_empty() and state.radio_modal_open)

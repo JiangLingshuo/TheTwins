@@ -57,6 +57,20 @@ var _previous_layout: VBoxContainer
 ## reply are recorded under the same question and evidence.
 var _exchange_context: Dictionary = {}
 
+## First-step questions Aurora asks for the player (assets/dialogue/radio_intro_calls.json).
+## When one becomes available and its evidence is owned, the radio opens with the
+## question and evidence already filled in; once answered it leaves the question list.
+const INTRO_PATH := "res://assets/dialogue/radio_intro_calls.json"
+## Seconds an intro must stay ready before the radio pops up (lets the "Recorded" toast show).
+const INTRO_DELAY := 0.9
+var _intro_calls: Array = []
+var _intro_current: Dictionary = {}
+var _intro_chain := false
+var _intro_dismissed: Array = []
+var _intro_ready_for := -1.0
+var _intro_poll := 0.0
+var _intro_dirty := true
+
 func _ready() -> void:
 	z_index = 80
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -92,6 +106,14 @@ func _ready() -> void:
 	_hangup.stream = HANGUP_SOUND
 	_hangup.volume_db = 6.0
 	add_child(_hangup)
+	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(INTRO_PATH))
+	if parsed is Dictionary:
+		_intro_calls = parsed.get("calls", [])
+	GameState.notebook_changed.connect(func() -> void: _intro_dirty = true)
+	GameState.rubbings_changed.connect(func() -> void: _intro_dirty = true)
+	# An intro for a stone in the other city waits until the player is there.
+	if get_parent().has_signal("time_changed"):
+		get_parent().time_changed.connect(func(_day: bool) -> void: _intro_dirty = true)
 
 func _exit_tree() -> void:
 	GameState.radio_modal_open = false
@@ -100,9 +122,10 @@ func _reposition_button() -> void:
 	if _button:
 		_button.position = Vector2(size.x - 140, size.y / 2 + 72)
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_button.disabled = not _can_open()
 	_button.tooltip_text = "Contact Aurora" if _can_open() else "Read the manuscripts, then use the searchlight to inspect the marker 50 years ago."
+	_poll_intros(delta)
 
 func _unhandled_key_input(event: InputEvent) -> void:
 	if is_open() and not _reply_playing and not _tutorial_paused and event.is_action_pressed("ui_cancel"):
@@ -124,6 +147,11 @@ func open() -> void:
 	_overlay.show_menu()
 	_tomb = ""
 	_status = ""
+	# A first-step question that has not been answered yet: Aurora is already calling about it.
+	var pending := _next_intro(false)
+	if not pending.is_empty():
+		_start_call(pending["tomb"])
+		_apply_intro(pending)
 	_render()
 
 ## The player ends the call: Aurora says a short goodbye, then the line drops.
@@ -152,6 +180,12 @@ func close(play_hangup: bool = true) -> void:
 	_heard_reply = false
 	_overlay.visible = false
 	GameState.radio_modal_open = false
+	# Hanging up on an intro call leaves it for the next time the radio is opened,
+	# without popping up again by itself.
+	if not _intro_current.is_empty() and not _intro_current["question"]["id"] in _intro_dismissed:
+		_intro_dismissed.append(_intro_current["question"]["id"])
+	_intro_current = {}
+	_intro_chain = false
 	_question = {}
 	_followups = []
 	_slot = ""
@@ -270,6 +304,12 @@ func _scroll_stack(parent: Control, minimum_height: float) -> VBoxContainer:
 func _render() -> void:
 	_render_pending = false
 	if not is_open() or _reply_playing or _tutorial_paused: return
+	# After an intro call's reply, the next waiting intro call follows on the same line.
+	if _intro_chain and _question.is_empty() and _followups.is_empty() and not _tomb.is_empty():
+		var following := _next_intro(false)
+		if not following.is_empty():
+			if following["tomb"] != _tomb: _start_call(following["tomb"])
+			_apply_intro(following)
 	_update_question_activity()
 	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
 	_previous_layout = _layout
@@ -469,7 +509,10 @@ func _marker_has_reopened_questions(stone: String) -> bool:
 func _visible_questions() -> Array:
 	var hidden: Array = []
 	var ordinary: Array = []
+	var answered: Array = model.progress.get("intro_done", [])
 	for question in model.questions_for(_tomb, _slot):
+		# First-step questions Aurora already answered stay in Radio Logs, not in this list.
+		if question["id"] in answered and question["id"] != _question.get("id", ""): continue
 		var state: Dictionary = _question_states.get(question["id"], {})
 		if question["available"] and state.get("available", false) and not state.get("unheard", true): continue
 		if question.get("hidden", false): hidden.append(question)
@@ -500,6 +543,7 @@ func _start_call(id: String) -> void:
 func _change_tomb() -> void:
 	if _reply_playing: return
 	_tomb = ""
+	_intro_chain = false
 	_question = {}
 	_followups = []
 	_queue_render()
@@ -534,6 +578,7 @@ func _select_question(question: Dictionary) -> void:
 func _clear_question() -> void:
 	if _reply_playing: return
 	_question = {}
+	_intro_chain = false
 	_queue_render()
 
 func _set_slot(id: String) -> void:
@@ -544,6 +589,7 @@ func _set_slot(id: String) -> void:
 
 func _clear_slot() -> void:
 	if _reply_playing: return
+	_intro_chain = false
 	_slot = ""
 	if _question.get("hidden", false): _question = {}
 	_status = "Evidence removed. Choose another record."
@@ -582,6 +628,12 @@ func _send() -> void:
 		"question_text": sent_question["label"], "evidence_id": model.submitted_id, "evidence_group": sent_slot,
 		"evidence_name": model.group_title(sent_slot) if not sent_slot.is_empty() else "", "follow_up": ""}
 	GameState.begin_radio_exchange(_session, _exchange_context)
+	# A first-step question that got its real reply (not a "try another record" nudge)
+	# is done: it leaves the question list for good.
+	if _is_intro_question(sent_question["id"]) and result.get("feedback", "") != "unmatched":
+		_mark_intro_done(sent_question["id"])
+	if not _intro_current.is_empty() and _intro_current["question"]["id"] == sent_question["id"]:
+		_intro_current = {}
 	_question = {}
 	_slot = ""
 	_last_lines = []
@@ -655,6 +707,101 @@ func _collect_term(meta: Variant) -> void:
 	GameState.collect_term(id)
 	_status = "Recorded: " + id
 	_queue_render()
+
+
+## --- First-step ("intro") calls -------------------------------------------------
+
+func _question_by_id(id: String) -> Dictionary:
+	for question: Dictionary in model.data.get("questions", []):
+		if question["id"] == id: return question
+	return {}
+
+
+func _is_intro_question(id: String) -> bool:
+	for call: Dictionary in _intro_calls:
+		if call["question"] == id: return true
+	return false
+
+
+func _mark_intro_done(id: String) -> void:
+	var done: Array = model.progress.get("intro_done", [])
+	if id not in done: done.append(id)
+	model.progress["intro_done"] = done
+
+
+## Was this question already answered with its evidence (by hand, or in a save from
+## before intro calls existed)?
+func _intro_heard(tomb: String, id: String, group: String) -> bool:
+	var members: Array = model.data.get("groups", {}).get(group, {}).get("members", []) if not group.is_empty() else []
+	for record in GameState.radio_history_records(tomb, id):
+		if group.is_empty() or str(record.get("evidence_id", "")) in members: return true
+	return false
+
+
+## The first intro call that is waiting: its question is available, its evidence is
+## owned, and its stone is recorded in the city the player is in. `skip_dismissed`
+## leaves out the calls the player already hung up on.
+func _next_intro(skip_dismissed: bool) -> Dictionary:
+	if not GameState.investigation_tutorial_completed: return {}
+	var answered: Array = model.progress.get("intro_done", [])
+	for call: Dictionary in _intro_calls:
+		var id: String = call["question"]
+		if id in answered or (skip_dismissed and id in _intro_dismissed): continue
+		var question := _question_by_id(id)
+		if question.is_empty(): continue
+		var tomb: String = question["tomb"]
+		if tomb not in GameState.gravestones or not model.city_allows(tomb): continue
+		var evidence: String = call.get("evidence", "")
+		var group: String = model.data.get("evidence_groups", {}).get(evidence, "") if not evidence.is_empty() else ""
+		if not evidence.is_empty() and (group.is_empty() or not model.owns(evidence)): continue
+		if _intro_heard(tomb, id, group):
+			_mark_intro_done(id)
+			continue
+		for item in model.questions_for(tomb, group):
+			if item["id"] == id and item["available"]:
+				return {"question": item, "tomb": tomb, "group": group}
+	return {}
+
+
+## Fill the radio in for an intro call: the question selected, its evidence in the slot.
+func _apply_intro(intro: Dictionary) -> void:
+	_intro_current = intro
+	_intro_chain = true
+	_slot = intro["group"]
+	_select_question(intro["question"])
+	_slot = intro["group"]
+	_status = "Aurora is calling about what you just found. Send the evidence to hear her."
+	_queue_render()
+
+
+func _intro_idle() -> bool:
+	if GameState.radio_modal_open or GameState.camera_modal_open: return false
+	var parent := get_parent()
+	var notebook := parent.get_node_or_null("NotebookTool")
+	if notebook and notebook.rubbing_drag.is_dragging(): return false
+	var guide := parent.get_node_or_null("SunMoonTutorial")
+	if guide and guide.has_method("_dialogue_is_playing") and guide._dialogue_is_playing(): return false
+	return true
+
+
+## Pop the radio up when an intro call has been ready for a moment and nothing else is going on.
+func _poll_intros(delta: float) -> void:
+	_intro_poll += delta
+	if _intro_poll < 0.25: return
+	_intro_poll = 0.0
+	if is_open() or not _can_open() or not _intro_idle():
+		_intro_ready_for = -1.0
+		return
+	if not _intro_dirty and _intro_ready_for < 0.0: return
+	if _next_intro(true).is_empty():
+		_intro_dirty = false
+		_intro_ready_for = -1.0
+		return
+	_intro_ready_for = maxf(_intro_ready_for, 0.0) + 0.25
+	if _intro_ready_for >= INTRO_DELAY:
+		_intro_ready_for = -1.0
+		_intro_dirty = false
+		open()
 
 
 func _can_open() -> bool:

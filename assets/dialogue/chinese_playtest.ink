@@ -4492,3 +4492,8 @@ Aurora 的其他通讯
 // source: "Diary page · a carver's doubts"
 日记一页 · 刻碑人的疑虑
 -> DONE
+
+=== zh_0902 ===
+// source: "Aurora is calling about what you just found. Send the evidence to hear her."
+Aurora 来电，说的正是你刚刚的发现。发送证据，听听她怎么说。
+-> DONE

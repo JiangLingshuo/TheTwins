@@ -1,0 +1,24 @@
+{
+  "_readme": "First-step questions that Aurora asks for the player. When the question becomes available (the comparison or find that opens it exists) and its evidence is owned, the radio pops up with the question and the evidence already filled in. The player only presses Send. The question is then taken out of the radio's question list; the exchange stays in Radio Logs. Edit this list to move a question in or out of the system: 'question' is an id from radio_content.json, 'evidence' is the evidence id to fill in ('' = ask with no evidence). Used by scripts/radio_tool.gd.",
+  "calls": [
+    {"question": "scholar:test_answer_scholar_8", "evidence": "profession_record", "kind": "shape comparison: crystal monument"},
+    {"question": "scholar:test_answer_scholar_12", "evidence": "twin_beast_account", "kind": "shape comparison: two-part creature"},
+    {"question": "sun:test_answer_sun_13", "evidence": "twin_beast_account", "kind": "shape comparison: beast on the sun marker"},
+    {"question": "scholar:test_answer_repeated_beast", "evidence": "repeated_beast_motifs", "kind": "camera repetition: beasts"},
+    {"question": "sun:test_answer_sun_17", "evidence": "shared_family_base", "kind": "camera repetition: shared base"},
+    {"question": "altar:test_answer_altar_12", "evidence": "infant_memorial_correspondence", "kind": "shape comparison: the child"},
+    {"question": "altar:test_answer_altar_8", "evidence": "altar_blessing_glyph", "kind": "camera repetition: blessing glyph"},
+    {"question": "altar:test_answer_altar_crystal_shape", "evidence": "crystal_god_crystal_correspondence", "kind": "shape comparison: crystal god"},
+    {"question": "mother:test_answer_mother_8", "evidence": "repeated_child_figures", "kind": "camera repetition: child figures"},
+    {"question": "father:test_answer_father_8", "evidence": "repeated_child_figures", "kind": "camera repetition: child figures"},
+    {"question": "mother:test_answer_mother_12", "evidence": "dry_underground_river", "kind": "shape comparison: dry river"},
+    {"question": "mother:test_answer_mother_17", "evidence": "skin_picture", "kind": "shape comparison: skin picture"},
+    {"question": "father:test_answer_father_12", "evidence": "skyway_reference", "kind": "shape comparison: the path"},
+    {"question": "mother:query_night_dry_river", "evidence": "night_mother_river_rubbing", "kind": "first reading of a glyph"},
+    {"question": "father:query_night_ascending_path", "evidence": "night_father_path_rubbing", "kind": "first reading of a glyph"},
+    {"question": "altar:query_night_crystal_god", "evidence": "crystal_god_rubbing", "kind": "first reading of a glyph"},
+    {"question": "mother:test_answer_mother_flower", "evidence": "night_mother_flower", "kind": "searchlight find"},
+    {"question": "altar:test_answer_altar_16", "evidence": "altar_moon_stone", "kind": "searchlight find"},
+    {"question": "altar:test_answer_altar_20", "evidence": "removed_crystal_god", "kind": "searchlight find"}
+  ]
+}
