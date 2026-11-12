@@ -706,7 +706,17 @@ func _guide_human_comparison() -> void:
 	if not _notebook.is_open():
 		_set_step(Step.BOOK, "Open your notebook to find the person-shaped rubbing you just made.", _notebook.get_node("NotebookButton"))
 	elif _notebook.book.get_section() == 1:
-		var page: Control = _notebook.book.left_page
+		# The person-shaped rubbing may sit on the right page, or on a later spread, when the
+		# player has rubbed other stones first. Page turns are blocked during this step, so
+		# turn to its spread for them (retried every frame while the book is busy) and
+		# highlight the page it is on.
+		var book: Control = _notebook.book
+		var index := GameState.rubbings.find("infant_figure_rubbing")
+		var per_spread: int = book.rubbings_per_page * 2
+		if index >= 0 and book.get_section_spread() != index / per_spread:
+			book.show_rubbing("infant_figure_rubbing")
+		var on_left: bool = index < 0 or index % per_spread < int(book.rubbings_per_page)
+		var page: Control = book.left_page if on_left else book.right_page
 		_set_step(Step.DRAG, "Drag the person-shaped rubbing onto the figure in the Day City background.", page.get_node("Rubbings"))
 	elif _notebook.book.get_section() == 0 and _notebook.book.get_section_spread() == 0:
 		var page: Control = _notebook.book.left_page
