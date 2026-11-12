@@ -70,6 +70,11 @@ func get_zoomed() -> Control:
 	return _zoomed
 
 
+## True while the camera is moving in or out.
+func is_moving() -> bool:
+	return _tween != null and _tween.is_running()
+
+
 ## Zoom in on `tombstone`, or back out if it is the one already zoomed in on.
 func toggle(tombstone: Control) -> void:
 	if tombstone == _zoomed:

@@ -241,8 +241,8 @@
       "evidence_id": "night_mother_flower",
       "city": "night",
       "position": [
-        612,
-        662
+        580,
+        566
       ],
       "caption": "Faded paint on mother marker: a large flower",
       "target_id": "night_mother_flower",
@@ -251,8 +251,8 @@
       "date_status": "timeline_suggestion",
       "required_grave": "mother_tomb",
       "size": [
-        84,
-        83
+        112,
+        110
       ],
       "texture": "res://assets/Art/figure/mother_flower_faded.png",
       "crop": true,

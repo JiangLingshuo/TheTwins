@@ -25,6 +25,14 @@ const WIPE_SOUND: AudioStream = preload("res://assets/audio/擦拭.wav")
 const WIPE_IDLE := 0.09
 var _wipe: AudioStreamPlayer
 var _wipe_idle := 0.0
+## Rubbing on a marker that is not zoomed in on zooms in on it by itself, after this
+## many seconds of brushing over the same stone.
+const AUTO_ZOOM_TIME := 0.8
+## Brushing counts as moving for this long after the last mouse movement.
+const MOTION_GRACE_MSEC := 220
+var _linger_stone: Control
+var _linger_time := 0.0
+var _last_move_msec := -100000
 
 @onready var _button: TextureButton = $RubbingButton
 
@@ -67,6 +75,7 @@ func _process(delta: float) -> void:
 		_wipe_idle += delta
 		if _wipe_idle > WIPE_IDLE:
 			_wipe.stream_paused = true
+	_track_linger(delta, get_global_mouse_position())
 	# Show the brush instead of the arrow, except over the button.
 	var over_button := _button.get_global_rect().has_point(get_global_mouse_position())
 	Input.mouse_mode = Input.MOUSE_MODE_VISIBLE if over_button else Input.MOUSE_MODE_HIDDEN
@@ -82,13 +91,16 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		_drawing = event.pressed
-		if not _drawing: _wipe_stop()
+		if not _drawing:
+			_wipe_stop()
+			_reset_linger()
 		if _drawing:
-			_hint_zoom_in()
+			_hint_zoom_in(event.global_position)
 			_last_point = event.global_position
 			_brush(_last_point, _last_point)
 		get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion and _drawing:
+		_last_move_msec = Time.get_ticks_msec()
 		_wipe_move(event.global_position.distance_to(_last_point))
 		_brush(_last_point, event.global_position)
 		_last_point = event.global_position
@@ -113,6 +125,9 @@ func _wipe_stop() -> void:
 
 
 func _brush(from_point: Vector2, to_point: Vector2) -> void:
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	if scene_zoom and scene_zoom.is_moving():
+		return  # the camera is still moving in: strokes would land in the wrong place
 	for symbol in get_tree().get_nodes_in_group("rubbing_symbols"):
 		if symbol.is_visible_in_tree() and can_rub(symbol):
 			symbol.brush(from_point, to_point)
@@ -128,11 +143,46 @@ func can_rub(symbol: Control) -> bool:
 	return stone != null and stone.is_ancestor_of(symbol)
 
 
-func _hint_zoom_in() -> void:
+func _hint_zoom_in(point: Vector2) -> void:
 	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
 	var toast := get_parent().get_node_or_null("Toast")
-	if scene_zoom and not scene_zoom.is_zoomed() and toast:
+	# Over a marker the view zooms in by itself once the player keeps rubbing it.
+	if scene_zoom and not scene_zoom.is_zoomed() and toast and _auto_zoom_stone_at(point) == null:
 		toast.show_message("Use a marker's magnifier to look closer before making a rubbing.", true)
+
+
+## The marker under a screen position that rubbing may zoom in on (the topmost one),
+## or null. Until the tutorial is over only the small marker is open to it.
+func _auto_zoom_stone_at(point: Vector2) -> Control:
+	var found: Control = null
+	for stone in get_tree().get_nodes_in_group("gravestones"):
+		if stone.is_point_on_stone(point) 				and (GameState.investigation_tutorial_completed or stone.gravestone_id == "baby_tomb"):
+			found = stone
+	return found
+
+
+func _reset_linger() -> void:
+	_linger_stone = null
+	_linger_time = 0.0
+
+
+## While the charcoal keeps moving over one marker that is not zoomed in on, count up;
+## at AUTO_ZOOM_TIME the camera moves in on it.
+func _track_linger(delta: float, point: Vector2) -> void:
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	if not _drawing or scene_zoom == null or scene_zoom.is_zoomed() or scene_zoom.is_moving():
+		_reset_linger()
+		return
+	var stone := _auto_zoom_stone_at(point)
+	if stone == null or stone != _linger_stone:
+		_reset_linger()
+		_linger_stone = stone
+		return
+	if Time.get_ticks_msec() - _last_move_msec < MOTION_GRACE_MSEC:
+		_linger_time += delta
+	if _linger_time >= AUTO_ZOOM_TIME:
+		_reset_linger()
+		scene_zoom.zoom_to(stone)
 
 
 func _connect_symbol(symbol: RubbingSymbol) -> void:

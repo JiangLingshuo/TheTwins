@@ -76,6 +76,10 @@ func _on_catcher_input(event: InputEvent) -> void:
 	match event.button_index:
 		MOUSE_BUTTON_LEFT:
 			_catcher.accept_event()
+			# The beam is aimed at the whole scene: if the view was zoomed in after picking
+			# the tool up, pull back first and let the player aim again.
+			if _zoom_out():
+				return
 			flashlight.turn_on_at(_catcher.get_global_transform() * event.position, true)
 			_set_state(State.ON)
 		MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
@@ -84,11 +88,22 @@ func _on_catcher_input(event: InputEvent) -> void:
 				_scale.adjust_with_wheel(event)
 
 
+## Back to the whole scene (the searchlight works on the big picture). True if the view was zoomed.
+func _zoom_out() -> bool:
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	if scene_zoom == null or not scene_zoom.is_zoomed():
+		return false
+	scene_zoom.zoom_out()
+	return true
+
+
 func _set_state(new_state: int) -> void:
 	state = new_state
 	_scale.visible = state != State.OFF
 	# Keep accepting scene clicks and wheel input while the beam is locked.
 	_catcher.visible = state != State.OFF
+	if state == State.AIMING:
+		_zoom_out()
 	flashlight.active = state == State.ON
 	_button.texture_normal = icon_on if state == State.ON else icon_off
 	_button.modulate = Color(1.2, 1.15, 1.0) if state == State.AIMING else Color.WHITE

@@ -141,6 +141,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		record()
 
 
+## True if a screen position is over a visible pixel of the stone.
+func is_point_on_stone(point: Vector2) -> bool:
+	if _image == null or not is_visible_in_tree():
+		return false
+	var local: Vector2 = get_global_transform().affine_inverse() * point
+	if not Rect2(Vector2.ZERO, size).has_point(local):
+		return false
+	var pixel := Vector2i(local / size * Vector2(_image.get_size()))
+	pixel = pixel.clamp(Vector2i.ZERO, _image.get_size() - Vector2i.ONE)
+	return _image.get_pixelv(pixel).a >= hit_alpha
+
+
 ## True if a mouse event is over a visible pixel of the stone.
 func _is_on_stone(event: InputEvent) -> bool:
 	if _image == null or not is_visible_in_tree():

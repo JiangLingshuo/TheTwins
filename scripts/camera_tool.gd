@@ -18,6 +18,7 @@ var _running := false
 var _completing := false
 var _capturing := false
 var _elapsed := 0.0
+var _settle := 0.9  # seconds between pressing the camera and the shot
 const GROUPS := {"sun_coin": {"ids": ["shape_sky_sun", "shape_sun_marker", "shape_pool_coin"], "evidence": "sun_coin_correspondence", "label": "Shape correspondence"}, "crystal": {"ids": ["crystal_marker", "crystal_lamp"], "evidence": "crystal_marker_correspondence", "label": "Shape correspondence"}, "base": {"ids": ["base_scholar", "base_infant", "base_sun"], "evidence": "shared_family_base", "label": "Gravestone correspondence"}, "beast": {"ids": ["beast_a", "beast_b", "beast_c"], "evidence": "repeated_beast_motifs", "label": "Local repetition"}, "blessing": {"ids": ["blessing_altar", "blessing_mother", "blessing_father"], "evidence": "altar_blessing_glyph", "label": "Local repetition"}, "child": {"ids": ["child_altar", "child_mother", "child_father"], "evidence": "repeated_child_figures", "label": "Local repetition"}}
 
 func _ready() -> void:
@@ -106,7 +107,7 @@ func play_tutorial() -> void:
 	GameState.camera_tutorial_pending = true
 	GameState.camera_modal_open = true
 	_prepare()
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(_settle).timeout
 	_dialogue.play_file("res://assets/dialogue/tutorial_camera_intro.xml")
 	await _dialogue.finished
 	await take_photo(true)
@@ -118,6 +119,13 @@ func play_tutorial() -> void:
 	await tutorial_finished
 
 func _prepare() -> void:
+	# A photograph shows the whole scene: pull the view back out first, and give the
+	# camera move time to finish before the picture is taken.
+	_settle = 0.9
+	var scene_zoom := get_tree().get_first_node_in_group("scene_zoom")
+	if scene_zoom and scene_zoom.is_zoomed():
+		scene_zoom.zoom_out()
+		_settle = maxf(_settle, scene_zoom.zoom_time + 0.15)
 	get_parent().get_node("RubbingTool").turn_off()
 	get_parent().get_node("FlashlightTool").turn_off()
 	get_parent().get_node("NotebookTool").rubbing_drag.cancel()
@@ -132,7 +140,7 @@ func take_photo(guided: bool = false) -> void:
 	_tutorial = guided
 	GameState.camera_modal_open = true
 	_prepare()
-	await get_tree().create_timer(0.9).timeout
+	await get_tree().create_timer(_settle).timeout
 	# Capture before showing the frame/flash; none of these temporary photos become evidence.
 	var hidden: Array[CanvasItem] = []
 	for item in [get_parent().get_node("Toolbox"), get_parent().get_node("NotebookTool"), get_parent().get_node("RadioTool"), get_parent().get_node("Toast")]:
