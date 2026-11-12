@@ -52,14 +52,18 @@ func _run() -> void:
 	var ids: Array = radio._visible_questions().map(func(q: Dictionary) -> String: return q["id"])
 	check("it no longer shows in the radio list", "scholar:test_answer_scholar_8" not in ids)
 	check("the exchange is kept in the radio logs", not state.radio_history_records("scholar_tomb", "scholar:test_answer_scholar_8").is_empty())
-	# A second intro waiting: the call carries on to it.
+	# A second intro becomes ready while the radio is still open: no chaining on the same line.
 	state.record_evidence("twin_beast_account")
 	state.record_rubbing("scholar_beast_rubbing", "scholar_tomb", "res://assets/Art/symbol/spar.png", "beast")
 	state.confirm_rubbing_meaning("scholar_beast_rubbing", "Beast")
-	await wait(0.6)
+	await wait(1.5)
 	radio._queue_render()
 	await wait(0.6)
-	check("the next waiting intro follows on the same call", radio._question.get("id", "") == "scholar:test_answer_scholar_12")
+	check("a second intro does not chain onto the open call", radio._question.is_empty())
+	# Once the call is over it rings on its own.
+	radio.close(false)
+	await wait(2.4)
+	check("the second intro pops up by itself after the call", radio.is_open() and radio._question.get("id", "") == "scholar:test_answer_scholar_12")
 	# Hanging up on it: it does not pop up again by itself, but is ready when the radio is reopened.
 	radio.close(false)
 	await wait(0.4)
@@ -72,10 +76,38 @@ func _run() -> void:
 	# A wrong record only gets a nudge, so the question stays.
 	var wrong: String = radio.model.data["evidence_groups"].get("profession_record", "")
 	radio._slot = wrong
-	var before: Array = radio.model.progress.get("intro_done", []).duplicate()
 	radio._send()
 	await drain(radio._reply_box)
 	check("a nudge reply does not use the question up", "scholar:test_answer_scholar_12" not in radio.model.progress.get("intro_done", []))
+	radio.close(false)
+	await wait(0.3)
+	# Several questions ready at once: only one rings, the rest wait for the player.
+	radio.model.progress["intro_done"] = []
+	radio.model.progress["intro_skipped"] = []
+	radio._intro_dismissed = []
+	radio.model.progress["intro_started"] = true
+	state.radio_question_history.clear()  # nothing has been heard yet
+	state.record_gravestone("sun_tomb")
+	state.record_evidence("shared_family_base")
+	radio._intro_dirty = true
+	await wait(2.4)
+	check("with several ready, one rings", radio.is_open())
+	var rang: String = radio._question.get("id", "")
+	radio.close(false)
+	await wait(2.4)
+	check("the others do not ring by themselves", not radio.is_open())
+	check("the one that rang is not asked for again", rang != "" and rang in radio._intro_dismissed)
+	# A save from before intro calls: everything already ready is left alone.
+	radio.model.progress.erase("intro_started")
+	radio.model.progress["intro_done"] = []
+	radio.model.progress["intro_skipped"] = []
+	radio._intro_dismissed = []
+	radio._start_intro_calls()
+	check("an old save marks what is ready as skipped", radio.model.progress.get("intro_skipped", []).size() >= 2)
+	check("and nothing pops up for it", radio._next_intro(false).is_empty())
+	radio._intro_dirty = true
+	await wait(2.0)
+	check("no pop-up for an old save", not radio.is_open())
 	print("radio intro failures: ", failures)
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_radio_intro.autosave"))
 	quit(1 if failures else 0)

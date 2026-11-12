@@ -65,7 +65,6 @@ const INTRO_PATH := "res://assets/dialogue/radio_intro_calls.json"
 const INTRO_DELAY := 0.9
 var _intro_calls: Array = []
 var _intro_current: Dictionary = {}
-var _intro_chain := false
 var _intro_dismissed: Array = []
 var _intro_ready_for := -1.0
 var _intro_poll := 0.0
@@ -109,6 +108,7 @@ func _ready() -> void:
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(INTRO_PATH))
 	if parsed is Dictionary:
 		_intro_calls = parsed.get("calls", [])
+	_start_intro_calls()
 	GameState.notebook_changed.connect(func() -> void: _intro_dirty = true)
 	GameState.rubbings_changed.connect(func() -> void: _intro_dirty = true)
 	# An intro for a stone in the other city waits until the player is there.
@@ -185,7 +185,6 @@ func close(play_hangup: bool = true) -> void:
 	if not _intro_current.is_empty() and not _intro_current["question"]["id"] in _intro_dismissed:
 		_intro_dismissed.append(_intro_current["question"]["id"])
 	_intro_current = {}
-	_intro_chain = false
 	_question = {}
 	_followups = []
 	_slot = ""
@@ -304,12 +303,6 @@ func _scroll_stack(parent: Control, minimum_height: float) -> VBoxContainer:
 func _render() -> void:
 	_render_pending = false
 	if not is_open() or _reply_playing or _tutorial_paused: return
-	# After an intro call's reply, the next waiting intro call follows on the same line.
-	if _intro_chain and _question.is_empty() and _followups.is_empty() and not _tomb.is_empty():
-		var following := _next_intro(false)
-		if not following.is_empty():
-			if following["tomb"] != _tomb: _start_call(following["tomb"])
-			_apply_intro(following)
 	_update_question_activity()
 	# Build the replacement off-tree, then swap once complete. Never show an empty dimmer.
 	_previous_layout = _layout
@@ -543,7 +536,6 @@ func _start_call(id: String) -> void:
 func _change_tomb() -> void:
 	if _reply_playing: return
 	_tomb = ""
-	_intro_chain = false
 	_question = {}
 	_followups = []
 	_queue_render()
@@ -578,7 +570,6 @@ func _select_question(question: Dictionary) -> void:
 func _clear_question() -> void:
 	if _reply_playing: return
 	_question = {}
-	_intro_chain = false
 	_queue_render()
 
 func _set_slot(id: String) -> void:
@@ -589,7 +580,6 @@ func _set_slot(id: String) -> void:
 
 func _clear_slot() -> void:
 	if _reply_playing: return
-	_intro_chain = false
 	_slot = ""
 	if _question.get("hidden", false): _question = {}
 	_status = "Evidence removed. Choose another record."
@@ -711,6 +701,21 @@ func _collect_term(meta: Variant) -> void:
 
 ## --- First-step ("intro") calls -------------------------------------------------
 
+## A save that predates intro calls (or was played before the feature) may already have a
+## pile of questions that are ready. Calling about all of them at once would flood the
+## player, so they are left as ordinary questions in the list and never pop up. Questions
+## already answered with their evidence are marked done. A fresh game starts clean.
+func _start_intro_calls() -> void:
+	if model.progress.get("intro_started", false): return
+	model.progress["intro_started"] = true
+	if GameState.gravestones.is_empty() or not GameState.investigation_tutorial_completed: return
+	var skipped: Array = model.progress.get("intro_skipped", [])
+	for ready_intro: Dictionary in _ready_intros(false):
+		var id: String = ready_intro["question"]["id"]
+		if id not in skipped: skipped.append(id)
+	model.progress["intro_skipped"] = skipped
+
+
 func _question_by_id(id: String) -> Dictionary:
 	for question: Dictionary in model.data.get("questions", []):
 		if question["id"] == id: return question
@@ -742,11 +747,18 @@ func _intro_heard(tomb: String, id: String, group: String) -> bool:
 ## owned, and its stone is recorded in the city the player is in. `skip_dismissed`
 ## leaves out the calls the player already hung up on.
 func _next_intro(skip_dismissed: bool) -> Dictionary:
-	if not GameState.investigation_tutorial_completed: return {}
+	var ready_list := _ready_intros(skip_dismissed, true)
+	return ready_list[0] if not ready_list.is_empty() else {}
+
+
+## Every intro call that is waiting (see _next_intro); `first_only` stops at the first.
+func _ready_intros(skip_dismissed: bool, first_only: bool = false) -> Array:
+	var found: Array = []
+	if not GameState.investigation_tutorial_completed: return found
 	var answered: Array = model.progress.get("intro_done", [])
 	for call: Dictionary in _intro_calls:
 		var id: String = call["question"]
-		if id in answered or (skip_dismissed and id in _intro_dismissed): continue
+		if id in answered or id in model.progress.get("intro_skipped", []) or (skip_dismissed and id in _intro_dismissed): continue
 		var question := _question_by_id(id)
 		if question.is_empty(): continue
 		var tomb: String = question["tomb"]
@@ -759,14 +771,14 @@ func _next_intro(skip_dismissed: bool) -> Dictionary:
 			continue
 		for item in model.questions_for(tomb, group):
 			if item["id"] == id and item["available"]:
-				return {"question": item, "tomb": tomb, "group": group}
-	return {}
+				found.append({"question": item, "tomb": tomb, "group": group})
+				if first_only: return found
+	return found
 
 
 ## Fill the radio in for an intro call: the question selected, its evidence in the slot.
 func _apply_intro(intro: Dictionary) -> void:
 	_intro_current = intro
-	_intro_chain = true
 	_slot = intro["group"]
 	_select_question(intro["question"])
 	_slot = intro["group"]
@@ -801,7 +813,14 @@ func _poll_intros(delta: float) -> void:
 	if _intro_ready_for >= INTRO_DELAY:
 		_intro_ready_for = -1.0
 		_intro_dirty = false
-		open()
+		# One call at a time: any others that are ready wait, filled in, until the player
+		# opens the radio again (they never pop up by themselves).
+		for waiting: Dictionary in _ready_intros(true):
+			var waiting_id: String = waiting["question"]["id"]
+			if waiting_id not in _intro_dismissed: _intro_dismissed.append(waiting_id)
+		var first := _next_intro(false)
+		if not first.is_empty():
+			open()
 
 
 func _can_open() -> bool:
