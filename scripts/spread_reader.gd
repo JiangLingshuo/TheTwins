@@ -126,7 +126,7 @@ func setup(title: String, chunk: String, font: Font, ink: Color, left: bool, off
 		ripple.size = Vector2(320, 26)
 		ripple.tint = Color("843c42")
 		add_child(ripple)
-		_label("Click the underlined keyword.", font, Color("843c42"), Vector2(36, 86), Vector2(280, 24), 17)
+		_label(GameState.zh_text("Click the underlined keyword."), font, Color("843c42"), Vector2(36, 86), Vector2(280, 24), 17)
 	body.text = content
 	body.mouse_filter = Control.MOUSE_FILTER_STOP if interactive else Control.MOUSE_FILTER_IGNORE
 	body.meta_clicked.connect(func(meta: Variant) -> void: keyword_selected.emit(str(meta)), CONNECT_DEFERRED)

@@ -4422,3 +4422,73 @@ Aurora 的其他通讯
 // source: "All gravestones"
 全部墓碑
 -> DONE
+
+=== zh_0888 ===
+// source: "Click the underlined keyword."
+点击带下划线的关键词。
+-> DONE
+
+=== zh_0889 ===
+// source: "All sources"
+全部来源
+-> DONE
+
+=== zh_0890 ===
+// source: "Designer's statement · infant's marker"
+设计师的说明 · 婴儿的碑
+-> DONE
+
+=== zh_0891 ===
+// source: "Designer's journal · a student's plea"
+设计师日记 · 一位学生的恳求
+-> DONE
+
+=== zh_0892 ===
+// source: "Day City medical file · the infant"
+昼城医疗档案 · 那名婴儿
+-> DONE
+
+=== zh_0893 ===
+// source: "Scholar's notes · dawn disappearances"
+学者笔记 · 黎明时的失踪
+-> DONE
+
+=== zh_0894 ===
+// source: "Day City record · the Scholar's work"
+昼城记录 · 学者的工作
+-> DONE
+
+=== zh_0895 ===
+// source: "Day City order · the one-way passage"
+昼城政令 · 单向通行
+-> DONE
+
+=== zh_0896 ===
+// source: "Legend · the twin-bodied creature"
+传说 · 双头兽
+-> DONE
+
+=== zh_0897 ===
+// source: "Night City legend · Divine Messenger"
+夜城传说 · 神使
+-> DONE
+
+=== zh_0898 ===
+// source: "Old record · how the road was sealed"
+旧记录 · 通路是怎样被封住的
+-> DONE
+
+=== zh_0899 ===
+// source: "Night City account · the climb up"
+夜城记载 · 向上攀登
+-> DONE
+
+=== zh_0900 ===
+// source: "Banned book · Dayfolk and Nightfolk"
+禁书 · 昼民与夜民
+-> DONE
+
+=== zh_0901 ===
+// source: "Diary page · a carver's doubts"
+日记一页 · 刻碑人的疑虑
+-> DONE
