@@ -121,7 +121,7 @@ Glad you’re safe! I hope the trip wasn’t too rough. Have you had a chance to
 Yeah, I was just looking at it. Interesting color scheme. #player
 There’s a reason for it. Seen from space, Twins is a planet in black and white... Just like the civilization that once lived there. Of course, that’s a bonus to the name. It was first named the Twins because its day and night align with Earth’s, despite the distance between them. #aurora
 What interests us most is the special rule of the fallen cities on the Twins: the very thing that seems to have sustained their survival also seems to have led to their death. #aurora
-Should I expect to meet anyone here? #player
+Fallen cities? Should I expect to meet anyone there? #player
 No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked. #aurora
 Where? #player
 (You might have an answer in mind. But you wait for her confirmation.) #narrator

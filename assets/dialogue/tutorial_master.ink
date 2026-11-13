@@ -43,7 +43,7 @@ There’s a reason for it. Seen from space, Twins is a planet in black and white
 // line_id:chat_start:009b
 What interests us most is the special rule of the fallen cities on the Twins: the very thing that seems to have sustained their survival also seems to have led to their death. #aurora
 // line_id:chat_start:010
-Should I expect to meet anyone here? #player
+Fallen cities? Should I expect to meet anyone there? #player
 // line_id:chat_start:011
 No, but you’ll find their traces—a fallen civilization of two cities. Our archaeologists have searched their libraries, their homes, their schools. All the places where they lived. But there’s one place they overlooked. #aurora
 // line_id:chat_start:012
