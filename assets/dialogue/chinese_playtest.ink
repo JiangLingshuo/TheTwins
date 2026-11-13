@@ -2766,7 +2766,7 @@ Aurora 说，这是女儿小时候和母亲共用的私人记号。给对方画�
 -> DONE
 
 === zh_0567 ===
-// source: "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.\n\nDay City’s historians once disputed why the People of Sun and Moon divided. One hypothesis held that bodies suited to life underground and bodies suited to life above ground could not live together for long, so the division of Day and Night was the inevitable result of the People of Sun and Moon adapting to their surroundings."
+// source: "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.\n\nNot everyone supported the division of Day and Night. Some Day City historians argued that the Nightfolk were part of the Dayfolk: the group was called the People of Sun and Moon for a reason. They held that the People had evolved into two bodies, one suited to the surface and one to the underground, so that together they could reach and explore further. The argument was soon rejected as absurd; elderly Dayfolk still remember it as a joke."
 这部史书被发现前一直是禁书。
 
 昼民和夜民都必须按时躺进睡棺，第二天才能醒来。
@@ -2777,7 +2777,7 @@ Aurora 说，这是女儿小时候和母亲共用的私人记号。给对方画�
 
 夜民把自己的睡棺放在地下。洞穴太暗，睡棺几乎和地面融为一体。
 
-昼城的史学家曾争论日月之民为何分离。一种假说认为，适应地下生活的体质与适应地上生活的体质难以长期共存，因此昼夜分体，是日月之民适应环境的必然结果。
+并非所有人都支持昼夜分离。一些昼城史学家认为，夜民本就是昼民的一部分：这个族群叫日月之民，自有其道理。他们认为，日月之民演化出了两具身体，一具适应地表，一具适应地下，合起来便能探索得更远。这种说法很快被斥为荒谬，上了年纪的昼民至今仍记得，它曾被当作笑话。
 -> DONE
 
 === zh_0568 ===
