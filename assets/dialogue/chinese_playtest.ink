@@ -4496,6 +4496,6 @@ Aurora 的其他通讯
 -> DONE
 
 === zh_0902 ===
-// source: "What interests us most is the special rule on the Twins. The very thing that seems to have sustained its survival is also what seems to have led to its death."
-我们最感兴趣的，是双子星上那条特殊的规则。似乎正是维系它存续的东西，也把它推向了灭亡。
+// source: "What interests us most is the special rule of the fallen cities on the Twins: the very thing that seems to have sustained their survival also seems to have led to their death."
+我们最感兴趣的，是双子星上这两座没落之城的特殊规则：似乎正是维系它们存续的东西，也把它们推向了灭亡。
 -> DONE
