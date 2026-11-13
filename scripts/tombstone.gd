@@ -95,6 +95,7 @@ func get_stone_global_rect() -> Rect2:
 
 
 func _input(event: InputEvent) -> void:
+	_record_on_click(event)
 	# Hover follows the mouse, but only where no UI (the open notebook, a
 	# button, the flashlight's aiming layer) is under the cursor.
 	if event is InputEventMouseMotion:
@@ -130,6 +131,31 @@ func _interaction_allowed() -> bool:
 	if GameState.investigation_tutorial_completed:
 		return true
 	return gravestone_id == "baby_tomb" and GameState.tutorial_record_intro_heard
+
+
+## Any interaction on the stone records it: a plain click, or a click made with a
+## tool in hand (rubbing, aiming the searchlight). Read in _input so the tool that
+## uses the click still gets it.
+func _record_on_click(event: InputEvent) -> void:
+	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
+		return
+	if is_recorded() or not _interaction_allowed() or GameState.radio_modal_open or GameState.camera_modal_open:
+		return
+	if not _is_on_stone(event):
+		return
+	# UI over the stone (the notebook, a dialogue, a button) keeps the click to itself;
+	# a tool's full-screen click catcher is not UI in this sense.
+	var hovered := get_viewport().gui_get_hovered_control()
+	if hovered != null and not hovered.is_in_group("scene_click_catchers"):
+		return
+	record()
+
+
+## Zooming in on the stone (by its magnifier, or a rubbing that lingers on it) is an
+## interaction too.
+func note_interaction() -> void:
+	if _interaction_allowed():
+		record()
 
 
 func _unhandled_input(event: InputEvent) -> void:

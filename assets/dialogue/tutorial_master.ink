@@ -157,6 +157,8 @@ Choose the marker, then a question. Send a relevant record with it, and we can w
 
 === chat_tutorial_report_intro ===
 # runtime_xml:tutorial_report_intro.xml
+// line_id:chat_tutorial_report_intro:002
+During your investigation, I'll check in from time to time over the field radio, to tell you right away what your findings might mean. And you can call me anytime if you need more information. #aurora
 // line_id:chat_tutorial_report_intro:001
 You have enough to make a first report. Open Gravestones in your notebook and fill in the infant’s identity and cause of death. You can come back and revise either answer as you learn more. #aurora
 -> END

@@ -708,7 +708,7 @@ func _collect_term(meta: Variant) -> void:
 func _start_intro_calls() -> void:
 	if model.progress.get("intro_started", false): return
 	model.progress["intro_started"] = true
-	if GameState.gravestones.is_empty() or not GameState.investigation_tutorial_completed: return
+	if not GameState.investigation_tutorial_completed: return
 	var skipped: Array = model.progress.get("intro_skipped", [])
 	for ready_intro: Dictionary in _ready_intros(false):
 		var id: String = ready_intro["question"]["id"]
@@ -762,7 +762,8 @@ func _ready_intros(skip_dismissed: bool, first_only: bool = false) -> Array:
 		var question := _question_by_id(id)
 		if question.is_empty(): continue
 		var tomb: String = question["tomb"]
-		if tomb not in GameState.gravestones or not model.city_allows(tomb): continue
+		# The call follows the finding itself: it does not wait for the stone to be recorded.
+		if not model.city_allows(tomb): continue
 		var evidence: String = call.get("evidence", "")
 		var group: String = model.data.get("evidence_groups", {}).get(evidence, "") if not evidence.is_empty() else ""
 		if not evidence.is_empty() and (group.is_empty() or not model.owns(evidence)): continue

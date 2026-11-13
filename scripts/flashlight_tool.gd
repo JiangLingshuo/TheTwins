@@ -29,6 +29,8 @@ func _ready() -> void:
 	_scale.value_changed.connect(flashlight.set_target_focus)
 	_button.pressed.connect(_on_button_pressed)
 	_catcher.gui_input.connect(_on_catcher_input)
+	# Aiming at a tombstone through the catcher still counts as interacting with it.
+	_catcher.add_to_group("scene_click_catchers")
 	_button.tooltip_text = "Select a spot, then scroll or drag the year ring. Fixed settings: 0, 45, 50, 60, 250 years ago. Esc: put away."
 	_set_state(State.OFF)
 

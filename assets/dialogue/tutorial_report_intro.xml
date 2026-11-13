@@ -1,4 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
 <dialogue>
+  <line speaker="Aurora">During your investigation, I'll check in from time to time over the field radio, to tell you right away what your findings might mean. And you can call me anytime if you need more information.</line>
   <line speaker="Aurora">You have enough to make a first report. Open Gravestones in your notebook and fill in the infant’s identity and cause of death. You can come back and revise either answer as you learn more.</line>
 </dialogue>

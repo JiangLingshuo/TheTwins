@@ -98,6 +98,8 @@ func zoom_to(tombstone: Control) -> void:
 		_zoomed.zoomed = false
 	_zoomed = tombstone
 	tombstone.zoomed = true
+	if tombstone.has_method("note_interaction"):
+		tombstone.note_interaction()
 	_tween_to(target, offset, 1.0)
 	zoom_changed.emit(tombstone)
 
