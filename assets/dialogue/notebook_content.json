@@ -3,7 +3,7 @@
   "sources": {
     "evidence_master.ink": "607cdb1c835ac418be6fb74ed5f5cebb43fb03ef617428d0ad40a72aaa57d728",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
-    "telecomm_master.ink": "552e911015e2dbe8f003e858ad02ca88aa7a41f7870ff72bcab5fd9730bff729"
+    "telecomm_master.ink": "25fb761eb75888d66ffe8e5fdd21e639cdf112fa886b1f24776f9aee1771354d"
   },
   "gravestones": {
     "baby_tomb": {
@@ -2910,7 +2910,7 @@
         },
         {
           "speaker": "#PLAYER#",
-          "content": "Should I expect to meet anyone here?"
+          "content": "Fallen cities? Should I expect to meet anyone there?"
         },
         {
           "speaker": "Aurora",

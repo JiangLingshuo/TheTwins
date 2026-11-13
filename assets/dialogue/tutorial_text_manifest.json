@@ -82,7 +82,7 @@
   {
     "stage": "开场",
     "role": "玩家",
-    "text": "Should I expect to meet anyone here?",
+    "text": "Fallen cities? Should I expect to meet anyone there?",
     "id": "chat_start:010",
     "xml": "start.xml",
     "knot": "chat_start"

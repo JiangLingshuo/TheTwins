@@ -44,8 +44,8 @@ Aurora？是你吗？总算连上了。我已经安全降落在双子星上。
 -> DONE
 
 === zh_0009 ===
-// source: "Should I expect to meet anyone here?"
-我会在这里遇见什么人吗？
+// source: "Fallen cities? Should I expect to meet anyone there?"
+没落之城？我会在那里遇见什么人吗？
 -> DONE
 
 === zh_0010 ===
