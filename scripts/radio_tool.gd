@@ -779,6 +779,9 @@ func _ready_intros(skip_dismissed: bool, first_only: bool = false) -> Array:
 
 ## Fill the radio in for an intro call: the question selected, its evidence in the slot.
 func _apply_intro(intro: Dictionary) -> void:
+	# Aurora calls about what the player found at this stone, so it counts as found:
+	# the call must be able to go through even if the stone itself was never clicked.
+	GameState.record_gravestone(intro["tomb"])
 	_intro_current = intro
 	_slot = intro["group"]
 	_select_question(intro["question"])

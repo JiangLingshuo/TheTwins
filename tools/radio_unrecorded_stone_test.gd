@@ -66,8 +66,21 @@ func _run() -> void:
 	check("the Scholar's stone is not recorded", "scholar_tomb" not in state.gravestones)
 	await wait(2.0)
 	check("the instant call rings without the stone recorded", radio.is_open() and radio._question.get("id", "") == "scholar:test_answer_scholar_8")
+	check("the call counts the stone as found", "scholar_tomb" in state.gravestones)
+	radio._send()
+	await wait(0.3)
+	check("the filled-in evidence can be sent", radio._reply_playing and not radio._status.contains("Record this gravestone"))
+	for i in 80:
+		if not radio._reply_playing: break
+		var box = radio._reply_box
+		if box._accept_input:
+			box._finish_line()
+			box._advance()
+		await wait(0.05)
+	check("Aurora answers it", not state.radio_history_records("scholar_tomb", "scholar:test_answer_scholar_8").is_empty())
 	radio.close(false)
 	await wait(0.3)
+	state.gravestones.erase("scholar_tomb")  # so zooming in below has something to record
 
 	var sun := _stone("sun_tomb")
 	check("the sun stone is in the Day City", sun != null)
