@@ -1062,7 +1062,7 @@ In their shared residential districts, sleeping coffins stood upright to conserv
 
 The Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.
 
-Not everyone supported the division of Day and Night. Some Day City historians argued that the Nightfolk were part of the Dayfolk: the group was called the People of Sun and Moon for a reason. They held that the People had evolved into two bodies, one suited to the surface and one to the underground, so that together they could reach and explore further. The argument was soon rejected as absurd; elderly Dayfolk still remember it as a joke.
+Not everyone supported the division of Day and Night. One Day City historian argued that the Nightfolk were part of the Dayfolk: the group was called the People of Sun and Moon for a reason. The historian held that the People had evolved into two bodies, one suited to the surface and one to the underground, so that together they could reach and explore further. The argument was soon rejected as absurd; elderly Dayfolk still remember it as a joke.
 -> DONE
 
 === ev_history_coffin_illustration ===
