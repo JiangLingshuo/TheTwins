@@ -1709,7 +1709,7 @@ What would you like to ask?
 + {submitted_id == "repeated_beast_motifs"} [What does it mean when the same symbol keeps appearing?] -> test_answer_repeated_beast
 + {((links ? Relation.beast) || (owned_evidence ? EvidenceId.repeated_beast_motifs))} [What does the beast on this marker mean?] -> test_answer_sun_13
 + {(owned_evidence ? EvidenceId.shared_family_base)} [Do these three markers belong together?] -> test_answer_sun_17
-+ {(1 == 1) && (has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference))} [Which family member has no place on the base?] -> test_answer_sun_25
++ {(1 == 1) && has_tag(EvidenceTag.four_person_family)} [Which family member has no place on the base?] -> test_answer_sun_25
 + {((has_tag(EvidenceTag.dawn_disappearances) && ((read_answers ? AnswerId.scholar_12_supported_15) || (read_answers ? AnswerId.sun_13_supported_15))) || (hypothesis_open && (has_tag(EvidenceTag.skin_as_message_medium) || has_tag(EvidenceTag.paired_day_night_death))))} [Do you think the cause of disappearance aligns with what the Scholar has investigated?]
     ~ hypothesis_return = "sun"
     -> test_disappearance_hypothesis

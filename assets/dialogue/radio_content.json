@@ -11,7 +11,7 @@
       "skyway_reference"
     ]
   },
-  "source_sha256": "25fb761eb75888d66ffe8e5fdd21e639cdf112fa886b1f24776f9aee1771354d",
+  "source_sha256": "6ffdb9ccefafb4ada36fd9ed202696b16fc15dd057571aaee88a8042987049fd",
   "questions": [
     {
       "id": "baby:test_answer_baby_8",
@@ -251,7 +251,7 @@
       "id": "sun:test_answer_sun_25",
       "tomb": "sun_tomb",
       "label": "Which family member has no place on the base?",
-      "condition": "(1 == 1) && (has_tag(EvidenceTag.four_person_family) || has_tag(EvidenceTag.missing_family_member_reference))",
+      "condition": "(1 == 1) && has_tag(EvidenceTag.four_person_family)",
       "target": "test_answer_sun_25",
       "hidden": true,
       "candidates": [
