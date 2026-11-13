@@ -1,9 +1,9 @@
 {
   "version": 1,
   "sources": {
-    "evidence_master.ink": "7251961a62d1296197b2e95981640216d1fc73466c5de952bc45282a88c71b17",
+    "evidence_master.ink": "607cdb1c835ac418be6fb74ed5f5cebb43fb03ef617428d0ad40a72aaa57d728",
     "tombstone_master.ink": "c696cabcb60eb1da3f5e844a59b61a2020f0e39a3be465c5d5ddd5a2943c9534",
-    "telecomm_master.ink": "02d814579f6ae7ac92ce601386cca66c47cd265a84427d8b82f547e09672cede"
+    "telecomm_master.ink": "552e911015e2dbe8f003e858ad02ca88aa7a41f7870ff72bcab5fd9730bff729"
   },
   "gravestones": {
     "baby_tomb": {
@@ -2906,7 +2906,7 @@
         },
         {
           "speaker": "Aurora",
-          "content": "What interests us most is the special rule on the Twins. The very thing that seems to have sustained its survival is also what seems to have led to its death."
+          "content": "What interests us most is the special rule of the fallen cities on the Twins: the very thing that seems to have sustained their survival also seems to have led to their death."
         },
         {
           "speaker": "#PLAYER#",
