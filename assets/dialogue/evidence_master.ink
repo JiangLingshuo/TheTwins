@@ -1061,6 +1061,8 @@ Before their division, they were known together as the People of Sun and Moon. S
 In their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.
 
 The Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.
+
+Day City’s historians once disputed why the People of Sun and Moon divided. One hypothesis held that bodies suited to life underground and bodies suited to life above ground could not live together for long, so the division of Day and Night was the inevitable result of the People of Sun and Moon adapting to their surroundings.
 -> DONE
 
 === ev_history_coffin_illustration ===

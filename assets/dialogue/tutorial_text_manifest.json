@@ -73,6 +73,14 @@
   },
   {
     "stage": "开场",
+    "role": "Aurora",
+    "text": "What interests us most is the special rule on the Twins. The very thing that seems to have sustained its survival is also what seems to have led to its death.",
+    "id": "chat_start:009b",
+    "xml": "start.xml",
+    "knot": "chat_start"
+  },
+  {
+    "stage": "开场",
     "role": "玩家",
     "text": "Should I expect to meet anyone here?",
     "id": "chat_start:010",
