@@ -79,6 +79,7 @@ func begin(id: String, pointer: Vector2) -> bool:
 	_pointer = pointer
 	_left_book = false
 	hide_hint()
+	_show_whole_scene()
 	queue_redraw()
 	return true
 
@@ -97,8 +98,15 @@ func begin_cycle(id: String, pointer: Vector2) -> bool:
 	_pointer = pointer
 	_left_book = false
 	hide_hint()
+	_show_whole_scene()
 	queue_redraw()
 	return true
+
+
+## Rubbings are matched against things all over the scene: pull the view back out to the
+## whole scene when a drag starts, so every possible target is in sight.
+func _show_whole_scene() -> void:
+	get_tree().call_group("scene_zoom", "zoom_out")
 
 
 ## Stop the drag without changing anything.
@@ -154,6 +162,10 @@ func _notification(what: int) -> void:
 
 func _drop(pointer: Vector2) -> void:
 	var id := rubbing_id
+	var zoom := get_tree().get_first_node_in_group("scene_zoom")
+	while zoom and zoom.is_moving() and rubbing_id == id:
+		await get_tree().process_frame
+	if rubbing_id != id: return
 	if id == "girl_signature_rubbing" and _tool._cover_holding and not _tool._cover_ready:
 		await _tool.cover_comparison_ready
 		if rubbing_id != id: return

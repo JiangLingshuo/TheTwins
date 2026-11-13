@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3]
+[gd_scene load_steps=33 format=3]
 
 [ext_resource type="Script" path="res://scripts/main.gd" id="1_main"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/BG_day.png" id="2_day"]
@@ -28,6 +28,7 @@
 [ext_resource type="Texture2D" path="res://assets/Art/day/fountain.png" id="21_fountain"]
 [ext_resource type="Texture2D" path="res://assets/Art/day/energy.png" id="23_energy"]
 [ext_resource type="Texture2D" uid="uid://ckos50jatjcp2" path="res://assets/Art/day/Appearance_of_the_Dayfolk.png" id="24_dayfolk"]
+[ext_resource type="Texture2D" path="res://assets/Art/day/Appearance_of_the_Dayfolk_hit.png" id="24b_dayfolk_hit"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/ladder.png" id="25_ladder"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/river.png" id="26_river"]
 [ext_resource type="Texture2D" path="res://assets/Art/night/road.png" id="27_road"]
@@ -92,6 +93,7 @@ texture = ExtResource("24_dayfolk")
 script = ExtResource("14_target")
 target_id = "dayfolk_appearance"
 hit_by_alpha = true
+hit_mask = ExtResource("24b_dayfolk_hit")
 
 [node name="EnergyLamp" type="TextureRect" parent="DayCemetery"]
 layout_mode = 0

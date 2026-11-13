@@ -37,6 +37,16 @@ var _box: Control
 var _skip_button: Button
 var _shake_tween: Tween
 var _drag_hint: DragHint
+## The frame around the figure the person-shaped rubbing belongs on (appears when the
+## player does not seem to know what to do).
+var _target_frame: TargetFrame
+var _target_figure: Control
+## Msec since the comparison step began (-1 = not waiting), and whether the player
+## already dropped the rubbing somewhere else.
+var _comparison_since := -1
+var _comparison_missed := false
+## Seconds to wait before framing the figure for a player who has not tried it.
+const FRAME_AFTER_IDLE := 9.0
 
 func _ready() -> void:
 	await get_tree().process_frame
@@ -47,6 +57,13 @@ func _ready() -> void:
 	_moon = _baby_tomb.get_node("MoonSymbol")
 	_human = _baby_tomb.get_node("HumanSymbol")
 	_build_guide()
+	_target_figure = _main.get_node_or_null("DayCemetery/AppearanceOfTheDayfolk")
+	_target_frame = TargetFrame.new()
+	_target_frame.z_index = 90
+	_target_frame.top_level = true
+	_main.add_child(_target_frame)
+	_notebook.rubbing_drag.mismatched.connect(func(id: String, _target: Control) -> void:
+		if id == "infant_figure_rubbing": _comparison_missed = true)
 	_scene_zoom = _main.get_node_or_null("SceneZoom")
 	if _scene_zoom:
 		_scene_zoom.zoom_changed.connect(func(_tombstone: Control) -> void: refresh())
@@ -76,12 +93,39 @@ func _process(_delta: float) -> void:
 		_guide_backdrop.material.set_shader_parameter("panel_size", _panel.size)
 	if _notebook == null: # _ready() is still waiting a frame
 		return
+	_update_target_frame()
 	if _dialogue_is_playing():
 		_hide_guide_during_dialogue()
 		return
 	# Page-opening animations finish after notebook_opened; keep the hint in sync.
 	if not _speaking and not _skipping and step >= Step.BOOK:
 		refresh()
+
+## The person-shaped rubbing is in the notebook and still has to be matched to its figure.
+func _comparison_pending() -> bool:
+	return not GameState.investigation_tutorial_completed and GameState.rubbings.has("infant_figure_rubbing") 		and GameState.gravestones.has("baby_tomb") and not GameState.evidence_ids.has("dayfolk_appearance")
+
+
+## Frame the figure while the rubbing is being dragged, after a miss, or once the player
+## has had a while without trying anything.
+func _update_target_frame() -> void:
+	if _target_frame == null or _target_figure == null: return
+	var show := false
+	if _comparison_pending():
+		if _dialogue_is_playing() or _skipping:
+			_comparison_since = -1  # the clock starts once Aurora has finished talking
+		else:
+			if _comparison_since < 0: _comparison_since = Time.get_ticks_msec()
+			var dragging: bool = _notebook.rubbing_drag.is_dragging() and _notebook.rubbing_drag.rubbing_id == "infant_figure_rubbing"
+			show = dragging or _comparison_missed or (Time.get_ticks_msec() - _comparison_since) / 1000.0 > FRAME_AFTER_IDLE
+	else:
+		_comparison_since = -1
+		_comparison_missed = false
+	_target_frame.active = show
+	if show:
+		_target_frame.rect = _target_figure.get_hit_global_rect().grow(14.0)
+		_target_frame.caption = "拖到这里" if GameState.chinese_playtest else "Drop here"
+
 
 func _dialogue_is_playing() -> bool:
 	var radio := _main.get_node_or_null("RadioTool")
@@ -760,6 +804,47 @@ func _guide_searchlight() -> void:
 		_set_step(Step.DONE, "Scroll the mouse wheel to the 50-years-ago setting (2000). Each scroll moves one setting.", tool.get_node("FocusScale"))
 	else:
 		_set_step(Step.DONE, "Keep the light on the small marker for a moment. If nothing appears, click its figure or base to re-aim.", _human)
+
+
+## A pulsing frame with corner marks round a scene object, with a short caption above it.
+class TargetFrame extends Control:
+	var rect := Rect2()
+	var caption := ""
+	var active := false
+	var _shown := 0.0
+	var _time := 0.0
+
+	func _ready() -> void:
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+
+	func _process(delta: float) -> void:
+		_shown = move_toward(_shown, 1.0 if active else 0.0, delta * 3.0)
+		_time += delta
+		visible = _shown > 0.01
+		if visible: queue_redraw()
+
+	func _draw() -> void:
+		# Dark amber on a light scene, with a pale halo so it also reads on dark parts.
+		var pulse := 0.7 + 0.3 * sin(_time * 4.0)
+		var ink := Color(0.4, 0.17, 0.03, _shown)
+		var halo := Color(1.0, 0.95, 0.8, _shown * (0.55 + 0.4 * pulse))
+		var inverse := get_global_transform().affine_inverse()
+		var local := Rect2(inverse * rect.position, rect.size)
+		draw_rect(local, Color(1.0, 0.9, 0.55, _shown * 0.12 * pulse), true)
+		draw_rect(local.grow(2.0), halo, false, 6.0)
+		draw_rect(local, ink, false, 4.0)
+		var arm := minf(34.0, minf(local.size.x, local.size.y) * 0.3)
+		for corner in [local.position, Vector2(local.end.x, local.position.y), local.end, Vector2(local.position.x, local.end.y)]:
+			var dx := arm if corner.x == local.position.x else -arm
+			var dy := arm if corner.y == local.position.y else -arm
+			for stroke in [[Vector2(dx, 0), halo, 10.0], [Vector2(0, dy), halo, 10.0], [Vector2(dx, 0), ink, 6.0], [Vector2(0, dy), ink, 6.0]]:
+				draw_line(corner, corner + stroke[0], stroke[1], stroke[2])
+		if not caption.is_empty():
+			var font := GameState.playtest_font(preload("res://assets/fonts/ZhaohuaTypeWriter.ttf"))
+			var at := local.position + Vector2(2, -12)
+			draw_string_outline(font, at, caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, 7, halo)
+			draw_string(font, at, caption, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, Color(0.42, 0.19, 0.04, _shown))
 
 
 ## A subtle "drag upward" gesture above an icon: a dot rises from the icon with a
