@@ -2766,7 +2766,7 @@ Aurora 说，这是女儿小时候和母亲共用的私人记号。给对方画�
 -> DONE
 
 === zh_0567 ===
-// source: "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor."
+// source: "This history was a banned book until it was discovered.\n\nBoth Dayfolk and Nightfolk must rest in their sleeping coffins at the proper time if they are to awaken the following day.\n\nBefore their division, they were known together as the People of Sun and Moon. Some had the daylight; others had the moonlit night.\n\nIn their shared residential districts, sleeping coffins stood upright to conserve space. Later, when the Nightfolk moved underground, the number of people on the surface decreased. Space was no longer scarce, and the Dayfolk developed the habit of lying down in their coffins.\n\nThe Nightfolk placed theirs underground, where the darkness of the caves made them almost indistinguishable from the surrounding floor.\n\nDay City’s historians once disputed why the People of Sun and Moon divided. One hypothesis held that bodies suited to life underground and bodies suited to life above ground could not live together for long, so the division of Day and Night was the inevitable result of the People of Sun and Moon adapting to their surroundings."
 这部史书被发现前一直是禁书。
 
 昼民和夜民都必须按时躺进睡棺，第二天才能醒来。
@@ -2776,6 +2776,8 @@ Aurora 说，这是女儿小时候和母亲共用的私人记号。给对方画�
 过去，他们住在同一个居住区，睡棺竖着摆以节省空间。后来夜民搬到地下，地表人口减少，不再缺地方。昼民于是习惯把睡棺放平，躺在里面。
 
 夜民把自己的睡棺放在地下。洞穴太暗，睡棺几乎和地面融为一体。
+
+昼城的史学家曾争论日月之民为何分离。一种假说认为，适应地下生活的体质与适应地上生活的体质难以长期共存，因此昼夜分体，是日月之民适应环境的必然结果。
 -> DONE
 
 === zh_0568 ===
@@ -4496,4 +4498,9 @@ Aurora 的其他通讯
 === zh_0902 ===
 // source: "Aurora is calling about what you just found. Send the evidence to hear her."
 Aurora 来电，说的正是你刚刚的发现。发送证据，听听她怎么说。
+-> DONE
+
+=== zh_0903 ===
+// source: "What interests us most is the special rule on the Twins. The very thing that seems to have sustained its survival is also what seems to have led to its death."
+我们最感兴趣的，是双子星上那条特殊的规则。似乎正是维系它存续的东西，也把它推向了灭亡。
 -> DONE
