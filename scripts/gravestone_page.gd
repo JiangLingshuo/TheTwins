@@ -26,6 +26,13 @@ signal clue_pressed(clue_id: String)
 ## Opacity of the faint parts (slot frames, empty slots, divider).
 @export_range(0.0, 1.0, 0.05) var faded_alpha: float = 0.45
 
+## How many rubbings each stone really carries (the symbols in scenes/tombstones/).
+## Slots beyond it are blacked out so players do not hunt for rubbings that do not exist.
+const RUBBING_TOTALS := {
+	"baby_tomb": 2, "scholar_tomb": 2, "sun_tomb": 2, "altar_tomb": 2,
+	"mother_tomb": 3, "father_tomb": 2,
+}
+
 const DESCRIPTION_PLACEHOLDER := "Not yet described."
 const EMPTY_CLUE := "—"
 const HANDWRITING := preload("res://assets/fonts/Kalam-Regular.ttf")
@@ -227,6 +234,9 @@ func _draw_rubbings() -> void:
 func _draw_rubbing_slot(index: int, slot: Control) -> void:
 	if _unknown: return
 	var ids := GameState.get_gravestone_rubbings(gravestone_id)
+	if index >= int(RUBBING_TOTALS.get(gravestone_id, rubbing_slots)):
+		slot.draw_rect(Rect2(Vector2.ZERO, slot.size).grow(-2.0), Color(_ink, 0.9))
+		return
 	if index >= ids.size(): return
 	var box := Rect2(Vector2.ZERO, slot.size).grow(-4.0)
 	var texture := TrimmedTexture.of(GameState.get_rubbing_texture(ids[index]))
